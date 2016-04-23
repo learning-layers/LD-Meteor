@@ -1,0 +1,7 @@
+node_modules
+client/hot-force-reload.js
+.idea
+.deploy
+!.deploy/settings.example.json
+*.iml
+settings-dev.json

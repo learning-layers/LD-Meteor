@@ -1,0 +1,46 @@
+# Meteor packages used by this project, one per line.
+# Check this file (and the other files in this directory) into your repository.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+meteor-base             # Packages every Meteor app needs to have
+mobile-experience       # Packages for a great mobile UX
+mongo                   # The database Meteor supports right now
+blaze-html-templates    # Compile .html files into Meteor Blaze views
+session                 # Client-side reactive dictionary for your app
+jquery                  # Helpful client-side library
+tracker                 # Meteor's client-side reactive programming library
+
+es5-shim                # ECMAScript 5 compatibility for older browsers.
+ecmascript              # Enable ECMAScript2015+ syntax in app code
+#gadicc:ecmascript-hot
+
+#autopublish             # Publish all data to the clients (for prototyping)
+#insecure                # Allow all DB writes from clients (for prototyping)
+
+fourseven:scss          # Sass and SCSS support for Meteor.js (with autoprefixer and sourcemaps).
+seba:minifiers-autoprefixer # Standard minifiers used with Meteor apps by default + css autoprefixer.
+standard-minifier-js    # Standard javascript minifiers used with Meteor apps by default.
+
+practicalmeteor:mocha   # Write package tests with mocha and run them in the browser or from the command line with spacejam.
+kadira:flow-router-ssr  # Same as kadira:flow-router, but with SSR support
+
+twbs:bootstrap
+ian:accounts-ui-bootstrap-3
+
+accounts-base
+aur0r:accounts-learninglayers
+accounts-facebook
+accounts-google
+service-configuration
+
+browser-policy
+simple:rest
+alanning:roles
+aur0r:accounts-trashmailfilter
+splendido:accounts-meld
+email
+juliancwirko:s-alert
+kadira:debug
+accounts-password
