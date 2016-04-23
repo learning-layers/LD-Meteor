@@ -1,6 +1,6 @@
 import { chai } from 'meteor/practicalmeteor:chai';
 
-describe('server test', function() {
+describe('server full-app test', function() {
   it('passes', function() {
     chai.assert.isTrue(true);
   });
