@@ -14,4 +14,6 @@ before_install:
   - "npm install -g phantomjs2 --phantomjs_downloadurl=https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2"
   - "npm install -g spacejam"
 
-script: "spacejam test-packages --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner"
+script:
+  - "npm run testall"
+  - "spacejam test-packages --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner"
