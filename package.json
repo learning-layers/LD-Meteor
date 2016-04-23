@@ -14,7 +14,7 @@
     "prod": "meteor run --production --settings settings-dev.json",
     "test": "meteor test --settings settings-dev.json --driver-package practicalmeteor:mocha --port 3100",
     "testall": "meteor test --settings settings-dev.json --full-app --driver-package practicalmeteor:mocha --port 3101",
-    "testall-travis": "meteor test --once --settings settings-dev.test.json --full-app --driver-package practicalmeteor:mocha",
+    "testall-travis": "meteor test --once --settings settings-dev.test.json --driver-package dispatch:mocha-phantomjs",
     "test-build": "meteor build /tmp/build --directory && run-build"
   },
   "repository": "learning-layers/LD-Meteor",
