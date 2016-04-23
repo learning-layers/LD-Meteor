@@ -14,5 +14,5 @@ before_install:
   - "npm install -g spacejam"
 
 script:
-  - "npm run testall"
+  - "npm run testall-travis"
   - "spacejam test-packages --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner"
