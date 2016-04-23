@@ -15,4 +15,5 @@ before_install:
 
 script:
   - "npm run testall-travis"
+  - "meteor reset"
   - "spacejam test-packages --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner"

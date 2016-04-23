@@ -1,0 +1,20 @@
+{
+  "public": {
+    "app": {
+      "name": "Living Documents",
+      "version": "0.0.1"
+    }
+  },
+  "private": {
+    "email": {
+      "url": null,
+      "from": null
+    },
+    "initialUser": {
+      "email": "martin@bachl.pro",
+      "password": "changeme1"
+    },
+    "oAuth": {
+    }
+  }
+}
