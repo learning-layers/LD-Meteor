@@ -1,0 +1,39 @@
+{
+  "public": {
+    "isProdEnv": true,
+    "httpsRedirect": true,
+    "rootUrl": "https://<domain>",
+    "app": {
+      "name": "<AppName>",
+      "version": "0.0.1"
+    },
+    "hostname": {
+      "ip": "<IP to server>",
+      "hostname": "<Domain>"
+    }
+  },
+  "private": {
+    "email": {
+      "url": "smtp://<email url>",
+      "from": "<From>"
+    },
+    "initialUser": {
+      "email": "<email address>",
+      "password": "<initial password>"
+    },
+    "oAuth": {
+      "facebook": {
+        "appId": "<appId>",
+        "secret": "<clientSecret>"
+      },
+      "google": {
+        "clientId": "<clientId>",
+        "secret": "<clientSecret>"
+      },
+      "learninglayers": {
+        "clientId": "<clientId>",
+        "secret": "<clientSecret>"
+      }
+    }
+  }
+}
