@@ -10,5 +10,7 @@ node_js:
 before_install:
   - "curl https://install.meteor.com | /bin/sh"
   - export PATH="$HOME/.meteor:$PATH"
+  - meteor --version
+  - "npm install -g spacejam"
 
-script: "meteor test --full-app --driver-package practicalmeteor:mocha"
+script: "spacejam test-packages --driver-package=practicalmeteor:mocha-console-runner"
