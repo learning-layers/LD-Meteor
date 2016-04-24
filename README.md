@@ -16,3 +16,7 @@ LD-Meteor is released under the MIT [license](https://github.com/learning-layers
 
 ###Bootswatch Paper Theme
 The [Bootswatch Paper Theme](http://bootswatch.com/paper/) by Thomas Park is licensed under the [MIT License](https://github.com/thomaspark/bootswatch/blob/gh-pages/LICENSE). Based on [Bootstrap](http://getbootstrap.com/). Icons from [Font Awesome](http://fortawesome.github.io/Font-Awesome/). Web fonts from [Google](https://www.google.com/fonts/).
+
+###Hopscotch
+Hopscotch by LinkedIn is licensed under the [Apache License V2.0](https://github.com/linkedin/hopscotch/blob/master/LICENSE).
+"Hopscotch is a framework to make it easy for developers to add product tours to their pages." - [Hopscotch Github Repository 2016](https://github.com/linkedin/hopscotch)

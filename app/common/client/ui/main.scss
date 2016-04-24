@@ -1,7 +1,8 @@
 @import "../../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap";
-@import "variables";
-@import "bootswatch";
-@import "paper_theme_fixes";
+@import "_variables";
+@import "_bootswatch";
+@import "_paper_theme_fixes";
+@import "_hopscoth";
 
 #nav-app-search {
   padding: 0;

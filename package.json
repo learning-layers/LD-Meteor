@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
+    "hopscotch": "^0.2.5",
     "meteor-node-stubs": "^0.2.3",
     "react": "^15.0.1",
     "react-bootstrap": "^0.29.2",

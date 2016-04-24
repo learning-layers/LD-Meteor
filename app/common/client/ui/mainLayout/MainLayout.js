@@ -7,12 +7,20 @@ class MainLayout extends Component {
     this.view = Blaze.render(Template.cookieConsentImply,
       ReactDOM.findDOMNode(this.refs.cookieConsentForm));
     setTimeout(function() {
-      Blaze.remove(this.view);
+      try {
+        Blaze.remove(this.view);
+      } catch (e) {
+        //
+      }
     }, 30000);
   }
   componentWillUnmount() {
     // Clean up Blaze view
-    Blaze.remove(this.view);
+    try {
+      Blaze.remove(this.view);
+    } catch (e) {
+      //
+    }
   }
   render() {
     return <div>
