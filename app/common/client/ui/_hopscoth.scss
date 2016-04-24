@@ -24,7 +24,7 @@ $font_0: Helvetica;
 $font_1: Arial;
 
 //urls
-$url_0: url(../img/sprite-green.png);
+$url_0: url(/hopscotch/sprite-green.png);
 
 .animated {
   animation-fill-mode: both;
@@ -240,11 +240,11 @@ div.hopscotch-bubble {
       text-shadow: 0 1px 1px $black_35;
       background-color: $color_mariner_approx;
       filter: progid:dximagetransform.microsoft.gradient(gradienttype=0, startcolorstr='$color_mariner_approx', endcolorstr='$color_matisse_approx');
-      background-image: linear-gradient(top, $color_mariner_approx 0, $color_matisse_approx 100%);
+      background-image: linear-gradient(to bottom, $color_mariner_approx 0, $color_matisse_approx 100%);
       &:hover {
         background-color: $color_astral_approx;
         filter: progid:dximagetransform.microsoft.gradient(gradienttype=0, startcolorstr='$color_astral_approx', endcolorstr='$color_chathams_blue_approx');
-        background-image: linear-gradient(top, $color_astral_approx 0, $color_chathams_blue_approx 100%);
+        background-image: linear-gradient(to bottom, $color_astral_approx 0, $color_chathams_blue_approx 100%);
       }
     }
     &.prev {
@@ -254,11 +254,11 @@ div.hopscotch-bubble {
       text-shadow: 0 1px 1px $white_75;
       background-color: $concrete;
       filter: progid:dximagetransform.microsoft.gradient(gradienttype=0, startcolorstr='$concrete', endcolorstr='$color_gray_nurse_approx');
-      background-image: linear-gradient(top, $concrete 0, $color_gray_nurse_approx 100%);
+      background-image: linear-gradient(to bottom, $concrete 0, $color_gray_nurse_approx 100%);
       &:hover {
         background-color: $color_gray_nurse_approx;
         filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9');
-        background-image: linear-gradient(top, $color_gray_nurse_approx 0, $color_mercury_approx 13%, $color_iron_approx 32%, $color_pink_swan_approx 71%, $color_shady_lady_approx 100%);
+        background-image: linear-gradient(to bottom, $color_gray_nurse_approx 0, $color_mercury_approx 13%, $color_iron_approx 32%, $color_pink_swan_approx 71%, $color_shady_lady_approx 100%);
       }
     }
   }
