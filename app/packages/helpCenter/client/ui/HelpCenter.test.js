@@ -11,7 +11,7 @@ let renderComponent = function (comp, props) {
 };
 
 let simulateClickOn = function($el) {
-  React.addons.TestUtils.Simulate.click($el[0]);
+  TestUtils.Simulate.click($el[0]);
 };
 
 describe('help center', function () {
@@ -23,11 +23,68 @@ describe('help center', function () {
 
   it('does render', function () {
     let component = renderComponent(HelpCenter, {});
-    console.debug(component);
     let el = ReactDOM.findDOMNode(component);
-    console.debug(el);
     let $el = $(el).find('#ld-helpcenter');
-    console.debug($el);
     chai.assert.equal($el.text(), 'Help Center');
   });
+
+  it('opens on click', function() {
+    let component = renderComponent(HelpCenter, {});
+    let el = ReactDOM.findDOMNode(component);
+    let $el = $(el).find('#ld-helpcenter');
+    chai.assert.equal(component.state.isOpened, false);
+    simulateClickOn($el);
+    //console.log(component);
+    chai.assert.equal(component.state.isOpened, true);
+  });
+
+  /*it('render the list of tours', function() {
+    let exampleTourList = [];
+    let exampleTour1 = {
+      label: "Tour 1",
+      hopscotchConfig: {
+        id: "hello-hopscotch",
+        steps: [
+          {
+            title: "My Header",
+            content: "This is the header of my page.",
+            target: "header",
+            placement: "bottom"
+          },
+          {
+            title: "My content",
+            content: "Here is where I put my content.",
+            target: "main",
+            placement: "bottom"
+          }
+        ]
+      }
+    };
+    exampleTourList.push(exampleTour1);
+    let exampleTour2 = {
+      label: "Tour 2",
+      hopscotchConfig: {
+        id: "hello-hopscotch",
+        steps: [
+          {
+            title: "My Header",
+            content: "This is the header of my page.",
+            target: "header",
+            placement: "bottom"
+          },
+          {
+            title: "My content",
+            content: "Here is where I put my content.",
+            target: "main",
+            placement: "bottom"
+          }
+        ]
+      }
+    };
+    exampleTourList.push(exampleTour2);
+    let component = renderComponent(HelpCenter, {tourList: exampleTourList});
+    let el = ReactDOM.findDOMNode(component);
+    let $el = $(el).find('#ld-helpcenter');
+    chai.assert.equal($el.text(), 'Help Center');
+  });*/
 });
