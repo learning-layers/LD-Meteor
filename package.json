@@ -20,6 +20,9 @@
   },
   "repository": "learning-layers/LD-Meteor",
   "author": "Martin Bachl <martin@bachl.pro>",
+  "contributors": [
+    "Philipp Dallmann <philipp.dallmann@outlook.com>"
+  ],
   "license": "MIT",
   "engines": {
     "node": "0.10.40"
@@ -29,6 +32,7 @@
     "hopscotch": "^0.2.5",
     "meteor-node-stubs": "^0.2.3",
     "react": "^15.0.1",
+    "react-addons-test-utils": "^15.0.1",
     "react-bootstrap": "^0.29.2",
     "react-dom": "^15.0.1",
     "react-komposer": "^1.8.0",
