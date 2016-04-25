@@ -1,6 +1,6 @@
 @import "../../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "_variables";
-@import "_bootswatch";
+@import "_bootswatch"; /* bootswatch paper theme */
 @import "_paper_theme_fixes";
 @import "_hopscoth";
 
@@ -20,3 +20,5 @@ Fixes for ian:accounts-ui-bootstrap-3
   top: auto;
   bottom: 0;
 }
+
+@import "../../../packages/helpCenter/client/ui/_help_center";

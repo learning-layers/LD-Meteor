@@ -30,6 +30,7 @@ class MainLayout extends Component {
       </header>
       <main>
         {this.props.content}
+        {this.props.helpCenter}
       </main>
     </div>
   }

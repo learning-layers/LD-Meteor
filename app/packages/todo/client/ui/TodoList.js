@@ -7,7 +7,6 @@ function onPropsChange(props, onData) {
   let handle = Meteor.subscribe('todos');
   if (handle.ready()) {
     let todos = Todos.find({}).fetch();
-    console.log(todos.length);
     onData(null, {todos});
   }
 }

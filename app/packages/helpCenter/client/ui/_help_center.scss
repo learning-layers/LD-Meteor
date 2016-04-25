@@ -1,0 +1,39 @@
+#ld-helcenter-wrapper {
+  position: fixed;
+  display: block;
+  bottom: 0;
+  width: 100%;
+}
+
+#ld-helpcenter {
+  margin-right: 20px;
+  cursor: pointer;
+  position: relative;
+  color: #fff;
+  padding: 5px 10px;
+  font-family: 'sofiapro',Arial,sans-serif;
+  font-size: 14px;
+  background-color: #428bca;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border: 1px solid #357ebc;
+  height: 30px;
+  z-index: 1;
+  width: 200px;
+  float: right;
+}
+
+#ld-helpcenter-panel {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  color: #fff;
+  position: relative;
+  max-height: 300px;
+  min-height: 50px;
+  background-color: #428bca;
+  border: 1px solid #357ebc;
+  font-size: 14px;
+  font-family: 'sofiapro',Arial,sans-serif;
+  padding: 5px 10px;
+  float: right;
+}

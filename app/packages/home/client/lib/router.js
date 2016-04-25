@@ -4,6 +4,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router-ssr';
 import MainLayout from '../../../../common/client/ui/mainLayout/MainLayout';
 import Navbar from '../../../../common/client/ui/mainLayout/Navbar';
 import Home from '../ui/Home';
+import HelpCenter from '../../../helpCenter/client/ui/HelpCenter';
 
 FlowRouter.route('/', {
   action: function(params, queryParams) {
@@ -11,7 +12,8 @@ FlowRouter.route('/', {
     console.log("Query Params:", queryParams);
     mount(MainLayout, {
       header: <Navbar />,
-      content: "Test"
+      content: <Home />,
+      helpCenter: <HelpCenter />
     });
   }
 });
@@ -22,7 +24,8 @@ FlowRouter.route('/home', {
     console.log("Query Params:", queryParams);
     mount(MainLayout, {
       header: <Navbar />,
-      content: <Home />
+      content: <Home />,
+      helpCenter: <HelpCenter />
     });
   }
 });

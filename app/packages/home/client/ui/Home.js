@@ -6,13 +6,12 @@ function onPropsChange(props, onData) {
   const user = Meteor.user();
   onData(null, {user});
 }
-//Test
 
 class Home extends Component {
   render() {
     const {user} = this.props;
     return <div className="ld-home">
-      Home
+      Home {user && user.profile ? user.profile.name: null}
     </div>
   }
 }
