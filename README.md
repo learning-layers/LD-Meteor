@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/learning-layers/LD-Meteor.svg?branch=master)](https://travis-ci.org/learning-layers/LD-Meteor)
 
+*This project is just recently set up and not ready to use yet. Release plan will come soon.*
+
 <a name="ld-meteor"/>
 # LD-Meteor
 Living Documents implemented in Meteor (web framework)
