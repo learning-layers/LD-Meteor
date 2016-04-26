@@ -34,11 +34,10 @@ describe('help center', function () {
     let $el = $(el).find('#ld-helpcenter');
     chai.assert.equal(component.state.isOpened, false);
     simulateClickOn($el);
-    //console.log(component);
     chai.assert.equal(component.state.isOpened, true);
   });
 
-  /*it('render the list of tours', function() {
+  it('renders the list of tours', function() {
     let exampleTourList = [];
     let exampleTour1 = {
       label: "Tour 1",
@@ -82,9 +81,12 @@ describe('help center', function () {
       }
     };
     exampleTourList.push(exampleTour2);
-    let component = renderComponent(HelpCenter, {tourList: exampleTourList});
+    let component = renderComponent(HelpCenter, {helpTours: exampleTourList});
     let el = ReactDOM.findDOMNode(component);
     let $el = $(el).find('#ld-helpcenter');
-    chai.assert.equal($el.text(), 'Help Center');
-  });*/
+    simulateClickOn($el);
+    let $elArray = $(el).find('ul.ld-help-center-menu.ld-help-center-submenu li');
+    chai.assert.equal($($elArray[0]).find('a').text(), exampleTour1.label);
+    chai.assert.equal($($elArray[1]).find('a').text(), exampleTour2.label);
+  });
 });

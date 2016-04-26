@@ -6,6 +6,29 @@ import Navbar from '../../../../common/client/ui/mainLayout/Navbar';
 import Home from '../ui/Home';
 import HelpCenter from '../../../helpCenter/client/ui/HelpCenter';
 
+let helpTours = [
+  {
+    label: "Tour 1",
+    hopscotchConfig: {
+      id: "hello-hopscotch",
+      steps: [
+        {
+          title: "My Header",
+          content: "This is the header of my page.",
+          target: "header",
+          placement: "bottom"
+        },
+        {
+          title: "My content",
+          content: "Here is where I put my content.",
+          target: "main",
+          placement: "bottom"
+        }
+      ]
+    }
+  }
+];
+
 FlowRouter.route('/', {
   action: function(params, queryParams) {
     console.log("Params:", params);
@@ -13,7 +36,7 @@ FlowRouter.route('/', {
     mount(MainLayout, {
       header: <Navbar />,
       content: <Home />,
-      helpCenter: <HelpCenter />
+      helpCenter: <HelpCenter helpTours={helpTours} />
     });
   }
 });
@@ -25,7 +48,7 @@ FlowRouter.route('/home', {
     mount(MainLayout, {
       header: <Navbar />,
       content: <Home />,
-      helpCenter: <HelpCenter />
+      helpCenter: <HelpCenter helpTours={helpTours} />
     });
   }
 });

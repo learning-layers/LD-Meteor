@@ -21,6 +21,7 @@
   z-index: 1;
   width: 200px;
   float: right;
+  border-bottom: 0;
 }
 
 #ld-helpcenter-panel {
@@ -34,6 +35,58 @@
   border: 1px solid #357ebc;
   font-size: 14px;
   font-family: 'sofiapro',Arial,sans-serif;
-  padding: 5px 10px;
+  padding: 0;
   float: right;
+}
+
+.ld-help-center-menu {
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  text-align: left;
+  > li {
+    a {
+      cursor: pointer;
+      display: block;
+      color: white;
+      padding: 3px 20px;
+      background-color: #428bca;
+      &:hover {
+        color: white;
+        background-color: #357ebc;
+      }
+      text-decoration: none;
+    }
+  }
+  > .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+  }
+}
+
+#help-process-title {
+  color: white;
+  font-weight: bold;
+  display: block;
+  padding: 3px 20px;
+  background-color: #428bca;
+}
+
+.ld-help-center-submenu {
+  padding-left: 18px;
+}
+
+#ld-help-search-form-group {
+  display: inline-block;
+  margin-left: 10px;
+  margin-bottom: 0;
+}
+
+.ld-help-search-input {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
 }
