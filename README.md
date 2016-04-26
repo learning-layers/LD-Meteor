@@ -29,7 +29,7 @@ In order to get the development environment up and running follow these steps:
 
 4. Start the client and server via ```meteor --settings settings-dev.test.json```.
 
-5. Now the server should be running at http://localhost:3000.
+5. Now the server should be running at [http://localhost:3000](http://localhost:3000).
 
 6. The next step that you should do is to create a file called settings-dev.json in the project directory and customize your settings there.
 
