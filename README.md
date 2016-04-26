@@ -1,17 +1,44 @@
 [![Build Status](https://travis-ci.org/learning-layers/LD-Meteor.svg?branch=master)](https://travis-ci.org/learning-layers/LD-Meteor)
 
 <a name="ld-meteor"/>
-LD-Meteor
-==
+# LD-Meteor
 Living Documents implemented in Meteor (web framework)
 
 **Table of Contents**
 - [LD-Meteor](#ld-meteor)
+- [Development](#development)
+    - [Setting up the development environment](#setting-up-development)
+    - [Customizing your settings-dev.json file](#customizing-the-settings)
+- [Deployment](#deployment)
+    - [Deployment via mupx](#mupx)
 - [License](#license)
 
+<a name="development"/>
+## Development
+
+<a name="setting-up-development"/>
+### Setting up the development environment
+*You should have your IDE already set up*
+In order to get the development environment up and running follow these steps:
+1. Go to https://www.meteor.com/install and perform the necessary steps to install meteor on your OS.
+2. Clone this github repository.
+3. Perform ```meteor npm install``` to install all needed dependencies.
+4. Start the client and server via ```meteor --settings settings-dev.test.json```.
+5. Now the server should be running at http://localhost:3000.
+6. The next step that you should do is to create a file called settings-dev.json in the project directory and customize your settings there.
+
+<a name="customizing-the-settings"/>
+### Customizing your settings-dev.json file
+*TODO*
+
+<a name="deployment"/>
+## Deployment
+<a name="mupx"/>
+### Deployment via mupx
+*TODO*
+
 <a name="license"/>
-License
---
+## License
 LD-Meteor is released under the MIT [license](https://github.com/learning-layers/LD-Meteor/blob/master/LICENSE) by Martin Bachl, Institute of Applied Research / Institute for Learning and Innovation in Networks, University of applied sciences Karlsruhe
 
 ###Bootswatch Paper Theme
