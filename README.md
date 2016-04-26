@@ -10,9 +10,10 @@ Living Documents implemented in Meteor (web framework)
 - [LD-Meteor](#ld-meteor)
 - [Development](#development)
     - [Setting up the development environment](#setting-up-development)
-    - [Customizing your settings-dev.json file](#customizing-the-settings)
-- [Deployment](#deployment)
-    - [Deployment via mupx](#mupx)
+    - [Customizing your settings-dev.json file (TODO)](#customizing-the-settings)
+- [Deployment (TODO)](#deployment)
+    - [Deployment via mupx (TODO)](#deployment-mupx)
+    - [Deployment in the Layers Box (TODO)](#deployment-layersbox)
 - [License](#license)
 
 <a name="development"/>
@@ -41,9 +42,10 @@ In order to get the development environment up and running follow these steps:
 
 <a name="deployment"/>
 ## Deployment
-<a name="mupx"/>
+<a name="deployment-mupx"/>
 ### Deployment via mupx
 *TODO*
+<a name="deployment-layersbox"/>
 ### Deployment in the Layers Box
 *TODO*
 
