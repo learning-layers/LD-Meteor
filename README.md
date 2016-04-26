@@ -20,11 +20,17 @@ Living Documents implemented in Meteor (web framework)
 ### Setting up the development environment
 *You should have your IDE already set up*
 In order to get the development environment up and running follow these steps:
+
 1. Go to https://www.meteor.com/install and perform the necessary steps to install meteor on your OS.
+
 2. Clone this github repository.
+
 3. Perform ```meteor npm install``` to install all needed dependencies.
+
 4. Start the client and server via ```meteor --settings settings-dev.test.json```.
+
 5. Now the server should be running at http://localhost:3000.
+
 6. The next step that you should do is to create a file called settings-dev.json in the project directory and customize your settings there.
 
 <a name="customizing-the-settings"/>
