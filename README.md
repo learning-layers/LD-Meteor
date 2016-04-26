@@ -42,6 +42,8 @@ In order to get the development environment up and running follow these steps:
 <a name="mupx"/>
 ### Deployment via mupx
 *TODO*
+### Deployment in the Layers Box
+*TODO*
 
 <a name="license"/>
 ## License
