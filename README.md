@@ -38,7 +38,13 @@ In order to get the development environment up and running follow these steps:
 
 <a name="customizing-the-settings"/>
 ### Customizing your settings-dev.json file
-*TODO*
+*TODO finish*
+
+1. Copy the settings-dev.example.json file into a file in the same directory called settings-dev.json.
+
+2. Enter your Facebook, Google and Learning Layers OIDC crendentials (@see TODO link to Wiki).
+
+3. In the email property enter in the url the smtp string that allows you to access your email account: e.g. ```smtp://<username>:<password>@<domain>:<port>```
 
 <a name="deployment"/>
 ## Deployment
