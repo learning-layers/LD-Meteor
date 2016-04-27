@@ -26,6 +26,44 @@ let helpTours = [
         }
       ]
     }
+  },{
+    label: "Tour 2",
+    hopscotchConfig: {
+      id: "hello-hopscotch",
+      steps: [
+        {
+          title: "My Header",
+          content: "This is the header of my page.",
+          target: "header",
+          placement: "bottom"
+        },
+        {
+          title: "My content",
+          content: "Here is where I put my content.",
+          target: "main",
+          placement: "bottom"
+        }
+      ]
+    }
+  },{
+    label: "Tour 3",
+    hopscotchConfig: {
+      id: "hello-hopscotch",
+      steps: [
+        {
+          title: "My Header",
+          content: "This is the header of my page.",
+          target: "header",
+          placement: "bottom"
+        },
+        {
+          title: "My content",
+          content: "Here is where I put my content.",
+          target: "main",
+          placement: "bottom"
+        }
+      ]
+    }
   }
 ];
 

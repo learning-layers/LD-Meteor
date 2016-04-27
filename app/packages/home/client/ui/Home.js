@@ -6,7 +6,7 @@ function onPropsChange(props, onData) {
   const user = Meteor.user();
   onData(null, {user});
 }
-console.log("test");
+
 class Home extends Component {
   render() {
     const {user} = this.props;

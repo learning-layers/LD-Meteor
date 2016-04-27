@@ -14,31 +14,16 @@ let simulateClickOn = function($el) {
   TestUtils.Simulate.click($el[0]);
 };
 
+let RBFormControlSimulateChangeOn = function(component, $el, value) {
+  let node = component.refs.filterTourInput;
+  let $node = ReactDOM.findDOMNode(node);
+  $node.value = value;
+  TestUtils.Simulate.change($node);
+};
+
 describe('help center', function () {
   beforeEach(function() {
-    defProps = {
-      number: 2
-    };
-  });
-
-  it('does render', function () {
-    let component = renderComponent(HelpCenter, {});
-    let el = ReactDOM.findDOMNode(component);
-    let $el = $(el).find('#ld-helpcenter');
-    chai.assert.equal($el.text(), 'Help Center');
-  });
-
-  it('opens on click', function() {
-    let component = renderComponent(HelpCenter, {});
-    let el = ReactDOM.findDOMNode(component);
-    let $el = $(el).find('#ld-helpcenter');
-    chai.assert.equal(component.state.isOpened, false);
-    simulateClickOn($el);
-    chai.assert.equal(component.state.isOpened, true);
-  });
-
-  it('renders the list of tours', function() {
-    let exampleTourList = [];
+    exampleTourList = [];
     let exampleTour1 = {
       label: "Tour 1",
       hopscotchConfig: {
@@ -81,12 +66,44 @@ describe('help center', function () {
       }
     };
     exampleTourList.push(exampleTour2);
-    let component = renderComponent(HelpCenter, {helpTours: exampleTourList});
+    defProps = {helpTours: exampleTourList};
+  });
+
+  it('does render', function () {
+    let component = renderComponent(HelpCenter, defProps);
+    let el = ReactDOM.findDOMNode(component);
+    let $el = $(el).find('#ld-helpcenter');
+    chai.assert.equal($el.text(), 'Help Center');
+  });
+
+  it('opens on click', function() {
+    let component = renderComponent(HelpCenter, defProps);
+    let el = ReactDOM.findDOMNode(component);
+    let $el = $(el).find('#ld-helpcenter');
+    chai.assert.equal(component.state.isOpened, false);
+    simulateClickOn($el);
+    chai.assert.equal(component.state.isOpened, true);
+  });
+
+  it('renders the list of tours', function() {
+    let component = renderComponent(HelpCenter, defProps);
     let el = ReactDOM.findDOMNode(component);
     let $el = $(el).find('#ld-helpcenter');
     simulateClickOn($el);
     let $elArray = $(el).find('ul.ld-help-center-menu.ld-help-center-submenu li');
-    chai.assert.equal($($elArray[0]).find('a').text(), exampleTour1.label);
-    chai.assert.equal($($elArray[1]).find('a').text(), exampleTour2.label);
+    chai.assert.equal($($elArray[0]).find('a').text(), exampleTourList[0].label);
+    chai.assert.equal($($elArray[1]).find('a').text(), exampleTourList[1].label);
+  });
+
+  it('filters the list of tours', function() {
+    let component = renderComponent(HelpCenter, {helpTours: exampleTourList});
+    let el = ReactDOM.findDOMNode(component);
+    let $el = $(el).find('#ld-helpcenter');
+    simulateClickOn($el);
+    let $elArray = $(el).find('ul.ld-help-center-menu.ld-help-center-submenu li[role="presentation"]');
+    chai.assert.equal($elArray.length, 2);
+    RBFormControlSimulateChangeOn(component, $el, "1");
+    $elArray = $(el).find('ul.ld-help-center-menu.ld-help-center-submenu li[role="presentation"]');
+    chai.assert.equal($elArray.length, 1);
   });
 });
