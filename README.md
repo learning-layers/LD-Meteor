@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/learning-layers/LD-Meteor.svg?branch=master)](https://travis-ci.org/learning-layers/LD-Meteor)
+[![bitHound Overall Score](https://www.bithound.io/github/learning-layers/LD-Meteor/badges/score.svg)](https://www.bithound.io/github/learning-layers/LD-Meteor)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 *This project is just recently set up and not ready to use yet. Release plan will come soon.*
