@@ -55,14 +55,14 @@ class LDNavbar extends Component {
                 </MenuItem>
                 <MenuItem eventKey={3.3}> Something else here
                 </MenuItem>
-                <MenuItem divider/>
+                <MenuItem divider />
                 <MenuItem eventKey={3.3}> Separated link
                 </MenuItem>
               </NavDropdown>
               <NavItem id='nav-app-search' eventKey={4} href='#'>
                 <Navbar.Form pullLeft>
                   <FormGroup>
-                    <FormControl type='text' placeholder='Search'/>
+                    <FormControl type='text' placeholder='Search' />
                   </FormGroup>
                   {' '}
                   <Button type='submit'>
