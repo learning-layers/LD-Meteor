@@ -1,5 +1,5 @@
-import { Mongo } from 'meteor/mongo';
+import { Mongo } from 'meteor/mongo'
 
-var _Todos = new Mongo.Collection("Todos");
+var _Todos = new Mongo.Collection('Todos')
 
-export const Todos = _Todos;
+export const Todos = _Todos

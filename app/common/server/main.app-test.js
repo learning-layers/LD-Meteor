@@ -1,7 +1,9 @@
-import { chai } from 'meteor/practicalmeteor:chai';
+/* eslint-env mocha */
 
-describe('server full-app test', function() {
-  it('passes', function() {
-    chai.assert.isTrue(true);
-  });
-});
+import { chai } from 'meteor/practicalmeteor:chai'
+
+describe('server full-app test', function () {
+  it('passes', function () {
+    chai.assert.isTrue(true)
+  })
+})
