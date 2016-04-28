@@ -5,6 +5,24 @@ language: node_js
 node_js:
   - "0.10.40"
 
+cache:
+  directories:
+  - ./node_modules/eslint
+  - ./node_modules/eslint-config-standard
+  - ./node_modules/eslint-config-standard-jsx
+  - ./node_modules/eslint-plugin-standard
+  - ./node_modules/eslint-plugin-promise
+  - ./node_modules/eslint-plugin-react
+  - ./node_modules/redbox-react
+  - ./node_modules/babel-plugin-react-transform
+  - ./node_modules/babel-plugin-transform-decorators
+  - ./node_modules/babel-plugin-transform-decorators-legacy
+  - ./node_modules/babel-preset-decorators-legacy
+  - ./node_modules/babel-preset-es2015
+  - ./node_modules/babel-preset-meteor
+  - ./node_modules/babel-preset-react
+  - ./node_modules/babel-preset-stage-0
+
 # Since sudo isn't possible anymore (for now), meteor can't add a link to itself to /usr/local/bin,
 # so you'll have to add the meteor installation directory to the PATH yourself.
 before_install:
