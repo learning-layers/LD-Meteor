@@ -29,6 +29,6 @@ script:
 
 deploy:
   provider: script
-  script: .deploy/deploy.sh
+  script: .travis/deploy.sh
   on:
   	branch: master
