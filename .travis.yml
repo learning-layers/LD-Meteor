@@ -26,3 +26,6 @@ script:
   - "npm run testall-travis"
   - "meteor reset"
   - "spacejam test-packages --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner"
+
+after_success:
+  - "curl http://139.59.141.146:8080/job/ld_meteor/build?token=XqnvXG0K1at7Ajn"
