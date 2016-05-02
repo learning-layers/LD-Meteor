@@ -26,9 +26,3 @@ script:
   - "npm run testall-travis"
   - "meteor reset"
   - "spacejam test-packages --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner"
-
-deploy:
-  provider: script
-  script: .travis/deploy.sh
-  on:
-  	branch: master
