@@ -1,6 +1,12 @@
 import { Meteor } from 'meteor/meteor'
 import { Logger } from 'meteor/ostrio:logger'
 import { LoggerMongo } from 'meteor/ostrio:loggermongo'
+import { I18N } from 'meteor/ostrio:i18n'
+
+// TODO polish
+if (!global.i18nConfig) {
+  global.i18nConfig = {}
+}
 
 global.log = new Logger()
 let LogMongo = new LoggerMongo(global.log, {
@@ -10,6 +16,10 @@ let LogMongo = new LoggerMongo(global.log, {
   // filter: ['ERROR', 'FATAL', 'WARN'], /* Filters: 'ERROR', 'FATAL', 'WARN', 'DEBUG', 'INFO', 'TRACE', '*' */
   client: false, /* This allows to call, but not execute on Client */
   server: true   /* Calls from client will be executed on Server */
+})
+
+Meteor.startup(function () {
+  global.i18n = new I18N({driver: 'Object', i18n: global.i18nConfig})
 })
 
 if (Meteor.isClient) {
@@ -50,4 +60,7 @@ if (Meteor.isServer) {
   /* Meteor.startup(function () {
     global.log.info('test', 'test', 1)
   }) */
+  /*Meteor.startup(function () {
+    console.log(global.i18n.get('en', 'main.heading'))
+  })*/
 }

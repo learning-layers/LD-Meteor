@@ -66,6 +66,7 @@ meteorhacks:inject-data@2.0.0
 meteorhacks:kadira@2.28.5
 meteorhacks:meteorx@1.4.1
 meteorhacks:picker@1.0.3
+meteorhacks:subs-manager@1.6.4
 minifier-css@1.1.11
 minifier-js@1.1.11
 minimongo@1.0.16
@@ -82,8 +83,12 @@ oauth@1.1.10
 oauth2@1.1.9
 observe-sequence@1.0.11
 ordered-dict@1.0.7
+ostrio:cookies@2.0.2
+ostrio:cstorage@2.0.4
+ostrio:i18n@2.1.6
 ostrio:logger@1.1.1
 ostrio:loggermongo@1.1.1
+ostrio:meteor-root@1.0.3
 practicalmeteor:chai@2.1.0_1
 practicalmeteor:loglevel@1.2.0_2
 practicalmeteor:mocha@2.4.5_2

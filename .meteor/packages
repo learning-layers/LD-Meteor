@@ -47,3 +47,4 @@ accounts-password
 selaias:cookie-consent
 ostrio:logger
 ostrio:loggermongo
+ostrio:i18n
