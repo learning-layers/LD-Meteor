@@ -82,6 +82,8 @@ oauth@1.1.10
 oauth2@1.1.9
 observe-sequence@1.0.11
 ordered-dict@1.0.7
+ostrio:logger@1.1.1
+ostrio:loggermongo@1.1.1
 practicalmeteor:chai@2.1.0_1
 practicalmeteor:loglevel@1.2.0_2
 practicalmeteor:mocha@2.4.5_2
