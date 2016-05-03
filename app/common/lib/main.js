@@ -60,7 +60,7 @@ if (Meteor.isServer) {
   /* Meteor.startup(function () {
     global.log.info('test', 'test', 1)
   }) */
-  /*Meteor.startup(function () {
+  /* Meteor.startup(function () {
     console.log(global.i18n.get('en', 'main.heading'))
   })*/
 }
