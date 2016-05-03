@@ -18,9 +18,12 @@ let LogMongo = new LoggerMongo(global.log, {
   server: true   /* Calls from client will be executed on Server */
 })
 
-Meteor.startup(function () {
-  global.i18n = new I18N({driver: 'Object', i18n: global.i18nConfig})
-})
+// TODO polish
+if (Meteor.isServer) {
+  Meteor.startup(function () {
+    global.i18n = new I18N({driver: 'Object', i18n: global.i18nConfig})
+  })
+}
 
 if (Meteor.isClient) {
   var isProdEnv = global.isProdEnv = function () {
