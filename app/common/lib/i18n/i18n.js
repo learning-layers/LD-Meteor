@@ -1,8 +1,4 @@
-// TODO polish
-if (!global.i18nConfig) {
-  global.i18nConfig = {}
-}
-global.i18nConfig.settings = {
+const settings = {
   en: {
     code: 'en',
     isoCode: 'en-US',
@@ -15,3 +11,5 @@ global.i18nConfig.settings = {
   },
   defaultLocale: 'en'
 }
+
+export default settings

@@ -1,8 +1,10 @@
 // TODO polish
-if (!global.i18nConfig) {
+/* if (!global.i18nConfig) {
   global.i18nConfig = {}
 }
-global.i18nConfig.ru = {
+global.i18nConfig*/
+
+const ru = {
   main: {
     'heading': 'Добро пожаловать в демо i18n',
     'user': {
@@ -16,3 +18,5 @@ global.i18nConfig.ru = {
     }
   }
 }
+
+export default ru

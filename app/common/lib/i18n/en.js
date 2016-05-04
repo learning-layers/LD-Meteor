@@ -1,8 +1,4 @@
-// TODO polish
-if (!global.i18nConfig) {
-  global.i18nConfig = {}
-}
-global.i18nConfig.en = {
+const en = {
   main: {
     heading: 'Welcome to i18n demo',
     user: {
@@ -109,3 +105,5 @@ global.i18nConfig.en = {
     signupsForbidden: 'Signups forbidden'
   }
 }
+
+export default en
