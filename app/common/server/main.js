@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { BrowserPolicy } from 'meteor/browser-policy-common'
 import { JsonRoutes } from 'meteor/simple:json-routes'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
+import { Accounts } from 'meteor/accounts-base'
 
 let isProdEnv = global.isProdEnv
 
