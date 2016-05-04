@@ -48,3 +48,6 @@ selaias:cookie-consent
 ostrio:logger
 ostrio:loggermongo
 ostrio:i18n
+coffeescript
+jparker:crypto-aes
+matb33:collection-hooks
