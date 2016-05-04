@@ -20,9 +20,9 @@ before_install:
   - "npm install -g eslint eslint-config-standard eslint-config-standard-jsx eslint-plugin-standard eslint-plugin-promise eslint-plugin-react"
 
 script:
-  - "npm run lint"
   - "npm run test-travis"
   - "meteor reset"
   - "npm run testall-travis"
   - "meteor reset"
   - "spacejam test-packages --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner"
+  - "npm run lint"
