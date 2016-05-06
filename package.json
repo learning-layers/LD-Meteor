@@ -29,9 +29,13 @@
     "node": "0.10.40"
   },
   "dependencies": {
+    "babel-plugin-transform-decorators": "^6.8.0",
+    "babel-preset-meteor": "^6.6.8",
     "bootstrap-sass": "^3.3.6",
+    "eslint-config-standard": "^5.3.1",
     "hopscotch": "^0.2.5",
     "meteor-node-stubs": "^0.2.3",
+    "npm-check-updates": "^2.6.4",
     "react": "^15.0.2",
     "react-addons-test-utils": "^15.0.2",
     "react-bootstrap": "^0.29.3",
@@ -40,6 +44,7 @@
     "react-mounter": "^1.0.0",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.2",
+    "redbox-react": "^1.2.4",
     "ws": "^1.1.0"
   },
   "devDependencies": {
