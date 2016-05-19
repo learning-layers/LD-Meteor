@@ -6,11 +6,14 @@ import { Template } from 'meteor/templating'
 class MainLayout extends Component {
   componentDidMount () {
     // Use Meteor Blaze to render the consent form
-    this.view = Blaze.render(Template.cookieConsentImply,
+    this.cookieConsentView = Blaze.render(Template.cookieConsentImply,
       ReactDOM.findDOMNode(this.refs.cookieConsentForm))
+    this.statusView = Blaze.render(Template.status,
+      ReactDOM.findDOMNode(this.refs.status))
     setTimeout(function () {
       try {
-        Blaze.remove(this.view)
+        Blaze.remove(this.cookieConsentView)
+        Blaze.remove(this.statusView)
       } catch (e) {
         //
       }
@@ -19,7 +22,8 @@ class MainLayout extends Component {
   componentWillUnmount () {
     // Clean up Blaze view
     try {
-      Blaze.remove(this.view)
+      Blaze.remove(this.cookieConsentView)
+      Blaze.remove(this.statusView)
     } catch (e) {
       //
     }
@@ -27,6 +31,7 @@ class MainLayout extends Component {
   render () {
     return (
       <div>
+        <div ref='status'></div>
         <div ref='cookieConsentForm'></div>
         <header>
           {this.props.header}
