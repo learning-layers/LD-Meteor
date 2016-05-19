@@ -15,7 +15,7 @@ before_install:
   - "curl https://install.meteor.com | /bin/sh"
   - export PATH="$HOME/.meteor:$PATH"
   - meteor --version
-  - "npm install -g spacejam"
+  - "npm install -g spacejam coffee-script"
   - "meteor add dispatch:mocha-phantomjs"
   - "npm install -g eslint eslint-config-standard eslint-config-standard-jsx eslint-plugin-standard eslint-plugin-promise eslint-plugin-react"
 
