@@ -1,0 +1,13 @@
+.status-indicator-base {
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+}
+
+.verified, .online {
+  background-color: lightgreen;
+}
+
+.not-verified, .not-online {
+  background-color: lightsalmon;
+}

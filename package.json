@@ -30,8 +30,10 @@
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
+    "classnames": "^2.2.5",
     "hopscotch": "^0.2.5",
     "meteor-node-stubs": "^0.2.3",
+    "node-uuid": "^1.4.7",
     "react": "^15.0.2",
     "react-addons-test-utils": "^15.0.2",
     "react-bootstrap": "^0.29.3",

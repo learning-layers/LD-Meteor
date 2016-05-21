@@ -1,6 +1,18 @@
 import React, {Component} from 'react'
 import {composeWithTracker} from 'react-komposer'
 import {Meteor} from 'meteor/meteor'
+import classNames from 'classnames'
+
+let getRoleObjects = function (roles, roleCategory) {
+  let roleObjects = []
+  let roleObjectsInfos = roles[roleCategory.name]
+  if (roleObjectsInfos) {
+    roleObjectsInfos.forEach(function (roleObjectsInfo) {
+      roleObjects.push({name: roleObjectsInfo})
+    })
+  }
+  return roleObjects
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('userList')
@@ -14,12 +26,13 @@ class User extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      registeredEmails: []
+      registeredEmails: [],
+      roles: []
     }
   }
 
   componentDidMount () {
-    Meteor.call('getRegisteredEmails', this.props.user._id, function (err, res) {
+    Meteor.call('getRegisteredEmails', this.props.user._id, (err, res) => {
       if (err) {
         //
       }
@@ -29,56 +42,80 @@ class User extends Component {
         })
       }
     })
+    Meteor.call('getRoles', this.props.user._id, (err, res) => {
+      if (err) {
+        //
+      }
+      if (res) {
+        this.setState({
+          roles: res
+        })
+      }
+    })
   }
-
+  resendVerificationEmail (userId) {
+    var result = global.confirm('Do you want to send this user a verification email?')
+    if (result) {
+      Meteor.call('resendUserVerificationMail', userId)
+    }
+  }
   render () {
     const { user } = this.props
     let email = user.profile.email
     if (!email) {
       email = 'No email defined!'
     }
+
     let isVerified = false
     this.state.registeredEmails.forEach(function (registeredEmail) {
       if (registeredEmail.verified) {
         isVerified = true
       }
     })
-    let isVerifiedStyle = {
-      backgroundColor: 'lightgreen',
-      borderRadius: '50%',
-      height: '15px',
-      width: '15px'
-    }
-    let isNotVerifiedStyle = {
-      backgroundColor: 'lightsalmon',
-      borderRadius: '50%',
-      height: '15px',
-      width: '15px'
-    }
+    let verificationClasses = classNames({ 'status-indicator-base': true, verified: isVerified, 'not-verified': !isVerified })
+
     let isOnline = user.status.online
-    return (
-      <tr>
-        <td class='user-id'>{user._id}</td>
-        <td class='user-email'>{email}</td>
-        <td class='user-is-online'>
-          {isOnline ? <div style={isVerifiedStyle}></div> : <div style={isNotVerifiedStyle}></div>}
-        </td>
-        <td class='user-verified'>
-          {isVerified ? <div style={isVerifiedStyle}></div> : <div>
-            <div style={isNotVerifiedStyle}></div>
-            <button class='btn btn-sm btn-default js-send-verification-mail'>Resend verification mail</button>
-          </div>
-          }
-        </td>
-        <td class='user-roles'>
-          <div class='num-of-roles'>
-            <ol>
-            </ol>
-          </div>
-          <button class='btn btn-success js-change-user-roles'>Change</button>
-        </td>
-      </tr>
-    )
+    let onlineStatusClasses = classNames({ 'status-indicator-base': true, online: isOnline, 'not-online': !isOnline })
+
+    let roles = this.state.roles
+    let roleKeys = Object.keys(roles)
+    let roleCategories = []
+    roleKeys.forEach(function (roleKey) {
+      roleCategories.push({name: roleKey})
+    })
+
+    return <tr>
+      <td className='user-id'>{user._id}</td>
+      <td className='user-email'>{email}</td>
+      <td className='user-is-online'>
+        <div className={onlineStatusClasses}></div>
+      </td>
+      <td className='user-verified'>
+        {isVerified ? <div className={verificationClasses}></div> : <div>
+          <div className={verificationClasses}></div>
+          <button className='btn btn-sm btn-default' onClick={() => this.resendVerificationEmail(user._id)}>Resend verification mail</button>
+        </div>
+        }
+      </td>
+      <td className='user-roles'>
+        <div className='num-of-roles'>
+          {roleCategories.length > 0 ? <ol>
+            {roleCategories.map(function (roleCategory) {
+              let permissions = getRoleObjects(roles, roleCategory)
+              return <li key={'roleCategory-' + roleCategory.name}>
+                {roleCategory.name}
+                <ul>
+                  {permissions.map(function (permission) {
+                    return <li key={'permission-' + permission.name}>{permission.name}</li>
+                  })}
+                </ul>
+              </li>
+            })}
+          </ol> : null}
+        </div>
+        <button className='btn btn-success js-change-user-roles'>Change</button>
+      </td>
+    </tr>
   }
 }
 
@@ -87,10 +124,10 @@ class UserManagement extends Component {
     const { users } = this.props
     let isSuperAdmin = true
     return (
-      <div class='container'>
+      <div className='container'>
         <h2>All users:</h2>
-        <div class='table-responsive'>
-          <table class='table table-striped table-bordered table-hover'>
+        <div className='table-responsive'>
+          <table className='table table-striped table-bordered table-hover'>
             <thead>
             {isSuperAdmin ? <tr>
               <th>userId</th>
@@ -106,7 +143,7 @@ class UserManagement extends Component {
             </thead>
             <tbody>
             {users.map((user) => {
-              return <User user={user} />
+              return <User key={'user-' + user._id} user={user} />
             })}
             </tbody>
           </table>
