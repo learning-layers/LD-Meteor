@@ -13,8 +13,8 @@ class Admin extends Component {
     return (
       <div className='ld-admin'>
         <ul>
-          <li><a>User Management</a></li>
-          <li><a>Logging</a></li>
+          <li><a href='/userManagement'>User Management</a></li>
+          <li><a href='/logging'>Logging</a></li>
         </ul>
       </div>
     )

@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import {composeWithTracker} from 'react-komposer'
 import {Meteor} from 'meteor/meteor'
 import classNames from 'classnames'
+import ChangeUserRolesModal from './ChangeUserRolesModal'
+import { getReactKomposerInstance } from '../../../../common/lib/utils'
 
 let getRoleObjects = function (roles, roleCategory) {
   let roleObjects = []
@@ -27,7 +30,8 @@ class User extends Component {
     super(props)
     this.state = {
       registeredEmails: [],
-      roles: []
+      roles: [],
+      openChangeUserRolesModal: null
     }
   }
 
@@ -53,10 +57,24 @@ class User extends Component {
       }
     })
   }
+  componentWillUnmount () {
+    let renderToElement = this.refs.changeRolesModal
+    if (this.state.openChangeUserRolesModal !== null) {
+      ReactDOM.unmountComponentAtNode(renderToElement)
+    }
+  }
   resendVerificationEmail (userId) {
     var result = global.confirm('Do you want to send this user a verification email?')
     if (result) {
       Meteor.call('resendUserVerificationMail', userId)
+    }
+  }
+  openChangeUserRolesModal () {
+    let renderToElement = this.refs.changeRolesModal
+    if (!this.state.openChangeUserRolesModal) {
+      this.state.openChangeUserRolesModal = ReactDOM.render(<ChangeUserRolesModal />, renderToElement)
+    } else {
+      getReactKomposerInstance(this.state.openChangeUserRolesModal).open()
     }
   }
   render () {
@@ -113,7 +131,8 @@ class User extends Component {
             })}
           </ol> : null}
         </div>
-        <button className='btn btn-success js-change-user-roles'>Change</button>
+        <div ref='changeRolesModal'></div>
+        <button className='btn btn-success' onClick={() => this.openChangeUserRolesModal()}>Change</button>
       </td>
     </tr>
   }
@@ -142,9 +161,9 @@ class UserManagement extends Component {
             </tr>}
             </thead>
             <tbody>
-            {users.map((user) => {
-              return <User key={'user-' + user._id} user={user} />
-            })}
+              {users.map((user) => {
+                return <User key={'user-' + user._id} user={user} />
+              })}
             </tbody>
           </table>
         </div>
