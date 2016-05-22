@@ -4,7 +4,7 @@ accounts-google@1.0.9
 accounts-oauth@1.1.12
 accounts-password@1.1.8
 alanning:roles@1.2.15
-aldeed:simple-schema@1.3.3
+aldeed:simple-schema@1.5.3
 allow-deny@1.0.4
 anti:i18n@0.4.3
 aur0r:accounts-learninglayers@0.0.8
@@ -71,11 +71,12 @@ livedata@1.0.18
 localstorage@1.0.9
 logging@1.0.12
 matb33:collection-hooks@0.8.1
+mdg:validation-error@0.5.1
 meteor@1.1.14
 meteor-base@1.0.4
 meteorhacks:fast-render@2.14.0
 meteorhacks:inject-data@2.0.0
-meteorhacks:kadira@2.28.5
+meteorhacks:kadira@2.28.7
 meteorhacks:meteorx@1.4.1
 meteorhacks:picker@1.0.3
 meteorhacks:subs-manager@1.6.4
@@ -83,7 +84,7 @@ meteorspark:util@0.2.0
 minifier-css@1.1.11
 minifier-js@1.1.11
 minimongo@1.0.16
-mizzao:timesync@0.3.4
+mizzao:timesync@0.4.0
 mizzao:user-status@0.6.6
 mobile-experience@1.0.4
 mobile-status-bar@1.0.12
@@ -101,8 +102,8 @@ ordered-dict@1.0.7
 ostrio:cookies@2.0.2
 ostrio:cstorage@2.0.4
 ostrio:i18n@2.1.6
-ostrio:logger@1.1.1
-ostrio:loggermongo@1.1.1
+ostrio:logger@1.1.2
+ostrio:loggermongo@1.1.2
 ostrio:meteor-root@1.0.3
 peerlibrary:assert@0.2.5
 peerlibrary:fiber-utils@0.6.0
@@ -137,7 +138,7 @@ splendido:accounts-meld@1.3.1
 srp@1.0.8
 standard-minifier-js@1.0.6
 stylus@2.511.5
-tap:i18n@1.6.1
+tap:i18n@1.8.0
 templating@1.1.9
 templating-tools@1.0.4
 tmeasday:test-reporter-helpers@0.2.1
