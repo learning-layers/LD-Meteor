@@ -6,7 +6,7 @@ Meteor.methods({
     console.log('trying to insert test items')
     let itemCount = InfiniteScrollItems.find({}).count()
     console.log('test items in db: ' + itemCount)
-    if (itemCount < 1000) {
+    if (itemCount < 1000 && Meteor.isServer) {
       console.log('inserting test items')
       for (var i = 0; i < 20000; i++) {
         InfiniteScrollItems.insert({ name: i })

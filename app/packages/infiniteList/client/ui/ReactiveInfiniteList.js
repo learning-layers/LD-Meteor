@@ -2,11 +2,27 @@ import React, {Component} from 'react'
 import Infinite from 'react-infinite'
 import { Meteor } from 'meteor/meteor'
 import { InfiniteScrollItems } from '../../lib/collections'
+import {composeWithTracker} from 'react-komposer'
+import { SubsManager } from 'meteor/meteorhacks:subs-manager'
+import { Session } from 'meteor/session'
+
+let InfiniteScrollItemsSubs = new SubsManager()
+let initialLimit = 20
+Session.setDefault('initialLimit', initialLimit)
+
+function onPropsChange (props, onData) {
+  let handle = InfiniteScrollItemsSubs.subscribe('reactiveInfiniteItems', {itemId: 'test', limit: initialLimit})
+  if (handle.ready()) {
+    let elements = InfiniteScrollItems.find({}, { limit: Session.get('initialLimit') }).fetch()
+    onData(null, {elements})
+  }
+  return () => { Session.set('initialLimit', 20) }
+}
 
 class ListItem extends Component {
   render () {
     return <div className='infinite-list-item'>
-      List Item {this.props.count}
+      List Item {this.props.name} - {this.props.count}
     </div>
   }
 }
@@ -14,7 +30,7 @@ class ListItem extends Component {
 let buildElements = function (items) {
   var elements = []
   items.forEach(function (item) {
-    elements.push(<ListItem key={'list-item-' + item._id} count={item._id} />)
+    elements.push(<ListItem key={'list-item-' + item._id} count={item._id} name={item.name} />)
   })
   return elements
 }
@@ -22,13 +38,8 @@ let buildElements = function (items) {
 class ReactiveInfiniteList extends Component {
   constructor (props) {
     super(props)
-    Meteor.call('insertInfiniteScrollTestData')
-    let initialLimit = 20
-    let initialItems = InfiniteScrollItems.find({}, { limit: initialLimit }).fetch()
-    console.debug(initialItems)
+    console.debug('constructor')
     this.state = {
-      limit: initialLimit,
-      elements: buildElements(initialItems),
       isInfiniteLoading: false
     }
   }
@@ -37,15 +48,17 @@ class ReactiveInfiniteList extends Component {
       isInfiniteLoading: true
     })
     setTimeout(() => {
-      let elemLength = this.state.elements.length
-      Meteor.call('getItems', elemLength, 100, (err, newElements) => {
+      let elemLength = this.props.elements.length
+      Session.set('initialLimit', elemLength + 100)
+      Meteor.call('setArgs', {itemId: 'test', limit: elemLength + 100}, (err, res) => {
         if (err) {
           //
         }
-        this.setState({
-          isInfiniteLoading: false,
-          elements: this.state.elements.concat(buildElements(newElements))
-        })
+        if (res) {
+          this.setState({
+            isInfiniteLoading: false
+          })
+        }
       })
     }, 400)
   }
@@ -64,11 +77,11 @@ class ReactiveInfiniteList extends Component {
           loadingSpinnerDelegate={this.elementInfiniteLoad()}
           isInfiniteLoading={this.state.isInfiniteLoading}
           infiniteLoadBeginEdgeOffset={20}>
-          {this.state.elements}
+          {buildElements(this.props.elements)}
         </Infinite>
       </div>
     )
   }
 }
 
-export default ReactiveInfiniteList
+export default composeWithTracker(onPropsChange)(ReactiveInfiniteList)
