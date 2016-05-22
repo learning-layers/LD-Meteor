@@ -4,6 +4,14 @@ import { ServiceConfiguration } from 'meteor/service-configuration'
 import { Roles } from 'meteor/alanning:roles'
 import { _ } from 'meteor/underscore'
 
+Accounts.validateLoginAttempt(function (attempt) {
+  if (Roles.userIsInRole(attempt.user._id, ['inactive'])) {
+    attempt.allowed = false
+    throw new Meteor.Error(403, 'User account is inactive!')
+  }
+  return true
+})
+
 let meldAccounts = function (userId) {
   let currentUser = Meteor.users.findOne({'_id': userId})
   if (!currentUser.emails || !currentUser.emails[0]) {
