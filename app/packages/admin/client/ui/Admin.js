@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
+import InfiniteList from '../../../infiniteList/client/ui/InfiniteList'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -16,6 +17,7 @@ class Admin extends Component {
           <li><a href='/userManagement'>User Management</a></li>
           <li><a href='/logging'>Logging</a></li>
         </ul>
+        <InfiniteList />
       </div>
     )
   }

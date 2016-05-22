@@ -11,3 +11,31 @@
 .not-verified, .not-online {
   background-color: lightsalmon;
 }
+
+.change-user-roles-modal {
+  .modal-dialog {
+    width: 95%;
+  }
+}
+
+.infinite-example {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: auto;
+  margin-bottom: 20px;
+  width: 300px;
+  height: 250px;
+}
+.infinite-list-item {
+  text-align: center;
+  width: 100%;
+  margin: auto;
+  vertical-align: bottom;
+  height: 40px;
+}
+.infinite-list-item {
+  border-bottom: 1px solid #ddd;
+}
+.infinite-list-item:last-child span {
+  border-bottom: 0;
+}

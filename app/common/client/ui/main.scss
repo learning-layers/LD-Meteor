@@ -21,5 +21,9 @@ Fixes for ian:accounts-ui-bootstrap-3
   bottom: 0;
 }
 
+.modal-content {
+  border-radius: 0!important;
+}
+
 @import "../../../packages/helpCenter/client/ui/_help_center";
 @import "../../../packages/admin/client/ui/_userManagement";

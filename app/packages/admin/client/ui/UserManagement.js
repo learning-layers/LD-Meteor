@@ -69,10 +69,10 @@ class User extends Component {
       Meteor.call('resendUserVerificationMail', userId)
     }
   }
-  openChangeUserRolesModal () {
+  openChangeUserRolesModal (userId) {
     let renderToElement = this.refs.changeRolesModal
     if (!this.state.openChangeUserRolesModal) {
-      this.state.openChangeUserRolesModal = ReactDOM.render(<ChangeUserRolesModal />, renderToElement)
+      this.state.openChangeUserRolesModal = ReactDOM.render(<ChangeUserRolesModal userId={userId} />, renderToElement)
     } else {
       getReactKomposerInstance(this.state.openChangeUserRolesModal).open()
     }
@@ -132,7 +132,7 @@ class User extends Component {
           </ol> : null}
         </div>
         <div ref='changeRolesModal'></div>
-        <button className='btn btn-success' onClick={() => this.openChangeUserRolesModal()}>Change</button>
+        <button className='btn btn-success' onClick={() => this.openChangeUserRolesModal(user._id)}>Change</button>
       </td>
     </tr>
   }

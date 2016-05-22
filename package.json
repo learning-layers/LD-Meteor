@@ -38,6 +38,7 @@
     "react-addons-test-utils": "^15.0.2",
     "react-bootstrap": "^0.29.3",
     "react-dom": "^15.0.2",
+    "react-infinite": "^0.9.2",
     "react-komposer": "^1.8.0",
     "react-mounter": "^1.0.0",
     "react-transform-catch-errors": "^1.0.2",
