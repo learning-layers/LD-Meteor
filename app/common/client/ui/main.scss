@@ -25,5 +25,9 @@ Fixes for ian:accounts-ui-bootstrap-3
   border-radius: 0!important;
 }
 
+html, body, #react-root, [data-reactroot], main {
+  height: 100%;
+}
+
 @import "../../../packages/helpCenter/client/ui/_help_center";
 @import "../../../packages/admin/client/ui/_userManagement";

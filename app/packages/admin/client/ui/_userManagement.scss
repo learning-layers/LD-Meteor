@@ -18,13 +18,17 @@
   }
 }
 
+.ld-admin {
+  height: 100%
+}
+
 .infinite-example {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin: auto;
   margin-bottom: 20px;
-  width: 300px;
-  height: 250px;
+  width: 100%;
+  height: 30%;
 }
 .infinite-list-item {
   text-align: center;
