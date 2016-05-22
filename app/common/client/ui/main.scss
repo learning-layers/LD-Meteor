@@ -29,5 +29,9 @@ html, body, #react-root, [data-reactroot], main {
   height: 100%;
 }
 
+main {
+  height: calc(100% - 70px);
+}
+
 @import "../../../packages/helpCenter/client/ui/_help_center";
 @import "../../../packages/admin/client/ui/_userManagement";
