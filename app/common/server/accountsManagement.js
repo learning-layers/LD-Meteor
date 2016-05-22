@@ -12,6 +12,9 @@ Accounts.validateLoginAttempt(function (attempt) {
   return true
 })
 
+// TODO add method to forcibly logout users
+// @see http://stackoverflow.com/questions/20515989/how-can-i-log-out-a-user-from-the-server-in-meteor-js
+
 let meldAccounts = function (userId) {
   let currentUser = Meteor.users.findOne({'_id': userId})
   if (!currentUser.emails || !currentUser.emails[0]) {
