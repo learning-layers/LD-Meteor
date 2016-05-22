@@ -36,6 +36,9 @@
   margin: auto;
   vertical-align: bottom;
   height: 40px;
+  &.expanded {
+    height: 100px;
+  }
 }
 .infinite-list-item {
   border-bottom: 1px solid #ddd;

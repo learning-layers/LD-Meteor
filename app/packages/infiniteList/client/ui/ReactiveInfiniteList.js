@@ -6,6 +6,7 @@ import { InfiniteScrollItems } from '../../lib/collections'
 import {composeWithTracker} from 'react-komposer'
 import { SubsManager } from 'meteor/meteorhacks:subs-manager'
 import { Session } from 'meteor/session'
+import classNames from 'classnames'
 
 let InfiniteScrollItemsSubs = new SubsManager()
 let initialLimit = 20
@@ -22,18 +23,35 @@ function onPropsChange (props, onData) {
 
 class ListItem extends Component {
   render () {
-    return <div className='infinite-list-item'>
+    let listItemClasses = classNames({'infinite-list-item': true, expanded: this.props.expanded})
+    return <div className={listItemClasses}>
       List Item {this.props.name} - {this.props.count}
     </div>
   }
 }
 
-let buildElements = function (items) {
+let buildElements = function (items, expandedItems) {
   var elements = []
   items.forEach(function (item) {
-    elements.push(<ListItem key={'list-item-' + item._id} count={item._id} name={item.name} />)
+    if (expandedItems.indexOf(item.name) !== -1) {
+      elements.push(<ListItem key={'list-item-' + item._id} count={item._id} name={item.name} expanded />)
+    } else {
+      elements.push(<ListItem key={'list-item-' + item._id} count={item._id} name={item.name} expanded={false} />)
+    }
   })
   return elements
+}
+
+let buildElementHeights = function (items, expandedItems) {
+  var elementHeights = []
+  items.forEach(function (item) {
+    if (expandedItems.indexOf(item.name) !== -1) {
+      elementHeights.push(100)
+    } else {
+      elementHeights.push(40)
+    }
+  })
+  return elementHeights
 }
 
 class ReactiveInfiniteList extends Component {
@@ -45,7 +63,8 @@ class ReactiveInfiniteList extends Component {
     this.state = {
       isInfiniteLoading: false,
       gotDimenstions: false,
-      offsetHeight: -1
+      offsetHeight: -1,
+      expandedItems: [200]
     }
   }
   componentDidMount () {
@@ -90,14 +109,14 @@ class ReactiveInfiniteList extends Component {
   render () {
     return (
       <div className='infinite-example' ref='wrapper'>
-        {this.state.gotDimenstions ? <Infinite elementHeight={40}
+        {this.state.gotDimenstions ? <Infinite elementHeight={buildElementHeights(this.props.elements, this.state.expandedItems)}
           containerHeight={this.state.offsetHeight}
           infiniteLoadingBeginBottomOffset={200}
           onInfiniteLoad={() => this.handleInfiniteLoad()}
           loadingSpinnerDelegate={this.elementInfiniteLoad()}
           isInfiniteLoading={this.state.isInfiniteLoading}
           infiniteLoadBeginEdgeOffset={20}>
-          {buildElements(this.props.elements)}
+          {buildElements(this.props.elements, this.state.expandedItems)}
         </Infinite> : this.elementInfiniteLoad()}
       </div>
     )
