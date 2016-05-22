@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import Infinite from 'react-infinite'
+import { Meteor } from 'meteor/meteor'
+import { InfiniteScrollItems } from '../../lib/collections'
 
 class ListItem extends Component {
   render () {
@@ -9,19 +11,24 @@ class ListItem extends Component {
   }
 }
 
-let buildElements = function (start, end) {
+let buildElements = function (items) {
   var elements = []
-  for (var i = start; i < end; i++) {
-    elements.push(<ListItem key={'list-item-' + i} count={i} />)
-  }
+  items.forEach(function (item) {
+    elements.push(<ListItem key={'list-item-' + item._id} count={item._id} />)
+  })
   return elements
 }
 
 class InfiniteList extends Component {
   constructor (props) {
     super(props)
+    Meteor.call('insertInfiniteScrollTestData')
+    let initialLimit = 20
+    let initialItems = InfiniteScrollItems.find({}, { limit: initialLimit }).fetch()
+    console.debug(initialItems)
     this.state = {
-      elements: buildElements(0, 20),
+      limit: initialLimit,
+      elements: buildElements(initialItems),
       isInfiniteLoading: false
     }
   }
@@ -31,10 +38,14 @@ class InfiniteList extends Component {
     })
     setTimeout(() => {
       let elemLength = this.state.elements.length
-      let newElements = buildElements(elemLength, elemLength + 100)
-      this.setState({
-        isInfiniteLoading: false,
-        elements: this.state.elements.concat(newElements)
+      Meteor.call('getItems', elemLength, 100, (err, newElements) => {
+        if (err) {
+          //
+        }
+        this.setState({
+          isInfiniteLoading: false,
+          elements: this.state.elements.concat(buildElements(newElements))
+        })
       })
     }, 400)
   }
