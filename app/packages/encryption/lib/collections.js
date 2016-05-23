@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor'
 // TODO fix package loading if possible
 // import { CryptoJS } from 'meteor/jparker:crypto-aes'
 
-let _Tests = new Mongo.Collection('tests', {
+export const Tests = new Mongo.Collection('tests', {
   transform: function (doc) {
     if (Meteor.isClient) {
       if (doc._encrypted) {
@@ -15,6 +15,3 @@ let _Tests = new Mongo.Collection('tests', {
     return doc
   }
 })
-global.Tests = _Tests
-
-export const Tests = _Tests
