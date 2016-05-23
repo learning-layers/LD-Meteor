@@ -36,6 +36,10 @@ class EncryptionTest extends Component {
         <button className='btn btn-success' onClick={() => this.addNewTestItem()}>Add new encrypted test item</button>
         {tests.length > 0 ? <ul className='ld-testlist'>
             {tests.map(function (test) {
+              console.log(test)
+              if (test.valid === false) {
+                return null // filter out invalid items
+              }
               return <li key={'test-' + test._id}>
                 {test.data}
               </li>

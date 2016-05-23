@@ -1,6 +1,4 @@
 import { Meteor } from 'meteor/meteor'
-import { SimpleSchema } from 'meteor/aldeed:simple-schema'
-import { Match } from 'meteor/check'
 
 if (Meteor.isClient) {
   var isProdEnv = global.isProdEnv = function () {
@@ -22,7 +20,3 @@ if (Meteor.isServer) {
     return process.env.NODE_ENV === 'production'
   }
 }
-
-SimpleSchema.extendOptions({
-  placeholder: Match.Optional(String)
-})
