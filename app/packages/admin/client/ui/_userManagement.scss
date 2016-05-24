@@ -4,11 +4,11 @@
   width: 15px;
 }
 
-.verified, .online {
+.verified, .online, .role-active {
   background-color: lightgreen;
 }
 
-.not-verified, .not-online {
+.not-verified, .not-online, .not-role-active {
   background-color: lightsalmon;
 }
 

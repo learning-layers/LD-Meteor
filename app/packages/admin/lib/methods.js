@@ -35,5 +35,35 @@ Meteor.methods({
         }
       }
     }
+  },
+  activateUserRole: function (userId, userRole) {
+    if (this.userId && Roles.userIsInRole(this.userId, 'super-admin', Roles.GLOBAL_GROUP)) {
+      let user = Meteor.users.findOne({'_id': userId})
+      if (user) {
+        switch (userRole) {
+          case 'help-admin-group.help-admin':
+            Roles.addUsersToRoles(user._id, 'help-admin', 'help-admin-group')
+            break
+          case 'log-admin-group.log-admin':
+            Roles.addUsersToRoles(user._id, 'log-admin', 'log-admin-group')
+            break
+        }
+      }
+    }
+  },
+  deactivateUserRole: function (userId, userRole) {
+    if (this.userId && Roles.userIsInRole(this.userId, 'super-admin', Roles.GLOBAL_GROUP)) {
+      let user = Meteor.users.findOne({'_id': userId})
+      if (user) {
+        switch (userRole) {
+          case 'help-admin-group.help-admin':
+            Roles.removeUsersFromRoles(user._id, 'help-admin', 'help-admin-group')
+            break
+          case 'log-admin-group.log-admin':
+            Roles.removeUsersFromRoles(user._id, 'log-admin', 'log-admin-group')
+            break
+        }
+      }
+    }
   }
 })
