@@ -23,9 +23,9 @@ class AvailableRole extends Component {
 class CoveredRole extends Component {
   toggleRole () {
     if (this.props.covered) {
-      Meteor.call('deactivateUserRole', this.props.userId, this.props.internalName);
+      Meteor.call('deactivateUserRole', this.props.userId, this.props.internalName)
     } else {
-      Meteor.call('activateUserRole', this.props.userId, this.props.internalName);
+      Meteor.call('activateUserRole', this.props.userId, this.props.internalName)
     }
   }
   render () {
