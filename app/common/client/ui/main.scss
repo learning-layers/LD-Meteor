@@ -33,5 +33,9 @@ main {
   height: calc(100% - 70px);
 }
 
+.highlighted {
+  background-color: yellow;
+}
+
 @import "../../../packages/helpCenter/client/ui/_help_center";
 @import "../../../packages/admin/client/ui/_userManagement";
