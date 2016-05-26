@@ -42,7 +42,7 @@ class Search extends Component {
   handleSearchInputChange (event) {
     console.log('searchInputChange')
     let searchString = ReactDom.findDOMNode(event.target).value
-    searchString = searchString.replace(/s\b/ig, '')
+    searchString = searchString.replace(/\u0061\b/ig, '')
     Session.set('search', searchString)
   }
   render () {
