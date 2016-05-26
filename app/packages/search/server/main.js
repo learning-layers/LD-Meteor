@@ -1,5 +1,36 @@
 import { Meteor } from 'meteor/meteor'
 import { SearchItems } from '../lib/collections'
+import { MongoInternals } from 'meteor/mongo'
+
+let db = null
+Meteor.startup(function () {
+  var url = process.env.MONGO_URL
+  var remoteConnection = new MongoInternals.RemoteCollectionDriver(url, {db: {safe: true}})
+  db = remoteConnection.mongo.db
+  db.collectionNames(function (err, items) {
+    if (err) {
+      throw err
+    }
+    console.log(items)
+    db.close()
+  })
+  function exitHandler (options, err) {
+    if (options.cleanup) {
+      db.close()
+      console.log('clean')
+    }
+    /* if (err) { TODO move to logging
+      console.log(err.stack)
+    }*/
+    if (options.exit) {
+      db.close()
+      process.exit()
+    }
+  }
+  process.on('exit', exitHandler.bind(null, {cleanup: true}))
+  process.on('SIGINT', exitHandler.bind(null, {exit: true}))
+  // process.on('uncaughtException', exitHandler.bind(null, {exit: true})) // TODO move to logging
+})
 
 Meteor.startup(function () {
   if (SearchItems.find({}).count() < 9) {
@@ -38,6 +69,57 @@ Meteor.publish('search', function (args) {
   if (args.search === '') {
     return SearchItems.find({})
   } else {
-    return SearchItems.find({$text: { $search: args.search, $language: args.language }})
+    return SearchItems.find({$text: { $search: args.search, $language: args.language }}, {score: {$meta: 'textScore'}}, {sort: 'textScore', limit: 100})
   }
+})
+
+// TODO move to mongodb mapReduce
+let map = function (doc) {
+  let substrings = doc.text.split(' ')
+  let docIds = []
+  for (let i = 0; i < substrings.length; i++) {
+    let currentSubstring = substrings[i]
+    let lastChar = currentSubstring.charAt(currentSubstring.length - 1)
+    if (lastChar === ',' || lastChar === '.') {
+      currentSubstring = currentSubstring.substring(0, currentSubstring.length - 1)
+    }
+    if (currentSubstring.length > 3) {
+      docIds.push({ docId: doc._id, searchTerm: currentSubstring, count: 1 })
+    }
+  }
+  return docIds
+}
+
+let reduce = function (key, count, docId, sum) {
+  if (sum[key] === undefined) {
+    sum[key] = {count: 1, docIds: [docId]}
+  } else {
+    let sumItem = sum[key]
+    sumItem.count += count
+    sumItem.docIds.push(docId)
+  }
+  return sum
+}
+
+Meteor.publish('searchAutocomplete', function () {
+  let docs = SearchItems.find({}).fetch()
+  let foundOccurences = []
+  docs.forEach(function (doc) {
+    foundOccurences = foundOccurences.concat(map(doc))
+  })
+  let sum = []
+  foundOccurences.forEach(function (foundOccurence) {
+    sum = reduce(foundOccurence.searchTerm, foundOccurence.count, foundOccurence.docId, sum)
+  })
+  // console.log('map=')
+  // console.log(foundOccurences)
+  // console.log('reduce=')
+  let sumKeys = Object.keys(sum)
+  sumKeys.forEach(function (sumKey) {
+    let currentItem = sum[sumKey]
+    if (currentItem.count > 1) {
+      console.log({word: sumKey, currentItem})
+    }
+  })
+  return []
 })

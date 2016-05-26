@@ -9,7 +9,8 @@ Session.setDefault('search', '')
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('search', {search: Session.get('search'), language: 'de'})
-  if (handle.ready()) {
+  let handle2 = Meteor.subscribe('searchAutocomplete')
+  if (handle.ready() && handle2.ready()) {
     let searchItems = SearchItems.find({}).fetch()
     onData(null, {searchItems})
   }
