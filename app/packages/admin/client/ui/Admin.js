@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
-import ReactiveInfiniteList from '../../../infiniteList/client/ui/ReactiveInfiniteList'
+import Chat from '../../../infiniteList/client/ui/Chat'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -17,7 +17,7 @@ class Admin extends Component {
           <li><a href='/userManagement'>User Management</a></li>
           <li><a href='/logging'>Logging</a></li>
         </ul>
-        <ReactiveInfiniteList />
+        <Chat />
       </div>
     )
   }

@@ -22,7 +22,7 @@ let buildElements = function (items) {
 class InfiniteList extends Component {
   constructor (props) {
     super(props)
-    Meteor.call('insertInfiniteScrollTestData')
+    // Meteor.call('insertInfiniteScrollTestData')
     let initialLimit = 20
     let initialItems = InfiniteScrollItems.find({}, { limit: initialLimit }).fetch()
     console.debug(initialItems)
