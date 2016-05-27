@@ -7,13 +7,13 @@ Meteor.startup(function () {
   var url = process.env.MONGO_URL
   var remoteConnection = new MongoInternals.RemoteCollectionDriver(url, {db: {safe: true}})
   db = remoteConnection.mongo.db
-  db.collectionNames(function (err, items) {
+  /* db.collectionNames(function (err, items) {
     if (err) {
       throw err
     }
     console.log(items)
     db.close()
-  })
+  })*/
   function exitHandler (options, err) {
     if (options.cleanup) {
       db.close()

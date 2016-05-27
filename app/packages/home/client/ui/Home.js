@@ -11,7 +11,7 @@ class Home extends Component {
   render () {
     const {user} = this.props
     return (
-      <div className='ld-home'>
+      <div className='ld-home container-fluid'>
         Home
         {user && user.profile ? user.profile.name : null}
       </div>
