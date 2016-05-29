@@ -1,0 +1,36 @@
+.ld-sidebar {
+  overflow: visible!important;
+}
+.ld-sidebar-content {
+  width: 305px;
+  ul.nav {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  #login-dropdown-list {
+    width: auto;
+    display: inline-block;
+    float: left;
+    height: 68px;
+    .dropdown-toggle {
+      padding-top: 16px;
+      padding-bottom: 33px;
+      word-break: break-all;
+      width: 170px;
+    }
+    .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
+  }
+  .sidebar-avatar {
+    height: 48px;
+    width: 48px;
+  }
+  .sidebar-logout {
+    a {
+      height: 68px;
+      font-size: 25px;
+      padding-top: 20px;
+    }
+  }
+}
