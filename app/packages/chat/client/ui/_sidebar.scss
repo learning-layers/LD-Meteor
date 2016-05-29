@@ -32,6 +32,7 @@
       height: 68px;
       font-size: 25px;
       padding-top: 20px;
+      color: #d9534f;
     }
   }
 }
@@ -67,11 +68,37 @@
     padding: 7px;
     .form-control {
       display: inline-block;
-      width: 160px;
+      width: 156px;
       margin-left: 10px;
     }
   }
   hr.no-margin {
     margin: 0;
+  }
+  .friend-container {
+    padding: 7px;
+    .collapse-btn {
+      display: inline-block;
+      background-color: #337ab7;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      padding: 6px;
+      color: white;
+    }
+    .dropdown-basic-filter {
+      box-shadow: none;
+      background-color: white;
+      margin-top: -5px;
+      &:hover {
+        background-color: #f0f0f0;
+        color: #333;
+        border-color: #adadad;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+      }
+    }
+    .inner-container {
+      padding: 5px 5px 5px 10px;
+    }
   }
 }

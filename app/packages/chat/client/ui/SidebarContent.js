@@ -32,11 +32,11 @@ class SidebarContent extends Component {
           <Image className='sidebar-avatar' src='https://randomuser.me/api/portraits/thumb/women/2.jpg' circle />
         </NavItem>
         <NavItem className='sidebar-logout' style={{float: 'right'}}>
-          <span className='glyphicon glyphicon-off'></span>
+          <span className='glyphicon glyphicon-off' />
         </NavItem>
       </Nav>
       <div className='clearfix'></div>
-      <Tabs defaultActiveKey={2} id='communication-category-tabs'>
+      <Tabs defaultActiveKey={1} id='communication-category-tabs'>
         <Tab eventKey={1} title='Friendlist'><FriendList /></Tab>
         <Tab eventKey={2} title='Groups'>Tab 2 content</Tab>
         <Tab eventKey={3} title='Notifications' disabled>Tab 3 content</Tab>
