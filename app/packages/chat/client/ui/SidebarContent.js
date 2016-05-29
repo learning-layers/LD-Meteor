@@ -5,6 +5,8 @@ import { Blaze } from 'meteor/blaze'
 import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
 import NavItem from '../../../../../node_modules/react-bootstrap/lib/NavItem'
 import Image from '../../../../../node_modules/react-bootstrap/lib/Image'
+import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
+import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 
 class SidebarContent extends Component {
   componentDidMount () {
@@ -33,6 +35,11 @@ class SidebarContent extends Component {
         </NavItem>
       </Nav>
       <div className='clearfix'></div>
+      <Tabs defaultActiveKey={2} id='communication-category-tabs'>
+        <Tab eventKey={1} title='Friendlist'>Tab 1 content</Tab>
+        <Tab eventKey={2} title='Groups'>Tab 2 content</Tab>
+        <Tab eventKey={3} title='Notifications' disabled>Tab 3 content</Tab>
+      </Tabs>
     </div>
   }
 }
