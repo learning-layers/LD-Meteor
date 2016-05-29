@@ -22,7 +22,8 @@ class LDSidebar extends Component {
     let self = this
     return (
       <div className='ld-sidebar-wrapper'>
-        <Sidebar sidebarClassName='ld-sidebar' pullRight styles={style} sidebar={<SidebarContent onSetSidebarOpen={self.onSetSidebarOpen.bind(self)} />}
+        <Sidebar sidebarClassName='ld-sidebar' pullRight styles={style}
+          sidebar={<SidebarContent open={this.state.sidebarOpen} onSetSidebarOpen={self.onSetSidebarOpen.bind(self)} />}
           open={this.state.sidebarOpen}
           docked={this.state.sidebarDocked}
           onSetOpen={(open) => this.onSetSidebarOpen(open)}>

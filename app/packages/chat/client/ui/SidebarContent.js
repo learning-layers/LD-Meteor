@@ -21,12 +21,9 @@ class SidebarContent extends Component {
   }
   render () {
     return <div className='ld-sidebar-content'>
-      <div style={{backgroundColor: 'black', width: '30px', height: '30px', position: 'fixed', top: '40%'}}
-        onClick={() => {
-          this.props.onSetSidebarOpen(false)
-        }
-      }>
-      </div>
+      {this.props.open ? <div className='close-handle' onClick={() => this.props.onSetSidebarOpen(false)}>
+        <span className='glyphicon glyphicon-chevron-right' />
+      </div> : null}
       <Nav ref='accountsLoginContainer'>
         <NavItem style={{float: 'left', height: '68px', width: '78px'}}>
           <Image className='sidebar-avatar' src='https://randomuser.me/api/portraits/thumb/women/2.jpg' circle />
