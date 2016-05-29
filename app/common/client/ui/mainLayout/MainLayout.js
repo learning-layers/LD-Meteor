@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Blaze } from 'meteor/blaze'
 import { Template } from 'meteor/templating'
-import FriedList from '../../../../packages/chat/client/ui/FriendList'
+import LDSidebar from '../../../../packages/chat/client/ui/Sidebar'
 
 class MainLayout extends Component {
   componentDidMount () {
@@ -41,7 +41,7 @@ class MainLayout extends Component {
           {this.props.content}
           {this.props.helpCenter}
         </main>
-        <FriedList />
+        <LDSidebar />
       </div>
     )
   }

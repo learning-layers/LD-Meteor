@@ -61,3 +61,17 @@
     }
   }
 }
+
+.ld-friendlist {
+  .top-bar {
+    padding: 7px;
+    .form-control {
+      display: inline-block;
+      width: 160px;
+      margin-left: 10px;
+    }
+  }
+  hr.no-margin {
+    margin: 0;
+  }
+}
