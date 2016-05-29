@@ -7,8 +7,8 @@ import FriedList from '../../../../packages/chat/client/ui/FriendList'
 class MainLayout extends Component {
   componentDidMount () {
     // Use Meteor Blaze to render the consent form
-    this.cookieConsentView = Blaze.render(Template.cookieConsentImply,
-      ReactDOM.findDOMNode(this.refs.cookieConsentForm))
+    /* this.cookieConsentView = Blaze.render(Template.cookieConsentImply,
+      ReactDOM.findDOMNode(this.refs.cookieConsentForm))*/
     this.statusView = Blaze.render(Template.status,
       ReactDOM.findDOMNode(this.refs.status))
     setTimeout(function () {
@@ -24,16 +24,16 @@ class MainLayout extends Component {
     // Clean up Blaze view
     try {
       Blaze.remove(this.cookieConsentView)
-      Blaze.remove(this.statusView)
+      // Blaze.remove(this.statusView)
     } catch (e) {
       //
     }
   }
   render () {
+    // <div ref='cookieConsentForm'></div>
     return (
       <div>
         <div ref='status'></div>
-        <div ref='cookieConsentForm'></div>
         <header>
           {this.props.header}
         </header>
