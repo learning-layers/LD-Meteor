@@ -12,6 +12,7 @@ import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
 import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
+import classNames from 'classnames'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -30,9 +31,14 @@ class LDNavbar extends Component {
     Blaze.remove(this.view)
   }
 
+  openSidebar () {
+    global.emitter.emit('sidebar-toggle', true)
+  }
   render () {
+    let loggedIn = Meteor.userId()
+    let navbarClassNames = classNames({'ld-navbar': true, 'logged-in': !!loggedIn})
     return (
-      <div className='ld-navbar'>
+      <div className={navbarClassNames}>
         <Navbar fluid bsStyle='default'>
           <Navbar.Header>
             <Navbar.Brand>
@@ -75,8 +81,12 @@ class LDNavbar extends Component {
               <NavItem eventKey={1} href='#'>
                 Link Right
               </NavItem>
-              <NavItem eventKey={2} href='#'>
-                Link Right
+              <NavItem className='sidebar-nav-item' eventKey={2} href='#' onClick={() => this.openSidebar()}>
+                <button className='sidebar-btn'>
+                  <span className='icon-bar' />
+                  <span className='icon-bar' />
+                  <span className='icon-bar' />
+                </button>
               </NavItem>
             </Nav>
           </Navbar.Collapse>

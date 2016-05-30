@@ -27,7 +27,7 @@ class FriendList extends Component {
         </div> : <div className='collapse-btn closed' onClick={() => this.setState({ open: !this.state.open })}>
           <span className='glyphicon glyphicon-chevron-right' />
         </div>}
-        <DropdownButton bsStyle='default' bsSize='small' title='Online' key='dropdown-basic-filter' className='dropdown-basic-filter'>
+        <DropdownButton id='friend-ddb-1' bsStyle='default' bsSize='small' title='Online' key='dropdown-basic-filter' className='dropdown-basic-filter'>
           <MenuItem eventKey='1'>All</MenuItem>
           <MenuItem eventKey='2' active>Online</MenuItem>
           <MenuItem eventKey='3'>History</MenuItem>

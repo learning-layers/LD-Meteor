@@ -37,6 +37,15 @@ main {
   background-color: yellow;
 }
 
+.ld-navbar.logged-in {
+  #login-dropdown-list {
+    display: none;
+  }
+  li.sidebar-nav-item {
+    display: block!important;
+  }
+}
+
 @import "../../../packages/helpCenter/client/ui/_help_center";
 @import "../../../packages/admin/client/ui/_userManagement";
 @import "../../../packages/infiniteList/client/ui/_chat";
