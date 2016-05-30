@@ -4,10 +4,11 @@ import { Template } from 'meteor/templating'
 import { Blaze } from 'meteor/blaze'
 import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
 import NavItem from '../../../../../node_modules/react-bootstrap/lib/NavItem'
-import Image from '../../../../../node_modules/react-bootstrap/lib/Image'
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import FriendList from './FriendList'
+import { Meteor } from 'meteor/meteor'
+import Avatar from './Avatar'
 
 class SidebarContent extends Component {
   componentDidMount () {
@@ -19,6 +20,9 @@ class SidebarContent extends Component {
     // Clean up Blaze view
     Blaze.remove(this.view)
   }
+  logout () {
+    Meteor.logout()
+  }
   render () {
     return <div className='ld-sidebar-content'>
       {this.props.open ? <div className='close-handle' onClick={() => this.props.onSetSidebarOpen(false)}>
@@ -26,9 +30,9 @@ class SidebarContent extends Component {
       </div> : null}
       <Nav ref='accountsLoginContainer'>
         <NavItem style={{float: 'left', height: '68px', width: '78px'}}>
-          <Image className='sidebar-avatar' src='https://randomuser.me/api/portraits/thumb/women/2.jpg' circle />
+          <Avatar />
         </NavItem>
-        <NavItem className='sidebar-logout' style={{float: 'right'}}>
+        <NavItem className='sidebar-logout' style={{float: 'right'}} onClick={() => this.logout()}>
           <span className='glyphicon glyphicon-off' />
         </NavItem>
       </Nav>

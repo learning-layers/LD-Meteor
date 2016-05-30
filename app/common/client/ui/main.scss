@@ -46,6 +46,19 @@ main {
   }
 }
 
+li.avatar-nav-item {
+  a {
+    padding-top: 2px;
+    padding-right: 7px;
+    padding-bottom: 0;
+  }
+  .avatar-online-status {
+    margin-right: -5px;
+    bottom: 0;
+    right: 0;
+  }
+}
+
 @import "../../../packages/helpCenter/client/ui/_help_center";
 @import "../../../packages/admin/client/ui/_userManagement";
 @import "../../../packages/infiniteList/client/ui/_chat";

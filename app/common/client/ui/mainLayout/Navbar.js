@@ -13,6 +13,7 @@ import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
 import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
 import classNames from 'classnames'
+import Avatar from '../../../../packages/chat/client/ui/Avatar'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -78,9 +79,9 @@ class LDNavbar extends Component {
               </NavItem>
             </Nav>
             <Nav pullRight ref='accountsLoginContainer'>
-              <NavItem eventKey={1} href='#'>
-                Link Right
-              </NavItem>
+              {loggedIn ? <NavItem className='avatar-nav-item' eventKey={1} href='#'>
+                <Avatar />
+              </NavItem> : null}
               <NavItem className='sidebar-nav-item' eventKey={2} href='#' onClick={() => this.openSidebar()}>
                 <button className='sidebar-btn'>
                   <span className='icon-bar' />
