@@ -151,3 +151,20 @@ li.sidebar-nav-item {
     height: 50px;
   }
 }
+
+.sidebar-avatar {
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.avatar-online-status {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  bottom: 5px;
+  right: 2px;
+  border-radius: 50%;
+  color: white;
+  padding: 5px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+  background-color: #5cb85c;
+}
