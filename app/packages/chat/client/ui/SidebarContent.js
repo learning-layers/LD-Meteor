@@ -9,6 +9,7 @@ import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import FriendList from './FriendList'
 import { Meteor } from 'meteor/meteor'
 import Avatar from './Avatar'
+import ChatLineCalculator from '../lib/chatLineCalculator'
 
 class SidebarContent extends Component {
   componentDidMount () {
@@ -24,6 +25,7 @@ class SidebarContent extends Component {
     Meteor.logout()
   }
   render () {
+    let messageObject = new ChatLineCalculator().getChatMessageObject('LabelLabelLabelLabelLabelLabelLabelLabel!HelloWorld')
     return <div className='ld-sidebar-content'>
       {this.props.open ? <div className='close-handle' onClick={() => this.props.onSetSidebarOpen(false)}>
         <span className='glyphicon glyphicon-chevron-right' />
@@ -39,7 +41,12 @@ class SidebarContent extends Component {
       <div className='clearfix'></div>
       <Tabs defaultActiveKey={1} id='communication-category-tabs'>
         <Tab eventKey={1} title='Friendlist'><FriendList /></Tab>
-        <Tab eventKey={2} title='Groups'>Tab 2 content</Tab>
+        <Tab eventKey={2} title='Groups'>
+          Tab 2 content
+          {messageObject.lines.map(function (line) {
+            return <div style={{display: 'block', height: '17px'}}>{line}</div>
+          })}
+        </Tab>
         <Tab eventKey={3} title='Notifications' disabled>Tab 3 content</Tab>
       </Tabs>
     </div>
