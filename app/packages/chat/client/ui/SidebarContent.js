@@ -26,6 +26,10 @@ class SidebarContent extends Component {
   }
   render () {
     let messageObject = new ChatLineCalculator().getChatMessageObject('LabelLabelLabelLabelLabelLabelLabelLabel!HelloWorld')
+    let message = 'OpieOP haha Kappa lel'
+    let emotes = {356: ['0-5'], 25: ['12-16']}
+    let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(message, emotes)
+    console.log(messageWithEmotesObject)
     return <div className='ld-sidebar-content'>
       {this.props.open ? <div className='close-handle' onClick={() => this.props.onSetSidebarOpen(false)}>
         <span className='glyphicon glyphicon-chevron-right' />
@@ -44,6 +48,9 @@ class SidebarContent extends Component {
         <Tab eventKey={2} title='Groups'>
           Tab 2 content
           {messageObject.lines.map(function (line) {
+            return <div style={{display: 'block', height: '17px'}}>{line}</div>
+          })}
+          {messageWithEmotesObject.lines.map(function (line) {
             return <div style={{display: 'block', height: '17px'}}>{line}</div>
           })}
         </Tab>

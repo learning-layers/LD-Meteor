@@ -26,7 +26,6 @@ class CollapsibleFilterContainer extends Component {
     if (this.props.alwaysOpen) {
       this.state.open = true
     }
-    console.log(this.props.children)
     let childrenWithProps = React.Children.map(this.props.children, (child) => {
       if (typeof child !== 'string') {
         return React.cloneElement(child, { activeFilter: this.state.activeFilter })
