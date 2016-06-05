@@ -3,7 +3,7 @@ import React from 'react'
 const characterWidth = 7.313
 const maxLineLength = 300
 const maxCharactersPerLine = Math.floor(300 / 7.313)
-const emoteWidth = 20
+const emoteWidth = 28
 
 class ChatLineCalculator {
   formatEmotes (text, emotes) {
@@ -23,7 +23,7 @@ class ChatLineCalculator {
           // replace the emote string with empty array values to preserve the original indexes
           splitText = splitText.slice(0, mote[0]).concat(empty).concat(splitText.slice(mote[1] + 1, splitText.length))
           // replace the first emote string position with the image that needs to be inserted at this position
-          splitText.splice(mote[0], 1, <img className='emoticon' style={{display: 'inline', height: '28px'}} src={'http://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'} />)
+          splitText.splice(mote[0], 1, <div style={{display: 'inline-block', textAlign: 'center', width: '28px'}}><img className='emoticon' style={{height: '28px'}} src={'http://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'} /></div>)
         }
       }
     }
@@ -44,10 +44,23 @@ class ChatLineCalculator {
         }
         currentLineContent += c
       } else if (c !== '') {
-        console.debug(c)
-        if (currentLineContent !== '') {
-          currentLineContents.push(currentLineContent)
-          currentLineContent = ''
+        if (currentLineLength + emoteWidth > maxLineLength) {
+          if (currentLineContent !== '') {
+            currentLineContents.push(currentLineContent)
+            currentLineContent = ''
+            prevSpacePosition = -1
+            lines.push(currentLineContents)
+            currentLineContents = []
+          }
+          currentLineLength = emoteWidth
+        } else {
+          // console.debug(c)
+          if (currentLineContent !== '') {
+            currentLineContents.push(currentLineContent)
+            currentLineContent = ''
+            prevSpacePosition = -1
+          }
+          currentLineLength += emoteWidth
         }
         currentLineContents.push(c)
       }
