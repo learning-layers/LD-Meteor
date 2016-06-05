@@ -1,3 +1,7 @@
+const characterWidth = 7.313
+const maxLineLength = 300
+const maxCharactersPerLine = Math.floor(300 / 7.313)
+
 class ChatLineCalculator {
   formatEmotes (text, emotes) {
     console.time('Function #2')
@@ -24,15 +28,13 @@ class ChatLineCalculator {
     let currentLineLength = 0
     let lines = []
     let lineHeight = 17
-    let characterWidth = 7.313
-    let maxLineLength = 300
-    let maxCharactersPerLine = Math.floor(300 / 7.313) // TODO move this to constant
     let currentLine = ''
     let prevSpacePosition = -1
     for (let i = 0, len = splitText.length; i < len; i++) {
       let c = splitText[i]
       if (c !== '' && c.length <= 1) {
         currentLineLength += characterWidth
+        // console.debug('currentLineLength' + currentLineLength)
         if (c === ' ') {
           prevSpacePosition = currentLine.length
         }
@@ -46,24 +48,45 @@ class ChatLineCalculator {
         if (i + 1 < len && splitText[i + 1] !== ' ') {
           // get word length and check if it is too long for one line
           let lengthBeforeBreak = maxCharactersPerLine - (prevSpacePosition + 1)
+          console.debug('lengthBeforeBreak=' + lengthBeforeBreak)
           let lengthAfterBreak = 0
-          for (let j = 0; j < len; j++) {
-            if (splitText[j] === ' ') {
-              lengthAfterBreak = j + 1
-              j = len
+          for (let j = prevSpacePosition + lengthBeforeBreak + 1; j < len; j++) {
+            let c = splitText[j]
+            console.debug('c=' + c)
+            if (c === ' ') {
+              j = len + 1
+            } else {
+              lengthAfterBreak++
             }
           }
+          console.debug('lengthAfterBreak=' + lengthAfterBreak)
           let wordLength = lengthBeforeBreak + lengthAfterBreak
-          if (!(wordLength > maxCharactersPerLine)) {
-            // the word is not too long for one line so it makes
-            // sense to move it to the next line
-            let wordBeforeBreak = currentLine.substring(prevSpacePosition + 1, maxCharactersPerLine + 1)
-            let lineToPush = currentLine.substring(0, prevSpacePosition + 1)
-            currentLineLength = wordBeforeBreak.length
+          console.debug('wordLength=' + wordLength)
+          if (wordLength > maxCharactersPerLine) {
+            console.debug('word is TOO long for one line')
+            console.debug('Pushing line with line length=' + currentLineLength + ', value=' + currentLine)
+            currentLineLength = 0
+            lines.push(currentLine)
+            currentLine = ''
+          } else {
+            // console.debug('word is not too long for one line')
+            // The word is not too long for one line so it makes
+            // sense to move it to the next line.
+            // --------------------------------------
+            // Add the line before the break to lines
+            let lineToPush = currentLine.substring(0, prevSpacePosition)
             lines.push(lineToPush)
+            console.debug('Pushing line with line length=' + lineToPush.length + ', value=' + lineToPush)
+            // extract the word before the break
+            let wordBeforeBreak = currentLine.substring(prevSpacePosition + 1, maxCharactersPerLine + 1)
+            console.debug('Moving word=' + wordBeforeBreak + ' to new line')
+            // set the currentLineLength to the word length
+            currentLineLength = wordBeforeBreak.length * characterWidth
+            // set the current line to the word that has been moved to the next line
             currentLine = wordBeforeBreak
           }
         } else {
+          console.debug('Pushing line with line length=' + currentLineLength + ', value=' + currentLine)
           currentLineLength = 0
           lines.push(currentLine)
           currentLine = ''
@@ -71,6 +94,7 @@ class ChatLineCalculator {
       }
     }
     if (currentLine !== '') {
+      console.debug('Pushing line with line length=' + currentLineLength + ', value=' + currentLine)
       lines.push(currentLine)
     }
     let messageHeight = Math.ceil(lines.length * lineHeight)
