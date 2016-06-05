@@ -42,8 +42,18 @@ class ChatLineCalculator {
         // console.debug('currentLineLength' + currentLineLength)
         if (c === ' ') {
           prevSpacePosition = currentLineContent.length
+          currentLineContent += c
+        } else if (c === '\n' || c === '\r\n') {
+          currentLineContents.push(currentLineContent)
+          currentLineContent = ''
+          prevSpacePosition = -1
+          lines.push({ lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons })
+          lineContainsEmoticons = false
+          currentLineContents = []
+          currentLineLength = 0
+        } else {
+          currentLineContent += c
         }
-        currentLineContent += c
       } else if (c !== '') {
         if (currentLineLength + emoteWidth > maxLineLength) {
           if (currentLineContent !== '') {
