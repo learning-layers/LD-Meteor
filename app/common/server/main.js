@@ -62,7 +62,8 @@ Meteor.startup(function () {
     'fonts.gstatic.com',
     'video-js.zencoder.com',
     'vjs.zencdn.net',
-    'randomuser.me'
+    'randomuser.me',
+    'static-cdn.jtvnw.net'
   ]
 
   if (!isProdEnv()) {

@@ -27,8 +27,8 @@ class SidebarContent extends Component {
   render () {
     let messageObject = new ChatLineCalculator().getChatMessageObject('LabelLabelLabelLabelLabelLabelLabelLabel!HelloWorld')
     // let message = 'LabelLabelLabelLabel LabelLabelLabelLabel!HelloWorld' // 'OpieOP haha Kappa lel'
-    let message = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
-    let emotes = {} // 356: ['0-5'], 25: ['12-16']
+    let message = 'OpieOP haha Kappa lel Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
+    let emotes = {356: ['0-5'], 25: ['12-16']}
     let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(message, emotes)
     console.log(messageWithEmotesObject)
     return <div className='ld-sidebar-content'>
@@ -51,8 +51,10 @@ class SidebarContent extends Component {
           {false ? messageObject.lines.map(function (line) {
             return <div style={{display: 'block', height: '17px'}}>{line}</div>
           }) : null}
-          {messageWithEmotesObject.lines.map(function (line) {
-            return <div style={{display: 'block', height: '17px'}}>{line}</div>
+          {messageWithEmotesObject.lines.map(function (line, i) {
+            return <div style={{display: 'block', height: '28px'}} key={'line-' + i}>{line.map(function (lineContent, j) {
+              return <div style={{display: 'inline'}} key={'line-' + i + '-content-' + j}>{lineContent}</div>
+            })}</div>
           })}
         </Tab>
         <Tab eventKey={3} title='Notifications' disabled>Tab 3 content</Tab>
