@@ -34,6 +34,7 @@ class ChatLineCalculator {
     let currentLineContents = []
     let currentLineContent = ''
     let prevSpacePosition = -1
+    let lineContainsEmoticons = false
     for (let i = 0, len = splitText.length; i < len; i++) {
       let c = splitText[i]
       if (c !== '' && c.length <= 1) {
@@ -49,7 +50,8 @@ class ChatLineCalculator {
             currentLineContents.push(currentLineContent)
             currentLineContent = ''
             prevSpacePosition = -1
-            lines.push(currentLineContents)
+            lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+            lineContainsEmoticons = false
             currentLineContents = []
           }
           currentLineLength = emoteWidth
@@ -62,6 +64,7 @@ class ChatLineCalculator {
           }
           currentLineLength += emoteWidth
         }
+        lineContainsEmoticons = true
         currentLineContents.push(c)
       }
       if (currentLineLength + characterWidth > maxLineLength) {
@@ -89,7 +92,8 @@ class ChatLineCalculator {
             // console.debug('Pushing line with line length=' + currentLineLength + ', value=' + currentLine)
             currentLineLength = 0
             currentLineContents.push(currentLineContent)
-            lines.push(currentLineContents)
+            lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+            lineContainsEmoticons = false
             currentLineContents = []
             currentLineContent = ''
           } else {
@@ -100,7 +104,8 @@ class ChatLineCalculator {
             // Add the line before the break to lines
             let lineToPush = currentLineContent.substring(0, prevSpacePosition)
             currentLineContents.push(lineToPush)
-            lines.push(currentLineContents)
+            lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+            lineContainsEmoticons = false
             currentLineContents = []
             // console.debug('Pushing line with line length=' + lineToPush.length + ', value=' + lineToPush)
             // extract the word before the break
@@ -115,7 +120,8 @@ class ChatLineCalculator {
           // console.debug('Pushing line with line length=' + currentLineLength + ', value=' + currentLine)
           currentLineLength = 0
           currentLineContents.push(currentLineContent)
-          lines.push(currentLineContents)
+          lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+          lineContainsEmoticons = false
           currentLineContents = []
           currentLineContent = ''
         }
@@ -124,7 +130,7 @@ class ChatLineCalculator {
     if (currentLineContent !== '') {
       // console.debug('Pushing line with line length=' + currentLineLength + ', value=' + currentLine)
       currentLineContents.push(currentLineContent)
-      lines.push(currentLineContents)
+      lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
     }
     let messageHeight = Math.ceil(lines.length * lineHeight)
     console.timeEnd('Function #2')

@@ -53,7 +53,11 @@ class SidebarContent extends Component {
               return <div style={{display: 'block', height: '17px'}}>{line}</div>
             }) : null}
             {messageWithEmotesObject.lines.map(function (line, i) {
-              return <div style={{display: 'block', height: '28px'}} key={'line-' + i}>{line.map(function (lineContent, j) {
+              let lineHeight = 17
+              if (line.containsEmoticons) {
+                lineHeight = 26
+              }
+              return <div style={{display: 'block', height: lineHeight + 'px', overflow: 'visible'}} key={'line-' + i}>{line.lineContents.map(function (lineContent, j) {
                 return <div style={{display: 'inline'}} key={'line-' + i + '-content-' + j}>{lineContent}</div>
               })}</div>
             })}
