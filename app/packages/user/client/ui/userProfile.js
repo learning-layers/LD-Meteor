@@ -4,6 +4,10 @@ import { Meteor } from 'meteor/meteor'
 import debounce from 'lodash/debounce'
 import { SimpleSchema } from 'meteor/aldeed:simple-schema'
 import { Match } from 'meteor/check'
+import ReactSelectize from 'react-selectize'
+
+const SimpleSelect = ReactSelectize.SimpleSelect
+const MultiSelect = ReactSelectize.MultiSelect
 
 export const UserProfileSchema = new SimpleSchema({
   name: {
@@ -118,6 +122,25 @@ class UserProfile extends Component {
       <div className='ld-user-profile container-fluid'>
         User Profile
         <ValidatedForm schema={UserProfileSchema} />
+        <SimpleSelect
+          placeholder='Select a fruit'
+          onValueChange={function (value) {
+            window.alert(value)
+          }}>
+          <option value='apple'>apple</option>
+          <option value='mango'>mango</option>
+          <option value='orange'>orange</option>
+          <option value='banana'>banana</option>
+        </SimpleSelect>
+        <MultiSelect
+          placeholder='Select fruits'
+          options={['apple', 'mango', 'orange', 'banana'].map(function (fruit) {
+            return {label: fruit, value: fruit}
+          })}
+          onValuesChange={function (values) {
+            window.alert(values)
+          }}
+        />
       </div>
     )
   }
