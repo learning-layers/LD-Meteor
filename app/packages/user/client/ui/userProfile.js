@@ -2,6 +2,25 @@ import React, { Component } from 'react'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import debounce from 'lodash/debounce'
+import { SimpleSchema } from 'meteor/aldeed:simple-schema'
+import { Match } from 'meteor/check'
+
+export const UserProfileSchema = new SimpleSchema({
+  name: {
+    type: String,
+    label: 'name',
+    max: 600,
+    min: 4,
+    placeholder: 'name'
+  },
+  price: {
+    type: String,
+    label: 'price',
+    regEx: /^\$\d+\.\d+$/,
+    placeholder: '$0.00',
+    min: 2
+  }
+})
 
 class ValidatedInput extends Component {
   constructor (props) {
@@ -22,7 +41,7 @@ class ValidatedInput extends Component {
       startValidation()
     } else {
       // wait until the user starts typing, and then stops
-      this.prepareToValidate = debounce(startValidation, 1000);
+      this.prepareToValidate = debounce(startValidation, 1000)
     }
   }
   handleChange (e) {
@@ -48,7 +67,10 @@ class ValidatedInput extends Component {
 class ValidatedForm extends Component {
   constructor (props) {
     super(props)
-    this.state = {value: '', price: ''}
+    this.state = {
+      value: '',
+      price: ''
+    }
   }
   handleChange (e) {
     this.setState({
@@ -62,23 +84,24 @@ class ValidatedForm extends Component {
   }
   validate (state) {
     return {
-      value: state.value.indexOf('react') !== -1,
-      price: /^\$\d+\.\d+$/.test(state.price)
+      name: Match.test({name: state.value}, this.props.schema.pick(['name'])),
+      price: Match.test({price: state.price}, this.props.schema.pick(['price']))
     }
   }
   render () {
     var valid = this.validate(this.state)
+    const {schema} = this.props
     return (
       <div>
-        <ValidatedInput valid={valid.value}
+        <ValidatedInput valid={valid.name}
           className='foobar'
           value={this.state.value}
           onChange={(e) => this.handleChange(e)}
-          placeholder={'something with \'react\''} />
+          placeholder={schema._schema.name.placeholder} />
         <ValidatedInput valid={valid.price}
           value={this.state.price}
           onChange={(e) => this.handlePriceChange(e)}
-          placeholder='$0.00' />
+          placeholder={schema._schema.price.placeholder} />
       </div>
     )
   }
@@ -94,7 +117,7 @@ class UserProfile extends Component {
     return (
       <div className='ld-user-profile container-fluid'>
         User Profile
-        <ValidatedForm />
+        <ValidatedForm schema={UserProfileSchema} />
       </div>
     )
   }
