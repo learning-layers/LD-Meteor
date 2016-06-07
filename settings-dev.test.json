@@ -3,7 +3,8 @@
     "app": {
       "name": "Living Documents",
       "version": "0.0.1"
-    }
+    },
+    "environment": "test"
   },
   "private": {
     "email": {

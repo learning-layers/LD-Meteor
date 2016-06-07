@@ -6,7 +6,8 @@
     "living",
     "documents",
     "meteor",
-    "react"
+    "react",
+    "ssr"
   ],
   "main": "app/common/lib/main.js",
   "scripts": {
@@ -14,8 +15,9 @@
     "prod": "meteor run --production --settings settings-dev.json",
     "test": "meteor test --settings settings-dev.json --driver-package practicalmeteor:mocha --port 3100",
     "testall": "meteor test --settings settings-dev.json --full-app --driver-package practicalmeteor:mocha --port 3101",
-    "test-travis": "meteor test --once --settings settings-dev.test.json --driver-package dispatch:mocha-phantomjs",
-    "testall-travis": "meteor test --once --full-app --settings settings-dev.test.json --driver-package dispatch:mocha-phantomjs",
+    "test-packages": "spacejam test-packages --use-system-phantomjs --settings settings-dev.test.json --driver-package=practicalmeteor:mocha-console-runner",
+    "test-travis": "spacejam test --once --settings settings-dev.test.json --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner",
+    "testall-travis": "spacejam test --once --full-app --settings settings-dev.test.json --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner",
     "test-build": "meteor build /tmp/build --directory && run-build",
     "lint": "eslint ./app/**/*.js"
   },
@@ -26,7 +28,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": "0.10.40"
+    "node": "0.10.45"
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.6",

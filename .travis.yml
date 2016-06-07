@@ -16,7 +16,8 @@ before_install:
   - export PATH="$HOME/.meteor:$PATH"
   - meteor --version
   - "npm install -g spacejam coffee-script"
-  - "meteor add dispatch:mocha-phantomjs"
+  - "meteor add practicalmeteor:mocha-console-runner"
+  - "meteor remove kadira:debug"
   - "npm install -g eslint eslint-config-standard eslint-config-standard-jsx eslint-plugin-standard eslint-plugin-promise eslint-plugin-react"
 
 script:
@@ -24,5 +25,5 @@ script:
   - "meteor reset"
   - "npm run testall-travis"
   - "meteor reset"
-  - "spacejam test-packages --use-system-phantomjs --driver-package=practicalmeteor:mocha-console-runner"
+  - "npm run test-packages"
   - "npm run lint"
