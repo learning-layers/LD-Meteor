@@ -3,6 +3,33 @@ import ReactDOM from 'react-dom'
 import { Blaze } from 'meteor/blaze'
 import { Template } from 'meteor/templating'
 import LDSidebar from '../../../../packages/chat/client/ui/Sidebar'
+import { Meteor } from 'meteor/meteor'
+import {composeWithTracker} from 'react-komposer'
+import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
+
+function onPropsChange (props, onData) {
+  const user = Meteor.user()
+  onData(null, {user})
+}
+
+// TODO change this file to use registered_emails instead of emails to check if the user is verified
+let userEmailIsVerified = function (user) {
+  let isVerified = false
+  user.emails.forEach(function (email) {
+    if (email.verified) {
+      isVerified = true
+    }
+  })
+  return isVerified
+}
+
+let isAllowedToNavigateToThisRoute = function (neededRoles, user) {
+  // check user roles against needed roles
+  return {
+    result: true,
+    rolesMissing: []
+  }
+}
 
 class MainLayout extends Component {
   componentDidMount () {
@@ -31,6 +58,20 @@ class MainLayout extends Component {
   }
   render () {
     // <div ref='cookieConsentForm'></div>
+    let { user, isPublic, requiredRoles, tosNotNeeded } = this.props
+    let isAllowedToEnterRoute
+    if (isPublic) {
+      tosNotNeeded = true
+      isAllowedToEnterRoute = true
+    } else if (user === null) {
+      isAllowedToEnterRoute = false
+    } else {
+      isAllowedToEnterRoute = isAllowedToNavigateToThisRoute(requiredRoles, user).result
+    }
+    let isVerified = false
+    if (user) {
+      isVerified = userEmailIsVerified(user)
+    }
     return (
       <div>
         <div ref='status'></div>
@@ -38,7 +79,7 @@ class MainLayout extends Component {
           {this.props.header}
         </header>
         <main>
-          {this.props.content}
+          {isAllowedToEnterRoute ? isVerified || tosNotNeeded ? this.props.content : <VerificationAndTOSInterceptor /> : 'You are not allowed to access this route'}
           {this.props.helpCenter}
         </main>
         <LDSidebar />
@@ -47,4 +88,4 @@ class MainLayout extends Component {
   }
 }
 
-export default MainLayout
+export default composeWithTracker(onPropsChange)(MainLayout)
