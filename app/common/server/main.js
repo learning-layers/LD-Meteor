@@ -6,6 +6,19 @@ import { Accounts } from 'meteor/accounts-base'
 
 let isProdEnv = global.isProdEnv
 
+global.hasAgreedToTOS = function (user) {
+  if (user && user.tos) {
+    let hasAgreedToTOS = true
+    user.tos.forEach(function (tosItem) {
+      if (!tosItem.agreed) {
+        hasAgreedToTOS = false
+      }
+    })
+    return hasAgreedToTOS
+  }
+  return false
+}
+
 // setup ssr cache per user
 var timeInMillis = 1000 * 10 // 10 secs
 FlowRouter.setPageCacheTimeout(timeInMillis)

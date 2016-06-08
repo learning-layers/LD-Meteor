@@ -8,7 +8,7 @@ import {composeWithTracker} from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 
 function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('currentUserRegisteredEmails')
+  let handle = Meteor.subscribe('currentUserDetails')
   if (handle.ready()) {
     const user = Meteor.users.findOne({'_id': Meteor.userId()})
     onData(null, {user})
@@ -31,6 +31,19 @@ let isAllowedToNavigateToThisRoute = function (neededRoles, user) {
     result: true,
     rolesMissing: []
   }
+}
+
+let isUserAgreeingWithTOS = function (user) {
+  if (user && user.tos) {
+    let hasAgreedToTOS = true
+    user.tos.forEach(function (tosItem) {
+      if (!tosItem.agreed) {
+        hasAgreedToTOS = false
+      }
+    })
+    return hasAgreedToTOS
+  }
+  return false
 }
 
 class MainLayout extends Component {
@@ -71,8 +84,10 @@ class MainLayout extends Component {
       isAllowedToEnterRoute = isAllowedToNavigateToThisRoute(requiredRoles, user).result
     }
     let isVerified = false
+    let acceptedTermsOfService = false
     if (user) {
       isVerified = userEmailIsVerified(user)
+      acceptedTermsOfService = isUserAgreeingWithTOS(user)
     }
     return (
       <div>
@@ -81,7 +96,7 @@ class MainLayout extends Component {
           {this.props.header}
         </header>
         <main>
-          {isAllowedToEnterRoute ? isVerified || tosNotNeeded ? this.props.content : <VerificationAndTOSInterceptor isVerified={isVerified} registeredEmails={user.registered_emails} /> : 'You are not allowed to access this route'}
+          {isAllowedToEnterRoute ? isVerified && acceptedTermsOfService || tosNotNeeded ? this.props.content : <VerificationAndTOSInterceptor acceptedTermsOfService={acceptedTermsOfService} isVerified={isVerified} registeredEmails={user.registered_emails} /> : 'You are not allowed to access this route'}
           {this.props.helpCenter}
         </main>
         <LDSidebar />

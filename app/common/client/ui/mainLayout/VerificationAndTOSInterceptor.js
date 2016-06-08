@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Meteor } from 'meteor/meteor'
 
-class VerifyEmailAddress extends Component {
+class VerifyEmailAddressPanel extends Component {
   resendVerificationEmail (address) {
     var result = global.confirm('Do you want to send a verification email to ' + address + '?')
     if (result) {
@@ -22,10 +22,17 @@ class VerifyEmailAddress extends Component {
 }
 
 class VerificationAndTOSInterceptor extends Component {
+  agreeToTOS () {
+    var result = global.confirm('Do you want to agree to the terms of service?')
+    if (result) {
+      Meteor.call('agreeToTOS')
+    }
+  }
   render () {
-    let { isVerified, registeredEmails } = this.props
+    let { isVerified, acceptedTermsOfService, registeredEmails } = this.props
     return <div className='ld-verify-and-tos'>
-      {isVerified ? 'You have a verified email address' : <VerifyEmailAddress registeredEmails={registeredEmails} />}
+      {isVerified ? 'You have a verified email address' : <VerifyEmailAddressPanel registeredEmails={registeredEmails} />}
+      {acceptedTermsOfService ? 'You have agreed to our Terms of Service' : <div>You have not yet agreed to our Terms of Service <button onClick={() => this.agreeToTOS()}>Agree to TOS</button></div>}
     </div>
   }
 }
