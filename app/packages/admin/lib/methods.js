@@ -26,13 +26,17 @@ Meteor.methods({
     }
     return []
   },
-  resendUserVerificationMail: function (userId) {
+  resendUserVerificationMail: function (userId, address) {
     if (this.userId && Roles.userIsInRole(this.userId, 'super-admin', Roles.GLOBAL_GROUP)) {
       let user = Meteor.users.findOne({'_id': userId})
       if (user) {
         if (Meteor.isServer) {
-          Accounts.sendVerificationEmail(userId)
+          Accounts.sendVerificationEmail(userId, address)
         }
+      }
+    } else if (this.userId === userId) {
+      if (Meteor.isServer) {
+        Accounts.sendVerificationEmail(userId, address)
       }
     }
   },

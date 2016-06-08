@@ -81,7 +81,7 @@ class MainLayout extends Component {
           {this.props.header}
         </header>
         <main>
-          {isAllowedToEnterRoute ? isVerified || tosNotNeeded ? this.props.content : <VerificationAndTOSInterceptor isVerified={isVerified} /> : 'You are not allowed to access this route'}
+          {isAllowedToEnterRoute ? isVerified || tosNotNeeded ? this.props.content : <VerificationAndTOSInterceptor isVerified={isVerified} registeredEmails={user.registered_emails} /> : 'You are not allowed to access this route'}
           {this.props.helpCenter}
         </main>
         <LDSidebar />
