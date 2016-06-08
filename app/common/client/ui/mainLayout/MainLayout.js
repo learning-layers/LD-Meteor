@@ -8,14 +8,16 @@ import {composeWithTracker} from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 
 function onPropsChange (props, onData) {
-  const user = Meteor.user()
-  onData(null, {user})
+  let handle = Meteor.subscribe('currentUserRegisteredEmails')
+  if (handle.ready()) {
+    const user = Meteor.users.findOne({'_id': Meteor.userId()})
+    onData(null, {user})
+  }
 }
 
-// TODO change this file to use registered_emails instead of emails to check if the user is verified
 let userEmailIsVerified = function (user) {
   let isVerified = false
-  user.emails.forEach(function (email) {
+  user.registered_emails.forEach(function (email) {
     if (email.verified) {
       isVerified = true
     }
@@ -79,7 +81,7 @@ class MainLayout extends Component {
           {this.props.header}
         </header>
         <main>
-          {isAllowedToEnterRoute ? isVerified || tosNotNeeded ? this.props.content : <VerificationAndTOSInterceptor /> : 'You are not allowed to access this route'}
+          {isAllowedToEnterRoute ? isVerified || tosNotNeeded ? this.props.content : <VerificationAndTOSInterceptor isVerified={isVerified} /> : 'You are not allowed to access this route'}
           {this.props.helpCenter}
         </main>
         <LDSidebar />
