@@ -3,6 +3,7 @@
 @import "_bootswatch"; /* bootswatch paper theme */
 @import "_paper_theme_fixes";
 @import "_hopscoth";
+@import "_s_alert.scss";
 
 #nav-app-search {
   padding: 0;
@@ -59,6 +60,21 @@ li.avatar-nav-item {
   }
 }
 
+.status-indicator-base {
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+}
+
+.verified, .online, .role-active {
+  background-color: lightgreen;
+}
+
+.not-verified, .not-online, .not-role-active {
+  background-color: lightsalmon;
+}
+
+@import "mainLayout/_mainLayout";
 @import "../../../packages/helpCenter/client/ui/_help_center";
 @import "../../../packages/admin/client/ui/_userManagement";
 @import "../../../packages/infiniteList/client/ui/_chat";

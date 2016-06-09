@@ -1,17 +1,3 @@
-.status-indicator-base {
-  border-radius: 50%;
-  height: 15px;
-  width: 15px;
-}
-
-.verified, .online, .role-active {
-  background-color: lightgreen;
-}
-
-.not-verified, .not-online, .not-role-active {
-  background-color: lightsalmon;
-}
-
 .change-user-roles-modal {
   .modal-dialog {
     width: 95%;

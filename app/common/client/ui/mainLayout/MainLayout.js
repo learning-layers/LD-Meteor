@@ -6,6 +6,7 @@ import LDSidebar from '../../../../packages/chat/client/ui/Sidebar'
 import { Meteor } from 'meteor/meteor'
 import {composeWithTracker} from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
+import Alert from 'react-s-alert'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('currentUserDetails')
@@ -100,6 +101,7 @@ class MainLayout extends Component {
           {this.props.helpCenter}
         </main>
         <LDSidebar />
+        <Alert stack={{limit: 3}} position='bottom-left' />
       </div>
     )
   }

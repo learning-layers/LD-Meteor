@@ -14,6 +14,8 @@ Meteor.methods({
         }
       }
     }
-    return []
+    if (Meteor.isServer) {
+      return true
+    }
   }
 })

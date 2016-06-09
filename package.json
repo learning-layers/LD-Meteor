@@ -21,7 +21,7 @@
     "test-build": "meteor build /tmp/build --directory && run-build",
     "lint": "eslint ./app/**/*.js"
   },
-  "repository": "https://github.com/learning-layers/LD-Meteor",
+  "repository": "git://github.com/learning-layers/LD-Meteor",
   "author": "Martin Bachl <martin@bachl.pro>",
   "contributors": [
     "Philipp Dallmann <philipp.dallmann@outlook.com>"
@@ -48,6 +48,7 @@
     "react-komposer": "^1.8.0",
     "react-mentions": "^0.4.4",
     "react-mounter": "^1.0.0",
+    "react-s-alert": "^1.1.4",
     "react-selectize": "^2.0.2",
     "react-sidebar": "^2.1.2"
   },
