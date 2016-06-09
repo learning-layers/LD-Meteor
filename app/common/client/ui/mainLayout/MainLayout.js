@@ -79,7 +79,7 @@ class MainLayout extends Component {
     if (isPublic) {
       tosNotNeeded = true
       isAllowedToEnterRoute = true
-    } else if (user === null) {
+    } else if (!user) {
       isAllowedToEnterRoute = false
     } else {
       isAllowedToEnterRoute = isAllowedToNavigateToThisRoute(requiredRoles, user).result
@@ -90,6 +90,7 @@ class MainLayout extends Component {
       isVerified = userEmailIsVerified(user)
       acceptedTermsOfService = isUserAgreeingWithTOS(user)
     }
+    // TODO Add redirection in case of that the user is not allowed to enter the route.
     return (
       <div>
         <div ref='status'></div>
@@ -97,7 +98,16 @@ class MainLayout extends Component {
           {this.props.header}
         </header>
         <main>
-          {isAllowedToEnterRoute ? isVerified && acceptedTermsOfService || tosNotNeeded ? this.props.content : <VerificationAndTOSInterceptor acceptedTermsOfService={acceptedTermsOfService} isVerified={isVerified} registeredEmails={user.registered_emails} /> : 'You are not allowed to access this route'}
+          {isAllowedToEnterRoute ? <div>
+            {isPublic && !user ? this.props.content : (<div>
+              {isVerified && acceptedTermsOfService || tosNotNeeded ? this.props.content : (
+                <VerificationAndTOSInterceptor
+                  acceptedTermsOfService={acceptedTermsOfService}
+                  isVerified={isVerified}
+                  registeredEmails={user.registered_emails} />
+              )}
+            </div>)}
+          </div> : <div>You are not allowed to access this route</div>}
           {this.props.helpCenter}
         </main>
         <LDSidebar />

@@ -5,6 +5,9 @@ import { Roles } from 'meteor/alanning:roles'
 import { _ } from 'meteor/underscore'
 
 Accounts.validateLoginAttempt(function (attempt) {
+  if (!attempt || !attempt.user) {
+    throw new Meteor.Error(403, 'Login failed, Email or password wrong')
+  }
   if (Roles.userIsInRole(attempt.user._id, ['inactive'])) {
     attempt.allowed = false
     throw new Meteor.Error(403, 'User account is inactive!')

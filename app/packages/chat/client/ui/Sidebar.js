@@ -1,6 +1,4 @@
 import React, {Component} from 'react'
-import { Meteor } from 'meteor/meteor'
-import { Tracker } from 'meteor/tracker'
 import Sidebar from 'react-sidebar'
 import defaultStyle from './defaultStyle'
 import merge from 'lodash/merge'
@@ -21,23 +19,10 @@ class LDSidebar extends Component {
     this.trackerComputation = null
   }
   componentDidMount () {
-    Tracker.autorun((c) => {
-      if (!this.trackerComputation) {
-        this.trackerComputation = c
-      }
-      if (!Meteor.userId()) {
-        this.onSetSidebarOpen(false)
-      }
-    })
     global.emitter.addListener('sidebar-toggle', (open) => { this.onSetSidebarOpen(open) })
   }
   componentWillUnmount () {
     global.emitter.removeListener('sidebar-toggle', (open) => { this.onSetSidebarOpen(open) })
-    Meteor.setTimeout(() => {
-      if (this.trackerComputation) {
-        this.trackerComputation.stop()
-      }
-    }, 500)
   }
   onSetSidebarOpen (open) {
     this.setState({sidebarOpen: open})
