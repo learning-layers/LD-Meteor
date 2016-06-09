@@ -11,9 +11,13 @@ import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('currentUserDetails')
-  if (handle.ready()) {
+  let accessKeyHandle
+  if (props && props.id && props.accessKey) {
+    accessKeyHandle = Meteor.subscribe('accessKeys', {type: 'document', id: props.id, accessKey: props.accessKey})
+  }
+  if (!accessKeyHandle && handle.ready() || accessKeyHandle && accessKeyHandle.ready() && handle.ready()) {
     const user = Meteor.users.findOne({'_id': Meteor.userId()})
-    onData(null, {user})
+    onData(null, {user, accessKey: props.accessKey})
   }
 }
 
