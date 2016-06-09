@@ -44,7 +44,7 @@ class TermsOfService extends Component {
     if (result) {
       Meteor.call('agreeToTOS', function (err, res) {
         if (err) {
-          Alert.success('Error: Agreeing to our Terms of Service failed!')
+          Alert.error('Error: Agreeing to our Terms of Service failed!')
         } else {
           Alert.success('Success: Agreeing to our Terms of Service')
         }

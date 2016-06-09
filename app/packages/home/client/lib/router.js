@@ -73,6 +73,7 @@ FlowRouter.route('/', {
     console.log('Params:', params)
     console.log('Query Params:', queryParams)
     mount(MainLayout, {
+      isPublic: true,
       header: <Navbar />,
       content: <Home />,
       helpCenter: <HelpCenter helpTours={helpTours} />
@@ -100,6 +101,7 @@ Meteor.startup(function () { // TODO move to common package
     FlowRouter.route('/local', {
       action: function (params, queryParams) {
         mount(MainLayout, {
+          isPublic: true,
           header: null,
           content: null,
           helpCenter: null

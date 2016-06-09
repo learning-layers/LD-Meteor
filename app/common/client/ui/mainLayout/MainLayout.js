@@ -7,6 +7,7 @@ import { Meteor } from 'meteor/meteor'
 import {composeWithTracker} from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 import Alert from 'react-s-alert'
+import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('currentUserDetails')
@@ -90,7 +91,15 @@ class MainLayout extends Component {
       isVerified = userEmailIsVerified(user)
       acceptedTermsOfService = isUserAgreeingWithTOS(user)
     }
-    // TODO Add redirection in case of that the user is not allowed to enter the route.
+    
+    if (!user && !isAllowedToEnterRoute) {
+      Meteor.setTimeout(function () {
+        FlowRouter.go('/')
+        Meteor.setTimeout(function () {
+          Alert.error('Error: You were redirected to the front page because you didn\'t have permission to access the previous site!')
+        }, 70)
+      }, 150)
+    }
     return (
       <div>
         <div ref='status'></div>
