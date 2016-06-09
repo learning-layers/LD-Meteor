@@ -91,7 +91,7 @@ class MainLayout extends Component {
       isVerified = userEmailIsVerified(user)
       acceptedTermsOfService = isUserAgreeingWithTOS(user)
     }
-    
+
     if (!user && !isAllowedToEnterRoute) {
       Meteor.setTimeout(function () {
         FlowRouter.go('/')
