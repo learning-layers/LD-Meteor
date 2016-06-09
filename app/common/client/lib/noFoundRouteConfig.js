@@ -11,6 +11,7 @@ FlowRouter.notFound = {
     console.log('Query Params:', queryParams)
     let id = params.id
     let accessKey = params.accessKey
+    // TODO check if the path contains the keyword share if so change the message
     mount(MainLayout, {
       isPublic: true,
       id: id,
