@@ -74,9 +74,12 @@ li.avatar-nav-item {
   background-color: lightsalmon;
 }
 
+h1, h2, h3, h4 {
+  margin-top: 0;
+}
+
 .panel-heading {
   h1, h2, h3, h4 {
-    margin-top: 0;
     margin-bottom: 0;
   }
 }

@@ -6,6 +6,13 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema'
 import { Match } from 'meteor/check'
 import ReactSelectize from 'react-selectize'
 import FileUpload from '../../../fileUpload/client/ui/FileUpload'
+import Row from '../../../../../node_modules/react-bootstrap/lib/Row'
+import Col from '../../../../../node_modules/react-bootstrap/lib/Col'
+import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
+import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
+import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
+import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/ControlLabel'
+import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
 
 const SimpleSelect = ReactSelectize.SimpleSelect
 const MultiSelect = ReactSelectize.MultiSelect
@@ -117,11 +124,74 @@ function onPropsChange (props, onData) {
   onData(null, {user})
 }
 
+class UserProfileContent extends Component {
+  render () {
+    return <Row id='user-profile'>
+      <Col xs={12} md={3}>
+        <a href='' className='thumbnail'>
+          <img className='img-responsive' src='https://api.learnenv.com/api/users/avatar/1' />
+        </a>
+        <div className='user-tags'>
+          <MultiSelect
+            width='200px'
+            placeholder='Enter tags here...'
+            // createFromSearch :: [Item] -> [Item] -> String -> Item?
+            createFromSearch={function (options, values, search) {
+              values = [{label: 'testLabel'}]
+              const labels = values.map(function (value) {
+                return value.label
+              })
+              if (search.trim().length === 0 || labels.indexOf(search.trim()) !== -1) {
+                return null
+              }
+              return {label: search.trim(), value: search.trim()}
+            }}
+            renderValue={function (item) {
+              return <div className='removable-emoji'>
+                {item.label}
+                <div style={{display: 'inline', marginLeft: '5px'}} onClick={function () {
+                  window.alert('test')
+                }}> &times;</div>
+              </div>
+            }}
+          />
+        </div>
+      </Col>
+      <Col xs={12} md={9}>
+        <div className='user-profile-info'>
+          <h2 id='personal-info-header'>Personal Info</h2>
+          <form>
+            <FormGroup controlId='userFullNameText'>
+              <ControlLabel>Full Name</ControlLabel>
+              <FormControl type='text' placeholder='Enter Full Name...' />
+            </FormGroup>
+            <FormGroup controlId='userDescriptionTextArea'>
+              <ControlLabel>Description</ControlLabel>
+              <FormControl type='textarea' placeholder='Enter Description...' />
+            </FormGroup>
+          </form>
+        </div>
+      </Col>
+    </Row>
+  }
+}
+
 class UserProfile extends Component {
   render () {
+    const { user } = this.props
     return (
       <div className='ld-user-profile container-fluid'>
-        User Profile
+        {!user ? <Tabs defaultActiveKey={1} id='user-profile-tabs'>
+          <Tab eventKey={1} title='User Details'>
+            <UserProfileContent />
+          </Tab>
+          <Tab eventKey={2} title='User Settings'>
+            Settings
+          </Tab>
+        </Tabs> : <UserProfileContent />}
+
+        <br /><br /><br /><br />
+
         <ValidatedForm schema={UserProfileSchema} />
         <SimpleSelect
           placeholder='Select a fruit'

@@ -93,7 +93,7 @@ modules-runtime@0.6.3
 mongo@1.1.7
 mongo-id@1.0.4
 mongo-livedata@1.0.12
-npm-bcrypt@0.8.5
+npm-bcrypt@0.8.6_1
 npm-mongo@1.4.43
 oauth@1.1.10
 oauth2@1.1.9

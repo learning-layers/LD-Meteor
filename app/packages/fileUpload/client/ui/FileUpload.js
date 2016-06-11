@@ -38,7 +38,7 @@ class FileUpload extends Component {
     }
   }
   render () {
-    return <div>
+    return <div className='fileUpload'>
       <input id='fileInput' type='file' onChange={(ev) => this.handleFileUploadChange(ev)} />
       <p>
         <small>Upload file in <code>mp4</code> format, with size less or equal to 10MB</small>

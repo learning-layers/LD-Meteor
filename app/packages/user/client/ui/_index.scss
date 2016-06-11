@@ -1,3 +1,12 @@
+#personal-info-header {
+  margin-bottom: 25px;
+}
+.user-tags {
+  .react-selectize.root-node {
+    width: 100%!important;
+  }
+}
+
 .react-selectize {
   color: #000;
 
@@ -81,6 +90,15 @@
           -ms-flex-align: center;
           -webkit-align-items: center;
           align-items: center;
+          height: 32px;
+          font-size: 13px;
+          font-weight: bold;
+          color: rgba(0,0,0,0.6);
+          line-height: 32px;
+          padding: 0 12px;
+          border-radius: 16px;
+          background-color: #e4e4e4;
+          margin-right: 7px;
         }
       }
 
@@ -377,11 +395,11 @@
 }
 
 .multi-select.react-selectize.default.root-node .simple-value {
-  background: #f2f9fc;
-  border: 1px solid #c9e6f2;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  color: #08c;
+  // background: #f2f9fc;
+  // border: 1px solid #c9e6f2;
+  // -webkit-border-radius: 2px;
+  // border-radius: 2px;
+  // color: #08c;
 }
 
 .simple-select.react-selectize.default.root-node {
