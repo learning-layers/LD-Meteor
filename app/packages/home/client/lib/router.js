@@ -5,7 +5,6 @@ import MainLayout from '../../../../common/client/ui/mainLayout/MainLayout'
 import Navbar from '../../../../common/client/ui/mainLayout/Navbar'
 import Home from '../ui/Home'
 import HelpCenter from '../../../helpCenter/client/ui/HelpCenter'
-import { Meteor } from 'meteor/meteor'
 
 let helpTours = [
   {
@@ -93,20 +92,3 @@ FlowRouter.route('/home', {
   }
 })
 
-/**
- * Startup configuration
- */
-Meteor.startup(function () { // TODO move to common package
-  if (Meteor.settings.public.environment && Meteor.settings.public.environment === 'test') {
-    FlowRouter.route('/local', {
-      action: function (params, queryParams) {
-        mount(MainLayout, {
-          isPublic: true,
-          header: null,
-          content: null,
-          helpCenter: null
-        })
-      }
-    })
-  }
-})
