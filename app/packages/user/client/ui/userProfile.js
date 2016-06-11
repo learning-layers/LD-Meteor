@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce'
 import { SimpleSchema } from 'meteor/aldeed:simple-schema'
 import { Match } from 'meteor/check'
 import ReactSelectize from 'react-selectize'
+import FileUpload from '../../../fileUpload/client/ui/FileUpload'
 
 const SimpleSelect = ReactSelectize.SimpleSelect
 const MultiSelect = ReactSelectize.MultiSelect
@@ -141,6 +142,7 @@ class UserProfile extends Component {
             window.alert(values)
           }}
         />
+        <FileUpload />
       </div>
     )
   }
