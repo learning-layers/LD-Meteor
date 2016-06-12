@@ -23,7 +23,13 @@ export const Uploads = new Meteor.Files({
   // chunkSize: 256*256*4,
   allowClientCode: false,
   onBeforeUpload: function (file) {
+    console.info(file)
+    // console.log(Meteor.user())
+    // console.log()
     var allowedExt = ['mp3', 'm4a', 'zip', 'mp4', 'avi', 'webm']
+    if (file.meta.parent.collection === 'user' && file.meta.parent.uploadType === 'avatar') {
+      allowedExt = ['png', 'jpg', 'jpeg']
+    }
     var allowedMaxSize = 100000 * 10 * 400
     if (file.size <= allowedMaxSize) {
       if (!file.ext) {

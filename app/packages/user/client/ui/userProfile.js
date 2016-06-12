@@ -13,6 +13,7 @@ import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
 import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/ControlLabel'
 import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
+import { Uploads } from '../../../fileUpload/lib/collections'
 
 const SimpleSelect = ReactSelectize.SimpleSelect
 const MultiSelect = ReactSelectize.MultiSelect
@@ -124,13 +125,48 @@ function onPropsChange (props, onData) {
   onData(null, {user})
 }
 
+/* var formatFileURL = function (fileRef, version, pub) {
+  var ext, ref, root
+  if (version == null) {
+    version = 'original'
+  }
+  if (pub == null) {
+    pub = false
+  }
+  root = __meteor_runtime_config__.ROOT_URL.replace(/\/+$/, '')
+  if ((fileRef != null ? (ref = fileRef.extension) != null ? ref.length : void 0 : void 0) > 0) {
+    ext = '.' + fileRef.extension
+  } else {
+    ext = ''
+  }
+  if (pub) {
+    return root + (fileRef._downloadRoute + '/' + version + '-' + fileRef._id + ext)
+  } else {
+    return root + (fileRef._downloadRoute + '/' + fileRef._collectionName + '/' + fileRef._id + '/' + version + '/' + fileRef._id + ext)
+  }
+}*/
+
 class UserProfileContent extends Component {
   render () {
+    const { user } = this.props
+    let userId = user._id
+    let userAvatar = Uploads.collection.findOne({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()})
+    let userAvatarPath
+    if (userAvatar) {
+      userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension
+    }
+    if (!userAvatarPath) {
+      userAvatarPath = '/img/Portrait_placeholder.png'
+    }
+    console.log(userAvatar)
     return <Row id='user-profile'>
       <Col xs={12} md={3}>
-        <a href='' className='thumbnail'>
-          <img className='img-responsive' src='https://api.learnenv.com/api/users/avatar/1' />
+        <a href='' id='user-profile-avatar' className='thumbnail'>
+          <img className='img-responsive' src={userAvatarPath} />
         </a>
+        <div className='well'>
+          <FileUpload collection='user' elementId={userId} uploadType='avatar' />
+        </div>
         <div className='user-tags'>
           <MultiSelect
             width='200px'
@@ -188,7 +224,7 @@ class UserProfile extends Component {
           <Tab eventKey={2} title='User Settings'>
             Settings
           </Tab>
-        </Tabs> : <UserProfileContent />}
+        </Tabs> : <UserProfileContent user={user} />}
 
         <br /><br /><br /><br />
 
@@ -212,7 +248,6 @@ class UserProfile extends Component {
             window.alert(values)
           }}
         />
-        <FileUpload />
       </div>
     )
   }
