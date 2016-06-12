@@ -23,11 +23,10 @@ export const Uploads = new Meteor.Files({
   // chunkSize: 256*256*4,
   allowClientCode: false,
   onBeforeUpload: function (file) {
-    console.info(file)
-    // console.log(Meteor.user())
-    // console.log()
     var allowedExt = ['mp3', 'm4a', 'zip', 'mp4', 'avi', 'webm']
     if (file.meta.parent.collection === 'user' && file.meta.parent.uploadType === 'avatar') {
+      // TODO add possibility to add collection type listeners
+      // TODO for handling allowed file extensions and sizes
       allowedExt = ['png', 'jpg', 'jpeg']
     }
     var allowedMaxSize = 100000 * 10 * 400
@@ -42,6 +41,12 @@ export const Uploads = new Meteor.Files({
       }
     } else {
       return 'Max. file size is ' + humanFileSize(allowedMaxSize, true) + ' you\'ve tried to upload ' + humanFileSize(file.size, true)
+    }
+  },
+  onAfterUpload: function (fileObj) {
+    if (Meteor.isServer) {
+      // TODO add after successful upload listener
+      console.log(fileObj)
     }
   },
   downloadCallback: function (fileObj) {
