@@ -8,6 +8,7 @@ import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import ValidatedInput from './validatedInput'
 import UserProfileContent from './userProfileContent'
+import Loader from 'react-loader'
 const SimpleSelect = ReactSelectize.SimpleSelect
 const MultiSelect = ReactSelectize.MultiSelect
 
@@ -117,7 +118,8 @@ class UserProfile extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(UserProfile)
+const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
+export default composeWithTracker(onPropsChange, Loading)(UserProfile)
 
 // TODO move this code to common package or fileUpload
 /* var formatFileURL = function (fileRef, version, pub) {

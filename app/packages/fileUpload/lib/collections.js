@@ -1,5 +1,10 @@
 import { Meteor } from 'meteor/meteor'
 
+global.fileUpload = {
+  beforeUploadInterceptors: [],
+  afterUploadInterceptors: []
+}
+
 function humanFileSize (bytes, si) {
   var thresh = si ? 1000 : 1024
   if (Math.abs(bytes) < thresh) {

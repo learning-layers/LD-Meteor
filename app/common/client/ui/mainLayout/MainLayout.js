@@ -8,6 +8,7 @@ import {composeWithTracker} from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 import Alert from 'react-s-alert'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
+import Loader from 'react-loader'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('currentUserDetails')
@@ -140,4 +141,5 @@ class MainLayout extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(MainLayout)
+const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
+export default composeWithTracker(onPropsChange, Loading)(MainLayout)
