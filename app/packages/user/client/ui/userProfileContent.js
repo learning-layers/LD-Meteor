@@ -53,6 +53,7 @@ class UserProfileContent extends Component {
       }
       Alert.success('Success: Adding tag \'' + item.label + '.')
     })
+    this.resetSearch()
   }
   render () {
     const { user, userAvatarPath, userTags } = this.props
