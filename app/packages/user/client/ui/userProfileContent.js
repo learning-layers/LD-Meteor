@@ -8,21 +8,25 @@ import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/Contro
 import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
 import { Uploads } from '../../../fileUpload/lib/collections'
 import ReactSelectize from 'react-selectize'
+import { composeWithTracker } from 'react-komposer'
 const MultiSelect = ReactSelectize.MultiSelect
+
+function onPropsChange (props, onData) {
+  const userAvatar = Uploads.collection.findOne({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()})
+  let userAvatarPath
+  if (userAvatar) {
+    userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension
+  }
+  if (!userAvatarPath) {
+    userAvatarPath = '/img/Portrait_placeholder.png'
+  }
+  onData(null, {userAvatarPath})
+}
 
 class UserProfileContent extends Component {
   render () {
-    const { user } = this.props
-    let userId = user._id
-    let userAvatar = Uploads.collection.findOne({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()})
-    let userAvatarPath
-    if (userAvatar) {
-      userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension
-    }
-    if (!userAvatarPath) {
-      userAvatarPath = '/img/Portrait_placeholder.png'
-    }
-    console.log(userAvatar)
+    const { user, userAvatarPath } = this.props
+    const userId = user._id
     return <Row id='user-profile'>
       <Col xs={12} md={3}>
         <a href='' id='user-profile-avatar' className='thumbnail'>
@@ -76,4 +80,4 @@ class UserProfileContent extends Component {
   }
 }
 
-export default UserProfileContent
+export default composeWithTracker(onPropsChange)(UserProfileContent)

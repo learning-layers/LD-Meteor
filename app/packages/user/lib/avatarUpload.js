@@ -1,3 +1,6 @@
+import { Uploads } from '../../fileUpload/lib/collections'
+import { Meteor } from 'meteor/meteor'
+
 function humanFileSize (bytes, si) {
   var thresh = si ? 1000 : 1024
   if (Math.abs(bytes) < thresh) {
@@ -41,7 +44,13 @@ global.fileUpload.beforeUploadInterceptors.push({
     }
   },
   onAfterUpload: function (file) {
-    console.log('Successfully uploaded avatar!!!')
-    console.log(file)
+    // assure that there is only one avatar image for a user
+    // after a new one has been uploaded successfully
+    let avatarUploads = Uploads.collection.find({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()}).fetch()
+    avatarUploads.forEach(function (avatarUpload) {
+      if (avatarUpload._id !== file._id) {
+        Uploads.collection.remove({ '_id': avatarUpload._id })
+      }
+    })
   }
 })
