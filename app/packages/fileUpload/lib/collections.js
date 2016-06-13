@@ -1,10 +1,19 @@
 import { Meteor } from 'meteor/meteor'
 
-let interceptorMap = []
+if (!global.fileUpload) {
+  global.fileUpload = {
+    beforeUploadInterceptors: [],
+    afterUploadInterceptors: []
+  }
+}
+
+global.fileUpload.interceptorMap = []
+let interceptorMap = global.fileUpload.interceptorMap
 Meteor.startup(function () {
   global.fileUpload.beforeUploadInterceptors.forEach(function (interceptor) {
     interceptorMap[interceptor.collection + '#' + interceptor.uploadType] = interceptor
   })
+  global.fileUpload.interceptorMap = interceptorMap
 })
 
 export const Uploads = new Meteor.Files({

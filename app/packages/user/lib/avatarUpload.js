@@ -28,9 +28,11 @@ if (!global.fileUpload) {
 global.fileUpload.beforeUploadInterceptors.push({
   collection: 'user',
   uploadType: 'avatar',
+  allowedExtensions: ['png', 'jpg', 'jpeg'],
+  allowedSize: 100000 * 10 * 400, // 400 MB
   onBeforeUpload: function (file) {
-    var allowedExt = ['png', 'jpg', 'jpeg']
-    var allowedMaxSize = 100000 * 10 * 400 // 400 MB
+    var allowedExt = this.allowedExtensions
+    var allowedMaxSize = this.allowedSize
     if (file.size <= allowedMaxSize) {
       if (!file.ext) {
         file.ext = file.extension

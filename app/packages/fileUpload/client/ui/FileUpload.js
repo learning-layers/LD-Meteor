@@ -3,6 +3,22 @@ import { Uploads } from '../../lib/collections'
 import { Tracker } from 'meteor/tracker'
 import Alert from 'react-s-alert'
 
+function humanFileSize (bytes, si) {
+  var thresh = si ? 1000 : 1024
+  if (Math.abs(bytes) < thresh) {
+    return bytes + ' B'
+  }
+  var units = si
+    ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+  var u = -1
+  do {
+    bytes /= thresh
+    ++u
+  } while (Math.abs(bytes) >= thresh && u < units.length - 1)
+  return bytes.toFixed(1) + ' ' + units[u]
+}
+
 class FileUpload extends Component {
   constructor (props) {
     super(props)
@@ -71,6 +87,7 @@ class FileUpload extends Component {
     if (currentFileUpload && !this.state.progress) {
       this.state.progress = 0
     }
+    let interceptor = global.fileUpload.interceptorMap[this.props.collection + '#' + this.props.uploadType]
     return <div className='fileUpload'>
       {currentFileUpload ? <div className='uploadIndicator'>
         Uploading <b>{currentFileUpload.file.name}</b>:
@@ -84,7 +101,7 @@ class FileUpload extends Component {
       </div> : null}
       <input id='fileInput' type='file' onChange={(ev) => this.handleFileUploadChange(ev)} />
       <p>
-        <small>Upload file in <code>mp4</code> format, with size less or equal to 10MB</small>
+        <small>Upload file in <code>{interceptor.allowedExtensions.join(',')}</code> format, with size less or equal to {humanFileSize(interceptor.allowedSize, true)}</small>
       </p>
     </div>
   }
