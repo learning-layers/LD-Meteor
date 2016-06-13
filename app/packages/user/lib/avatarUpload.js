@@ -1,5 +1,6 @@
 import { Uploads } from '../../fileUpload/lib/collections'
 import { Meteor } from 'meteor/meteor'
+import fs from 'fs'
 
 function humanFileSize (bytes, si) {
   var thresh = si ? 1000 : 1024
@@ -50,6 +51,7 @@ global.fileUpload.beforeUploadInterceptors.push({
     avatarUploads.forEach(function (avatarUpload) {
       if (avatarUpload._id !== file._id) {
         Uploads.collection.remove({ '_id': avatarUpload._id })
+        fs.unlink(avatarUpload.path)
       }
     })
   }
