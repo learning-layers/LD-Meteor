@@ -29,21 +29,22 @@ class FileUpload extends Component {
           uploadType: this.props.uploadType
         }
       }
+      var self = this
       let upload = Uploads.insert({
         file: file,
         meta: metaData,
-        onUploaded: (error, fileObj) => {
+        onUploaded: function (error, fileObj) {
           if (error) {
             Alert.error('Error during upload of file \'' + fileObj.name + '\' ' + error)
           } else {
-            this.setState({progress: 100, uploadSuccess: true})
+            self.setState({progress: 100, uploadSuccess: true})
             Alert.success('File \'' + fileObj.name + '\' successfully uploaded')
           }
         },
         streams: 'dynamic',
         chunkSize: 'dynamic'
       })
-      this.setState({currentFile: upload, uploadSuccess: null})
+      this.setState({currentFile: upload, uploadSuccess: null, progress: 0})
       this.trackProgress(upload)
     }
   }

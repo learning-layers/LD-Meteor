@@ -22,3 +22,10 @@ if (Meteor.isServer) {
     return process.env.NODE_ENV === 'production'
   }
 }
+
+if (!global.fileUpload) {
+  global.fileUpload = {
+    beforeUploadInterceptors: [],
+    afterUploadInterceptors: []
+  }
+}

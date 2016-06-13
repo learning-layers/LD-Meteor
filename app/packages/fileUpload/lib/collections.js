@@ -1,25 +1,11 @@
 import { Meteor } from 'meteor/meteor'
 
-global.fileUpload = {
-  beforeUploadInterceptors: [],
-  afterUploadInterceptors: []
-}
-
-function humanFileSize (bytes, si) {
-  var thresh = si ? 1000 : 1024
-  if (Math.abs(bytes) < thresh) {
-    return bytes + ' B'
-  }
-  var units = si
-    ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-  var u = -1
-  do {
-    bytes /= thresh
-    ++u
-  } while (Math.abs(bytes) >= thresh && u < units.length - 1)
-  return bytes.toFixed(1) + ' ' + units[u]
-}
+let interceptorMap = []
+Meteor.startup(function () {
+  global.fileUpload.beforeUploadInterceptors.forEach(function (interceptor) {
+    interceptorMap[interceptor.collection + '#' + interceptor.uploadType] = interceptor
+  })
+})
 
 export const Uploads = new Meteor.Files({
   collectionName: 'Uploads',
@@ -28,31 +14,20 @@ export const Uploads = new Meteor.Files({
   // chunkSize: 256*256*4,
   allowClientCode: false,
   onBeforeUpload: function (file) {
-    var allowedExt = ['mp3', 'm4a', 'zip', 'mp4', 'avi', 'webm']
-    if (file.meta.parent.collection === 'user' && file.meta.parent.uploadType === 'avatar') {
-      // TODO add possibility to add collection type listeners
-      // TODO for handling allowed file extensions and sizes
-      allowedExt = ['png', 'jpg', 'jpeg']
+    let interceptor = interceptorMap[file.meta.parent.collection + '#' + file.meta.parent.uploadType]
+    if (!interceptor || !interceptor.onBeforeUpload) {
+      console.log('No onBeforeUpload interceptor found for collection=' + file.meta.parent.collection + ', uploadType=' + file.meta.parent.uploadType + '!')
+      return 'No onBeforeUpload interceptor found for collection=' + file.meta.parent.collection + ', uploadType=' + file.meta.parent.uploadType + '!'
     }
-    var allowedMaxSize = 100000 * 10 * 400
-    if (file.size <= allowedMaxSize) {
-      if (!file.ext) {
-        file.ext = file.extension
-      }
-      if (allowedExt.indexOf(file.ext) !== -1) {
-        return true
-      } else {
-        return 'The file you wanted to upload has the extension ' + file.ext + ' only the formats ' + allowedExt.join(', ') + ' are possible to upload'
-      }
-    } else {
-      return 'Max. file size is ' + humanFileSize(allowedMaxSize, true) + ' you\'ve tried to upload ' + humanFileSize(file.size, true)
-    }
+    return interceptor.onBeforeUpload(file)
   },
-  onAfterUpload: function (fileObj) {
-    if (Meteor.isServer) {
-      // TODO add after successful upload listener
-      console.log(fileObj)
+  onAfterUpload: function (file) {
+    let interceptor = interceptorMap[file.meta.parent.collection + '#' + file.meta.parent.uploadType]
+    if (!interceptor || !interceptor.onAfterUpload) {
+      console.log('No onAfterUpload interceptor found for collection=' + file.meta.parent.collection + ', uploadType=' + file.meta.parent.uploadType + '!')
+      return 'No onAfterUpload interceptor found for collection=' + file.meta.parent.collection + ', uploadType=' + file.meta.parent.uploadType + '!'
     }
+    interceptor.onAfterUpload(file)
   },
   downloadCallback: function (fileObj) {
     var ref = this.params
