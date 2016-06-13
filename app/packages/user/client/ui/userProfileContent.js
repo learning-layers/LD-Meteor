@@ -24,6 +24,15 @@ function onPropsChange (props, onData) {
 }
 
 class UserProfileContent extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      options: [
+        {label: 'test', name: 'test'}
+      ],
+      values: []
+    }
+  }
   render () {
     const { user, userAvatarPath } = this.props
     const userId = user._id
@@ -39,10 +48,15 @@ class UserProfileContent extends Component {
           <MultiSelect
             width='200px'
             placeholder='Enter tags here...'
+            options={this.state.options}
+            values={this.state.values}
             // createFromSearch :: [Item] -> [Item] -> String -> Item?
             createFromSearch={function (options, values, search) {
-              values = [{label: 'testLabel'}]
-              const labels = values.map(function (value) {
+              console.debug('searching')
+              console.debug(options)
+              console.debug(values)
+              console.debug(search)
+              let labels = values.map(function (value) {
                 return value.label
               })
               if (search.trim().length === 0 || labels.indexOf(search.trim()) !== -1) {
@@ -56,6 +70,37 @@ class UserProfileContent extends Component {
                 <div style={{display: 'inline', marginLeft: '5px'}} onClick={function () {
                   window.alert('test')
                 }}> &times;</div>
+              </div>
+            }}
+            onValuesChange={(values) => {
+              window.alert(values)
+              this.setState({values: values})
+            }}
+            uid={function (item) {
+              return item.label
+            }}
+            valuesFromPaste={function (options, values, pastedText) {
+              return pastedText
+                .split(',')
+                .filter(function (text) {
+                  var labels = values.map(function (item) {
+                    return item.label
+                  })
+                  return labels.indexOf(text) === -1
+                })
+                .map(function (text) {
+                  return {label: text, value: text}
+                })
+            }}
+            renderNoResultsFound={function (values, search) {
+              return <div className='no-results-found'>
+                {(function () {
+                  if (search.trim().length === 0) {
+                    return 'Type a few characters to create a tag'
+                  } else if (values.map(function (item) { return item.label }).indexOf(search.trim()) !== -1) {
+                    return 'Tag already exists'
+                  }
+                }())}
               </div>
             }}
           />

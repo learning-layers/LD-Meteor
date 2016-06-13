@@ -51,7 +51,7 @@ global.fileUpload.beforeUploadInterceptors.push({
     avatarUploads.forEach(function (avatarUpload) {
       if (avatarUpload._id !== file._id) {
         Uploads.collection.remove({ '_id': avatarUpload._id })
-        fs.unlink(avatarUpload.path)
+        fs.unlink(avatarUpload.path, function () {})
       }
     })
   }
