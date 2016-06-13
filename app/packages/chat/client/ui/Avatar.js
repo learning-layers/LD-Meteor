@@ -3,7 +3,7 @@ import Image from '../../../../../node_modules/react-bootstrap/lib/Image'
 
 class Avatar extends Component {
   render () {
-    let { onlineStatus, avatarSrc } = this.props
+    let { onlineStatus, userAvatarPath } = this.props
     let onlineStatusColor = 'green'
     switch (onlineStatus) {
       case 'On':
@@ -24,11 +24,8 @@ class Avatar extends Component {
         break
     }
     let onlineStatusStyle = {backgroundColor: onlineStatusColor}
-    if (avatarSrc === undefined) {
-      avatarSrc = 'https://randomuser.me/api/portraits/thumb/women/2.jpg'
-    }
     return <div className='avatar'>
-      <Image className='sidebar-avatar' src={avatarSrc} circle />
+      <Image className='sidebar-avatar' src={userAvatarPath} circle />
       <div className='avatar-online-status' style={onlineStatusStyle}>{onlineStatus}</div>
     </div>
   }

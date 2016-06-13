@@ -10,6 +10,21 @@ import FriendList from './FriendList'
 import { Meteor } from 'meteor/meteor'
 import Avatar from './Avatar'
 import ChatLineCalculator from '../lib/chatLineCalculator'
+import { Uploads } from '../../../fileUpload/lib/collections'
+import { composeWithTracker } from 'react-komposer'
+
+function onPropsChange (props, onData) {
+  const user = Meteor.user()
+  const userAvatar = Uploads.collection.findOne({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()})
+  let userAvatarPath
+  if (userAvatar) {
+    userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension
+  }
+  if (!userAvatarPath) {
+    userAvatarPath = '/img/Portrait_placeholder.png'
+  }
+  onData(null, {user, userAvatarPath})
+}
 
 class SidebarContent extends Component {
   componentDidMount () {
@@ -25,6 +40,7 @@ class SidebarContent extends Component {
     Meteor.logout()
   }
   render () {
+    const {userAvatarPath} = this.props
     let messageObject = new ChatLineCalculator().getChatMessageObject('LabelLabelLabelLabelLabelLabelLabelLabel!HelloWorld')
     // let message = 'LabelLabelLabelLabel LabelLabelLabelLabel!HelloWorld' // 'OpieOP haha Kappa lel'
     let message = 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
@@ -37,7 +53,7 @@ class SidebarContent extends Component {
       </div> : null}
       <Nav ref='accountsLoginContainer'>
         <NavItem style={{float: 'left', height: '68px', width: '78px'}}>
-          <Avatar />
+          <Avatar userAvatarPath={userAvatarPath} />
         </NavItem>
         <NavItem className='sidebar-logout' style={{float: 'right'}} onClick={() => this.logout()}>
           <span className='glyphicon glyphicon-off' />
@@ -69,4 +85,4 @@ class SidebarContent extends Component {
   }
 }
 
-export default SidebarContent
+export default composeWithTracker(onPropsChange)(SidebarContent)

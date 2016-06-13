@@ -14,10 +14,19 @@ import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup
 import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
 import classNames from 'classnames'
 import Avatar from '../../../../packages/chat/client/ui/Avatar'
+import { Uploads } from '../../../../packages/fileUpload/lib/collections'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
-  onData(null, {user})
+  const userAvatar = Uploads.collection.findOne({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()})
+  let userAvatarPath
+  if (userAvatar) {
+    userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension
+  }
+  if (!userAvatarPath) {
+    userAvatarPath = '/img/Portrait_placeholder.png'
+  }
+  onData(null, {user, userAvatarPath})
 }
 
 class LDNavbar extends Component {
@@ -36,6 +45,7 @@ class LDNavbar extends Component {
     global.emitter.emit('sidebar-toggle', true)
   }
   render () {
+    const { userAvatarPath } = this.props
     let loggedIn = Meteor.userId()
     let navbarClassNames = classNames({'ld-navbar': true, 'logged-in': !!loggedIn})
     return (
@@ -80,7 +90,7 @@ class LDNavbar extends Component {
             </Nav>
             <Nav pullRight ref='accountsLoginContainer'>
               {loggedIn ? <NavItem className='avatar-nav-item' eventKey={1} href='#'>
-                <Avatar />
+                <Avatar userAvatarPath={userAvatarPath} />
               </NavItem> : null}
               <NavItem className='sidebar-nav-item' eventKey={2} href='#' onClick={() => this.openSidebar()}>
                 <button className='sidebar-btn'>
