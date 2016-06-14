@@ -5,13 +5,13 @@ import MainLayout from '../../../../common/client/ui/mainLayout/MainLayout'
 import Navbar from '../../../../common/client/ui/mainLayout/Navbar'
 import UserProfile from '../ui/userProfile'
 
-FlowRouter.route('/userprofile', {
+FlowRouter.route('/user/:id', {
   action: function (params, queryParams) {
     console.log('Params:', params)
     console.log('Query Params:', queryParams)
     mount(MainLayout, {
       header: <Navbar />,
-      content: <UserProfile />,
+      content: <UserProfile userId={params.id} />,
       helpCenter: null
     })
   }

@@ -16,6 +16,9 @@ Meteor.startup(function () {
   global.fileUpload.interceptorMap = interceptorMap
 })
 
+let metaData = []
+const cleanupInterval = 1000 * 60 * 120
+
 export const Uploads = new Meteor.Files({
   collectionName: 'Uploads',
   debug: false,
@@ -23,6 +26,17 @@ export const Uploads = new Meteor.Files({
   // chunkSize: 256*256*4,
   allowClientCode: false,
   onBeforeUpload: function (file) {
+    if (file.meta) {
+      metaData[file.path] = file.meta
+      Meteor.setTimeout(function () {
+        // cleanup metaData
+        if (metaData[file.path]) {
+          delete metaData[ file.path ]
+        }
+      }, cleanupInterval)
+    } else {
+      file.meta = metaData[file.path]
+    }
     let interceptor = interceptorMap[file.meta.parent.collection + '#' + file.meta.parent.uploadType]
     if (!interceptor || !interceptor.onBeforeUpload) {
       console.log('No onBeforeUpload interceptor found for collection=' + file.meta.parent.collection + ', uploadType=' + file.meta.parent.uploadType + '!')
@@ -31,6 +45,9 @@ export const Uploads = new Meteor.Files({
     return interceptor.onBeforeUpload(file)
   },
   onAfterUpload: function (file) {
+    if (metaData[file.path]) {
+      delete metaData[ file.path ]
+    }
     let interceptor = interceptorMap[file.meta.parent.collection + '#' + file.meta.parent.uploadType]
     if (!interceptor || !interceptor.onAfterUpload) {
       console.log('No onAfterUpload interceptor found for collection=' + file.meta.parent.collection + ', uploadType=' + file.meta.parent.uploadType + '!')

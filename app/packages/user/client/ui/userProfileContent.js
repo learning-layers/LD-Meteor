@@ -14,11 +14,13 @@ import Alert from 'react-s-alert'
 const MultiSelect = ReactSelectize.MultiSelect
 
 function onPropsChange (props, onData) {
+  let user = props.user
+  let userId = user._id
   let handle = Meteor.subscribe('userTags')
   if (handle.ready()) {
     const userAvatar = Uploads.collection.findOne({
       'meta.parent.uploadType': 'avatar',
-      'meta.parent.elementId': Meteor.userId()
+      'meta.parent.elementId': userId
     })
     let userAvatarPath
     if (userAvatar) {
@@ -27,7 +29,7 @@ function onPropsChange (props, onData) {
     if (!userAvatarPath) {
       userAvatarPath = '/img/Portrait_placeholder.png'
     }
-    const userTags = Tags.find({ parentId: Meteor.userId(), type: 'user' }).fetch()
+    const userTags = Tags.find({ parentId: userId, type: 'user' }).fetch()
     onData(null, { userAvatarPath, userTags })
   }
 }
@@ -57,15 +59,20 @@ class UserProfileContent extends Component {
   }
   render () {
     const { user, userAvatarPath, userTags } = this.props
+    const isOwnProfile = user._id === Meteor.userId()
     const userId = user._id
+    const userName = user.profile.name
     return <Row id='user-profile'>
+      {isOwnProfile ? <Col lg={12}>
+        <div className='alert alert-info'>This is your own profile page so you can edit things here.</div>
+      </Col> : null}
       <Col xs={12} md={3}>
         <a href='' id='user-profile-avatar' className='thumbnail'>
           <img className='img-responsive' src={userAvatarPath} />
         </a>
-        <div className='well'>
+        {isOwnProfile ? <div className='well'>
           <FileUpload collection='user' elementId={userId} uploadType='avatar' />
-        </div>
+        </div> : null}
         <div className='user-tags'>
           <MultiSelect
             ref='userTags'
@@ -173,8 +180,12 @@ class UserProfileContent extends Component {
       </Col>
       <Col xs={12} md={9}>
         <div className='user-profile-info'>
-          <h2 id='personal-info-header'>Personal Info</h2>
+          <h2 id='personal-info-header'>Personal Info of {userName}</h2>
           <form>
+            {user._id === Meteor.userId() ? <FormGroup controlId='userDescriptionTextArea'>
+              <ControlLabel>Change Displayname</ControlLabel>
+              <FormControl type='textarea' placeholder='Enter Displayname...' />
+            </FormGroup> : null}
             <FormGroup controlId='userFullNameText'>
               <ControlLabel>Full Name</ControlLabel>
               <FormControl type='text' placeholder='Enter Full Name...' />
@@ -183,6 +194,7 @@ class UserProfileContent extends Component {
               <ControlLabel>Description</ControlLabel>
               <FormControl type='textarea' placeholder='Enter Description...' />
             </FormGroup>
+            <button className='btn btn-info'>Submit</button>
           </form>
         </div>
       </Col>

@@ -3,14 +3,11 @@ import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { SimpleSchema } from 'meteor/aldeed:simple-schema'
 import { Match } from 'meteor/check'
-import ReactSelectize from 'react-selectize'
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import ValidatedInput from './validatedInput'
 import UserProfileContent from './userProfileContent'
 import Loader from 'react-loader'
-const SimpleSelect = ReactSelectize.SimpleSelect
-const MultiSelect = ReactSelectize.MultiSelect
 
 export const UserProfileSchema = new SimpleSchema({
   name: {
@@ -73,8 +70,11 @@ class ValidatedForm extends Component {
 }
 
 function onPropsChange (props, onData) {
-  const user = Meteor.user()
-  onData(null, {user})
+  let handle = Meteor.subscribe('userprofile', {userId: props.userId})
+  if (handle.ready()) {
+    const user = Meteor.users.findOne({'_id': props.userId})
+    onData(null, { user })
+  }
 }
 
 class UserProfile extends Component {
@@ -94,25 +94,6 @@ class UserProfile extends Component {
         <br /><br /><br /><br />
 
         <ValidatedForm schema={UserProfileSchema} />
-        <SimpleSelect
-          placeholder='Select a fruit'
-          onValueChange={function (value) {
-            window.alert(value)
-          }}>
-          <option value='apple'>apple</option>
-          <option value='mango'>mango</option>
-          <option value='orange'>orange</option>
-          <option value='banana'>banana</option>
-        </SimpleSelect>
-        <MultiSelect
-          placeholder='Select fruits'
-          options={['apple', 'mango', 'orange', 'banana'].map(function (fruit) {
-            return {label: fruit, value: fruit}
-          })}
-          onValuesChange={function (values) {
-            window.alert(values)
-          }}
-        />
       </div>
     )
   }
