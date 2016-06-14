@@ -135,7 +135,7 @@ class MainLayout extends Component {
           {this.props.helpCenter}
         </main>
         <LDSidebar />
-        <Alert stack={{limit: 3}} position='bottom-left' />
+        <Alert stack={{limit: 3, spacing: 10}} position='bottom-left' offset={50} />
       </div>
     )
   }
