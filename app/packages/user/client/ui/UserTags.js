@@ -50,7 +50,6 @@ class UserTags extends Component {
         onSearchChange={() => console.log(arguments)}
         theme='material'
         createFromSearch={function (options, values, search) {
-          console.log(search)
           // console.debug('searching')
           // console.debug(options)
           // console.debug(values)

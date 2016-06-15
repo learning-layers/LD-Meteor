@@ -4,13 +4,7 @@ import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/Contro
 import { Meteor } from 'meteor/meteor'
 import ValidatedFormControl from './ValidatedFormControl'
 import { Match } from 'meteor/check'
-import { composeWithTracker } from 'react-komposer'
 import Alert from 'react-s-alert'
-
-function onPropsChange (props, onData) {
-  const user = Meteor.users.findOne({'_id': props.userId})
-  onData(null, { user })
-}
 
 class UserProfileInfoForm extends Component {
   constructor (props) {
@@ -20,6 +14,13 @@ class UserProfileInfoForm extends Component {
       fullName: props.user.profile.fullName || '',
       description: props.user.profile.description || ''
     }
+  }
+  componentWillReceiveProps (nextProps) {
+    this.setState({
+      displayName: nextProps.user.profile.name || '',
+      fullName: nextProps.user.profile.fullName || '',
+      description: nextProps.user.profile.description || ''
+    })
   }
   handleChangeDisplayName (e) {
     this.setState({
@@ -49,7 +50,6 @@ class UserProfileInfoForm extends Component {
     console.log('Submitted=' + JSON.stringify(this.state))
     if (this.validate(this.state)) {
       Meteor.call('sendNewProfileInfoData', this.state.displayName, this.state.fullName, this.state.description, function (error, result) {
-        console.log(arguments)
         if (error) {
           if (error.message) {
             Alert.error(error.message)
@@ -58,14 +58,14 @@ class UserProfileInfoForm extends Component {
           }
         }
         if (result) {
-          Alert.success('Success: Changing profile information failed was successful.')
+          Alert.success('Success: Changing profile information was successful.')
         }
       })
     }
   }
   render () {
-    const { userId, schema } = this.props
-    const isOwnProfile = userId === Meteor.userId()
+    const { user, schema } = this.props
+    const isOwnProfile = user._id === Meteor.userId()
     var valid = this.validate(this.state)
     return <form onSubmit={(e) => this.handleSubmit(e)}>
       {isOwnProfile ? <FormGroup controlId='userDescriptionTextArea'>
@@ -101,9 +101,9 @@ class UserProfileInfoForm extends Component {
           placeholder={schema._schema.description.placeholder}
           disabled={!isOwnProfile} />
       </FormGroup>
-      <button className='btn btn-info' disabled={!valid.all}>Submit</button>
+      {isOwnProfile ? <button className='btn btn-info' disabled={!valid.all}>Submit</button> : null}
     </form>
   }
 }
 
-export default composeWithTracker(onPropsChange)(UserProfileInfoForm)
+export default UserProfileInfoForm

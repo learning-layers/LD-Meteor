@@ -48,7 +48,7 @@ class UserProfileContent extends Component {
       <Col xs={12} md={9}>
         <div className='user-profile-info'>
           <h2 id='personal-info-header'>Personal Info of {userName}</h2>
-          <UserProfileInfoForm userId={userId} userName={userName} schema={UserProfileSchema} />
+          <UserProfileInfoForm user={user} schema={UserProfileSchema} />
         </div>
       </Col>
     </Row>
