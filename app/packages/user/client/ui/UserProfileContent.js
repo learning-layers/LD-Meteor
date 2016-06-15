@@ -12,10 +12,23 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema'
 export const UserProfileSchema2 = new SimpleSchema({
   displayName: {
     type: String,
-    label: 'displayName',
+    label: 'Change Displayname',
     max: 60,
     min: 4,
     placeholder: 'Enter Displayname ...'
+  },
+  fullName: {
+    type: String,
+    label: 'Full Name',
+    max: 200,
+    min: 2,
+    placeholder: 'Enter Full Name ...'
+  },
+  description: {
+    type: String,
+    label: 'Description',
+    max: 1000,
+    placeholder: 'Enter Description ...'
   }
 })
 
