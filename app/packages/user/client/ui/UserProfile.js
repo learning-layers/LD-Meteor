@@ -5,8 +5,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema'
 import { Match } from 'meteor/check'
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
-import ValidatedInput from './validatedInput'
-import UserProfileContent from './userProfileContent'
+import ValidatedInput from './ValidatedInput'
+import UserProfileContent from './UserProfileContent'
 import Loader from 'react-loader'
 
 export const UserProfileSchema = new SimpleSchema({

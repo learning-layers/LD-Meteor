@@ -8,7 +8,7 @@ import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/Contro
 import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
 import { Uploads } from '../../../fileUpload/lib/collections'
 import { composeWithTracker } from 'react-komposer'
-import UserTags from './userTags'
+import UserTags from './UserTags'
 
 function onPropsChange (props, onData) {
   let user = props.user

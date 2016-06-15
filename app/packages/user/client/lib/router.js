@@ -3,7 +3,7 @@ import { mount } from 'react-mounter'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import MainLayout from '../../../../common/client/ui/mainLayout/MainLayout'
 import Navbar from '../../../../common/client/ui/mainLayout/Navbar'
-import UserProfile from '../ui/userProfile'
+import UserProfile from '../ui/UserProfile'
 
 FlowRouter.route('/user/:id', {
   action: function (params, queryParams) {
