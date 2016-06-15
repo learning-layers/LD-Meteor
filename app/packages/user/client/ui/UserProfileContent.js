@@ -7,30 +7,7 @@ import { Uploads } from '../../../fileUpload/lib/collections'
 import { composeWithTracker } from 'react-komposer'
 import UserTags from './UserTags'
 import UserProfileInfoForm from './UserProfileInfoForm'
-import { SimpleSchema } from 'meteor/aldeed:simple-schema'
-
-export const UserProfileSchema2 = new SimpleSchema({
-  displayName: {
-    type: String,
-    label: 'Change Displayname',
-    max: 60,
-    min: 4,
-    placeholder: 'Enter Displayname ...'
-  },
-  fullName: {
-    type: String,
-    label: 'Full Name',
-    max: 200,
-    min: 2,
-    placeholder: 'Enter Full Name ...'
-  },
-  description: {
-    type: String,
-    label: 'Description',
-    max: 1000,
-    placeholder: 'Enter Description ...'
-  }
-})
+import { UserProfileSchema } from '../../lib/schema'
 
 function onPropsChange (props, onData) {
   let user = props.user
@@ -71,7 +48,7 @@ class UserProfileContent extends Component {
       <Col xs={12} md={9}>
         <div className='user-profile-info'>
           <h2 id='personal-info-header'>Personal Info of {userName}</h2>
-          <UserProfileInfoForm userId={userId} schema={UserProfileSchema2} />
+          <UserProfileInfoForm userId={userId} userName={userName} schema={UserProfileSchema} />
         </div>
       </Col>
     </Row>

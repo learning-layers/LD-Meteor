@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import ReactSelectize from 'react-selectize'
-const MultiSelect = ReactSelectize.MultiSelect
 import { Tags } from '../../../tags/lib/collections'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import Alert from 'react-s-alert'
+const MultiSelect = ReactSelectize.MultiSelect
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('userTags')

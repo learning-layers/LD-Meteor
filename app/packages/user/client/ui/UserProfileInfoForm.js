@@ -4,14 +4,21 @@ import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/Contro
 import { Meteor } from 'meteor/meteor'
 import ValidatedFormControl from './ValidatedFormControl'
 import { Match } from 'meteor/check'
+import { composeWithTracker } from 'react-komposer'
+import Alert from 'react-s-alert'
+
+function onPropsChange (props, onData) {
+  const user = Meteor.users.findOne({'_id': props.userId})
+  onData(null, { user })
+}
 
 class UserProfileInfoForm extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      displayName: '',
-      fullName: '',
-      description: ''
+      displayName: props.user.profile.name || '',
+      fullName: props.user.profile.fullName || '',
+      description: props.user.profile.description || ''
     }
   }
   handleChangeDisplayName (e) {
@@ -33,17 +40,38 @@ class UserProfileInfoForm extends Component {
     return {
       displayName: Match.test({displayName: state.displayName}, this.props.schema.pick(['displayName'])),
       fullName: Match.test({fullName: state.fullName}, this.props.schema.pick(['fullName'])),
-      description: Match.test({description: state.description}, this.props.schema.pick(['description']))
+      description: Match.test({description: state.description}, this.props.schema.pick(['description'])),
+      all: Match.test(this.state, this.props.schema)
+    }
+  }
+  handleSubmit (e) {
+    e.preventDefault()
+    console.log('Submitted=' + JSON.stringify(this.state))
+    if (this.validate(this.state)) {
+      Meteor.call('sendNewProfileInfoData', this.state.displayName, this.state.fullName, this.state.description, function (error, result) {
+        console.log(arguments)
+        if (error) {
+          if (error.message) {
+            Alert.error(error.message)
+          } else {
+            Alert.error('Error: Changing profile information failed.')
+          }
+        }
+        if (result) {
+          Alert.success('Success: Changing profile information failed was successful.')
+        }
+      })
     }
   }
   render () {
     const { userId, schema } = this.props
     const isOwnProfile = userId === Meteor.userId()
     var valid = this.validate(this.state)
-    return <form>
+    return <form onSubmit={(e) => this.handleSubmit(e)}>
       {isOwnProfile ? <FormGroup controlId='userDescriptionTextArea'>
         <ControlLabel>{schema._schema.displayName.label}</ControlLabel>
         <ValidatedFormControl
+          ref='displayName'
           type='text'
           valid={valid.displayName}
           value={this.state.displayName}
@@ -54,6 +82,7 @@ class UserProfileInfoForm extends Component {
       <FormGroup controlId='userFullNameText'>
         <ControlLabel>{schema._schema.fullName.label}</ControlLabel>
         <ValidatedFormControl
+          ref='fullName'
           type='text'
           valid={valid.fullName}
           value={this.state.fullName}
@@ -64,6 +93,7 @@ class UserProfileInfoForm extends Component {
       <FormGroup controlId='userDescriptionTextArea'>
         <ControlLabel>{schema._schema.description.label}</ControlLabel>
         <ValidatedFormControl
+          ref='description'
           type='text'
           valid={valid.description}
           value={this.state.description}
@@ -71,9 +101,9 @@ class UserProfileInfoForm extends Component {
           placeholder={schema._schema.description.placeholder}
           disabled={!isOwnProfile} />
       </FormGroup>
-      <button className='btn btn-info'>Submit</button>
+      <button className='btn btn-info' disabled={!valid.all}>Submit</button>
     </form>
   }
 }
 
-export default UserProfileInfoForm
+export default composeWithTracker(onPropsChange)(UserProfileInfoForm)

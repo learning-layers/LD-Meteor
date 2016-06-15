@@ -1,29 +1,10 @@
 import React, { Component } from 'react'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
-import { SimpleSchema } from 'meteor/aldeed:simple-schema'
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import UserProfileContent from './UserProfileContent'
 import Loader from 'react-loader'
-import ValidatedForm from './ValidatedForm'
-
-export const UserProfileSchema = new SimpleSchema({
-  name: {
-    type: String,
-    label: 'name',
-    max: 600,
-    min: 4,
-    placeholder: 'name'
-  },
-  price: {
-    type: String,
-    label: 'price',
-    regEx: /^\$\d+\.\d+$/,
-    placeholder: '$0.00',
-    min: 2
-  }
-})
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('userprofile', {userId: props.userId})
@@ -46,10 +27,6 @@ class UserProfile extends Component {
             Settings
           </Tab>
         </Tabs> : <UserProfileContent user={user} />}
-
-        <br /><br /><br /><br />
-
-        <ValidatedForm schema={UserProfileSchema} />
       </div>
     )
   }
