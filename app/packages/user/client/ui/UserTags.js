@@ -25,7 +25,7 @@ class UserTags extends Component {
     }
   }
   addTagFromOption (item) {
-    Meteor.call('addTagToUser', item.label, item.value, Meteor.userId(), function (err, res) {
+    Meteor.call('addTagToUser', item.label, item.value, this.props.userId, function (err, res) {
       if (err) {
         //
       }
