@@ -93,6 +93,11 @@ h1, h2, h3, h4 {
 }
 
 input {
+  &:focus {
+    &.invalid {
+      box-shadow: inset 0 -2px 0 #f44336;
+    }
+  }
   &.invalid {
     box-shadow: inset 0 -2px 0 #f44336;
   }
