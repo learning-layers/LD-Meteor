@@ -9,7 +9,6 @@ import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
 import NavItem from '../../../../../node_modules/react-bootstrap/lib/NavItem'
 import NavDropdown from '../../../../../node_modules/react-bootstrap/lib/NavDropdown'
 import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
 import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
 import classNames from 'classnames'
@@ -59,21 +58,11 @@ class LDNavbar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavItem eventKey={1} href='#'>
-                Link
+              <NavItem eventKey={1} href='/'>
+                Home
               </NavItem>
-              <NavItem eventKey={2} href='#'>
-                Link
-              </NavItem>
-              <NavDropdown eventKey={3} title='Dropdown' id='basic-nav-dropdown'>
-                <MenuItem eventKey={3.1}> Action
-                </MenuItem>
-                <MenuItem eventKey={3.2}> Another action
-                </MenuItem>
-                <MenuItem eventKey={3.3}> Something else here
-                </MenuItem>
-                <MenuItem divider />
-                <MenuItem eventKey={3.3}> Separated link
+              <NavDropdown eventKey={3} title='Document' id='basic-nav-dropdown'>
+                <MenuItem eventKey={3.1}> New Document
                 </MenuItem>
               </NavDropdown>
               <NavItem id='nav-app-search' eventKey={4} href='#'>
@@ -81,10 +70,6 @@ class LDNavbar extends Component {
                   <FormGroup>
                     <FormControl type='text' placeholder='Search' />
                   </FormGroup>
-                  {' '}
-                  <Button type='submit'>
-                    Submit
-                  </Button>
                 </Navbar.Form>
               </NavItem>
             </Nav>
