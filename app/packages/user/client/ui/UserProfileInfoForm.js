@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
 import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/ControlLabel'
 import { Meteor } from 'meteor/meteor'
-import ValidatedFormControl from './ValidatedFormControl'
+import ValidatedFormControl from '../../../../common/client/ui/forms/ValidatedFormControl'
 import { Match } from 'meteor/check'
 import Alert from 'react-s-alert'
 

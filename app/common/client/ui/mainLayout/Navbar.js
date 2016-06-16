@@ -14,6 +14,7 @@ import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormCon
 import classNames from 'classnames'
 import Avatar from '../../../../packages/chat/client/ui/Avatar'
 import { Uploads } from '../../../../packages/fileUpload/lib/collections'
+import CreateDocumentModal from '../../../../packages/document/client/ui/CreateDocumentModal'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -29,19 +30,35 @@ function onPropsChange (props, onData) {
 }
 
 class LDNavbar extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      openChangeUserRolesModal: null
+    }
+  }
   componentDidMount () {
     // Use Meteor Blaze to render login buttons
     this.view = Blaze.render(Template._loginButtons,
       ReactDOM.findDOMNode(this.refs.accountsLoginContainer))
   }
-
   componentWillUnmount () {
-    // Clean up Blaze view
+    // cleanup blaze view and react roots
     Blaze.remove(this.view)
+    let renderToElement = this.refs.createDocumentModal
+    if (this.state.openChangeUserRolesModal !== null) {
+      ReactDOM.unmountComponentAtNode(renderToElement)
+    }
   }
-
   openSidebar () {
     global.emitter.emit('sidebar-toggle', true)
+  }
+  openCreateDocumentModal () {
+    let renderToElement = this.refs.createDocumentModal
+    if (!this.state.openChangeUserRolesModal) {
+      this.state.openChangeUserRolesModal = ReactDOM.render(<CreateDocumentModal />, renderToElement)
+    } else {
+      this.state.openChangeUserRolesModal.open()
+    }
   }
   render () {
     const { userAvatarPath } = this.props
@@ -61,17 +78,17 @@ class LDNavbar extends Component {
               <NavItem eventKey={1} href='/'>
                 Home
               </NavItem>
-              <NavDropdown eventKey={3} title='Document' id='basic-nav-dropdown'>
-                <MenuItem eventKey={3.1}> New Document
+              {loggedIn ? <NavDropdown eventKey={3} title='Document' id='basic-nav-dropdown'>
+                <MenuItem eventKey={3.1} onClick={() => this.openCreateDocumentModal()}> New Document
                 </MenuItem>
-              </NavDropdown>
-              <NavItem id='nav-app-search' eventKey={4} href='#'>
+              </NavDropdown> : null}
+              {loggedIn ? <NavItem id='nav-app-search' eventKey={4} href='#'>
                 <Navbar.Form pullLeft>
                   <FormGroup>
                     <FormControl type='text' placeholder='Search' />
                   </FormGroup>
                 </Navbar.Form>
-              </NavItem>
+              </NavItem> : null}
             </Nav>
             <Nav pullRight ref='accountsLoginContainer'>
               {loggedIn ? <NavItem className='avatar-nav-item' eventKey={1} href='#'>
@@ -87,6 +104,7 @@ class LDNavbar extends Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
+        <div ref='createDocumentModal'></div>
       </div>
     )
   }
