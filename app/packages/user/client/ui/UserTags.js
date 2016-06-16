@@ -27,9 +27,11 @@ class UserTags extends Component {
   addTagFromOption (item) {
     Meteor.call('addTagToUser', item.label, item.value, this.props.userId, function (err, res) {
       if (err) {
-        //
+        Alert.error('Error: Adding tag \'' + item.label + '.')
       }
-      Alert.success('Success: Adding tag \'' + item.label + '.')
+      if (res) {
+        Alert.success('Success: Adding tag \'' + item.label + '.')
+      }
     })
     this.resetSearch()
   }
@@ -70,10 +72,12 @@ class UserTags extends Component {
               if (result) {
                 Meteor.call('removeTagFromUser', item._id, function (err, res) {
                   if (err) {
-                    //
+                    Alert.error('Error: Removing tag \'' + item.label + '.')
                   }
-                  Alert.success('Success: Removed tag \'' + item.label + '.')
-                  console.log(res)
+                  if (res) {
+                    Alert.success('Success: Removed tag \'' + item.label + '.')
+                    console.log(res)
+                  }
                 })
               }
             }}> &times;</div>
@@ -98,10 +102,11 @@ class UserTags extends Component {
               // remove the value from the database
               Meteor.call('removeTagFromUser', currentTag._id, function (err, res) {
                 if (err) {
-                  //
+                  Alert.error('Error: Removing tag \'' + currentTag.label + '.')
                 }
-                Alert.success('Success: Removed tag \'' + currentTag.label + '.')
-                console.log(res)
+                if (res) {
+                  Alert.success('Success: Removed tag \'' + currentTag.label + '.')
+                }
               })
             }
           })
