@@ -57,6 +57,7 @@ let buildElementHeights = function (items, expandedItems) {
 class ReactiveInfiniteList extends Component {
   constructor (props) {
     super(props)
+    // Meteor.call('insertInfiniteScrollTestData')
     console.debug('constructor')
     this.componentDidMount.bind(this)
     this.componentWillUnmount.bind(this)

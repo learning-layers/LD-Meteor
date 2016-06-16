@@ -53,7 +53,7 @@ class LDNavbar extends Component {
         <Navbar fluid bsStyle='default'>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href='#'>Living Documents</a>
+              <a href='/'>Living Documents</a>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
