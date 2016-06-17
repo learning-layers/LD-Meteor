@@ -4,6 +4,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import MainLayout from '../../../../common/client/ui/mainLayout/MainLayout'
 import Navbar from '../../../../common/client/ui/mainLayout/Navbar'
 import DocumentList from '../ui/DocumentList'
+import Document from '../ui/Document'
 
 FlowRouter.route('/documentList', {
   action: function (params, queryParams) {
@@ -12,6 +13,20 @@ FlowRouter.route('/documentList', {
     mount(MainLayout, {
       header: <Navbar />,
       content: <DocumentList />,
+      helpCenter: null
+    })
+  }
+})
+
+FlowRouter.route('/document/:id', {
+  action: function (params, queryParams) {
+    console.log('Params:', params)
+    console.log('Query Params:', queryParams)
+    let id = params.id
+    mount(MainLayout, {
+      id: id,
+      header: <Navbar />,
+      content: <Document id={id} />,
       helpCenter: null
     })
   }

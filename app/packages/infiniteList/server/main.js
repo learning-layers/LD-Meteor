@@ -1,8 +1,12 @@
 import { Meteor } from 'meteor/meteor'
 import { InfiniteScrollItems } from '../lib/collections'
 import { ServerArgs } from '../../serverargs/lib/collections'
+import { check } from 'meteor/check'
 
 Meteor.publish('infiniteItems', function (args) {
+  check(args, {
+    limit: Number
+  })
   return InfiniteScrollItems.find({}, {limit: args.limit})
 })
 
@@ -10,6 +14,11 @@ Meteor.publish('reactiveInfiniteItems', function (initialArgs) {
   // TODO polish
   console.log('initialArgs=')
   console.log(initialArgs)
+  // Match.Maybe for optional vars
+  check(initialArgs, {
+    itemId: String,
+    limit: Number
+  })
   if (this.userId) {
     let serverItemArgs = ServerArgs.findOne({'itemId': initialArgs.itemId})
     if (serverItemArgs) {

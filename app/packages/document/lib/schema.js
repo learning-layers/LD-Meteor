@@ -10,7 +10,17 @@ export const DocumentSchema = new SimpleSchema({
     type: String,
     label: 'Document title',
     max: 300,
-    min: 6,
+    min: 4,
     placeholder: 'Enter document title ...'
+  },
+  createdBy: {
+    type: String,
+    label: 'Created by',
+    max: 40,
+    min: 6
+  },
+  createdAt: {
+    type: Date,
+    label: 'Created at'
   }
 })
