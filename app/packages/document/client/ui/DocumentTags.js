@@ -7,25 +7,25 @@ import Alert from 'react-s-alert'
 const MultiSelect = ReactSelectize.MultiSelect
 
 function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('userTags', {userId: props.userId})
-  if (handle.ready() && props.userId) {
-    const userTags = Tags.find({ parentId: props.userId, type: 'user' }).fetch()
-    onData(null, { userTags })
+  let handle = Meteor.subscribe('documentTags', {documentId: props.documentId})
+  if (handle.ready() && props.documentId) {
+    const documentTags = Tags.find({ parentId: props.documentId, type: 'document' }).fetch()
+    onData(null, { documentTags })
   }
 }
 
-class UserTags extends Component {
+class DocumentTags extends Component {
   constructor (props) {
     super(props)
     console.log(props)
     this.state = {
       tagOptions: [
-        {label: 'test', name: 'test'}
+        {label: 'test', name: 'test', value: 'test'}
       ]
     }
   }
   addTagFromOption (item) {
-    Meteor.call('addTagToUser', item.label, item.value, this.props.userId, function (err, res) {
+    Meteor.call('addTagToDocument', item.label, item.value, this.props.documentId, function (err, res) {
       if (err) {
         Alert.error('Error: Adding tag \'' + item.label + '.')
       }
@@ -36,19 +36,19 @@ class UserTags extends Component {
     this.resetSearch()
   }
   resetSearch () {
-    console.log(this.refs.userTags)
-    this.refs.userTags.setState({search: ''})
+    console.log(this.refs.documentTags)
+    this.refs.documentTags.setState({search: ''})
   }
   render () {
-    const { userTags } = this.props
+    const { documentTags, documentId } = this.props
     return <div className='user-tags'>
       <MultiSelect
-        ref='userTags'
+        ref='documentTags'
         anchor={undefined}
         width='200px'
         placeholder='Enter tags here...'
         options={this.state.tagOptions}
-        values={userTags}
+        values={documentTags}
         onSearchChange={() => console.log(arguments)}
         theme='material'
         createFromSearch={function (options, values, search) {
@@ -70,7 +70,7 @@ class UserTags extends Component {
             <div style={{display: 'inline', marginLeft: '5px'}} onClick={function () {
               let result = window.confirm('Do you want to remove the tag \'' + item.label + '?')
               if (result) {
-                Meteor.call('removeTagFromUser', item._id, function (err, res) {
+                Meteor.call('removeTagFromDocument', item._id, function (err, res) {
                   if (err) {
                     Alert.error('Error: Removing tag \'' + item.label + '.')
                   }
@@ -84,23 +84,25 @@ class UserTags extends Component {
           </div>
         }}
         onValuesChange={(values) => {
-          values.forEach(function (value) {
+          values.forEach((value) => {
             if (!value._id) {
               // insert the value into the database
-              Meteor.call('addTagToUser', value.label, value.value, Meteor.userId(), function (err, res) {
+              Meteor.call('addTagToDocument', value.label, value.value, documentId, function (err, res) {
                 if (err) {
-                  //
+                  Alert.error('Error: Adding tag \'' + value.label + '.')
                 }
-                Alert.success('Success: Adding tag \'' + value.label + '.')
-                console.log(res)
-                value._id = res
+                if (res) {
+                  Alert.success('Success: Adding tag \'' + value.label + '.')
+                  console.log(res)
+                  value._id = res
+                }
               })
             }
           })
-          userTags.forEach(function (currentTag) {
+          documentTags.forEach(function (currentTag) {
             if (values.indexOf(currentTag) === -1) {
               // remove the value from the database
-              Meteor.call('removeTagFromUser', currentTag._id, function (err, res) {
+              Meteor.call('removeTagFromDocument', currentTag._id, function (err, res) {
                 if (err) {
                   Alert.error('Error: Removing tag \'' + currentTag.label + '.')
                 }
@@ -149,4 +151,4 @@ class UserTags extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(UserTags)
+export default composeWithTracker(onPropsChange)(DocumentTags)

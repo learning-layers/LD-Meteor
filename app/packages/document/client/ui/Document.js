@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { Documents } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
+import DocumentTags from './DocumentTags'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -24,6 +25,7 @@ class Document extends Component {
           <button className='btn btn-default'>
             <span className='glyphicon glyphicon-plus' />
           </button>
+          <DocumentTags documentId={document._id} />
         </div>
       </div>
       <div className='main-content panel panel-primary'>
