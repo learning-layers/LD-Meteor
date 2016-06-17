@@ -9,11 +9,9 @@ function onPropsChange (props, onData) {
 
 class Home extends Component {
   render () {
-    const {user} = this.props
     return (
       <div className='ld-home container-fluid'>
-        Home
-        {user && user.profile ? user.profile.name : null}
+        <h2 className='letterpress-effect'>Living Documents</h2>
       </div>
     )
   }

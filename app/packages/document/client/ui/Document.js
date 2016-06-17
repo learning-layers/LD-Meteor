@@ -14,8 +14,28 @@ function onPropsChange (props, onData) {
 class Document extends Component {
   render () {
     const { document } = this.props
-    return <div class='document'>
-      {document.title}
+    return <div className='document container-fluid'>
+      <div className='well breadcrumb-tag-wrapper'>
+        <div className='hierarchy-bar'>Hierarchy:</div>
+        <hr />
+        <div className='tag-bar'>
+          Tags:
+          {' '}
+          <button className='btn btn-default'>
+            <span className='glyphicon glyphicon-plus' />
+          </button>
+        </div>
+      </div>
+      <div className='main-content panel panel-primary'>
+        <div className='panel-heading'><h4 className='document-title'>{document.title}</h4></div>
+        <div className='panel-body'>
+          <div className='attachments-bar'>
+          </div>
+          <div className='content'>
+            Document
+          </div>
+        </div>
+      </div>
     </div>
   }
 }

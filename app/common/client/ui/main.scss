@@ -111,6 +111,8 @@ input {
 }
 
 @import "mainLayout/_mainLayout";
+@import "../../../packages/document/client/ui/_document";
+@import "../../../packages/home/client/ui/_home";
 @import "../../../packages/helpCenter/client/ui/_help_center";
 @import "../../../packages/admin/client/ui/_userManagement";
 @import "../../../packages/infiniteList/client/ui/_chat";
