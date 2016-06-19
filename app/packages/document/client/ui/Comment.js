@@ -6,7 +6,6 @@ import { moment } from 'meteor/momentjs:moment'
 import Rating from 'react-rating'
 import classNames from 'classnames'
 import CommentReply from './CommentReply'
-import { Meteor } from 'meteor/meteor'
 
 class Comment extends Component {
   constructor (props) {
