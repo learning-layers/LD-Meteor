@@ -107,10 +107,18 @@
   padding: 10px;
   background-color: #efefef;
   margin-bottom: 10px;
-  input.form-control {
-    margin-bottom: 10px;
-  }
   .options-bar {
+    margin-top: 10px;
+    button {
+      float: right;
+    }
+  }
+}
+
+.create-new-comment-wrapper {
+  margin-bottom: 20px;
+  .options-bar {
+    margin-top: 10px;
     button {
       float: right;
     }

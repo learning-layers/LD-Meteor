@@ -3,12 +3,7 @@ import { Meteor } from 'meteor/meteor'
 import { Documents } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
 import DocumentTags from './DocumentTags'
-import Comment from './Comment'
-import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
-import DropdownButton from '../../../../../node_modules/react-bootstrap/lib/DropdownButton'
-import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
-import uuid from 'node-uuid'
+import CommentingArea from './CommentingArea'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -44,25 +39,7 @@ class Document extends Component {
           </div>
         </div>
       </div>
-      <div className='commenting-section'>
-        <div className='commenting-header'>
-          <h4>Comments (14)</h4>
-          <div className='options-top-bar'>
-            <ButtonToolbar className='options-bar'>
-              <Button bsSize='small'>Search</Button>
-              <DropdownButton bsSize='small' title='Sort' id='sort-dropdown'>
-                <MenuItem eventKey='1'>Most recent</MenuItem>
-                <MenuItem eventKey='2'>Oldest</MenuItem>
-                <MenuItem eventKey='2'>Most agreed upon</MenuItem>
-              </DropdownButton>
-              <Button bsSize='small'>Subscribe</Button>
-            </ButtonToolbar>
-          </div>
-          <hr />
-        </div>
-        <Comment key={'comment-' + uuid.v4()} />
-        <Comment key={'comment-' + uuid.v4()} />
-      </div>
+      <CommentingArea />
     </div>
   }
 }
