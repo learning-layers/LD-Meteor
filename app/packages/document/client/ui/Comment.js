@@ -5,6 +5,7 @@ import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { moment } from 'meteor/momentjs:moment'
 import Rating from 'react-rating'
 import classNames from 'classnames'
+import CommentReply from './CommentReply'
 
 class Comment extends Component {
   constructor (props) {
@@ -58,17 +59,7 @@ class Comment extends Component {
         </div>
         <hr className={hrDividerClassNames} />
       </div>
-      {this.state.replyActive ? <div>
-        <div className='reply-wrapper'>
-          <input className='form-control' placeholder='reply' />
-          <ButtonToolbar className='options-bar'>
-            <Button bsStyle='success' bsSize='small' onClick={() => this.submitReply()}>Submit Reply</Button>
-            <Button bsSize='small' onClick={() => this.closeReply()}>Close</Button>
-          </ButtonToolbar>
-          <div className='clearfix'></div>
-        </div>
-        <hr className='no-margin-top' />
-      </div> : null}
+      {this.state.replyActive ? <CommentReply /> : null}
     </div>
   }
 }
