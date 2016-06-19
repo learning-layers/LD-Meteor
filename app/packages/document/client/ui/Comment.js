@@ -4,6 +4,7 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { moment } from 'meteor/momentjs:moment'
 import Rating from 'react-rating'
+import classNames from 'classnames'
 
 class Comment extends Component {
   constructor (props) {
@@ -26,6 +27,7 @@ class Comment extends Component {
     })
   }
   render () {
+    let hrDividerClassNames = classNames({'no-margin-bottom': this.state.replyActive})
     return <div className='comment-wrapper'>
       <div className='comment'>
         <div className='avatar-img-wrapper'>
@@ -54,15 +56,18 @@ class Comment extends Component {
             </div>
           </div>}
         </div>
-        <hr />
+        <hr className={hrDividerClassNames} />
       </div>
-      {this.state.replyActive ? <div className='reply-wrapper'>
-        <input className='form-control' placeholder='reply' />
-        <ButtonToolbar className='options-bar'>
-          <Button bsSize='small' onClick={() => this.closeReply()}>Close</Button>
-          <Button bsStyle='success' bsSize='small' onClick={() => this.submitReply()}>Submit Reply</Button>
-        </ButtonToolbar>
-        <hr />
+      {this.state.replyActive ? <div>
+        <div className='reply-wrapper'>
+          <input className='form-control' placeholder='reply' />
+          <ButtonToolbar className='options-bar'>
+            <Button bsStyle='success' bsSize='small' onClick={() => this.submitReply()}>Submit Reply</Button>
+            <Button bsSize='small' onClick={() => this.closeReply()}>Close</Button>
+          </ButtonToolbar>
+          <div className='clearfix'></div>
+        </div>
+        <hr className='no-margin-top' />
       </div> : null}
     </div>
   }

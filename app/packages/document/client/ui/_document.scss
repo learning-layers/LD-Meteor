@@ -100,3 +100,19 @@
     color: #999999;
   }
 }
+
+.reply-wrapper {
+  position: relative;
+  margin-left: 4.000rem;
+  padding: 10px;
+  background-color: #efefef;
+  margin-bottom: 10px;
+  input.form-control {
+    margin-bottom: 10px;
+  }
+  .options-bar {
+    button {
+      float: right;
+    }
+  }
+}

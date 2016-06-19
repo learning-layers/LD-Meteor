@@ -6,6 +6,8 @@ import DocumentTags from './DocumentTags'
 import Comment from './Comment'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
+import DropdownButton from '../../../../../node_modules/react-bootstrap/lib/DropdownButton'
+import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -46,7 +48,12 @@ class Document extends Component {
           <h4>Comments (14)</h4>
           <div className='options-top-bar'>
             <ButtonToolbar className='options-bar'>
-              <Button bsSize='small'>Sort</Button>
+              <Button bsSize='small'>Search</Button>
+              <DropdownButton bsSize='small' title='Sort' id='sort-dropdown'>
+                <MenuItem eventKey='1'>Most recent</MenuItem>
+                <MenuItem eventKey='2'>Oldest</MenuItem>
+                <MenuItem eventKey='2'>Most agreed upon</MenuItem>
+              </DropdownButton>
               <Button bsSize='small'>Subscribe</Button>
             </ButtonToolbar>
           </div>
