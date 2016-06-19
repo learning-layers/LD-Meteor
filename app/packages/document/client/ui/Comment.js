@@ -6,6 +6,7 @@ import { moment } from 'meteor/momentjs:moment'
 import Rating from 'react-rating'
 import classNames from 'classnames'
 import CommentReply from './CommentReply'
+import { Meteor } from 'meteor/meteor'
 
 class Comment extends Component {
   constructor (props) {
@@ -15,12 +16,12 @@ class Comment extends Component {
     }
   }
   handleReplyClick () {
-    this.setState({
-      replyActive: true
-    })
-  }
-  submitReply () {
-    window.alert('submit reply')
+    global.emitter.emit('reply-opened')
+    setTimeout(() => {
+      this.setState({
+        replyActive: true
+      })
+    }, 100)
   }
   closeReply () {
     this.setState({
@@ -59,7 +60,7 @@ class Comment extends Component {
         </div>
         <hr className={hrDividerClassNames} />
       </div>
-      {this.state.replyActive ? <CommentReply /> : null}
+      {this.state.replyActive ? <CommentReply closeReply={() => this.closeReply()} /> : null}
     </div>
   }
 }

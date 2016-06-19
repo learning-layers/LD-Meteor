@@ -3,6 +3,26 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 
 class CommentReply extends Component {
+  constructor (props) {
+    super(props)
+    this.closeReply.bind(this)
+    this.componentDidMount.bind(this)
+    this.componentWillUnmount.bind(this)
+  }
+  componentDidMount () {
+    this.replyOpenedSubscription = global.emitter.addListener('reply-opened', () => { this.closeReply() })
+  }
+  componentWillUnmount () {
+    if (this.replyOpenedSubscription) {
+      this.replyOpenedSubscription.remove()
+    }
+  }
+  submitReply () {
+    window.alert('submit reply')
+  }
+  closeReply () {
+    this.props.closeReply()
+  }
   render () {
     return <div>
       <div className='reply-wrapper'>

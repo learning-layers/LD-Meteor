@@ -8,6 +8,7 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import DropdownButton from '../../../../../node_modules/react-bootstrap/lib/DropdownButton'
 import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
+import uuid from 'node-uuid'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -59,8 +60,8 @@ class Document extends Component {
           </div>
           <hr />
         </div>
-        <Comment />
-        <Comment />
+        <Comment key={'comment-' + uuid.v4()} />
+        <Comment key={'comment-' + uuid.v4()} />
       </div>
     </div>
   }

@@ -19,10 +19,12 @@ class LDSidebar extends Component {
     this.trackerComputation = null
   }
   componentDidMount () {
-    global.emitter.addListener('sidebar-toggle', (open) => { this.onSetSidebarOpen(open) })
+    this.sidebarToggleSubscription = global.emitter.addListener('sidebar-toggle', (open) => { this.onSetSidebarOpen(open) })
   }
   componentWillUnmount () {
-    global.emitter.removeListener('sidebar-toggle', (open) => { this.onSetSidebarOpen(open) })
+    if (this.sidebarToggleSubscription) {
+      this.sidebarToggleSubscription.remove()
+    }
   }
   onSetSidebarOpen (open) {
     this.setState({sidebarOpen: open})
