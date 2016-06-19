@@ -4,6 +4,8 @@ import { Documents } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
 import DocumentTags from './DocumentTags'
 import Comment from './Comment'
+import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
+import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -40,6 +42,16 @@ class Document extends Component {
         </div>
       </div>
       <div className='commenting-section'>
+        <div className='commenting-header'>
+          <h4>Comments (14)</h4>
+          <div className='options-top-bar'>
+            <ButtonToolbar className='options-bar'>
+              <Button bsSize='small'>Sort</Button>
+              <Button bsSize='small'>Subscribe</Button>
+            </ButtonToolbar>
+          </div>
+          <hr />
+        </div>
         <Comment />
         <Comment />
       </div>

@@ -48,7 +48,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 35px;
+  width: 4.000rem;
   img {
     width: 28px;
     height: 28px;
@@ -58,7 +58,7 @@
 .comment-content-wrapper {
   position: relative;
   width: 100%;
-  padding-left: 35px;
+  padding-left: 4.000rem;
   .datetime {
     font-size: 12px;
     position: absolute;
@@ -68,5 +68,35 @@
   }
   .options-bar {
     margin-top: 10px;
+    .options-buttons {
+      display: inline-block;
+    }
+  }
+  .rating-wrapper {
+    float: right;
+    display: inline-block;
+    margin-left: 10px;
+  }
+  .rating-lbl-wrapper {
+    display: inline-block;
+    height: 30px;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+    text-transform: uppercase;
+    margin-right: 10px;
+    color: #999999;
+  }
+}
+
+.commenting-header {
+  position: relative;
+  .options-top-bar {
+    font-size: 12px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #999999;
   }
 }

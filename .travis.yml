@@ -20,10 +20,11 @@ before_install:
   - "meteor remove kadira:debug"
   - "npm install -g eslint eslint-config-standard eslint-config-standard-jsx eslint-plugin-standard eslint-plugin-promise eslint-plugin-react"
 
+# TODO activate test-packages again when needed
+# "meteor reset"
+# "npm run test-packages"
 script:
   - "npm run test-travis"
   - "meteor reset"
   - "npm run testall-travis"
-  - "meteor reset"
-  - "npm run test-packages"
   - "npm run lint"
