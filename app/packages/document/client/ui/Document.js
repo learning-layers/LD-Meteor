@@ -39,7 +39,7 @@ class Document extends Component {
           </div>
         </div>
       </div>
-      <CommentingArea />
+      <CommentingArea documentId={document._id} />
     </div>
   }
 }

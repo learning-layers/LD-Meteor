@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
+import { composeWithTracker } from 'react-komposer'
 import Comment from './Comment'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import DropdownButton from '../../../../../node_modules/react-bootstrap/lib/DropdownButton'
 import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
-import uuid from 'node-uuid'
 import { MentionsInput, Mention } from 'react-mentions'
 import uniqBy from 'lodash/uniqBy'
 import sortBy from 'lodash/sortBy'
@@ -13,6 +13,7 @@ import throttle from 'lodash/throttle'
 import defaultStyle from './defaultStyle'
 import defaultMentionStyle from './defaultMentionStyle'
 import { Meteor } from 'meteor/meteor'
+import { DocumentComments } from '../../lib/collections'
 
 const style = merge({}, defaultStyle(), {
   suggestions: {
@@ -54,6 +55,16 @@ let data = function (possibleSuggestions, search, callback) {
   })
 }
 
+function onPropsChange (props, onData) {
+  let handle = Meteor.subscribe('documentComments', {documentId: props.documentId})
+  if (handle.ready()) {
+    let documentComments = DocumentComments.find({'documentId': props.documentId}).fetch()
+    console.log('documentComments=')
+    console.log(documentComments)
+    onData(null, {documentComments})
+  }
+}
+
 class CommentingArea extends Component {
   constructor (props) {
     super(props)
@@ -64,12 +75,26 @@ class CommentingArea extends Component {
       users: users
     }
   }
+  createNewComment () {
+    Meteor.call('createComment', {
+      documentId: this.props.documentId,
+      text: 'BulletProof Meteor is great!',
+      parent: null
+    })
+  }
+  handleChange (ev, value, plainTextVal, mentions) {
+    this.setState({
+      value: value,
+      mentions: mentions
+    })
+  }
   render () {
     let {users} = this.state
     let possibleSuggestions = []
     users.forEach(function (user) {
       possibleSuggestions.push({id: user._id, display: user.profile.name})
     })
+    const { documentComments } = this.props
     return <div class='commenting-section'>
       <div className='create-new-comment-wrapper'>
         <MentionsInput appendSpaceOnAdd value={this.state.value}
@@ -79,7 +104,7 @@ class CommentingArea extends Component {
             renderSuggestion={(entry, search, highlightedDisplay, index) => renderUserSuggestion(entry, search, highlightedDisplay, index)} />
         </MentionsInput>
         <ButtonToolbar className='options-bar'>
-          <Button bsStyle='success' bsSize='small' onClick={() => this.submitReply()}>Submit Reply</Button>
+          <Button bsStyle='success' bsSize='small' onClick={() => this.createNewComment()}>Submit Reply</Button>
           <Button bsSize='small' onClick={() => this.closeReply()}>Close</Button>
         </ButtonToolbar>
         <div className='clearfix'></div>
@@ -100,11 +125,12 @@ class CommentingArea extends Component {
           </div>
           <hr />
         </div>
-        <Comment key={'comment-' + uuid.v4()} />
-        <Comment key={'comment-' + uuid.v4()} />
+        {documentComments.map(function (documentComment) {
+          return <Comment key={'dc-' + documentComment._id} comment={documentComment} />
+        })}
       </div>
     </div>
   }
 }
 
-export default CommentingArea
+export default composeWithTracker(onPropsChange)(CommentingArea)

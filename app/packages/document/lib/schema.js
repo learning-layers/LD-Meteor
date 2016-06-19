@@ -24,3 +24,33 @@ export const DocumentSchema = new SimpleSchema({
     label: 'Created at'
   }
 })
+
+export const DocumentCommentSchema = new SimpleSchema({
+  documentId: {
+    type: String,
+    label: 'DocumentId',
+    max: 40,
+    min: 6
+  },
+  text: {
+    type: String,
+    label: 'Comment text',
+    max: 2000,
+    min: 4,
+    placeholder: 'Enter comment ... (Mention people using \'@\')'
+  },
+  createdBy: {
+    type: String,
+    label: 'Created by',
+    max: 40,
+    min: 6
+  },
+  createdAt: {
+    type: Date,
+    label: 'Created at'
+  },
+  parent: {
+    type: [String],
+    optional: true
+  }
+})
