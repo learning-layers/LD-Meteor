@@ -14,6 +14,7 @@ import defaultStyle from './defaultStyle'
 import defaultMentionStyle from './defaultMentionStyle'
 import { Meteor } from 'meteor/meteor'
 import { DocumentComments } from '../../lib/collections'
+import { Counts } from 'meteor/tmeasday:publish-counts'
 
 const style = merge({}, defaultStyle(), {
   suggestions: {
@@ -56,12 +57,12 @@ let data = function (possibleSuggestions, search, callback) {
 }
 
 function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('documentComments', {documentId: props.documentId})
-  if (handle.ready()) {
+  let commentsHandle = Meteor.subscribe('documentComments', {documentId: props.documentId})
+  let commentsCounterHandle = Meteor.subscribe('documentCommentsCount', {documentId: props.documentId})
+  if (commentsHandle.ready() && commentsCounterHandle.ready()) {
     let documentComments = DocumentComments.find({'documentId': props.documentId}).fetch()
-    console.log('documentComments=')
-    console.log(documentComments)
-    onData(null, {documentComments})
+    let documentCommentsCount = Counts.get('documentCommentsCount')
+    onData(null, {documentComments, documentCommentsCount})
   }
 }
 
@@ -79,7 +80,7 @@ class CommentingArea extends Component {
     Meteor.call('createComment', {
       documentId: this.props.documentId,
       text: 'BulletProof Meteor is great!',
-      parent: null
+      parents: null
     })
   }
   handleChange (ev, value, plainTextVal, mentions) {
@@ -94,7 +95,7 @@ class CommentingArea extends Component {
     users.forEach(function (user) {
       possibleSuggestions.push({id: user._id, display: user.profile.name})
     })
-    const { documentComments } = this.props
+    const { documentComments, documentCommentsCount } = this.props
     return <div class='commenting-section'>
       <div className='create-new-comment-wrapper'>
         <MentionsInput appendSpaceOnAdd value={this.state.value}
@@ -111,7 +112,7 @@ class CommentingArea extends Component {
       </div>
       <div className='commenting-section-comments'>
         <div className='commenting-header'>
-          <h4>Comments (14)</h4>
+          <h4>Comments ({documentCommentsCount})</h4>
           <div className='options-top-bar'>
             <ButtonToolbar className='options-bar'>
               <Button bsSize='small'>Search</Button>

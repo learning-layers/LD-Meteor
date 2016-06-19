@@ -78,7 +78,13 @@ class CommentReply extends Component {
     }
   }
   submitReply () {
-    window.alert('submit reply')
+    let newComment = {
+      documentId: this.props.parentComment.documentId,
+      text: 'BulletProof Meteor is great!',
+      parents: []
+    }
+    newComment.parents.push(this.props.parentComment._id)
+    Meteor.call('createComment', newComment)
   }
   closeReply () {
     this.props.closeReply()

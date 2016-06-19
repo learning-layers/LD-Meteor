@@ -147,6 +147,7 @@ stylus@2.512.2
 tap:i18n@1.8.2
 templating@1.1.11
 templating-tools@1.0.4
+tmeasday:publish-counts@0.7.3
 tmeasday:test-reporter-helpers@0.2.1
 tracker@1.0.14
 twbs:bootstrap@3.3.6

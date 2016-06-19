@@ -49,7 +49,7 @@ export const DocumentCommentSchema = new SimpleSchema({
     type: Date,
     label: 'Created at'
   },
-  parent: {
+  parents: {
     type: [String],
     optional: true
   }
