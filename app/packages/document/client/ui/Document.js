@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor'
 import { Documents } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
 import DocumentTags from './DocumentTags'
+import Comment from './Comment'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -37,6 +38,10 @@ class Document extends Component {
             Document
           </div>
         </div>
+      </div>
+      <div className='commenting-section'>
+        <Comment />
+        <Comment />
       </div>
     </div>
   }

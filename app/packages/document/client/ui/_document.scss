@@ -39,3 +39,34 @@
     margin-left: calc(4.000rem - 15px);
   }
 }
+
+.comment {
+  position: relative;
+}
+
+.avatar-img-wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 35px;
+  img {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.comment-content-wrapper {
+  position: relative;
+  width: 100%;
+  padding-left: 35px;
+  .datetime {
+    font-size: 12px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #999999;
+  }
+  .options-bar {
+    margin-top: 10px;
+  }
+}

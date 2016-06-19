@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import { moment } from 'meteor/momentjs:moment'
 
 if (Meteor.isClient) {
   var { EventEmitter } = require('fbemitter')
@@ -29,3 +30,5 @@ if (!global.fileUpload) {
     afterUploadInterceptors: []
   }
 }
+
+moment.locale('en')
