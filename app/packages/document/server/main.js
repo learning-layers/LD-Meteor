@@ -23,3 +23,7 @@ Meteor.publish('documentComments', function (args) {
 Meteor.publish('documentCommentsCount', function (args) {
   Counts.publish(this, 'documentCommentsCount', DocumentComments.find({documentId: args.documentId}))
 })
+
+Meteor.publish('commentRepliesCount', function (args) {
+  Counts.publish(this, 'crc-' + args.parent, DocumentComments.find({parents: args.parent}))
+})

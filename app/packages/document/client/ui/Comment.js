@@ -6,12 +6,24 @@ import { moment } from 'meteor/momentjs:moment'
 import Rating from 'react-rating'
 import classNames from 'classnames'
 import CommentReply from './CommentReply'
+import { composeWithTracker } from 'react-komposer'
+import { Meteor } from 'meteor/meteor'
+import { Counts } from 'meteor/tmeasday:publish-counts'
+
+function onPropsChange (props, onData) {
+  let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {parent: props.comment._id})
+  if (repliesCounterHandle.ready()) {
+    let commentRepliesCount = Counts.get('crc-' + props.comment._id)
+    onData(null, {commentRepliesCount})
+  }
+}
 
 class Comment extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      replyActive: false
+      replyActive: false,
+      repliesOpened: false
     }
   }
   handleReplyClick () {
@@ -27,9 +39,18 @@ class Comment extends Component {
       replyActive: false
     })
   }
+  openReplies () {
+    this.setState({
+      repliesOpened: true
+    })
+  }
   render () {
-    const { comment } = this.props
+    const { comment, commentRepliesCount } = this.props
     let hrDividerClassNames = classNames({'no-margin-bottom': this.state.replyActive})
+    let repliesLabel = 'replies'
+    if (commentRepliesCount === 1) {
+      repliesLabel = 'reply'
+    }
     return <div className='comment-wrapper'>
       <div className='comment'>
         <div className='avatar-img-wrapper'>
@@ -38,7 +59,7 @@ class Comment extends Component {
         <div className='comment-content-wrapper'>
           <h4>{comment.createdBy}</h4>
           <div className='datetime'>
-            {moment.max(moment(new Date()).fromNow())}
+            {moment.max(moment(comment.createdAt).fromNow())}
           </div>
           <div className='content-text'>
             {comment.text}
@@ -46,6 +67,10 @@ class Comment extends Component {
           {this.state.replyActive ? null : <div className='options-bar'>
             <ButtonToolbar className='options-buttons'>
               <Button bsSize='small' onClick={() => this.handleReplyClick()}>Reply</Button>
+              {commentRepliesCount && commentRepliesCount > 0 ? <Button bsSize='small' onClick={() => this.openReplies()}>
+                {'(' + commentRepliesCount + ') ' + repliesLabel}
+                <span><span className='caret' /></span>
+              </Button> : null}
             </ButtonToolbar>
             <div className='rating-wrapper'>
               <div className='rating-lbl-wrapper'>Level of agreement</div>
@@ -61,8 +86,9 @@ class Comment extends Component {
         <hr className={hrDividerClassNames} />
       </div>
       {this.state.replyActive ? <CommentReply parentComment={this.props.comment} closeReply={() => this.closeReply()} /> : null}
+      {this.state.repliesOpened ? 'repliesOpened' : null}
     </div>
   }
 }
 
-export default Comment
+export default composeWithTracker(onPropsChange)(Comment)
