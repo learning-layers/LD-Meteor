@@ -98,7 +98,6 @@ class CommentReply extends Component {
     users.forEach(function (user) {
       possibleSuggestions.push({id: user._id, display: user.profile.name})
     })
-    // <input className='form-control' placeholder='reply' />
     return <div>
       <div className='reply-wrapper'>
         <MentionsInput appendSpaceOnAdd value={this.state.value}

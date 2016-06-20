@@ -10,12 +10,27 @@ import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import RepliesArea from './RepliesArea'
+import { Uploads } from '../../../fileUpload/lib/collections'
 
 function onPropsChange (props, onData) {
   let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {documentId: props.comment.documentId, parent: props.comment._id})
-  if (repliesCounterHandle.ready()) {
+  let userProfileHandle = Meteor.subscribe('userprofile', {userId: props.comment.createdBy}) // TODO replace with more efficient subscription
+  if (repliesCounterHandle.ready() && userProfileHandle.ready()) {
     let commentRepliesCount = Counts.get('crc-' + props.comment._id)
-    onData(null, {commentRepliesCount})
+    const author = Meteor.users.findOne({'_id': props.comment.createdBy})
+    let userId = author._id
+    const userAvatar = Uploads.collection.findOne({
+      'meta.parent.uploadType': 'avatar',
+      'meta.parent.elementId': userId
+    })
+    let userAvatarPath
+    if (userAvatar) {
+      userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension
+    }
+    if (!userAvatarPath) {
+      userAvatarPath = '/img/Portrait_placeholder.png'
+    }
+    onData(null, {commentRepliesCount, author, userAvatarPath})
   }
 }
 
@@ -46,7 +61,7 @@ class Comment extends Component {
     })
   }
   render () {
-    const { comment, commentRepliesCount } = this.props
+    const { comment, commentRepliesCount, author, userAvatarPath } = this.props
     let hrDividerClassNames = classNames({'no-margin-bottom': this.state.replyActive})
     let repliesLabel = 'replies'
     if (commentRepliesCount === 1) {
@@ -55,10 +70,10 @@ class Comment extends Component {
     return <div className='comment-wrapper'>
       <div className='comment'>
         <div className='avatar-img-wrapper'>
-          <Image src='https://randomuser.me/api/portraits/men/20.jpg' />
+          <Image src={userAvatarPath} />
         </div>
         <div className='comment-content-wrapper'>
-          <h4>{comment.createdBy}</h4>
+          <h4>{author.profile.name}</h4>
           <div className='datetime'>
             {moment.max(moment(comment.createdAt).fromNow())}
           </div>
