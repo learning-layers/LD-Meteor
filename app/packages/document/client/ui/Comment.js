@@ -78,6 +78,7 @@ class Comment extends Component {
             {moment.max(moment(comment.createdAt).fromNow())}
           </div>
           <div className='content-text'>
+            {comment._id}
             {comment.text}
           </div>
           {this.state.replyActive ? null : <div className='options-bar'>
