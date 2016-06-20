@@ -12,7 +12,7 @@ import { Counts } from 'meteor/tmeasday:publish-counts'
 import RepliesArea from './RepliesArea'
 
 function onPropsChange (props, onData) {
-  let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {parent: props.comment._id})
+  let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {documentId: props.comment.documentId, parent: props.comment._id})
   if (repliesCounterHandle.ready()) {
     let commentRepliesCount = Counts.get('crc-' + props.comment._id)
     onData(null, {commentRepliesCount})

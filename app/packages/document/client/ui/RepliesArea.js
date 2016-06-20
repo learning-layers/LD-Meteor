@@ -5,7 +5,7 @@ import { DocumentComments } from '../../lib/collections'
 import Comment from './Comment'
 
 function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('commentReplies', {parent: props.parentComment._id})
+  let handle = Meteor.subscribe('commentReplies', {documentId: props.parentComment.documentId, parent: props.parentComment._id})
   if (handle.ready()) {
     let replies = DocumentComments.find({parents: props.parentComment._id}).fetch()
     onData(null, {replies})
