@@ -81,7 +81,10 @@ class CommentReply extends Component {
     let newComment = {
       documentId: this.props.parentComment.documentId,
       text: 'BulletProof Meteor is great!',
-      parents: []
+      parents: this.props.parentComment.parents
+    }
+    if (!newComment.parents) {
+      newComment.parents = []
     }
     newComment.parents.push(this.props.parentComment._id)
     Meteor.call('createComment', newComment)

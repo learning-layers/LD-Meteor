@@ -128,3 +128,11 @@
 .replies-area {
   padding-left: calc(4.000rem + 15px);
 }
+
+.caret {
+  transition: rotate 0.5s;
+}
+
+.caret-right {
+  transform: rotate(-90deg);
+}

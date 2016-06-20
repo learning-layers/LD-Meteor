@@ -70,7 +70,7 @@ class Comment extends Component {
               <Button bsSize='small' onClick={() => this.handleReplyClick()}>Reply</Button>
               {commentRepliesCount && commentRepliesCount > 0 ? <Button bsSize='small' onClick={() => this.openReplies()}>
                 {'(' + commentRepliesCount + ') ' + repliesLabel + ' '}
-                <span><span className='caret' /></span>
+                <span>{this.state.repliesOpened ? <span className='caret' /> : <span className='caret caret-right' />}</span>
               </Button> : null}
             </ButtonToolbar>
             <div className='rating-wrapper'>
