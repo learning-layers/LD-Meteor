@@ -9,6 +9,7 @@ import CommentReply from './CommentReply'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { Counts } from 'meteor/tmeasday:publish-counts'
+import RepliesArea from './RepliesArea'
 
 function onPropsChange (props, onData) {
   let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {parent: props.comment._id})
@@ -68,7 +69,7 @@ class Comment extends Component {
             <ButtonToolbar className='options-buttons'>
               <Button bsSize='small' onClick={() => this.handleReplyClick()}>Reply</Button>
               {commentRepliesCount && commentRepliesCount > 0 ? <Button bsSize='small' onClick={() => this.openReplies()}>
-                {'(' + commentRepliesCount + ') ' + repliesLabel}
+                {'(' + commentRepliesCount + ') ' + repliesLabel + ' '}
                 <span><span className='caret' /></span>
               </Button> : null}
             </ButtonToolbar>
@@ -86,7 +87,7 @@ class Comment extends Component {
         <hr className={hrDividerClassNames} />
       </div>
       {this.state.replyActive ? <CommentReply parentComment={this.props.comment} closeReply={() => this.closeReply()} /> : null}
-      {this.state.repliesOpened ? 'repliesOpened' : null}
+      {this.state.repliesOpened ? <RepliesArea parentComment={this.props.comment} /> : null}
     </div>
   }
 }

@@ -60,7 +60,7 @@ function onPropsChange (props, onData) {
   let commentsHandle = Meteor.subscribe('documentComments', {documentId: props.documentId})
   let commentsCounterHandle = Meteor.subscribe('documentCommentsCount', {documentId: props.documentId})
   if (commentsHandle.ready() && commentsCounterHandle.ready()) {
-    let documentComments = DocumentComments.find({'documentId': props.documentId}).fetch()
+    let documentComments = DocumentComments.find({documentId: props.documentId, parents: {'$type': 10}}).fetch()
     let documentCommentsCount = Counts.get('documentCommentsCount')
     onData(null, {documentComments, documentCommentsCount})
   }
@@ -105,7 +105,7 @@ class CommentingArea extends Component {
             renderSuggestion={(entry, search, highlightedDisplay, index) => renderUserSuggestion(entry, search, highlightedDisplay, index)} />
         </MentionsInput>
         <ButtonToolbar className='options-bar'>
-          <Button bsStyle='success' bsSize='small' onClick={() => this.createNewComment()}>Submit Reply</Button>
+          <Button bsStyle='success' bsSize='small' onClick={() => this.createNewComment()}>Submit Comment</Button>
           <Button bsSize='small' onClick={() => this.closeReply()}>Close</Button>
         </ButtonToolbar>
         <div className='clearfix'></div>

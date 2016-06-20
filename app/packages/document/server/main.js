@@ -24,6 +24,10 @@ Meteor.publish('documentCommentsCount', function (args) {
   Counts.publish(this, 'documentCommentsCount', DocumentComments.find({documentId: args.documentId}))
 })
 
-Meteor.publish('commentRepliesCount', function (args) {
+Meteor.publish('commentReplies', function (args) { // TODO add documentId otherwise the index will fail
+  return DocumentComments.find({parents: args.parent})
+})
+
+Meteor.publish('commentRepliesCount', function (args) { // TODO add documentId otherwise the index will fail
   Counts.publish(this, 'crc-' + args.parent, DocumentComments.find({parents: args.parent}))
 })
