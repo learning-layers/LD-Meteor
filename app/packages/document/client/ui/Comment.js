@@ -13,10 +13,15 @@ import RepliesArea from './RepliesArea'
 import { Uploads } from '../../../fileUpload/lib/collections'
 
 function onPropsChange (props, onData) {
-  let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {documentId: props.comment.documentId, parent: props.comment._id})
+  let path = JSON.parse(JSON.stringify(props.comment.parents))
+  if (!path) {
+    path = []
+  }
+  path.push(props.comment._id)
+  let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {documentId: props.comment.documentId, parent: path})
   let userProfileHandle = Meteor.subscribe('userprofile', {userId: props.comment.createdBy}) // TODO replace with more efficient subscription
   if (repliesCounterHandle.ready() && userProfileHandle.ready()) {
-    let commentRepliesCount = Counts.get('crc-' + props.comment._id)
+    let commentRepliesCount = Counts.get('crc-' + path.join(','))
     const author = Meteor.users.findOne({'_id': props.comment.createdBy})
     let userId = author._id
     const userAvatar = Uploads.collection.findOne({
@@ -78,7 +83,6 @@ class Comment extends Component {
             {moment.max(moment(comment.createdAt).fromNow())}
           </div>
           <div className='content-text'>
-            {comment._id}
             {comment.text}
           </div>
           {this.state.replyActive ? null : <div className='options-bar'>

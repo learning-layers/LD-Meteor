@@ -16,7 +16,6 @@ Meteor.publish('documentTags', function (args) {
 })
 
 Meteor.publish('documentComments', function (args) {
-  // {documentId: 'iSzHRYSngztqHeR3C', parent: { '$type' : 10}}
   return DocumentComments.find({documentId: args.documentId, parents: {$type: 10}})
 })
 
@@ -29,5 +28,5 @@ Meteor.publish('commentReplies', function (args) {
 })
 
 Meteor.publish('commentRepliesCount', function (args) {
-  Counts.publish(this, 'crc-' + args.parent, DocumentComments.find({documentId: args.documentId, parents: {$all: [args.parent]}}))
+  Counts.publish(this, 'crc-' + args.parent.join(','), DocumentComments.find({documentId: args.documentId, parents: {$all: [args.parent]}}))
 })
