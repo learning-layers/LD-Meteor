@@ -69,11 +69,7 @@ class Document extends Component {
         <div className='hierarchy-bar'>Hierarchy:</div>
         <hr />
         <div className='tag-bar'>
-          Tags:
-          {' '}
-          <button className='btn btn-default'>
-            <span className='glyphicon glyphicon-plus' />
-          </button>
+          <label for='document-tags'>Tags</label>
           <DocumentTags documentId={document._id} />
         </div>
       </div>

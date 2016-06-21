@@ -15,6 +15,30 @@
   .tag-bar, .hierarchy-bar {
     padding-left: 4px;
   }
+  .tag-bar {
+    position: relative;
+    label {
+      padding-left: 4px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      color: #9e9e9e;
+      font-size: 12px;
+      cursor: text;
+      -webkit-transition: .2s ease-out;
+      -moz-transition: .2s ease-out;
+      -o-transition: .2s ease-out;
+      -ms-transition: .2s ease-out;
+      transition: .2s ease-out;
+      &.active {
+        color: #337ab7;
+      }
+    }
+    .user-tags {
+      padding-top: 5px;
+    }
+  }
 }
 
 .main-content {
