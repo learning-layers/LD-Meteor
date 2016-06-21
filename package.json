@@ -53,7 +53,7 @@
     "react-markdown": "^2.3.0",
     "react-mentions": "^0.4.4",
     "react-mounter": "^1.0.0",
-    "react-rating": "^0.2.2",
+    "react-rating": "^0.3.0",
     "react-s-alert": "^1.1.4",
     "react-selectize": "^2.0.2",
     "react-sidebar": "^2.1.3"
