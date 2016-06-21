@@ -5,6 +5,7 @@ import { composeWithTracker } from 'react-komposer'
 import DocumentTags from './DocumentTags'
 import CommentingArea from './CommentingArea'
 import Loader from 'react-loader'
+import classNames from 'classnames'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -14,7 +15,53 @@ function onPropsChange (props, onData) {
   }
 }
 
+class AttachmentsBar extends Component {
+  render () {
+    let editorTabClassNames = classNames({'active': this.props.activeTabName === 'Editor'})
+    let filesTabClassNames = classNames({'active': this.props.activeTabName === 'Files'})
+    let mediaTabClassNames = classNames({'active': this.props.activeTabName === 'Media'})
+    return <div className='attachments-bar'>
+      <ul className='attachment-icons'>
+        <li className={editorTabClassNames} onClick={() => this.props.onChangeTabSelection('Editor')}>
+          <div className='icon-wrapper'>
+            <span className='glyphicon glyphicon-pencil' />
+          </div>
+        </li>
+        <li className={filesTabClassNames} onClick={() => this.props.onChangeTabSelection('Files')}>
+          <div className='icon-wrapper'>
+            <span className='glyphicon glyphicon-file' />
+          </div>
+        </li>
+        <li className={mediaTabClassNames} onClick={() => this.props.onChangeTabSelection('Media')}>
+          <div className='icon-wrapper'>
+            <span className='glyphicon glyphicon-picture' />
+          </div>
+        </li>
+      </ul>
+    </div>
+  }
+}
+
 class Document extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      activeTabName: 'Editor'
+    }
+  }
+  changeTab (tabName) {
+    switch (tabName) {
+      case 'Editor':
+      case 'Files':
+      case 'Media':
+        this.setState({
+          activeTabName: tabName
+        })
+        break
+      default:
+        break
+    }
+  }
   render () {
     const { document } = this.props
     return <div className='document container-fluid'>
@@ -33,10 +80,9 @@ class Document extends Component {
       <div className='main-content panel panel-primary'>
         <div className='panel-heading'><h4 className='document-title'>{document.title}</h4></div>
         <div className='panel-body'>
-          <div className='attachments-bar'>
-          </div>
+          <AttachmentsBar onChangeTabSelection={(tabName) => this.changeTab(tabName)} activeTabName={this.state.activeTabName} />
           <div className='content'>
-            Document
+            {this.state.activeTabName}
           </div>
         </div>
       </div>

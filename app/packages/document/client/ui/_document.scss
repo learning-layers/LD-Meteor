@@ -146,3 +146,40 @@ tr.document-list-item {
   transition: background-color 0.5s;
   cursor: pointer;
 }
+
+.attachment-icons {
+  color: white;
+  list-style: none;
+  margin-bottom: 0;
+  padding-left: 0;
+  li {
+    cursor: pointer;
+    padding: 0.417rem 0 0.417rem 0;
+    min-height: 3.429rem;
+    .icon-wrapper {
+      display: flex;
+      margin: auto;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      span {
+        font-size: 1.333rem;
+        margin: auto;
+        display: flex;
+      }
+    }
+    &.active, &:hover {
+      box-shadow: 0 0.071rem 0.429rem 0 rgba(0, 0, 0, 0.12), 0 0.071rem 0.429rem 0 rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+      color: black;
+    }
+    &.active {
+      background-color: white;
+      &:hover {
+        background-color: white;
+      }
+    }
+    &:hover {
+      background-color: lightgrey;
+    }
+  }
+}
