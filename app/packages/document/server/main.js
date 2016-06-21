@@ -4,7 +4,15 @@ import { Tags } from '../../tags/lib/collections'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 
 Meteor.publish('documentList', function () {
-  return Documents.find({'createdBy': this.userId})
+  const documents = Documents.find({'createdBy': this.userId}).fetch()
+  let userList = []
+  documents.forEach(function (document) {
+    userList.push(document.createdBy)
+  })
+  return [
+    Meteor.users.find({'_id': {$in: userList}}),
+    Documents.find({'createdBy': this.userId})
+  ]
 })
 
 Meteor.publish('document', function (args) {

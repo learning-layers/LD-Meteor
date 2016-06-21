@@ -36,5 +36,12 @@ Meteor.methods({
     } else {
       throw new Meteor.Error(401)
     }
+  },
+  deleteDocument: function (documentId) {
+    if (this.userId) {
+      Documents.remove({'_id': documentId, 'createdBy': this.userId})
+    } else {
+      throw new Meteor.Error(401)
+    }
   }
 })

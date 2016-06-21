@@ -22,6 +22,11 @@ export const DocumentSchema = new SimpleSchema({
   createdAt: {
     type: Date,
     label: 'Created at'
+  },
+  modifiedAt: {
+    type: Date,
+    label: 'Modified at',
+    optional: true
   }
 })
 

@@ -4,6 +4,7 @@ import { Documents } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
 import DocumentTags from './DocumentTags'
 import CommentingArea from './CommentingArea'
+import Loader from 'react-loader'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -44,4 +45,5 @@ class Document extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(Document)
+const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
+export default composeWithTracker(onPropsChange, Loading)(Document)
