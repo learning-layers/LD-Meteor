@@ -46,7 +46,8 @@ class Document extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      activeTabName: 'Editor'
+      activeTabName: 'Editor',
+      tagBarFocused: false
     }
   }
   changeTab (tabName) {
@@ -62,6 +63,11 @@ class Document extends Component {
         break
     }
   }
+  changeTagBarFocus (isFocused) {
+    this.setState({
+      tagBarFocused: isFocused
+    })
+  }
   render () {
     const { document } = this.props
     return <div className='document container-fluid'>
@@ -69,8 +75,8 @@ class Document extends Component {
         <div className='hierarchy-bar'>Hierarchy:</div>
         <hr />
         <div className='tag-bar'>
-          <label for='document-tags'>Tags</label>
-          <DocumentTags documentId={document._id} />
+          <label for='document-tags' className={this.state.tagBarFocused ? 'active' : ''}>Tags</label>
+          <DocumentTags onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={document._id} />
         </div>
       </div>
       <div className='main-content panel panel-primary'>

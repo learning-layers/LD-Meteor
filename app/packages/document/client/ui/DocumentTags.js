@@ -43,6 +43,9 @@ class DocumentTags extends Component {
     const { documentTags, documentId } = this.props
     return <div className='user-tags'>
       <MultiSelect
+        tabindex='-1'
+        onFocus={() => this.props.onFocus()}
+        onBlur={() => this.props.onBlur()}
         ref='documentTags'
         anchor={undefined}
         width='200px'
