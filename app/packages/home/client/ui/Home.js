@@ -12,6 +12,7 @@ class Home extends Component {
     return (
       <div className='ld-home container-fluid'>
         <h2 className='letterpress-effect'>Living Documents</h2>
+        <a href='/documentList'>DocumentList</a>
       </div>
     )
   }
