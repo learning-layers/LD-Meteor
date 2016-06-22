@@ -65,6 +65,12 @@ class Comment extends Component {
       repliesOpened: true
     })
   }
+  submitReplySuccess () {
+    this.setState({
+      repliesOpened: true,
+      replyActive: false
+    })
+  }
   render () {
     const { comment, commentRepliesCount, author, userAvatarPath } = this.props
     let hrDividerClassNames = classNames({'no-margin-bottom': this.state.replyActive})
@@ -106,7 +112,10 @@ class Comment extends Component {
         </div>
         <hr className={hrDividerClassNames} />
       </div>
-      {this.state.replyActive ? <CommentReply parentComment={this.props.comment} closeReply={() => this.closeReply()} /> : null}
+      {this.state.replyActive ? <CommentReply
+        parentComment={this.props.comment}
+        closeReply={() => this.closeReply()}
+        submitReplySuccess={() => this.submitReplySuccess()} /> : null}
       {this.state.repliesOpened ? <RepliesArea parentComment={this.props.comment} /> : null}
     </div>
   }

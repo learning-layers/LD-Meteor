@@ -9,6 +9,7 @@ import merge from 'lodash/merge'
 import throttle from 'lodash/throttle'
 import defaultStyle from './defaultStyle'
 import defaultMentionStyle from './defaultMentionStyle'
+import Alert from 'react-s-alert'
 
 const style = merge({}, defaultStyle(), {
   suggestions: {
@@ -87,7 +88,15 @@ class CommentReply extends Component {
       newComment.parents = []
     }
     newComment.parents.push(this.props.parentComment._id)
-    Meteor.call('createComment', newComment)
+    Meteor.call('createComment', newComment, (err, res) => {
+      if (err) {
+        Alert.error(err.message)
+      }
+      if (res) {
+        Alert.success('SUCCESS: Creating comment.')
+        this.props.submitReplySuccess()
+      }
+    })
   }
   closeReply () {
     this.props.closeReply()
