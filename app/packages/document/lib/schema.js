@@ -57,5 +57,9 @@ export const DocumentCommentSchema = new SimpleSchema({
   parents: {
     type: [String],
     optional: true
+  },
+  mentions: {
+    type: [String],
+    optional: true
   }
 })

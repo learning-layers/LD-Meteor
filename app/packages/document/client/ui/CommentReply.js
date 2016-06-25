@@ -79,10 +79,12 @@ class CommentReply extends Component {
     }
   }
   submitReply () {
+    // TODO transform mentions
     let newComment = {
       documentId: this.props.parentComment.documentId,
-      text: 'BulletProof Meteor is great!',
-      parents: this.props.parentComment.parents
+      text: this.state.value,
+      parents: this.props.parentComment.parents,
+      mentions: this.state.mentions
     }
     if (!newComment.parents) {
       newComment.parents = []

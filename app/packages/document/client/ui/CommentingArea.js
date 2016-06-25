@@ -77,10 +77,12 @@ class CommentingArea extends Component {
     }
   }
   createNewComment () {
+    // TODO transform mentions
     Meteor.call('createComment', {
       documentId: this.props.documentId,
-      text: 'BulletProof Meteor is great!',
-      parents: null
+      text: this.state.value,
+      parents: null,
+      mentions: this.state.mentions
     })
   }
   handleChange (ev, value, plainTextVal, mentions) {

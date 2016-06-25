@@ -62,7 +62,7 @@ class Comment extends Component {
   }
   openReplies () {
     this.setState({
-      repliesOpened: true
+      repliesOpened: !this.state.repliesOpened
     })
   }
   submitReplySuccess () {
