@@ -50,5 +50,21 @@ Meteor.methods({
     } else {
       throw new Meteor.Error(401)
     }
+  },
+  updateComment: function (commentId, comment) {
+    comment.modifiedAt = new Date()
+    if (comment.mentions) {
+      let mentionIds = []
+      comment.mentions.forEach(function (mention) {
+        mentionIds.push(mention.id)
+      })
+      comment.mentions = mentionIds
+    }
+    check(comment, DocumentCommentSchema)
+    if (this.userId) {
+      return DocumentComments.update({'_id': commentId, createdBy: this.userId}, {$set: {text: comment.text, modifiedAt: comment.modifiedAt}})
+    } else {
+      throw new Meteor.Error(401)
+    }
   }
 })

@@ -18,6 +18,7 @@ import throttle from 'lodash/throttle'
 import merge from 'lodash/merge'
 import uniqBy from 'lodash/uniqBy'
 import sortBy from 'lodash/sortBy'
+import Alert from 'react-s-alert'
 
 const style = merge({}, defaultStyle(), {
   suggestions: {
@@ -89,9 +90,16 @@ let startsWith = function (string, searchString, position) {
 class Comment extends Component {
   constructor (props) {
     super(props)
+    let commentText = ''
+    if (this.props.comment) {
+      commentText = this.props.comment.text
+    }
     this.state = {
+      value: commentText,
       replyActive: false,
-      repliesOpened: false
+      repliesOpened: false,
+      editMode: false,
+      changed: false
     }
   }
   handleReplyClick () {
@@ -118,6 +126,50 @@ class Comment extends Component {
       replyActive: false
     })
   }
+  handleEditClick () {
+    this.setState({
+      repliesOpened: true,
+      replyActive: false,
+      editMode: true,
+      changed: true
+    })
+  }
+  handleChange (ev, value, plainTextVal, mentions) {
+    this.setState({
+      value: value,
+      mentions: mentions,
+      changed: true
+    })
+  }
+  handleCancelEditClick () {
+    let commentText = ''
+    if (this.props.comment) {
+      commentText = this.props.comment.text
+    }
+    this.setState({
+      value: commentText,
+      changed: false
+    })
+  }
+  handleSaveClick () {
+    Meteor.call('updateComment', this.props.comment._id, {
+      documentId: this.props.comment.documentId,
+      text: this.state.value,
+      mentions: this.state.mentions,
+      createdAt: this.props.comment.createdAt,
+      createdBy: this.props.comment.createdBy
+    }, (err, res) => {
+      if (err) {
+        Alert.error(err.message)
+      }
+      if (res) {
+        Alert.success('SUCCESS: Updated your comment.')
+        this.setState({
+          changed: false
+        })
+      }
+    })
+  }
   render () {
     const { comment, commentRepliesCount, author, userAvatarPath } = this.props
     let hrDividerClassNames = classNames({'no-margin-bottom': this.state.replyActive})
@@ -125,6 +177,7 @@ class Comment extends Component {
     if (commentRepliesCount === 1) {
       repliesLabel = 'reply'
     }
+    const isOwnComment = comment.createdBy === Meteor.userId()
     return <div className='comment-wrapper'>
       <div className='comment'>
         <div className='avatar-img-wrapper'>
@@ -136,16 +189,19 @@ class Comment extends Component {
             {moment.max(moment(comment.createdAt).fromNow())}
           </div>
           <div className='content-text not-editable'>
-            <MentionsInput appendSpaceOnAdd value={comment.text}
+            <MentionsInput appendSpaceOnAdd value={this.state.value}
               style={style} onChange={(ev, value, plainTextVal, mentions) => this.handleChange(ev, value, plainTextVal, mentions)}
               placeholder={'Mention people using \'@\''}
-              disabled>
+              disabled={!this.state.editMode}>
               <Mention trigger='@' data={(search, callback) => throttle(data([], search, callback), 230)} style={defaultMentionStyle}
                 renderSuggestion={(entry, search, highlightedDisplay, index) => renderUserSuggestion(entry, search, highlightedDisplay, index)} />
             </MentionsInput>
           </div>
           {this.state.replyActive ? null : <div className='options-bar'>
             <ButtonToolbar className='options-buttons'>
+              {isOwnComment && !this.state.changed ? <Button bsSize='small' onClick={() => this.handleEditClick()}>Edit</Button> : null}
+              {this.state.changed ? <Button bsSize='small' bsStyle='info' onClick={() => this.handleCancelEditClick()}>Cancel Edit</Button> : null}
+              {this.state.changed ? <Button bsSize='small' bsStyle='success' onClick={() => this.handleSaveClick()}>Save Edit</Button> : null}
               <Button bsSize='small' onClick={() => this.handleReplyClick()}>Reply</Button>
               {commentRepliesCount && commentRepliesCount > 0 ? <Button bsSize='small' onClick={() => this.openReplies()}>
                 {'(' + commentRepliesCount + ') ' + repliesLabel + ' '}

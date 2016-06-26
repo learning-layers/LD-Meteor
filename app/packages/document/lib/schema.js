@@ -61,5 +61,10 @@ export const DocumentCommentSchema = new SimpleSchema({
   mentions: {
     type: [String],
     optional: true
+  },
+  modifiedAt: {
+    type: Date,
+    label: 'Modified at',
+    optional: true
   }
 })
