@@ -30,6 +30,13 @@ Meteor.methods({
   createComment: function (comment) {
     comment.createdAt = new Date()
     comment.createdBy = this.userId
+    if (comment.mentions) {
+      let mentionIds = []
+      comment.mentions.forEach(function (mention) {
+        mentionIds.push(mention.id)
+      })
+      comment.mentions = mentionIds
+    }
     check(comment, DocumentCommentSchema)
     if (this.userId) {
       return DocumentComments.insert(comment)

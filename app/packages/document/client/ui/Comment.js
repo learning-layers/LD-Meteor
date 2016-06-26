@@ -11,6 +11,22 @@ import { Meteor } from 'meteor/meteor'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import RepliesArea from './RepliesArea'
 import { Uploads } from '../../../fileUpload/lib/collections'
+import defaultStyle from './defaultStyle'
+import defaultMentionStyle from './defaultMentionStyle'
+import { MentionsInput, Mention } from 'react-mentions'
+import throttle from 'lodash/throttle'
+import merge from 'lodash/merge'
+import uniqBy from 'lodash/uniqBy'
+import sortBy from 'lodash/sortBy'
+
+const style = merge({}, defaultStyle(), {
+  suggestions: {
+    list: {
+      maxHeight: 100,
+      overflow: 'auto'
+    }
+  }
+})
 
 function onPropsChange (props, onData) {
   let path = JSON.parse(JSON.stringify(props.comment.parents))
@@ -37,6 +53,37 @@ function onPropsChange (props, onData) {
     }
     onData(null, {commentRepliesCount, author, userAvatarPath})
   }
+}
+
+let renderUserSuggestion = function (entry, search, highlightedDisplay, index) {
+  return <div>{entry.display}</div>
+}
+
+let data = function (possibleSuggestions, search, callback) {
+  Meteor.call('getMentions', {mentionSearch: search}, function (err, res) {
+    if (err) {
+      //
+    }
+    if (res) {
+      let users = Meteor.users.find({ 'profile.name': { $regex: '^' + search, $options: 'i' } }).fetch()
+      let suggestions = []
+      users = users.concat(res)
+      users.forEach(function (user) {
+        suggestions.push({ id: user._id, display: user.profile.name })
+      })
+      let filteredPossibleSuggestions = possibleSuggestions.filter(function (suggestion) {
+        return startsWith(suggestion.display, search, 0)
+      })
+      suggestions = uniqBy(filteredPossibleSuggestions.concat(suggestions), 'id')
+      suggestions = sortBy(suggestions, 'display')
+      callback(suggestions)
+    }
+  })
+}
+
+let startsWith = function (string, searchString, position) {
+  position = position || 0
+  return string.indexOf(searchString, position) === position
 }
 
 class Comment extends Component {
@@ -88,8 +135,14 @@ class Comment extends Component {
           <div className='datetime'>
             {moment.max(moment(comment.createdAt).fromNow())}
           </div>
-          <div className='content-text'>
-            {comment.text}
+          <div className='content-text not-editable'>
+            <MentionsInput appendSpaceOnAdd value={comment.text}
+              style={style} onChange={(ev, value, plainTextVal, mentions) => this.handleChange(ev, value, plainTextVal, mentions)}
+              placeholder={'Mention people using \'@\''}
+              disabled>
+              <Mention trigger='@' data={(search, callback) => throttle(data([], search, callback), 230)} style={defaultMentionStyle}
+                renderSuggestion={(entry, search, highlightedDisplay, index) => renderUserSuggestion(entry, search, highlightedDisplay, index)} />
+            </MentionsInput>
           </div>
           {this.state.replyActive ? null : <div className='options-bar'>
             <ButtonToolbar className='options-buttons'>

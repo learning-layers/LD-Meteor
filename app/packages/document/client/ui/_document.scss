@@ -112,6 +112,21 @@
     margin-right: 10px;
     color: #999999;
   }
+  .content-text.not-editable {
+    > div {
+      > div {
+        border: 0!important;
+      }
+    }
+    div {
+      min-height: 0!important;
+      height: auto!important;
+    }
+    textarea {
+      min-height: 0!important;
+      height: auto!important;
+    }
+  }
 }
 
 .commenting-header {
