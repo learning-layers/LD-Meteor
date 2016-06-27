@@ -19,6 +19,7 @@ import merge from 'lodash/merge'
 import uniqBy from 'lodash/uniqBy'
 import sortBy from 'lodash/sortBy'
 import Alert from 'react-s-alert'
+import { DocumentComments } from '../../lib/collections'
 
 const style = merge({}, defaultStyle(), {
   suggestions: {
@@ -52,7 +53,11 @@ function onPropsChange (props, onData) {
     if (!userAvatarPath) {
       userAvatarPath = '/img/Portrait_placeholder.png'
     }
-    onData(null, {commentRepliesCount, author, userAvatarPath})
+    // retrieve revisions
+    const revisionCount = DocumentComments.find({revisionOf: props.comment._id}).count()
+    const lastRevision = DocumentComments.findOne({revisionOf: props.comment._id}, {limit: 1, sort: {movedToRevisionsAt: -1}})
+    console.debug(revisionCount)
+    onData(null, {commentRepliesCount, author, userAvatarPath, revisionCount, lastRevision})
   }
 }
 
@@ -171,7 +176,7 @@ class Comment extends Component {
     })
   }
   render () {
-    const { comment, commentRepliesCount, author, userAvatarPath } = this.props
+    const { comment, commentRepliesCount, author, userAvatarPath, revisionCount, lastRevision } = this.props
     let hrDividerClassNames = classNames({'no-margin-bottom': this.state.replyActive})
     let repliesLabel = 'replies'
     if (commentRepliesCount === 1) {
@@ -197,6 +202,9 @@ class Comment extends Component {
                 renderSuggestion={(entry, search, highlightedDisplay, index) => renderUserSuggestion(entry, search, highlightedDisplay, index)} />
             </MentionsInput>
           </div>
+          {revisionCount > 0 ? <div className='well'>
+            This comment has been edited {revisionCount} times. (last edit: {moment.max(moment(lastRevision.movedToRevisionsAt)).fromNow()})
+          </div> : null}
           {this.state.replyActive ? null : <div className='options-bar'>
             <ButtonToolbar className='options-buttons'>
               {isOwnComment && !this.state.changed ? <Button bsSize='small' onClick={() => this.handleEditClick()}>Edit</Button> : null}

@@ -60,7 +60,7 @@ function onPropsChange (props, onData) {
   let commentsHandle = Meteor.subscribe('documentComments', {documentId: props.documentId})
   let commentsCounterHandle = Meteor.subscribe('documentCommentsCount', {documentId: props.documentId})
   if (commentsHandle.ready() && commentsCounterHandle.ready()) {
-    let documentComments = DocumentComments.find({documentId: props.documentId, parents: {'$type': 10}}).fetch()
+    let documentComments = DocumentComments.find({documentId: props.documentId, parents: {'$type': 10}, revisionOf: {$exists: false}}).fetch()
     let documentCommentsCount = Counts.get('documentCommentsCount')
     onData(null, {documentComments, documentCommentsCount})
   }

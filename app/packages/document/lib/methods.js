@@ -30,6 +30,9 @@ Meteor.methods({
   createComment: function (comment) {
     comment.createdAt = new Date()
     comment.createdBy = this.userId
+    delete comment.movedToRevisionsAt
+    delete comment.modifiedAt
+    delete comment.revisionOf
     if (comment.mentions) {
       let mentionIds = []
       comment.mentions.forEach(function (mention) {
@@ -53,6 +56,8 @@ Meteor.methods({
   },
   updateComment: function (commentId, comment) {
     comment.modifiedAt = new Date()
+    delete comment.movedToRevisionsAt
+    delete comment.revisionOf
     if (comment.mentions) {
       let mentionIds = []
       comment.mentions.forEach(function (mention) {
@@ -62,6 +67,12 @@ Meteor.methods({
     }
     check(comment, DocumentCommentSchema)
     if (this.userId) {
+      const oldComment = DocumentComments.findOne({'_id': commentId, createdBy: this.userId})
+      oldComment.revisionOf = oldComment._id
+      delete oldComment._id
+      oldComment.movedToRevisionsAt = new Date()
+      check(oldComment, DocumentCommentSchema)
+      DocumentComments.insert(oldComment)
       return DocumentComments.update({'_id': commentId, createdBy: this.userId}, {$set: {text: comment.text, modifiedAt: comment.modifiedAt}})
     } else {
       throw new Meteor.Error(401)

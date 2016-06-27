@@ -66,5 +66,17 @@ export const DocumentCommentSchema = new SimpleSchema({
     type: Date,
     label: 'Modified at',
     optional: true
+  },
+  movedToRevisionsAt: {
+    type: Date,
+    label: 'Moved to revisions at',
+    optional: true
+  },
+  revisionOf: {
+    type: String,
+    label: 'RevisionId',
+    max: 40,
+    min: 6,
+    optional: true
   }
 })
