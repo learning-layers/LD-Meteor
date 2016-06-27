@@ -24,7 +24,6 @@ function onPropsChange (props, onData) {
   let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {documentId: props.comment.documentId, parent: path})
   let userProfileHandle = Meteor.subscribe('userprofile', {userId: props.comment.createdBy}) // TODO replace with more efficient subscription
   if (repliesCounterHandle.ready() && userProfileHandle.ready()) {
-    window.alert('subscribed')
     let commentRepliesCount = Counts.get('crc-' + path.join(','))
     const author = Meteor.users.findOne({'_id': props.comment.createdBy})
     let userId = author._id
@@ -97,7 +96,6 @@ class Comment extends Component {
     this.refs.commentContent.setState({value: commentText})
   }
   handleSaveClick () {
-    console.log(this.refs.commentContent)
     Meteor.call('updateComment', this.props.comment._id, {
       documentId: this.props.comment.documentId,
       text: this.refs.commentContent.state.value,
