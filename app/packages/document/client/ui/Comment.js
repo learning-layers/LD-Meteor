@@ -11,24 +11,9 @@ import { Meteor } from 'meteor/meteor'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import RepliesArea from './RepliesArea'
 import { Uploads } from '../../../fileUpload/lib/collections'
-import defaultStyle from './defaultStyle'
-import defaultMentionStyle from './defaultMentionStyle'
-import { MentionsInput, Mention } from 'react-mentions'
-import throttle from 'lodash/throttle'
-import merge from 'lodash/merge'
-import uniqBy from 'lodash/uniqBy'
-import sortBy from 'lodash/sortBy'
+import CommentContent from './CommentContent'
 import Alert from 'react-s-alert'
 import { DocumentComments } from '../../lib/collections'
-
-const style = merge({}, defaultStyle(), {
-  suggestions: {
-    list: {
-      maxHeight: 100,
-      overflow: 'auto'
-    }
-  }
-})
 
 function onPropsChange (props, onData) {
   let path = JSON.parse(JSON.stringify(props.comment.parents))
@@ -39,6 +24,7 @@ function onPropsChange (props, onData) {
   let repliesCounterHandle = Meteor.subscribe('commentRepliesCount', {documentId: props.comment.documentId, parent: path})
   let userProfileHandle = Meteor.subscribe('userprofile', {userId: props.comment.createdBy}) // TODO replace with more efficient subscription
   if (repliesCounterHandle.ready() && userProfileHandle.ready()) {
+    window.alert('subscribed')
     let commentRepliesCount = Counts.get('crc-' + path.join(','))
     const author = Meteor.users.findOne({'_id': props.comment.createdBy})
     let userId = author._id
@@ -56,51 +42,14 @@ function onPropsChange (props, onData) {
     // retrieve revisions
     const revisionCount = DocumentComments.find({revisionOf: props.comment._id}).count()
     const lastRevision = DocumentComments.findOne({revisionOf: props.comment._id}, {limit: 1, sort: {movedToRevisionsAt: -1}})
-    console.debug(revisionCount)
     onData(null, {commentRepliesCount, author, userAvatarPath, revisionCount, lastRevision})
   }
-}
-
-let renderUserSuggestion = function (entry, search, highlightedDisplay, index) {
-  return <div>{entry.display}</div>
-}
-
-let data = function (possibleSuggestions, search, callback) {
-  Meteor.call('getMentions', {mentionSearch: search}, function (err, res) {
-    if (err) {
-      //
-    }
-    if (res) {
-      let users = Meteor.users.find({ 'profile.name': { $regex: '^' + search, $options: 'i' } }).fetch()
-      let suggestions = []
-      users = users.concat(res)
-      users.forEach(function (user) {
-        suggestions.push({ id: user._id, display: user.profile.name })
-      })
-      let filteredPossibleSuggestions = possibleSuggestions.filter(function (suggestion) {
-        return startsWith(suggestion.display, search, 0)
-      })
-      suggestions = uniqBy(filteredPossibleSuggestions.concat(suggestions), 'id')
-      suggestions = sortBy(suggestions, 'display')
-      callback(suggestions)
-    }
-  })
-}
-
-let startsWith = function (string, searchString, position) {
-  position = position || 0
-  return string.indexOf(searchString, position) === position
 }
 
 class Comment extends Component {
   constructor (props) {
     super(props)
-    let commentText = ''
-    if (this.props.comment) {
-      commentText = this.props.comment.text
-    }
     this.state = {
-      value: commentText,
       replyActive: false,
       repliesOpened: false,
       editMode: false,
@@ -111,7 +60,8 @@ class Comment extends Component {
     global.emitter.emit('reply-opened')
     setTimeout(() => {
       this.setState({
-        replyActive: true
+        replyActive: true,
+        changed: false
       })
     }, 100)
   }
@@ -139,28 +89,19 @@ class Comment extends Component {
       changed: true
     })
   }
-  handleChange (ev, value, plainTextVal, mentions) {
-    this.setState({
-      value: value,
-      mentions: mentions,
-      changed: true
-    })
-  }
   handleCancelEditClick () {
     let commentText = ''
     if (this.props.comment) {
       commentText = this.props.comment.text
     }
-    this.setState({
-      value: commentText,
-      changed: false
-    })
+    this.refs.commentContent.setState({value: commentText})
   }
   handleSaveClick () {
+    console.log(this.refs.commentContent)
     Meteor.call('updateComment', this.props.comment._id, {
       documentId: this.props.comment.documentId,
-      text: this.state.value,
-      mentions: this.state.mentions,
+      text: this.refs.commentContent.state.value,
+      mentions: this.refs.commentContent.state.mentions,
       createdAt: this.props.comment.createdAt,
       createdBy: this.props.comment.createdBy
     }, (err, res) => {
@@ -170,7 +111,8 @@ class Comment extends Component {
       if (res) {
         Alert.success('SUCCESS: Updated your comment.')
         this.setState({
-          changed: false
+          changed: false,
+          editMode: false
         })
       }
     })
@@ -194,13 +136,7 @@ class Comment extends Component {
             {moment.max(moment(comment.createdAt).fromNow())}
           </div>
           <div className='content-text not-editable'>
-            <MentionsInput appendSpaceOnAdd value={this.state.value}
-              style={style} onChange={(ev, value, plainTextVal, mentions) => this.handleChange(ev, value, plainTextVal, mentions)}
-              placeholder={'Mention people using \'@\''}
-              disabled={!this.state.editMode}>
-              <Mention trigger='@' data={(search, callback) => throttle(data([], search, callback), 230)} style={defaultMentionStyle}
-                renderSuggestion={(entry, search, highlightedDisplay, index) => renderUserSuggestion(entry, search, highlightedDisplay, index)} />
-            </MentionsInput>
+            <CommentContent ref='commentContent' text={this.props.comment.text} editMode={this.state.editMode} />
           </div>
           {revisionCount > 0 ? <div className='well'>
             This comment has been edited {revisionCount} times. (last edit: {moment.max(moment(lastRevision.movedToRevisionsAt)).fromNow()})
