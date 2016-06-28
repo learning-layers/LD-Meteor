@@ -56,5 +56,12 @@ Meteor.methods({
     if (this.userId) {
       Groups.update({'_id': groupId}, {$set: {modifiedAt: new Date()}, $pull: {members: {userId: userId}}})
     }
+  },
+  getGroupMentions: function (args) {
+    if (args.mentionSearch.length >= 4) {
+      return Groups.find({ name: { $regex: '^' + args.mentionSearch, $options: 'i' } }).fetch()
+    } else {
+      return []
+    }
   }
 })

@@ -6,6 +6,7 @@ import { DocumentAccess } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
 import Loader from 'react-loader'
 import DocumentUserSharing from './DocumentUserSharing'
+import DocumentGroupSharing from './DocumentGroupSharing'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('documentAccess', {documentId: props.documentId})
@@ -24,7 +25,7 @@ class DocumentSharing extends Component {
           <DocumentUserSharing documentId={documentId} documentAccess={documentAccess} />
         </Tab>
         <Tab eventKey={2} title='Groups'>
-          Groups
+          <DocumentGroupSharing documentId={documentId} documentAccess={documentAccess} />
         </Tab>
       </Tabs>
     </div>

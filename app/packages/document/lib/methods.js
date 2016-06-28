@@ -116,5 +116,44 @@ Meteor.methods({
         DocumentAccess.update({documentId: documentId}, {$pull: {userCanComment: {userId: userId}, userCanEdit: {userId: userId}, userCanView: {userId: userId}}})
       }
     }
+  },
+  addDocumentGroupAccess: function (documentId, groupId, permission) {
+    if (this.userId) {
+      let docAccess = DocumentAccess.findOne({documentId: documentId})
+      let docAccessId
+      if (docAccess) {
+        docAccessId = docAccess._id
+      }
+      if (!docAccessId) {
+        docAccessId = DocumentAccess.insert({
+          documentId: documentId,
+          userCanView: [],
+          userCanComment: [],
+          userCanEdit: [],
+          groupCanView: [],
+          groupCanComment: [],
+          groupCanEdit: []
+        })
+      }
+      let addToSetObject = {}
+      addToSetObject['group' + permission] = {
+        groupId: groupId,
+        addedBy: this.userId,
+        addedOn: new Date()
+      }
+      DocumentAccess.update({ '_id': docAccessId }, {
+        $addToSet: addToSetObject
+      })
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
+  removeDocumentGroupAccess (documentId, groupId) {
+    if (this.userId) {
+      let docAccess = DocumentAccess.findOne({documentId: documentId})
+      if (docAccess) {
+        DocumentAccess.update({documentId: documentId}, {$pull: {groupCanComment: {groupId: groupId}, groupCanEdit: {groupId: groupId}, groupCanView: {groupId: groupId}}})
+      }
+    }
   }
 })
