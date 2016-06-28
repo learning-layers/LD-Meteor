@@ -46,13 +46,14 @@ class DocumentList extends Component {
           <tbody>
             {documents.map((document) => {
               const user = Meteor.users.findOne(document.createdBy)
+              const isOwnUser = document.createdBy === ownUserId
               return <tr key={'dli-' + document._id} className='document-list-item'>
                 <td onClick={() => this.openDocument(document._id)}>{document.title}</td>
                 <td onClick={() => this.openDocument(document._id)}>{user.profile.name}</td>
                 <td onClick={() => this.openDocument(document._id)}>{document.modifiedAt}</td>
                 <td>
                   <ButtonToolbar className='options-buttons'>
-                    {ownUserId ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteDocument(document._id)}>
+                    {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteDocument(document._id)}>
                       <span className='glyphicon glyphicon-trash' />
                     </Button> : null}
                   </ButtonToolbar>

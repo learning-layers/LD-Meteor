@@ -47,7 +47,7 @@ email@1.0.14_1
 es5-shim@4.5.12_1
 facebook@1.2.8
 fastclick@1.0.12
-fourseven:scss@3.4.3
+fourseven:scss@3.8.0_1
 francocatena:status@1.5.1
 geojson-utils@1.0.9
 google@1.1.13
@@ -98,7 +98,7 @@ momentjs:moment@2.13.1
 mongo@1.1.9_1
 mongo-id@1.0.5
 mongo-livedata@1.0.12
-npm-bcrypt@0.8.6_1
+npm-bcrypt@0.8.7
 npm-mongo@1.4.44_1
 oauth@1.1.11
 oauth2@1.1.10
