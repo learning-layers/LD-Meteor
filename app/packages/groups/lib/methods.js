@@ -17,6 +17,13 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
+  leaveGroup: function (groupId) {
+    if (this.userId) {
+      Groups.update({'_id': groupId}, {$set: {modifiedAt: new Date()}, $pull: {members: {userId: this.userId}}})
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
   addUserToGroup: function (groupId, userId) {
     if (this.userId) {
       // check if user is in group first

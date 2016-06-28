@@ -42,6 +42,15 @@ class GroupList extends Component {
       }
     }
   }
+  leaveGroup (groupId) {
+    const group = Groups.findOne({'_id': groupId})
+    if (group) {
+      const result = global.confirm('Do you really want to leave the group \'' + group.name + '\'')
+      if (result) {
+        Meteor.call('leaveGroup', groupId)
+      }
+    }
+  }
   openManageMembersModal (groupId) {
     let renderToElement = this.refs.manageMembersModal
     if (!this.state.openManageMembersModal) {
@@ -82,7 +91,7 @@ class GroupList extends Component {
                   <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
                   <td>
                     <ButtonToolbar className='options-buttons'>
-                      <Button className='delete-doc-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
+                      <Button className='delete-group-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
                         <span className='glyphicon glyphicon-user' />
                         <span className='glyphicon glyphicon-plus' />
                       </Button>
@@ -121,13 +130,16 @@ class GroupList extends Component {
                   <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
                   <td>
                     <ButtonToolbar className='options-buttons'>
-                      <Button className='delete-doc-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
+                      <Button className='delete-group-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
                         <span className='glyphicon glyphicon-user' />
                         <span className='glyphicon glyphicon-plus' />
                       </Button>
                       {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
                         <span className='glyphicon glyphicon-trash' />
                       </Button> : null}
+                      <Button className='leave-group-button' bsSize='small' bsStyle='info' onClick={() => this.leaveGroup(group._id)}>
+                        <span className='glyphicon glyphicon-log-out' />{' '}leave
+                      </Button>
                     </ButtonToolbar>
                   </td>
                 </tr>
