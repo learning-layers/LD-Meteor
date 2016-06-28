@@ -9,6 +9,17 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 const SimpleSelect = ReactSelectize.SimpleSelect
 import Alert from 'react-s-alert'
+import { DocumentAccess } from '../../lib/collections'
+import { composeWithTracker } from 'react-komposer'
+import Loader from 'react-loader'
+
+function onPropsChange (props, onData) {
+  let handle = Meteor.subscribe('documentAccess', {documentId: props.documentId})
+  if (handle.ready()) {
+    let documentAccess = DocumentAccess.findOne({'documentId': props.documentId})
+    onData(null, {documentAccess})
+  }
+}
 
 class DocumentSharing extends Component {
   constructor (props) {
@@ -46,9 +57,31 @@ class DocumentSharing extends Component {
       }
     })
   }
+  removeUserAccess (userId) {
+    Meteor.call('removeDocumentUserAccess', this.props.documentId, userId, function (err, res) {
+      if (err) {
+        Alert.error('Error: Unsharing the document with user \'' + userId + '.')
+      }
+      if (res) {
+        Alert.success('Success: Unsharing the document.')
+      }
+    })
+  }
   render () {
-    const { documentId } = this.props
-    let users = []
+    const { documentId, documentAccess } = this.props
+    let haveAccess = []
+    haveAccess = haveAccess.concat(documentAccess.userCanComment.map(function (userAccessObject) {
+      userAccessObject.permission = 'CanComment'
+      return userAccessObject
+    }))
+    haveAccess = haveAccess.concat(documentAccess.userCanView.map(function (userAccessObject) {
+      userAccessObject.permission = 'CanView'
+      return userAccessObject
+    }))
+    haveAccess = haveAccess.concat(documentAccess.userCanEdit.map(function (userAccessObject) {
+      userAccessObject.permission = 'CanEdit'
+      return userAccessObject
+    }))
     return <div className='document-sharing'>
       Document sharing of {documentId}
       <Tabs defaultActiveKey={2} id='document-sharing-tab'>
@@ -103,29 +136,27 @@ class DocumentSharing extends Component {
               <div className='clearfix'></div>
               <hr />
             </Col>
-            <Col xs={12}>
+            {documentAccess ? <Col xs={12}>
               <div className='table-responsive'>
                 <table className='table table-striped table-bordered table-hover'>
                   <thead>
                     <tr>
                       <th>User</th>
+                      <th>Access</th>
                       <th>Options</th>
                     </tr>
                   </thead>
                   <tbody>
-                  {users.map((group) => {
-                    const isOwnUser = group.createdBy === Meteor.userId()
-                    return <tr key={'dli-' + group._id} className='group-list-item'>
-                      <td>{group.name}</td>
+                  {haveAccess.map((userAccessObj) => {
+                    let currentUser = Meteor.users.find({'_id': userAccessObj.userId})
+                    return <tr key={'uao-' + userAccessObj.userId} className='user-access-list-item'>
+                      <td>{currentUser && currentUser.profile ? currentUser.profile.name : userAccessObj.userId}</td>
+                      <td>{userAccessObj.permission}</td>
                       <td>
                         <ButtonToolbar className='options-buttons'>
-                          <Button className='delete-group-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
-                            <span className='glyphicon glyphicon-user' />
-                            <span className='glyphicon glyphicon-plus' />
+                          <Button className='document-unshare-button' bsSize='small' bsStyle='info' onClick={() => this.removeUserAccess(userAccessObj.userId)}>
+                            Unshare
                           </Button>
-                          {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
-                            <span className='glyphicon glyphicon-trash' />
-                          </Button> : null}
                         </ButtonToolbar>
                       </td>
                     </tr>
@@ -133,7 +164,7 @@ class DocumentSharing extends Component {
                   </tbody>
                 </table>
               </div>
-            </Col>
+            </Col> : null}
           </Row>
         </Tab>
         <Tab eventKey={2} title='Groups'>
@@ -144,4 +175,5 @@ class DocumentSharing extends Component {
   }
 }
 
-export default DocumentSharing
+const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
+export default composeWithTracker(onPropsChange, Loading)(DocumentSharing)

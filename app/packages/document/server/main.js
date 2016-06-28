@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { Documents, DocumentComments } from '../lib/collections'
+import { Documents, DocumentComments, DocumentAccess } from '../lib/collections'
 import { Tags } from '../../tags/lib/collections'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 
@@ -29,6 +29,10 @@ Meteor.publish('documentComments', function (args) {
 
 Meteor.publish('documentCommentsCount', function (args) {
   Counts.publish(this, 'documentCommentsCount', DocumentComments.find({documentId: args.documentId}))
+})
+
+Meteor.publish('documentAccess', function (args) {
+  return DocumentAccess.find({documentId: args.documentId})
 })
 
 Meteor.publish('commentReplies', function (args) {

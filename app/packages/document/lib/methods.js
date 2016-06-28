@@ -108,5 +108,13 @@ Meteor.methods({
     } else {
       throw new Meteor.Error(401)
     }
+  },
+  removeDocumentUserAccess (documentId, userId) {
+    if (this.userId) {
+      let docAccess = DocumentAccess.findOne({documentId: documentId})
+      if (docAccess) {
+        DocumentAccess.update({documentId: documentId}, {$pull: {userCanComment: {userId: userId}, userCanEdit: {userId: userId}, userCanView: {userId: userId}}})
+      }
+    }
   }
 })
