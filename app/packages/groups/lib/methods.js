@@ -9,5 +9,12 @@ Meteor.methods({
     group.createdBy = this.userId
     check(group, GroupSchema)
     return Groups.insert(group)
+  },
+  deleteGroup: function (groupId) {
+    if (this.userId) {
+      Groups.remove({'_id': groupId, 'createdBy': this.userId})
+    } else {
+      throw new Meteor.Error(401)
+    }
   }
 })
