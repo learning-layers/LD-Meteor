@@ -8,6 +8,7 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import CreateNewGroupForm from './CreateNewGroupForm'
 import ManageGroupMembersModal from '../../../../packages/groups/client/ui/ManageGroupMembersModal'
+import { moment } from 'meteor/momentjs:moment'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupList')
@@ -74,7 +75,7 @@ class GroupList extends Component {
                 <td>{group.name}</td>
                 <td>{group.members.length}</td>
                 <td>{user.profile.name}</td>
-                <td>{group.modifiedAt}</td>
+                <td>{moment.max(moment(group.modifiedAt)).fromNow()}</td>
                 <td>
                   <ButtonToolbar className='options-buttons'>
                     <Button className='delete-doc-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>

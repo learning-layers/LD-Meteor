@@ -31,6 +31,7 @@ Meteor.methods({
       }
       if (!found) {
         Groups.update({ '_id': groupId }, {
+          $set: {modifiedAt: new Date()},
           $addToSet: {
             members: {
               userId: userId,
@@ -46,7 +47,7 @@ Meteor.methods({
   },
   removeUserFromGroup: function (groupId, userId) {
     if (this.userId) {
-      Groups.update({'_id': groupId}, {$pull: {members: {userId: userId}}})
+      Groups.update({'_id': groupId}, {$set: {modifiedAt: new Date()}, $pull: {members: {userId: userId}}})
     }
   }
 })
