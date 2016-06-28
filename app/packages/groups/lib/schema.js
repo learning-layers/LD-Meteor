@@ -28,7 +28,13 @@ export const GroupSchema = new SimpleSchema({
     label: 'Modified at',
     optional: true
   },
-  members: {
-    type: [String]
+  'members.$.userId': {
+    type: String
+  },
+  'members.$.addedBy': {
+    type: String
+  },
+  'members.$.addedOn': {
+    type: Date
   }
 })

@@ -57,7 +57,7 @@ class CreateNewGroupForm extends Component {
     const valid = this.validate(this.state)
     if (valid.all) {
       const cleanState = this.createCleanState()
-      Meteor.call('createGroup', cleanState, function (error, result) {
+      Meteor.call('createGroup', cleanState, (error, result) => {
         if (error) {
           if (error.message) {
             Alert.error(error.message)
@@ -67,6 +67,12 @@ class CreateNewGroupForm extends Component {
         }
         if (result) {
           Alert.success('Success: Creating group.')
+          Meteor.setTimeout(() => {
+            this.setState({
+              name: '',
+              validationStarted: false
+            })
+          }, 230)
         }
       })
     }
@@ -77,12 +83,12 @@ class CreateNewGroupForm extends Component {
     return <form className='create-new-group-form' onSubmit={(e) => this.submit(e)}>
       <FormGroup
         controlId='formBasicText'
-        validationState={this.state.validationStarted ? (valid.name ? 'success' : 'error') : null}
+        validationState={this.state.validationStarted ? (valid.name ? 'success' : 'error') : ''}
       >
         <ControlLabel>{GroupSchema._schema.name.label}</ControlLabel>
         <FormControl
           type='text'
-          value={this.state.value}
+          value={this.state.name}
           placeholder={GroupSchema._schema.name.placeholder}
           onChange={(e) => this.handleNameChange(e)}
         />
