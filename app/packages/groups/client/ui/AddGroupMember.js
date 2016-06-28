@@ -144,6 +144,17 @@ class AddGroupMember extends Component {
             </div> : null}
           </div>
         }}
+        filterOptions={(options, search) => {
+          return options.filter(function (option) {
+            let found = false
+            groupMembers.forEach(function (groupMember) {
+              if (groupMember.value === option.value) {
+                found = true
+              }
+            })
+            return !found
+          })
+        }}
       />
     </div>
   }
