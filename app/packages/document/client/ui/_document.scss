@@ -226,3 +226,19 @@ tr.document-list-item {
     }
   }
 }
+
+.document {
+  .panel-heading {
+    .options-buttons {
+      float: right;
+    }
+  }
+}
+
+#document-sharing-tab {
+  .react-selectize.simple-select {
+    .react-selectize-control {
+      height: 51px;
+    }
+  }
+}

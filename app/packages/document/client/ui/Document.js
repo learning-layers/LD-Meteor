@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import { Meteor } from 'meteor/meteor'
 import { Documents } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
@@ -6,6 +7,9 @@ import DocumentTags from './DocumentTags'
 import CommentingArea from './CommentingArea'
 import Loader from 'react-loader'
 import classNames from 'classnames'
+import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
+import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
+import DocumentSharingModal from './DocumentSharingModal'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id})
@@ -47,7 +51,14 @@ class Document extends Component {
     super(props)
     this.state = {
       activeTabName: 'Editor',
-      tagBarFocused: false
+      tagBarFocused: false,
+      manageSharingModal: null
+    }
+  }
+  componentWillUnmount () {
+    let renderToElement = this.refs.manageSharingModal
+    if (this.state.manageSharingModal !== null) {
+      ReactDOM.unmountComponentAtNode(renderToElement)
     }
   }
   changeTab (tabName) {
@@ -68,6 +79,14 @@ class Document extends Component {
       tagBarFocused: isFocused
     })
   }
+  openDocumentSharingModal () {
+    let renderToElement = this.refs.manageSharingModal
+    if (!this.state.manageSharingModal) {
+      this.state.manageSharingModal = ReactDOM.render(<DocumentSharingModal documentId={this.props.document._id} />, renderToElement)
+    } else {
+      this.state.manageSharingModal.open()
+    }
+  }
   render () {
     const { document } = this.props
     return <div className='document container-fluid'>
@@ -80,7 +99,15 @@ class Document extends Component {
         </div>
       </div>
       <div className='main-content panel panel-primary'>
-        <div className='panel-heading'><h4 className='document-title'>{document.title}</h4></div>
+        <div className='panel-heading'>
+          <h4 className='document-title'>{document.title}</h4>
+          <ButtonToolbar className='options-buttons'>
+            <Button className='delete-group-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
+              <span className='glyphicon glyphicon glyphicon-share-alt' />
+            </Button>
+          </ButtonToolbar>
+          <div ref='manageSharingModal'></div>
+        </div>
         <div className='panel-body'>
           <AttachmentsBar onChangeTabSelection={(tabName) => this.changeTab(tabName)} activeTabName={this.state.activeTabName} />
           <div className='content'>

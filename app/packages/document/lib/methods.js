@@ -3,7 +3,7 @@ import { Documents } from './collections'
 import { DocumentSchema, DocumentCommentSchema } from './schema'
 import { check } from 'meteor/check'
 import { Tags } from '../../tags/lib/collections'
-import { DocumentComments } from '../lib/collections'
+import { DocumentComments, DocumentAccess } from '../lib/collections'
 
 Meteor.methods({
   createDocument: function (document) {
@@ -74,6 +74,37 @@ Meteor.methods({
       check(oldComment, DocumentCommentSchema)
       DocumentComments.insert(oldComment)
       return DocumentComments.update({'_id': commentId, createdBy: this.userId}, {$set: {text: comment.text, modifiedAt: comment.modifiedAt}})
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
+  addDocumentUserAccess: function (documentId, userId, permission) {
+    if (this.userId) {
+      let docAccess = DocumentAccess.findOne({documentId: documentId})
+      let docAccessId
+      if (docAccess) {
+        docAccessId = docAccess._id
+      }
+      if (!docAccessId) {
+        docAccessId = DocumentAccess.insert({
+          documentId: documentId,
+          userCanView: [],
+          userCanComment: [],
+          userCanEdit: [],
+          groupCanView: [],
+          groupCanComment: [],
+          groupCanEdit: []
+        })
+      }
+      let addToSetObject = {}
+      addToSetObject['user' + permission] = {
+        userId: userId,
+        addedBy: this.userId,
+        addedOn: new Date()
+      }
+      DocumentAccess.update({ '_id': docAccessId }, {
+        $addToSet: addToSetObject
+      })
     } else {
       throw new Meteor.Error(401)
     }

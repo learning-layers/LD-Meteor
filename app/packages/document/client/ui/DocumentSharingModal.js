@@ -1,20 +1,18 @@
 import React, {Component} from 'react'
 import Modal from '../../../../../node_modules/react-bootstrap/lib/Modal'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
-import ManageGroupMembers from './ManageGroupMembers'
+import DocumentSharing from './DocumentSharing'
 
-class ManageGroupMembersModal extends Component {
+class DocumentSharingModal extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      showModal: true,
-      groupId: this.props.groupId
+      showModal: true
     }
   }
   open (groupId) {
     this.setState({
-      showModal: true,
-      groupId: groupId
+      showModal: true
     })
   }
   close () {
@@ -23,13 +21,13 @@ class ManageGroupMembersModal extends Component {
     })
   }
   render () {
-    const { groupId } = this.state
-    return <Modal className='manage-group-members-modal' show={this.state.showModal} onHide={() => this.close()}>
+    const { documentId } = this.props
+    return <Modal className='document-sharing-modal' show={this.state.showModal} onHide={() => this.close()}>
       <Modal.Header closeButton>
-        <Modal.Title>Manage Group Members</Modal.Title>
+        <Modal.Title>Share this document with others</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ManageGroupMembers groupId={groupId} />
+        <DocumentSharing documentId={documentId} />
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={() => this.close()}>Close</Button>
@@ -38,4 +36,4 @@ class ManageGroupMembersModal extends Component {
   }
 }
 
-export default ManageGroupMembersModal
+export default DocumentSharingModal

@@ -80,3 +80,66 @@ export const DocumentCommentSchema = new SimpleSchema({
     optional: true
   }
 })
+
+export const DocumentAccessSchema = new SimpleSchema({
+  documentId: {
+    type: String,
+    label: 'Created by',
+    max: 40,
+    min: 6
+  },
+  'userCanView.$.userId': {
+    type: String
+  },
+  'userCanView.$.addedBy': {
+    type: String
+  },
+  'userCanView.$.addedOn': {
+    type: Date
+  },
+  'userCanComment.$.userId': {
+    type: String
+  },
+  'userCanComment.$.addedBy': {
+    type: String
+  },
+  'userCanComment.$.addedOn': {
+    type: Date
+  },
+  'userCanEdit.$.userId': {
+    type: String
+  },
+  'userCanEdit.$.addedBy': {
+    type: String
+  },
+  'userCanEdit.$.addedOn': {
+    type: Date
+  },
+  'groupCanView.$.groupId': {
+    type: String
+  },
+  'groupCanView.$.addedBy': {
+    type: String
+  },
+  'groupCanView.$.addedOn': {
+    type: Date
+  },
+  'groupCanComment.$.groupId': {
+    type: String
+  },
+  'groupCanComment.$.addedBy': {
+    type: String
+  },
+  'groupCanComment.$.addedOn': {
+    type: Date
+  },
+  'groupCanEdit.$.groupId': {
+    type: String
+  },
+  'groupCanEdit.$.addedBy': {
+    type: String
+  },
+  'groupCanEdit.$.addedOn': {
+    type: Date
+  }
+})
