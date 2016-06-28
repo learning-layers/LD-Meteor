@@ -7,6 +7,12 @@ Meteor.publish('groupList', function () {
   return Groups.find({'createdBy': this.userId})
 })
 
+Meteor.publish('ownGroupsList', function () {
+  // TODO add projections here:
+  // { name: 1, createdBy: 1, createdAt: 1, modifiedAt: 1 }
+  return Groups.find({'members.userId': this.userId})
+})
+
 Meteor.publish('groupMemberList', function (args) {
   return Groups.find({'_id': args.groupId})
 })

@@ -91,6 +91,7 @@ class CreateNewGroupForm extends Component {
           value={this.state.name}
           placeholder={GroupSchema._schema.name.placeholder}
           onChange={(e) => this.handleNameChange(e)}
+          autoComplete='off'
         />
         <FormControl.Feedback />
       </FormGroup>

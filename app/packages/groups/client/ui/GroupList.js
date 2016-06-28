@@ -12,9 +12,11 @@ import { moment } from 'meteor/momentjs:moment'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupList')
-  if (handle.ready()) {
+  let handle2 = Meteor.subscribe('ownGroupsList')
+  if (handle.ready() && handle2.ready()) {
     let groups = Groups.find({createdBy: Meteor.userId()}).fetch()
-    onData(null, {groups})
+    let ownGroups = Groups.find({'members.userId': Meteor.userId()}).fetch()
+    onData(null, {groups, ownGroups})
   }
 }
 
@@ -49,48 +51,90 @@ class GroupList extends Component {
     }
   }
   render () {
-    const { groups } = this.props
+    const { groups, ownGroups } = this.props
     const ownUserId = Meteor.userId()
     return <div className='group-list container'>
-      <div ref='manageMembersModal'></div>
-      <div className='create-new-group-wrapper'>
-        <CreateNewGroupForm />
-      </div>
-      <div className='table-responsive'>
-        <table className='table table-striped table-bordered table-hover'>
-          <thead>
-            <tr>
-              <th>Team name</th>
-              <th>Members</th>
-              <th>Creator</th>
-              <th>Last update</th>
-              <th>Options</th>
-            </tr>
-          </thead>
-          <tbody>
-            {groups.map((group) => {
-              const user = Meteor.users.findOne(group.createdBy)
-              const isOwnUser = group.createdBy === ownUserId
-              return <tr key={'dli-' + group._id} className='group-list-item'>
-                <td>{group.name}</td>
-                <td>{group.members.length}</td>
-                <td>{user.profile.name}</td>
-                <td>{moment.max(moment(group.modifiedAt)).fromNow()}</td>
-                <td>
-                  <ButtonToolbar className='options-buttons'>
-                    <Button className='delete-doc-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
-                      <span className='glyphicon glyphicon-user' />
-                      <span className='glyphicon glyphicon-plus' />
-                    </Button>
-                    {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
-                      <span className='glyphicon glyphicon-trash' />
-                    </Button> : null}
-                  </ButtonToolbar>
-                </td>
+      <div className='well'>
+        <p>Your groups:</p>
+        <div ref='manageMembersModal'></div>
+        <div className='create-new-group-wrapper'>
+          <CreateNewGroupForm />
+        </div>
+        <div className='table-responsive'>
+          <table className='table table-striped table-bordered table-hover'>
+            <thead>
+              <tr>
+                <th>Team name</th>
+                <th>Members</th>
+                <th>Creator</th>
+                <th>Last update</th>
+                <th>Options</th>
               </tr>
-            })}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {groups.map((group) => {
+                const user = Meteor.users.findOne(group.createdBy)
+                const isOwnUser = group.createdBy === ownUserId
+                return <tr key={'dli-' + group._id} className='group-list-item'>
+                  <td>{group.name}</td>
+                  <td>{group.members.length}</td>
+                  <td>{user.profile.name}</td>
+                  <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
+                  <td>
+                    <ButtonToolbar className='options-buttons'>
+                      <Button className='delete-doc-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
+                        <span className='glyphicon glyphicon-user' />
+                        <span className='glyphicon glyphicon-plus' />
+                      </Button>
+                      {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
+                        <span className='glyphicon glyphicon-trash' />
+                      </Button> : null}
+                    </ButtonToolbar>
+                  </td>
+                </tr>
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className='well'>
+        <p>Groups that you are a member in:</p>
+        <div className='table-responsive'>
+          <table className='table table-striped table-bordered table-hover'>
+            <thead>
+              <tr>
+                <th>Team name</th>
+                <th>Members</th>
+                <th>Creator</th>
+                <th>Last update</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ownGroups.map((group) => {
+                const user = Meteor.users.findOne(group.createdBy)
+                const isOwnUser = group.createdBy === ownUserId
+                return <tr key={'dli-' + group._id} className='group-list-item'>
+                  <td>{group.name}</td>
+                  <td>{group.members.length}</td>
+                  <td>{user.profile.name}</td>
+                  <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
+                  <td>
+                    <ButtonToolbar className='options-buttons'>
+                      <Button className='delete-doc-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
+                        <span className='glyphicon glyphicon-user' />
+                        <span className='glyphicon glyphicon-plus' />
+                      </Button>
+                      {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
+                        <span className='glyphicon glyphicon-trash' />
+                      </Button> : null}
+                    </ButtonToolbar>
+                  </td>
+                </tr>
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   }
