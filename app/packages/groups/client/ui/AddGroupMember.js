@@ -74,13 +74,14 @@ class AddGroupMember extends Component {
           }
           return {label: search.trim(), value: search.trim()}
         }}
-        renderValue={function (item) {
+        renderValue={(item) => {
           return <div className='removable-emoji'>
             {item.label}
-            <div style={{display: 'inline', marginLeft: '5px'}} onClick={function () {
+            <div style={{display: 'inline', marginLeft: '5px'}} onClick={() => {
               let result = window.confirm('Do you want to remove the tag \'' + item.label + '?')
               if (result) {
-                Meteor.call('removeTagFromUser', item._id, function (err, res) {
+                console.log(item)
+                Meteor.call('removeUserFromGroup', this.props.groupId, item.value, function (err, res) {
                   if (err) {
                     Alert.error('Error: Removing tag \'' + item.label + '.')
                   }
@@ -102,8 +103,6 @@ class AddGroupMember extends Component {
                   //
                 }
                 Alert.success('Success: Adding tag \'' + value.label + '.')
-                console.log(res)
-                value._id = res
               })
             }
           })

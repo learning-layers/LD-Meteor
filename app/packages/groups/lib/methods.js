@@ -19,7 +19,29 @@ Meteor.methods({
   },
   addUserToGroup: function (groupId, userId) {
     if (this.userId) {
-      Groups.update({'_id': groupId}, {$addToSet: {members: {userId: userId, addedBy: this.userId, addedOn: new Date()}}})
+      // check if user is in group first
+      const group = Groups.find({'_id': userId})
+      let found = false
+      if (group.members) {
+        group.members.forEach(function (member) {
+          if (member.userId === userId) {
+            found = true
+          }
+        })
+      }
+      if (!found) {
+        Groups.update({ '_id': groupId }, {
+          $addToSet: {
+            members: {
+              userId: userId,
+              addedBy: this.userId,
+              addedOn: new Date()
+            }
+          }
+        })
+      } else {
+        throw new Meteor.Error(400, 'User already member of the group')
+      }
     }
   },
   removeUserFromGroup: function (groupId, userId) {

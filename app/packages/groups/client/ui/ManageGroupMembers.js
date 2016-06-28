@@ -24,29 +24,15 @@ class ManageGroupMembers extends Component {
   render () {
     const { group } = this.props
     return <div className='manage-group-members'>
-      <AddGroupMember groupId={this.state.groupId} />
-      {group.members.length}
-      <div className='table-responsive'>
-        <table className='table table-striped table-bordered table-hover'>
-          <thead>
-            <tr>
-              <th>Member name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {group.members.map((member) => {
-              const user = Meteor.users.findOne({'_id': member.userId})
-              if (!user) {
-                // retrieve user info via sync method
-                console.log(member.userId)
-              }
-              return <tr key={'gmli-' + member.userId} className='member-list-item'>
-                <td>{user ? user.profile.name : member.userId}</td>
-              </tr>
-            })}
-          </tbody>
-        </table>
-      </div>
+      <AddGroupMember groupId={this.state.groupId} groupMembers={group.members.map(function (member) {
+        const user = Meteor.users.findOne({'_id': member.userId})
+        if (!user) {
+          // retrieve user info via sync method
+          console.log(member.userId)
+        }
+        const label = user ? user.profile.name : member.userId
+        return {label: label, value: member.userId}
+      })} />
     </div>
   }
 }
