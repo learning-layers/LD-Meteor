@@ -81,7 +81,7 @@ class DocumentUserSharing extends Component {
         <SimpleSelect
           ref='groupSelection'
           options={this.state.options}
-          placeholder='Select a user'
+          placeholder='Select a group'
           theme='material'
           onSearchChange={(search) => {
             Meteor.call('getGroupMentions', {mentionSearch: search}, (err, res) => {

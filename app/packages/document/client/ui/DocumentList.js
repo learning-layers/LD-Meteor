@@ -11,7 +11,7 @@ import Loader from 'react-loader'
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('documentList')
   if (handle.ready()) {
-    let documents = Documents.find({createdBy: Meteor.userId()}).fetch()
+    let documents = Documents.find({}).fetch()
     onData(null, {documents})
   }
 }

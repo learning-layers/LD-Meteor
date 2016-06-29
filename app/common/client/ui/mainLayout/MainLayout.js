@@ -7,7 +7,6 @@ import { Meteor } from 'meteor/meteor'
 import {composeWithTracker} from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 import Alert from 'react-s-alert'
-import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import Loader from 'react-loader'
 
 function onPropsChange (props, onData) {
@@ -98,12 +97,12 @@ class MainLayout extends Component {
     }
 
     if (!user && !isAllowedToEnterRoute) {
-      Meteor.setTimeout(function () {
+      /* Meteor.setTimeout(function () {
         FlowRouter.go('/')
         Meteor.setTimeout(function () {
           Alert.error('Error: You were redirected to the front page because you didn\'t have permission to access the previous site!')
         }, 70)
-      }, 150)
+      }, 150)*/
     }
     return (
       <div>

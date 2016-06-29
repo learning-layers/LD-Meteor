@@ -4,6 +4,9 @@ import { Meteor } from 'meteor/meteor'
 
 export const Documents = new Mongo.Collection('Documents')
 Documents.attachSchema(DocumentSchema)
+if (Meteor.isServer) {
+  Documents._ensureIndex({ createdBy: 1 })
+}
 
 export const DocumentComments = new Mongo.Collection('DocumentComments')
 DocumentComments.attachSchema(DocumentCommentSchema)
