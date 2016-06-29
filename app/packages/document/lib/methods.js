@@ -155,5 +155,10 @@ Meteor.methods({
         DocumentAccess.update({documentId: documentId}, {$pull: {groupCanComment: {groupId: groupId}, groupCanEdit: {groupId: groupId}, groupCanView: {groupId: groupId}}})
       }
     }
+  },
+  checkHasAccessToDocument (documentId) {
+    return {
+      result: true
+    }
   }
 })

@@ -9,6 +9,7 @@ import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 import Alert from 'react-s-alert'
 import Loader from 'react-loader'
 import Login from './Login'
+import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('currentUserDetails')
@@ -54,6 +55,16 @@ let isUserAgreeingWithTOS = function (user) {
 }
 
 class MainLayout extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      accessCheckResult: {
+        route: null,
+        result: false
+      }
+    }
+    // TODO onLogout delete accessCheckResult
+  }
   componentDidMount () {
     // Use Meteor Blaze to render the consent form
     /* this.cookieConsentView = Blaze.render(Template.cookieConsentImply,
@@ -62,7 +73,7 @@ class MainLayout extends Component {
       ReactDOM.findDOMNode(this.refs.status))
     setTimeout(function () {
       try {
-        Blaze.remove(this.cookieConsentView)
+        // Blaze.remove(this.cookieConsentView)
         Blaze.remove(this.statusView)
       } catch (e) {
         //
@@ -72,11 +83,33 @@ class MainLayout extends Component {
   componentWillUnmount () {
     // Clean up Blaze view
     try {
-      Blaze.remove(this.cookieConsentView)
-      // Blaze.remove(this.statusView)
+      // Blaze.remove(this.cookieConsentView)
+      Blaze.remove(this.statusView)
     } catch (e) {
       //
     }
+  }
+  accessCheck () {
+    const self = this
+    Meteor.call('checkHasAccessToDocument', (err, res) => {
+      console.debug('END Performing meteor method call')
+      if (err) {
+        self.setState({
+          accessCheckResult: {
+            route: '/document/' + this.props.id,
+            result: false
+          }
+        })
+      }
+      if (res) {
+        self.setState({
+          accessCheckResult: {
+            route: '/document/' + this.props.id,
+            result: res.result
+          }
+        })
+      }
+    })
   }
   render () {
     // <div ref='cookieConsentForm'></div>
@@ -96,6 +129,22 @@ class MainLayout extends Component {
       isVerified = userEmailIsVerified(user)
       acceptedTermsOfService = isUserAgreeingWithTOS(user)
     }
+
+    let routeNeedsAccess = false
+    const currentRoute = FlowRouter.current()
+    if (user && currentRoute.route.path === '/document/:id') {
+      routeNeedsAccess = true
+      if (routeNeedsAccess) {
+        console.debug('Access=' + JSON.stringify(this.state.accessCheckResult))
+      }
+      if (!(this.state.accessCheckResult.route === '/document/' + this.props.id)) {
+        console.debug('BEGIN Performing meteor method call')
+        Meteor.setTimeout(() => {
+          this.accessCheck()
+        }, 0)
+      }
+    }
+
     return (
       <div>
         <div ref='status'></div>
