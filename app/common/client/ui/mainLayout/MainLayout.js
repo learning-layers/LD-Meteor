@@ -8,6 +8,7 @@ import {composeWithTracker} from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 import Alert from 'react-s-alert'
 import Loader from 'react-loader'
+import Login from './Login'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('currentUserDetails')
@@ -79,7 +80,7 @@ class MainLayout extends Component {
   }
   render () {
     // <div ref='cookieConsentForm'></div>
-    let { user, isPublic, requiredRoles, tosNotNeeded } = this.props
+    let { user, isPublic, requiredRoles, tosNotNeeded, canRequestAccess } = this.props
     let isAllowedToEnterRoute
     if (isPublic) {
       tosNotNeeded = true
@@ -95,15 +96,6 @@ class MainLayout extends Component {
       isVerified = userEmailIsVerified(user)
       acceptedTermsOfService = isUserAgreeingWithTOS(user)
     }
-
-    if (!user && !isAllowedToEnterRoute) {
-      /* Meteor.setTimeout(function () {
-        FlowRouter.go('/')
-        Meteor.setTimeout(function () {
-          Alert.error('Error: You were redirected to the front page because you didn\'t have permission to access the previous site!')
-        }, 70)
-      }, 150)*/
-    }
     return (
       <div>
         <div ref='status'></div>
@@ -111,27 +103,30 @@ class MainLayout extends Component {
           {this.props.header}
         </header>
         <main>
-          {isAllowedToEnterRoute ? <div>
-            {isPublic && !user ? this.props.content : (<div>
-              {isVerified && acceptedTermsOfService || tosNotNeeded ? this.props.content : (
-                <VerificationAndTOSInterceptor
-                  acceptedTermsOfService={acceptedTermsOfService}
-                  isVerified={isVerified}
-                  registeredEmails={user.registered_emails} />
-              )}
-            </div>)}
-          </div> : <div className='container'>
-            <div className='panel panel-danger'>
-              <div className='panel-heading'><h2>Access Forbidden</h2></div>
-              <div className='panel-body'>
-                <div className='access-forbidden-panel-content-wrapper'>
-                  <img src='/stop-sign-35069.svg' alt='Stop Sign' />
-                  You don't have permission to be here...
-                </div>
-              </div>
-            </div>
+          {isPublic && !user ? <div>{this.props.content}{this.props.helpCenter}</div> : <div>
+            {!user ? <Login /> : <div>
+              {isAllowedToEnterRoute ? <div>
+                {isVerified && acceptedTermsOfService || tosNotNeeded ? <div>{this.props.content}{this.props.helpCenter}</div> : (
+                  <VerificationAndTOSInterceptor
+                    acceptedTermsOfService={acceptedTermsOfService}
+                    isVerified={isVerified}
+                    registeredEmails={user.registered_emails} />
+                )}
+              </div> : <div>
+                {canRequestAccess ? <div className='container'>Request access</div> : <div className='container'>
+                  <div className='panel panel-danger'>
+                    <div className='panel-heading'><h2>Access Forbidden</h2></div>
+                    <div className='panel-body'>
+                      <div className='access-forbidden-panel-content-wrapper'>
+                        <img src='/stop-sign-35069.svg' alt='Stop Sign' />
+                        You don't have permission to be here...
+                      </div>
+                    </div>
+                  </div>
+                </div>}
+              </div>}
+            </div>}
           </div>}
-          {this.props.helpCenter}
         </main>
         <LDSidebar />
         <Alert stack={{limit: 3, spacing: 10}} position='bottom-left' offset={50} />
