@@ -2,17 +2,33 @@ import { Meteor } from 'meteor/meteor'
 import { Documents, DocumentComments, DocumentAccess } from '../lib/collections'
 import { Tags } from '../../tags/lib/collections'
 import { Counts } from 'meteor/tmeasday:publish-counts'
+import { Groups } from '../../groups/lib/collections'
 
 Meteor.publish('documentList', function () {
   this.autorun(function () {
-    // look for all documents the user has access to via
-    // a documentAccessObject
+    // find all groups the user is a member in
+    let groups = Groups.find({'members.userId': this.userId}, {name: 0, members: 0}).fetch()
+
+    // collect all groupIds
+    let groupIds = []
+    groups.forEach(function (group) {
+      groupIds.push(group._id)
+    })
+
+    // look for all documents the user or groups the user is a member of has access to via a documentAccessObject
     const documentAccessObjects = DocumentAccess.find(
-      { $or: [ { 'userCanView.userId': this.userId }, { 'userCanComment.userId': this.userId }, { 'userCanEdit.userId': this.userId } ] },
+      {
+        $or: [
+          { 'userCanView.userId': this.userId },
+          { 'userCanComment.userId': this.userId },
+          { 'userCanEdit.userId': this.userId },
+          { 'groupCanView.groupId': {$in: groupIds} },
+          { 'groupCanComment.groupId': {$in: groupIds} },
+          { 'groupCanEdit.groupId': {$in: groupIds} }
+        ]
+      },
       { userCanView: 0, userCanEdit: 0, userCanComment: 0, groupCanView: 0, groupCanEdit: 0, groupCanComment: 0 }
     ).fetch()
-
-    // TODO add group sharings
 
     // collect all documentIds that the user has access to
     let documentAccessDocumentIds = []
