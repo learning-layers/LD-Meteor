@@ -9,7 +9,6 @@ import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 import Alert from 'react-s-alert'
 import Loader from 'react-loader'
 import Login from './Login'
-import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('currentUserDetails')
@@ -89,28 +88,6 @@ class MainLayout extends Component {
       //
     }
   }
-  accessCheck () {
-    const self = this
-    Meteor.call('checkHasAccessToDocument', (err, res) => {
-      console.debug('END Performing meteor method call')
-      if (err) {
-        self.setState({
-          accessCheckResult: {
-            route: '/document/' + this.props.id,
-            result: false
-          }
-        })
-      }
-      if (res) {
-        self.setState({
-          accessCheckResult: {
-            route: '/document/' + this.props.id,
-            result: res.result
-          }
-        })
-      }
-    })
-  }
   render () {
     // <div ref='cookieConsentForm'></div>
     let { user, isPublic, requiredRoles, tosNotNeeded, canRequestAccess } = this.props
@@ -128,21 +105,6 @@ class MainLayout extends Component {
     if (user) {
       isVerified = userEmailIsVerified(user)
       acceptedTermsOfService = isUserAgreeingWithTOS(user)
-    }
-
-    let routeNeedsAccess = false
-    const currentRoute = FlowRouter.current()
-    if (user && currentRoute.route.path === '/document/:id') {
-      routeNeedsAccess = true
-      if (routeNeedsAccess) {
-        console.debug('Access=' + JSON.stringify(this.state.accessCheckResult))
-      }
-      if (!(this.state.accessCheckResult.route === '/document/' + this.props.id)) {
-        console.debug('BEGIN Performing meteor method call')
-        Meteor.setTimeout(() => {
-          this.accessCheck()
-        }, 0)
-      }
     }
 
     return (

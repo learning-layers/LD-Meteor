@@ -10,13 +10,18 @@ import classNames from 'classnames'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import DocumentSharingModal from './DocumentSharingModal'
+import NotFound from '../../../../common/client/ui/mainLayout/NotFound'
 
 function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('document', {id: props.id})
-  if (handle.ready()) {
-    let document = Documents.findOne({'_id': props.id})
-    onData(null, {document})
-  }
+  Meteor.subscribe('document', {id: props.id}, {
+    onReady: function () {
+      let document = Documents.findOne({'_id': props.id})
+      onData(null, {document})
+    },
+    onError: function (err) {
+      onData(null, {err: err})
+    }
+  })
 }
 
 class AttachmentsBar extends Component {
@@ -88,7 +93,22 @@ class Document extends Component {
     }
   }
   render () {
-    const { document } = this.props
+    const { document, err } = this.props
+    if (!document) {
+      if (err) {
+        if (err.error === 403) {
+          return <div className='container'>
+            Request access page.
+          </div>
+        } else {
+          return <div className='container'>
+            Ooops something went wrong. Msg admin.
+          </div>
+        }
+      } else {
+        return <NotFound />
+      }
+    }
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
         <div className='hierarchy-bar'>Hierarchy:</div>

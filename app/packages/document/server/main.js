@@ -53,7 +53,48 @@ Meteor.publish('documentList', function () {
 })
 
 Meteor.publish('document', function (args) {
-  return Documents.find({ '_id': args.id })
+  if (this.userId) {
+    let document = Documents.findOne({ '_id': args.id, createdBy: this.userId })
+    if (document) {
+      return Documents.find({ '_id': args.id })
+    } else {
+      // the user is not the creator of this document hence there has to be a more extensive
+      // search if the user has access or not
+      // find all groups the user is a member in
+      let groups = Groups.find({ 'members.userId': this.userId }, { name: 0, members: 0 }).fetch()
+
+      // collect all groupIds
+      let groupIds = []
+      groups.forEach(function (group) {
+        groupIds.push(group._id)
+      })
+      const documentAccessObj = DocumentAccess.findOne(
+        {
+          $and: [
+            { documentId: args.id },
+            {
+              $or: [
+                { 'userCanView.userId': this.userId },
+                { 'userCanComment.userId': this.userId },
+                { 'userCanEdit.userId': this.userId },
+                { 'groupCanView.groupId': { $in: groupIds } },
+                { 'groupCanComment.groupId': { $in: groupIds } },
+                { 'groupCanEdit.groupId': { $in: groupIds } }
+              ]
+            }
+          ]
+        }
+      )
+      if (documentAccessObj) {
+        return Documents.find({ '_id': args.id })
+      } else {
+        // the user doesn't have access
+        throw new Meteor.Error(403)
+      }
+    }
+  } else {
+    throw new Meteor.Error(401)
+  }
 })
 
 Meteor.publish('documentTags', function (args) {
