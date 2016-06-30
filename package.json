@@ -36,6 +36,7 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
     "classnames": "^2.2.5",
+    "cookies-js": "^1.2.2",
     "fbemitter": "^2.0.2",
     "hopscotch": "^0.2.5",
     "lodash": "^4.13.1",

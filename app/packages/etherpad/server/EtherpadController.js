@@ -19,7 +19,6 @@ class EtherpadController {
       } else {
         if (response.data.code === 0) {
           // ok status
-          console.log(response.data.data.groupID)
           callback(null, response.data.data.groupID)
         } else {
           // TODO add error handling
@@ -43,7 +42,6 @@ class EtherpadController {
       } else {
         if (response.data.code === 0) {
           // ok status
-          console.log(response.data.data.padID)
           callback(null, response.data.data.padID)
         } else {
           // TODO add error handling
@@ -66,7 +64,6 @@ class EtherpadController {
       } else {
         if (response.data.code === 0) {
           // ok status
-          console.log(response.data.data.authorID)
           callback(null, response.data.data.authorID)
         } else {
           // TODO add error handling
@@ -90,7 +87,6 @@ class EtherpadController {
       } else {
         if (response.data.code === 0) {
           // ok status
-          console.log(response.data.data.sessionID)
           callback(null, response.data.data.sessionID)
         } else {
           // TODO add error handling
