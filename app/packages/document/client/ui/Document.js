@@ -113,6 +113,14 @@ class Document extends Component {
         return <NotFound />
       }
     }
+
+    let etherpadGroup = document.etherpadGroup
+    let etherpadGroupPad = document.etherpadGroupPad
+    if (!etherpadGroup) {
+      // send a request to the server that the server should create a group and a pad in etherpad
+      Meteor.call('createEtherpadGroupAndPad', document._id)
+    }
+
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
         <div className='hierarchy-bar'>Hierarchy:</div>
@@ -136,6 +144,7 @@ class Document extends Component {
           <AttachmentsBar onChangeTabSelection={(tabName) => this.changeTab(tabName)} activeTabName={this.state.activeTabName} />
           <div className='content'>
             {this.state.activeTabName}
+            {etherpadGroup ? <div>{etherpadGroupPad ? 'etherpad exists (2/2)' : 'etherpad exists (1/2)'}</div> : 'etherpad doesn\'t exist (0/2)'}
           </div>
         </div>
       </div>

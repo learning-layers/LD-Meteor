@@ -27,6 +27,18 @@ export const DocumentSchema = new SimpleSchema({
     type: Date,
     label: 'Modified at',
     optional: true
+  },
+  etherpadGroup: {
+    type: String,
+    label: 'etherpadGroup',
+    max: 100,
+    min: 1
+  },
+  etherpadGroupPad: {
+    type: String,
+    label: 'etherpadGroupPad',
+    max: 100,
+    min: 1
   }
 })
 
