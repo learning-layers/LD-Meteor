@@ -98,11 +98,15 @@ class Document extends Component {
       if (err) {
         if (err.error === 403) {
           return <div className='container'>
-            Request access page.
+            You currently don't have access to this document.
+            If you want access ask the document author to grant you access to the document.
+            <button className='btn btn-default' onClick={() => window.location.reload()}>
+              Reload the page
+            </button>
           </div>
         } else {
           return <div className='container'>
-            Ooops something went wrong. Msg admin.
+            Ooops something went wrong. Please contact the administrator of this website.
           </div>
         }
       } else {
