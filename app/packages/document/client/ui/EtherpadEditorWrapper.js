@@ -13,6 +13,13 @@ class EtherpadEditorWrapper extends Component {
     }
   }
   componentDidMount () {
+    let closingCode = function closingCode () {
+      let result = this.removeEtherpadCookie()
+      console.log(result)
+      return null
+    }.bind(this)
+    window.onbeforeunload = closingCode
+    window.onunload = closingCode
     Meteor.call('getEtherpadSession', this.props.documentId, (err, res) => {
       if (err) {
         console.error('err=' + JSON.stringify(err))
@@ -25,6 +32,13 @@ class EtherpadEditorWrapper extends Component {
         })
       }
     })
+  }
+  removeEtherpadCookie () {
+    Cookies.expire('sessionID', { domain: 'localhost' })
+    return true
+  }
+  componentWillUnmount () {
+    this.removeEtherpadCookie()
   }
   onIframeLoaded () {
     console.debug('IFrame loaded')
