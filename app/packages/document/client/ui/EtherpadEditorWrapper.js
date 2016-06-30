@@ -9,7 +9,8 @@ class EtherpadEditorWrapper extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      cookieSet: false
+      cookieSet: false,
+      cookieDomain: null
     }
     this.closingCode = function closingCode () {
       let result = this.removeEtherpadCookie()
@@ -26,15 +27,24 @@ class EtherpadEditorWrapper extends Component {
       }
       if (res) {
         console.debug('res=' + JSON.stringify(res))
-        Cookies.set('sessionID', res, { domain: 'localhost' })
+        let domain
+        if (res.domain.indexOf(':') === -1) {
+          domain = res.domain
+        } else {
+          domain = res.domain.split(':')[0]
+        }
+        Cookies.set('sessionID', res.sessionId, { domain: domain })
         this.setState({
-          cookieSet: true
+          cookieSet: true,
+          cookieDomain: domain
         })
       }
     })
   }
   removeEtherpadCookie () {
-    Cookies.expire('sessionID', { domain: 'localhost' })
+    if (this.state.cookieDomain) {
+      Cookies.expire('sessionID', { domain: this.state.cookieDomain })
+    }
     return true
   }
   componentWillUnmount () {

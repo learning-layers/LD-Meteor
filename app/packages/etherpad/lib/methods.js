@@ -43,7 +43,10 @@ Meteor.methods({
             authorId = createAuthorSync(this.userId, user.profile.name)
             Meteor.users.update({ '_id': this.userId }, { $set: { etherpadAuthorId: authorId } })
           }
-          return createPadSessionSync(document.etherpadGroup, authorId, new Date().getTime() + (60 * 60 * 24))
+          return {
+            sessionId: createPadSessionSync(document.etherpadGroup, authorId, new Date().getTime() + (60 * 60 * 24)),
+            domain: this.connection.httpHeaders.host
+          }
         } else {
           throw new Meteor.Error(404)
         }
