@@ -13,6 +13,10 @@
     }
   },
   "private": {
+    "etherpad": {
+      "endpoint": "http://127.0.0.1:9001/api/1",
+      "apiKey": "56f0f3c1859afe6560b1343c512b19329d6ee2d357917ea595353438f02b543c"
+    },
     "email": {
       "url": "smtp://<email url>",
       "from": "<From>"
