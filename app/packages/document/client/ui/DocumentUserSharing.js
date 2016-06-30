@@ -60,18 +60,20 @@ class DocumentUserSharing extends Component {
   render () {
     const { documentAccess } = this.props
     let haveAccess = []
-    haveAccess = haveAccess.concat(documentAccess.userCanComment.map(function (userAccessObject) {
-      userAccessObject.permission = 'CanComment'
-      return userAccessObject
-    }))
-    haveAccess = haveAccess.concat(documentAccess.userCanView.map(function (userAccessObject) {
-      userAccessObject.permission = 'CanView'
-      return userAccessObject
-    }))
-    haveAccess = haveAccess.concat(documentAccess.userCanEdit.map(function (userAccessObject) {
-      userAccessObject.permission = 'CanEdit'
-      return userAccessObject
-    }))
+    if (documentAccess) {
+      haveAccess = haveAccess.concat(documentAccess.userCanComment.map(function (userAccessObject) {
+        userAccessObject.permission = 'CanComment'
+        return userAccessObject
+      }))
+      haveAccess = haveAccess.concat(documentAccess.userCanView.map(function (userAccessObject) {
+        userAccessObject.permission = 'CanView'
+        return userAccessObject
+      }))
+      haveAccess = haveAccess.concat(documentAccess.userCanEdit.map(function (userAccessObject) {
+        userAccessObject.permission = 'CanEdit'
+        return userAccessObject
+      }))
+    }
     return <Row>
       <Col xs={12}>
         <br />
