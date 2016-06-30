@@ -11,17 +11,24 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import DocumentSharingModal from './DocumentSharingModal'
 import NotFound from '../../../../common/client/ui/mainLayout/NotFound'
+import IFrameWithOnLoad from './IframeWithOnLoad'
+
+const etherpadEndpoint = Meteor.settings.public.etherpad.endpoint
 
 function onPropsChange (props, onData) {
-  Meteor.subscribe('document', {id: props.id}, {
-    onReady: function () {
+  let handle = Meteor.subscribe('document', {id: props.id}, {
+    /* onReady: function () { // TODO cleanup -> find a better solution for reactive updates here
       let document = Documents.findOne({'_id': props.id})
       onData(null, {document})
-    },
+    },*/
     onError: function (err) {
       onData(null, {err: err})
     }
   })
+  if (handle.ready()) {
+    let document = Documents.findOne({'_id': props.id})
+    onData(null, {document})
+  }
 }
 
 class AttachmentsBar extends Component {
@@ -92,6 +99,9 @@ class Document extends Component {
       this.state.manageSharingModal.open()
     }
   }
+  onIframeLoaded () {
+    window.alert('IFrame loaded')
+  }
   render () {
     const { document, err } = this.props
     if (!document) {
@@ -121,6 +131,8 @@ class Document extends Component {
       Meteor.call('createEtherpadGroupAndPad', document._id)
     }
 
+    let etherpadPadUrl = etherpadEndpoint + '/p/' + etherpadGroupPad
+
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
         <div className='hierarchy-bar'>Hierarchy:</div>
@@ -145,6 +157,7 @@ class Document extends Component {
           <div className='content'>
             {this.state.activeTabName}
             {etherpadGroup ? <div>{etherpadGroupPad ? 'etherpad exists (2/2)' : 'etherpad exists (1/2)'}</div> : 'etherpad doesn\'t exist (0/2)'}
+            {etherpadGroupPad ? <IFrameWithOnLoad id='etherpadEditorIframe' name='etherpadEditor' src={etherpadPadUrl} scrolling='no' onLoaded={this.onIframeLoaded} seamless /> : null}
           </div>
         </div>
       </div>

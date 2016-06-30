@@ -83,6 +83,7 @@ Meteor.startup(function () {
   if (!isProdEnv()) {
     // allow hot reloading in dev mode
     trustedOrigins.push('localhost:3002')
+    trustedOrigins.push('localhost:9001')
   }
 
   trustedOrigins.forEach(function (origin) {

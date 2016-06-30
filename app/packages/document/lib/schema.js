@@ -32,13 +32,15 @@ export const DocumentSchema = new SimpleSchema({
     type: String,
     label: 'etherpadGroup',
     max: 100,
-    min: 1
+    min: 1,
+    optional: true
   },
   etherpadGroupPad: {
     type: String,
     label: 'etherpadGroupPad',
     max: 100,
-    min: 1
+    min: 1,
+    optional: true
   }
 })
 

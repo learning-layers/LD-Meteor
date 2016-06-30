@@ -10,6 +10,9 @@
     "hostname": {
       "ip": "<IP to server>",
       "hostname": "<Domain>"
+    },
+    "etherpad": {
+      "endpoint": "http://localhost:9001"
     }
   },
   "private": {

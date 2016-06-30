@@ -4,7 +4,10 @@
       "name": "Living Documents",
       "version": "0.0.1"
     },
-    "environment": "test"
+    "environment": "test",
+    "etherpad": {
+      "endpoint": "http://localhost:9001"
+    }
   },
   "private": {
     "etherpad": {
