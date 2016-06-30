@@ -11,15 +11,15 @@ class EtherpadEditorWrapper extends Component {
     this.state = {
       cookieSet: false
     }
-  }
-  componentDidMount () {
-    let closingCode = function closingCode () {
+    this.closingCode = function closingCode () {
       let result = this.removeEtherpadCookie()
       console.log(result)
       return null
     }.bind(this)
-    window.onbeforeunload = closingCode
-    window.onunload = closingCode
+  }
+  componentDidMount () {
+    window.addEventListener('beforeunload', this.closingCode, false)
+    window.addEventListener('unload', this.closingCode, false)
     Meteor.call('getEtherpadSession', this.props.documentId, (err, res) => {
       if (err) {
         console.error('err=' + JSON.stringify(err))
@@ -39,6 +39,8 @@ class EtherpadEditorWrapper extends Component {
   }
   componentWillUnmount () {
     this.removeEtherpadCookie()
+    window.removeEventListener('beforeunload', this.closingCode, false)
+    window.removeEventListener('unload', this.closingCode, false)
   }
   onIframeLoaded () {
     console.debug('IFrame loaded')
