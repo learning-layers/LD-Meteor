@@ -11,9 +11,7 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import DocumentSharingModal from './DocumentSharingModal'
 import NotFound from '../../../../common/client/ui/mainLayout/NotFound'
-import IFrameWithOnLoad from './IframeWithOnLoad'
-
-const etherpadEndpoint = Meteor.settings.public.etherpad.endpoint
+import ContentEditor from './ContentEditor'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id}, {
@@ -99,8 +97,17 @@ class Document extends Component {
       this.state.manageSharingModal.open()
     }
   }
-  onIframeLoaded () {
-    window.alert('IFrame loaded')
+  contentSection (activeTabName) {
+    switch (activeTabName) {
+      case 'Editor':
+        return <div>{this.props.document ? <ContentEditor document={this.props.document} /> : null}</div>
+      case 'Files':
+        return 'Files'
+      case 'Media':
+        return 'Media'
+      default:
+        return <div>No section found</div>
+    }
   }
   render () {
     const { document, err } = this.props
@@ -123,16 +130,6 @@ class Document extends Component {
         return <NotFound />
       }
     }
-
-    let etherpadGroup = document.etherpadGroup
-    let etherpadGroupPad = document.etherpadGroupPad
-    if (!etherpadGroup) {
-      // send a request to the server that the server should create a group and a pad in etherpad
-      Meteor.call('createEtherpadGroupAndPad', document._id)
-    }
-
-    let etherpadPadUrl = etherpadEndpoint + '/p/' + etherpadGroupPad
-
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
         <div className='hierarchy-bar'>Hierarchy:</div>
@@ -155,9 +152,7 @@ class Document extends Component {
         <div className='panel-body'>
           <AttachmentsBar onChangeTabSelection={(tabName) => this.changeTab(tabName)} activeTabName={this.state.activeTabName} />
           <div className='content'>
-            {this.state.activeTabName}
-            {etherpadGroup ? <div>{etherpadGroupPad ? 'etherpad exists (2/2)' : 'etherpad exists (1/2)'}</div> : 'etherpad doesn\'t exist (0/2)'}
-            {etherpadGroupPad ? <IFrameWithOnLoad id='etherpadEditorIframe' name='etherpadEditor' src={etherpadPadUrl} scrolling='no' onLoaded={this.onIframeLoaded} seamless /> : null}
+            {this.contentSection(this.state.activeTabName)}
           </div>
         </div>
       </div>
