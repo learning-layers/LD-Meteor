@@ -4,9 +4,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import MainLayout from '../../../../common/client/ui/mainLayout/MainLayout'
 import Navbar from '../../../../common/client/ui/mainLayout/Navbar'
 import Home from '../ui/Home'
-import HelpCenter from '../../../helpCenter/client/ui/HelpCenter'
+// import HelpCenter from '../../../helpCenter/client/ui/HelpCenter'
 
-let helpTours = [
+/* let helpTours = [
   {
     label: 'Tour 1',
     hopscotchConfig: {
@@ -65,7 +65,9 @@ let helpTours = [
       ]
     }
   }
-]
+]*/
+
+// <HelpCenter helpTours={helpTours} />
 
 FlowRouter.route('/', {
   action: function (params, queryParams) {
@@ -75,7 +77,7 @@ FlowRouter.route('/', {
       isPublic: true,
       header: <Navbar />,
       content: <Home />,
-      helpCenter: <HelpCenter helpTours={helpTours} />
+      helpCenter: null
     })
   }
 })
@@ -87,7 +89,7 @@ FlowRouter.route('/home', {
     mount(MainLayout, {
       header: <Navbar />,
       content: <Home />,
-      helpCenter: <HelpCenter helpTours={helpTours} />
+      helpCenter: null
     })
   }
 })

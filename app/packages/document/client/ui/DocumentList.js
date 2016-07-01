@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ReactiveInfiniteList from '../../../infiniteList/client/ui/ReactiveInfiniteList'
+// import ReactiveInfiniteList from '../../../infiniteList/client/ui/ReactiveInfiniteList'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { Documents } from '../../lib/collections'
@@ -63,10 +63,11 @@ class DocumentList extends Component {
           </tbody>
         </table>
       </div>
-      <ReactiveInfiniteList />
     </div>
   }
 }
+
+// <ReactiveInfiniteList />
 
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
 export default composeWithTracker(onPropsChange, Loading)(DocumentList)

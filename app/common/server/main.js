@@ -77,7 +77,8 @@ Meteor.startup(function () {
     'vjs.zencdn.net',
     'randomuser.me',
     'static-cdn.jtvnw.net',
-    'api.learnenv.com'
+    'api.learnenv.com',
+    'learnenv.de:9001'
   ]
 
   if (!isProdEnv()) {

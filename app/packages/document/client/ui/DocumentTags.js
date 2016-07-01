@@ -20,7 +20,7 @@ class DocumentTags extends Component {
     console.log(props)
     this.state = {
       tagOptions: [
-        {label: 'test', name: 'test', value: 'test'}
+        // {label: 'test', name: 'test', value: 'test'}
       ]
     }
   }

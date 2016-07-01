@@ -72,7 +72,8 @@ class CreateDocumentModal extends Component {
               valid={valid.title}
               value={this.state.title}
               onChange={(e) => this.handleChangeTitle(e)}
-              placeholder={DocumentSchema._schema.title.placeholder} />
+              placeholder={DocumentSchema._schema.title.placeholder}
+              autoComplete='off' />
           </FormGroup>
           <button className='btn btn-success' disabled={!valid.all}>Submit</button>
         </form>

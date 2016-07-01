@@ -77,7 +77,8 @@ class UserProfileInfoForm extends Component {
           value={this.state.displayName}
           onChange={(e) => this.handleChangeDisplayName(e)}
           placeholder={schema._schema.displayName.placeholder}
-          disabled={!isOwnProfile} />
+          disabled={!isOwnProfile}
+          autoComplete='off' />
       </FormGroup> : null}
       <FormGroup controlId='userFullNameText'>
         <ControlLabel>{schema._schema.fullName.label}</ControlLabel>
@@ -88,7 +89,8 @@ class UserProfileInfoForm extends Component {
           value={this.state.fullName}
           onChange={(e) => this.handleChangeFullName(e)}
           placeholder={schema._schema.fullName.placeholder}
-          disabled={!isOwnProfile} />
+          disabled={!isOwnProfile}
+          autoComplete='off' />
       </FormGroup>
       <FormGroup controlId='userDescriptionTextArea'>
         <ControlLabel>{schema._schema.description.label}</ControlLabel>
@@ -99,7 +101,8 @@ class UserProfileInfoForm extends Component {
           value={this.state.description}
           onChange={(e) => this.handleChangeDescription(e)}
           placeholder={schema._schema.description.placeholder}
-          disabled={!isOwnProfile} />
+          disabled={!isOwnProfile}
+          autoComplete='off' />
       </FormGroup>
       {isOwnProfile ? <button className='btn btn-info' disabled={!valid.all}>Submit</button> : null}
     </form>
