@@ -151,8 +151,9 @@ class Comment extends Component {
               </Button> : null}
             </ButtonToolbar>
             <div className='rating-wrapper'>
-              <div className='rating-lbl-wrapper'>Level of agreement</div>
+              <div style={{display: 'none'}} className='rating-lbl-wrapper'>Level of agreement</div>
               <Rating
+                style={{display: 'none'}}
                 fractions={2}
                 initialRate={2.5}
                 onChange={(rate) => { console.log('changed rating'); console.log(rate) }}

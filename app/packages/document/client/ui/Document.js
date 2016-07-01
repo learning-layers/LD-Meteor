@@ -133,8 +133,8 @@ class Document extends Component {
     }
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
-        <div className='hierarchy-bar'>Hierarchy:</div>
-        <hr />
+        <div style={{display: 'none'}} className='hierarchy-bar'>Hierarchy:</div>
+        <hr style={{display: 'none'}} />
         <div className='tag-bar'>
           <label for='document-tags' className={this.state.tagBarFocused ? 'active' : ''}>Tags</label>
           <DocumentTags onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={document._id} />
