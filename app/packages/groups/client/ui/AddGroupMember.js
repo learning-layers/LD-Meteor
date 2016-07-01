@@ -38,7 +38,7 @@ class AddGroupMember extends Component {
         ref='groupMemberTags'
         anchor={undefined}
         width='200px'
-        placeholder='Enter tags here...'
+        placeholder='Enter a username here...'
         options={this.state.userOptions}
         values={groupMembers}
         onSearchChange={(search) => {

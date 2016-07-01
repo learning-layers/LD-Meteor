@@ -110,7 +110,7 @@ class DocumentUserSharing extends Component {
           ref='permissionSelection'
           options={this.state.sharingOptions}
           defaultValue={{label: 'Can Edit', value: 'can_edit'}}
-          placeholder='Select a fruit'
+          placeholder='Select a permission'
           theme='material'
         />
       </Col>
