@@ -82,7 +82,7 @@ class LDNavbar extends Component {
                 <MenuItem eventKey={3.1} onClick={() => this.openCreateDocumentModal()}> New Document
                 </MenuItem>
               </NavDropdown> : null}
-              {loggedIn ? <NavItem id='nav-app-search' eventKey={4} href='#'>
+              {false && loggedIn ? <NavItem id='nav-app-search' eventKey={4} href='#'>
                 <Navbar.Form pullLeft>
                   <FormGroup>
                     <FormControl type='text' placeholder='Search' />
