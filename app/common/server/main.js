@@ -107,3 +107,11 @@ Meteor.startup(function () {
     process.env.MAIL_URL = Meteor.settings.private.email.url
   }
 })
+
+global.AdminConfig = {
+  name: 'Living Documents',
+  adminEmails: [ Meteor.settings.private.initialUser.email ],
+  collections: {
+    DocumentsCollection: {}
+  }
+}
