@@ -7,7 +7,7 @@ Documents.attachSchema(DocumentSchema)
 if (Meteor.isServer) {
   Documents._ensureIndex({ createdBy: 1 })
 }
-global.DocumentsCollection = Documents
+global['Documents'] = Documents
 
 export const DocumentComments = new Mongo.Collection('DocumentComments')
 DocumentComments.attachSchema(DocumentCommentSchema)

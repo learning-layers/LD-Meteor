@@ -108,13 +108,13 @@ Meteor.startup(function () {
   }
 })
 
-global.Users2 = Meteor.users
+global.Users = Meteor.users
 
 global.AdminConfig = {
   name: 'Living Documents',
   adminEmails: [ Meteor.settings.private.initialUser.email ],
   collections: {
-    DocumentsCollection: {},
-    Users2: {}
+    Documents: {},
+    Users: {}
   }
 }

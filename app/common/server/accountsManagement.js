@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { Accounts } from 'meteor/accounts-base'
 import { ServiceConfiguration } from 'meteor/service-configuration'
 import { Roles } from 'meteor/alanning:roles'
-import { _ } from 'meteor/underscore'
+import _each from 'lodash/each'
 
 Accounts.validateLoginAttempt(function (attempt) {
   if (!attempt || !attempt.user) {
@@ -97,7 +97,7 @@ Meteor.startup(function () {
       {email: Meteor.settings.private.initialUser.email, roles: []}
     ]
 
-    _.each(users, function (user) {
+    _each(users, function (user) {
       var id
 
       id = Accounts.createUser({
