@@ -6,6 +6,9 @@
     },
     "etherpad": {
       "endpoint": "http://localhost:9001"
+    },
+    "initialUser": {
+      "email": "martin@bachl.pro"
     }
   },
   "private": {
