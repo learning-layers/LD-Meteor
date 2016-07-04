@@ -102,7 +102,7 @@ mobile-experience@1.0.4
 mobile-status-bar@1.0.12
 modules@0.6.4
 modules-runtime@0.6.4_1
-momentjs:moment@2.13.1
+momentjs:moment@2.14.1
 mongo@1.1.9_1
 mongo-id@1.0.5
 mongo-livedata@1.0.12
@@ -114,7 +114,7 @@ observe-sequence@1.0.12
 ordered-dict@1.0.8
 ostrio:cookies@2.0.4
 ostrio:cstorage@2.0.5
-ostrio:files@1.5.6
+ostrio:files@1.6.1
 ostrio:i18n@2.1.6
 ostrio:logger@1.1.2
 ostrio:loggermongo@1.1.3

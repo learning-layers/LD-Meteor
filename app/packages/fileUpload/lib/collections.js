@@ -22,7 +22,7 @@ const cleanupInterval = 1000 * 60 * 120
 export const Uploads = new Meteor.Files({
   collectionName: 'Uploads',
   debug: false,
-  throttle: 256 * 256 * 64,
+  // throttle: 256 * 256 * 64,
   // chunkSize: 256*256*4,
   allowClientCode: false,
   onBeforeUpload: function (file) {

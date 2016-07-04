@@ -1,5 +1,4 @@
 import { Uploads } from '../../fileUpload/lib/collections'
-import { Meteor } from 'meteor/meteor'
 import fs from 'fs'
 
 function humanFileSize (bytes, si) {
@@ -49,12 +48,17 @@ global.fileUpload.beforeUploadInterceptors.push({
   onAfterUpload: function (file) {
     // assure that there is only one avatar image for a user
     // after a new one has been uploaded successfully
-    let avatarUploads = Uploads.collection.find({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()}).fetch()
-    avatarUploads.forEach(function (avatarUpload) {
-      if (avatarUpload._id !== file._id) {
-        Uploads.collection.remove({ '_id': avatarUpload._id })
-        fs.unlink(avatarUpload.path, function () {})
-      }
-    })
+    if (file && file.meta && file.meta.parent && file.meta.parent.elementId) {
+      let avatarUploads = Uploads.collection.find({
+        'meta.parent.uploadType': 'avatar',
+        'meta.parent.elementId': file.meta.parent.elementId
+      }).fetch()
+      avatarUploads.forEach(function (avatarUpload) {
+        if (avatarUpload._id !== file._id) {
+          Uploads.collection.remove({ '_id': avatarUpload._id })
+          fs.unlink(avatarUpload.path, function () {})
+        }
+      })
+    }
   }
 })
