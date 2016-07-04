@@ -10,21 +10,50 @@ import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import { Template } from 'meteor/templating'
 import _difference from 'lodash/difference'
 import _map from 'lodash/map'
-// import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
-// import { Template } from 'meteor/templating'
+import jQuery from 'meteor/jquery'
 
 // The code below is originally written by Sachin 'sachinbhutani' (https://github.com/sachinbhutani)
 // for the package flow-db-admin (https://github.com/sachinbhutani/flow-db-admin).
 // It has been adjusted that it works fine together with Meteor 1.3 and React
 
-global.window.adminCollectionObject = function (collection) {
-  console.info('Expected=' + Session.get('admin_collection_name'))
-  console.info('Observed=' + collection)
-  if (collection === undefined) {
-    collection = Session.get('admin_collection_name')
+function parseID (id) {
+  if (typeof id === 'string') {
+    if (id.indexOf('ObjectID') > -1) {
+      return new Mongo.ObjectID(id.slice(id.indexOf('"') + 1, id.lastIndexOf('"')))
+    } else {
+      return id
+    }
+  } else {
+    return id
   }
-  return global.window[collection]
 }
+
+Template.fAdminLayout.events({
+  'click .btn-delete': function (e, t) {
+    let _id = jQuery(e.target).attr('doc')
+    if (Session.equals('admin_collection_name', 'Users')) {
+      Session.set('admin_id', _id)
+      Session.set('admin_doc', Meteor.users.findOne(_id))
+    } else {
+      Session.set('admin_id', parseID(_id))
+      Session.set('admin_doc', global.window.adminCollectionObject(FlowRouter.getParam('collectionName')).findOne(parseID(_id)))
+    }
+    return false
+  }
+})
+
+Template.AdminDashboardEdit.events({
+  'click #confirm-delete': function () {
+    let collection = FlowRouter.getParam('collectionName')
+    let _id = FlowRouter.getParam('_id')
+    Meteor.call('adminRemoveMongoDoc', collection, _id, function (e, r) {
+      jQuery('#admin-delete-modal').modal('hide')
+      jQuery('body').removeClass('modal-open')
+      jQuery('.modal-backdrop').remove()
+    })
+    return false
+  }
+})
 
 Template.AdminDashboardEdit.helpers({
   fadmin_doc: function () {
@@ -32,7 +61,11 @@ Template.AdminDashboardEdit.helpers({
     let editId	= FlowRouter.getParam('_id')
     console.debug('editcollectionName=' + editcollectionName)
     console.debug('editId=' + editId)
-    return global.window[editcollectionName].findOne({'_id': editId})
+    if (Meteor.isClient) {
+      return global.window[ editcollectionName ].findOne({ '_id': editId })
+    } else {
+      return global[ editcollectionName ].findOne({ '_id': editId })
+    }
   },
   action: function () {
     let action = FlowRouter.getQueryParam('action')
@@ -57,18 +90,6 @@ Template.AdminDashboardUsersEdit.helpers({
     _difference(_map(Meteor.roles.find().fetch(), function (role) { return role.name }), Roles.getRolesForUser(FlowRouter.getParam('_id')))
   }
 })
-
-function parseID (id) {
-  if (typeof id === 'string') {
-    if (id.indexOf('ObjectID') > -1) {
-      return new Mongo.ObjectID(id.slice(id.indexOf('"') + 1, id.lastIndexOf('"')))
-    } else {
-      return id
-    }
-  } else {
-    return id
-  }
-}
 
 function onPropsChange (props, onData) {
   let rerender = uuid.v4()
@@ -244,33 +265,3 @@ class FlowDbAdminLayout extends Component {
 }
 
 export default composeWithTracker(onPropsChange)(FlowDbAdminLayout)
-
-/* Template.AdminDashboardEdit.rendered = function () {
-  let editcollectionName = FlowRouter.getParam('collectionName')
-  let editId = FlowRouter.getParam('_id')
-  let item = global.window[editcollectionName].findOne({'_id': editId})
-  console.debug(item)
-  if (Session.get('admin_doc') && item && Session.get('admin_doc')._id !== item._id) {
-    console.debug('Item id is different (2)')
-    Session.set('admin_doc', item)
-    Meteor.setTimeout(() => {
-      BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardEdit' })
-    }, 300)
-  } else if (!Session.get('admin_doc')) {
-    console.debug('Admin doc not set (2)')
-    Session.set('admin_doc', item)
-    Meteor.setTimeout(() => {
-      BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardEdit' })
-    }, 300)
-  } else if (Session.get('admin_doc') && !item) {
-    console.debug('Item not available (2)')
-    Meteor.setTimeout(() => {
-      BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardEdit' })
-    }, 300)
-  } else if (Session.get('admin_doc') && item && Session.get('admin_doc')._id === item._id) {
-    console.debug('Already the right item fetched (2)')
-    Meteor.setTimeout(() => {
-      BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardEdit' })
-    }, 300)
-  }
-}*/
