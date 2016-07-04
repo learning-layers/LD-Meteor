@@ -42,6 +42,19 @@ Template.fAdminLayout.events({
   }
 })
 
+Template.AdminDashboardUsersEdit.events({
+  'click #confirm-delete': function () {
+    let collection = FlowRouter.getParam('collectionName')
+    let _id = FlowRouter.getParam('_id')
+    Meteor.call('adminRemoveMongoDoc', collection, _id, function (e, r) {
+      jQuery('#admin-delete-modal').modal('hide')
+      jQuery('body').removeClass('modal-open')
+      jQuery('.modal-backdrop').remove()
+    })
+    return false
+  }
+})
+
 Template.AdminDashboardEdit.events({
   'click #confirm-delete': function () {
     let collection = FlowRouter.getParam('collectionName')
