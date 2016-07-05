@@ -1,4 +1,13 @@
 import { Meteor } from 'meteor/meteor'
+import { FilesCollection } from 'meteor/ostrio:files'
+import Grid from 'gridfs-stream'
+import fs from 'fs'
+
+let gfs
+if (Meteor.isServer) {
+  const mongo = MongoInternals.NpmModules.mongodb.module // eslint-disable-line no-undef
+  gfs = Grid(Meteor.users.rawDatabase(), mongo)
+}
 
 if (!global.fileUpload) {
   global.fileUpload = {
@@ -6,7 +15,6 @@ if (!global.fileUpload) {
     afterUploadInterceptors: []
   }
 }
-
 global.fileUpload.interceptorMap = []
 let interceptorMap = global.fileUpload.interceptorMap
 Meteor.startup(function () {
@@ -16,27 +24,11 @@ Meteor.startup(function () {
   global.fileUpload.interceptorMap = interceptorMap
 })
 
-let metaData = []
-const cleanupInterval = 1000 * 60 * 120
-
-export const Uploads = new Meteor.Files({
+export const Uploads = new FilesCollection({
   collectionName: 'Uploads',
-  debug: false,
-  // throttle: 256 * 256 * 64,
-  // chunkSize: 256*256*4,
   allowClientCode: false,
-  onBeforeUpload: function (file) {
-    if (file.meta) {
-      metaData[file.path] = file.meta
-      Meteor.setTimeout(function () {
-        // cleanup metaData
-        if (metaData[file.path]) {
-          delete metaData[ file.path ]
-        }
-      }, cleanupInterval)
-    } else {
-      file.meta = metaData[file.path]
-    }
+  debug: Meteor.isServer && process.env.NODE_ENV === 'development',
+  onBeforeUpload (file) {
     let interceptor = interceptorMap[file.meta.parent.collection + '#' + file.meta.parent.uploadType]
     if (!interceptor || !interceptor.onBeforeUpload) {
       console.log('No onBeforeUpload interceptor found for collection=' + file.meta.parent.collection + ', uploadType=' + file.meta.parent.uploadType + '!')
@@ -44,10 +36,23 @@ export const Uploads = new Meteor.Files({
     }
     return interceptor.onBeforeUpload(file)
   },
-  onAfterUpload: function (file) {
-    if (metaData[file.path]) {
-      delete metaData[ file.path ]
-    }
+  onAfterUpload (file) {
+    // Move file to GridFS
+    Object.keys(file.versions).forEach(versionName => {
+      const metadata = { versionName, fileId: file._id, storedAt: new Date() } // Optional
+      const writeStream = gfs.createWriteStream({ filename: file.name, metadata })
+
+      fs.createReadStream(file.versions[versionName].path).pipe(writeStream)
+
+      writeStream.on('close', Meteor.bindEnvironment(fileContent => {
+        const property = `versions.${versionName}.meta.gridFsFileId`
+
+        // If we store the ObjectID itself, Meteor (EJSON?) seems to convert it to a
+        // LocalCollection.ObjectID, which GFS doesn't understand.
+        this.collection.update(file._id, { $set: { [property]: fileContent._id.toString() } })
+        this.unlink(this.collection.findOne(file._id), versionName) // Unlink files from FS
+      }))
+    })
     let interceptor = interceptorMap[file.meta.parent.collection + '#' + file.meta.parent.uploadType]
     if (!interceptor || !interceptor.onAfterUpload) {
       console.log('No onAfterUpload interceptor found for collection=' + file.meta.parent.collection + ', uploadType=' + file.meta.parent.uploadType + '!')
@@ -55,6 +60,39 @@ export const Uploads = new Meteor.Files({
     }
     interceptor.onAfterUpload(file)
   },
+  interceptDownload (http, file, versionName) {
+    // Serve file from GridFS
+    const _id = (file.versions[versionName].meta || {}).gridFsFileId
+    if (_id) {
+      const readStream = gfs.createReadStream({ _id })
+      readStream.on('error', err => { throw err })
+      readStream.pipe(http.response)
+    }
+    return Boolean(_id) // Serve file from either GridFS or FS if it wasn't uploaded yet
+  },
+  /* onAfterRemove (files) {
+    // Remove corresponding file from GridFS
+    console.log('Deleting gfs items (4)')
+    files.forEach(file => {
+      console.log('Deleting gfs items (5)')
+      Object.keys(file.versions).forEach(versionName => {
+        console.log('Deleting gfs items (6)')
+        const _id = (file.versions[versionName].meta || {}).gridFsFileId
+        console.log('Removing file with _id=' + _id)
+        if (_id) {
+          console.log('Deleting gfs items (7)')
+          /* let fileObjectId
+          try {
+            fileObjectId = new Meteor.Collection.ObjectID(_id)
+          } catch (e) {
+            //
+          }
+          // gfs.remove({ '_id': fileObjectId }, err => { if (err) throw err })*/
+          /* gfs.remove({ '_id': 'ObjectID("' + _id + '")' }, err => { if (err) throw err })
+        }
+      })
+    })
+  },*/
   downloadCallback: function (fileObj) {
     var ref = this.params
     if (ref && ref.query && ref.query.download === 'true') {
@@ -68,6 +106,10 @@ export const Uploads = new Meteor.Files({
     }
   }
 })
+
+if (Meteor.isServer) {
+  Uploads.denyClient()
+}
 
 // To have sample files in DB we will upload them on server startup:
 if (Meteor.isServer) {

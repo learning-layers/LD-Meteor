@@ -1,5 +1,13 @@
 import { Uploads } from '../../fileUpload/lib/collections'
 import fs from 'fs'
+import { Meteor } from 'meteor/meteor'
+import Grid from 'gridfs-stream'
+
+let gfs
+if (Meteor.isServer) {
+  const mongo = MongoInternals.NpmModules.mongodb.module // eslint-disable-line no-undef
+  gfs = Grid(Meteor.users.rawDatabase(), mongo)
+}
 
 function humanFileSize (bytes, si) {
   var thresh = si ? 1000 : 1024
@@ -54,9 +62,21 @@ global.fileUpload.beforeUploadInterceptors.push({
         'meta.parent.elementId': file.meta.parent.elementId
       }).fetch()
       avatarUploads.forEach(function (avatarUpload) {
-        if (avatarUpload._id !== file._id) {
+        if (avatarUpload._id !== file._id.toString()) {
           Uploads.collection.remove({ '_id': avatarUpload._id })
-          fs.unlink(avatarUpload.path, function () {})
+          if (Meteor.isServer) {
+            try {
+              fs.unlink(avatarUpload.path, function () {})
+            } catch (e) {
+              //
+            }
+            Object.keys(avatarUpload.versions).forEach(versionName => {
+              const _id = (avatarUpload.versions[ versionName ].meta || {}).gridFsFileId
+              if (_id) {
+                gfs.remove({ '_id': _id }, (err, res) => { if (err) { throw err } else { console.log(JSON.stringify(res)) } })
+              }
+            })
+          }
         }
       })
     }
