@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Uploads } from '../../lib/collections'
+import { Uploads, fileUpload } from '../../lib/collections'
 import { Tracker } from 'meteor/tracker'
 import Alert from 'react-s-alert'
 
@@ -87,7 +87,7 @@ class FileUpload extends Component {
     if (currentFileUpload && !this.state.progress) {
       this.state.progress = 0
     }
-    let interceptor = global.fileUpload.interceptorMap[this.props.collection + '#' + this.props.uploadType]
+    let interceptor = fileUpload.interceptorMap[this.props.collection + '#' + this.props.uploadType]
     return <div className='fileUpload'>
       {currentFileUpload ? <div className='uploadIndicator'>
         Uploading <b>{currentFileUpload.file.name}</b>:

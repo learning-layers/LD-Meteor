@@ -24,11 +24,4 @@ if (Meteor.isServer) {
   }
 }
 
-if (!global.fileUpload) {
-  global.fileUpload = {
-    beforeUploadInterceptors: [],
-    afterUploadInterceptors: []
-  }
-}
-
 moment.locale('en')

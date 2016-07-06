@@ -9,19 +9,17 @@ if (Meteor.isServer) {
   gfs = Grid(Meteor.users.rawDatabase(), mongo)
 }
 
-if (!global.fileUpload) {
-  global.fileUpload = {
-    beforeUploadInterceptors: [],
-    afterUploadInterceptors: []
-  }
+export let fileUpload = {
+  interceptorMap: [],
+  interceptors: []
 }
-global.fileUpload.interceptorMap = []
-let interceptorMap = global.fileUpload.interceptorMap
+
+let interceptorMap = fileUpload.interceptorMap
 Meteor.startup(function () {
-  global.fileUpload.beforeUploadInterceptors.forEach(function (interceptor) {
+  fileUpload.interceptors.forEach(function (interceptor) {
     interceptorMap[interceptor.collection + '#' + interceptor.uploadType] = interceptor
   })
-  global.fileUpload.interceptorMap = interceptorMap
+  fileUpload.interceptorMap = interceptorMap
 })
 
 export const Uploads = new FilesCollection({

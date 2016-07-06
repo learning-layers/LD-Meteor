@@ -1,4 +1,4 @@
-import { Uploads } from '../../fileUpload/lib/collections'
+import { Uploads, fileUpload } from '../../fileUpload/lib/collections'
 import fs from 'fs'
 import { Meteor } from 'meteor/meteor'
 import Grid from 'gridfs-stream'
@@ -25,14 +25,7 @@ function humanFileSize (bytes, si) {
   return bytes.toFixed(1) + ' ' + units[u]
 }
 
-if (!global.fileUpload) {
-  global.fileUpload = {
-    beforeUploadInterceptors: [],
-    afterUploadInterceptors: []
-  }
-}
-
-global.fileUpload.beforeUploadInterceptors.push({
+fileUpload.interceptors.push({
   collection: 'user',
   uploadType: 'avatar',
   allowedExtensions: ['png', 'jpg', 'jpeg'],
@@ -73,7 +66,7 @@ global.fileUpload.beforeUploadInterceptors.push({
             Object.keys(avatarUpload.versions).forEach(versionName => {
               const _id = (avatarUpload.versions[ versionName ].meta || {}).gridFsFileId
               if (_id) {
-                gfs.remove({ '_id': _id }, (err, res) => { if (err) { throw err } else { console.log(JSON.stringify(res)) } })
+                gfs.remove({ '_id': _id }, (err) => { if (err) { throw err } })
               }
             })
           }
