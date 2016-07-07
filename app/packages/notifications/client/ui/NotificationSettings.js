@@ -6,8 +6,8 @@ class NotificationSettings extends Component {
     super(props)
     this.state = {
       min: 0,
-      max: 3,
-      value: 3
+      max: 2,
+      value: 2
     }
   }
   onSliderChange (value) {
@@ -59,12 +59,12 @@ class NotificationSettings extends Component {
         <strong>1st Option:</strong> You won't receive any emails. Notifications are only visible inside this web application.
       </li>
       <li className={optionTwoClasses} onClick={() => this.onSliderChange(1)}>
-        <strong>2nd Option:</strong> You will receive emails for actions were someone awaits a response of you. Notification about subscriptions are only shown inside this web application.
+        <strong>2nd Option:</strong> You will receive emails for actions were someone awaits a response of you. Notifications about subscriptions are only shown inside this web application.
       </li>
       <li className={optionThreeClasses} onClick={() => this.onSliderChange(2)}>
         <strong>3rd Option:</strong> All email notifications. But you can set the interval for emails about subscription updates.
       </li>
-      <li className={optionFourClasses} onClick={() => this.onSliderChange(3)}>
+      <li className={optionFourClasses} onClick={() => this.onSliderChange(3)} style={{display: 'none'}}>
         <strong>4th Option:</strong> Customized (advanced settings)
       </li>
     </ul>
@@ -77,8 +77,17 @@ class NotificationSettings extends Component {
         <hr style={{marginTop: '5px', marginBottom: '5px'}} />
         {this.quickNotificationSettingsExplanation(this.state.value)}
         <Rcslider dots tipFormatter={(value) => this.tipFormatter(value)} value={this.state.value} min={this.state.min} max={this.state.max} onChange={(value) => this.onSliderChange(value)} />
+        {this.state.value === 2 ? <div className='subscription-interval-settings'>
+          <ul style={{marginTop: '14px'}}>
+            <li>Receive notifications for my subscriptions immediately</li>
+            <li>Receive notfications for my subscriptions in the specified interval:</li>
+          </ul>
+        </div> : null}
       </div>
-      <div className='well'>
+      <div className='well' style={{display: 'none'}}>
+        <div className='alert alert-warning'>
+          The custom settings for notifications are currently under construction
+        </div>
         <h5>Advanced Settings (Custom fine-tuned notification settings)</h5>
         <hr style={{marginTop: '5px', marginBottom: '5px'}} />
       </div>
