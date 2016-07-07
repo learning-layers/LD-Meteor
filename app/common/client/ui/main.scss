@@ -126,6 +126,7 @@ hr {
 @import "mainLayout/_mainLayout";
 @import "mainLayout/_flowDBAdmin";
 @import "mainLayout/_login";
+@import "_slider";
 @import "../../../packages/document/client/ui/_document";
 @import "../../../packages/home/client/ui/_home";
 @import "../../../packages/helpCenter/client/ui/_help_center";
@@ -135,3 +136,4 @@ hr {
 @import "../../../packages/user/client/ui/_index";
 @import "../../../packages/groups/client/ui/_groups";
 @import "../../../packages/fileUpload/client/ui/_fileUpload";
+@import "../../../packages/notifications/client/ui/_notification_settings";
