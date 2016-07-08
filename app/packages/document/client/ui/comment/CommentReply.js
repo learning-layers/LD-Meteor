@@ -1,15 +1,15 @@
 import React, {Component} from 'react'
 import {Meteor} from 'meteor/meteor'
-import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { MentionsInput, Mention } from 'react-mentions'
 import uniqBy from 'lodash/uniqBy'
 import sortBy from 'lodash/sortBy'
 import merge from 'lodash/merge'
 import throttle from 'lodash/throttle'
-import defaultStyle from './defaultStyle'
-import defaultMentionStyle from './defaultMentionStyle'
 import Alert from 'react-s-alert'
+import defaultStyle from '../defaultStyle'
+import defaultMentionStyle from '../defaultMentionStyle'
+import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
+import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 
 const style = merge({}, defaultStyle(), {
   suggestions: {

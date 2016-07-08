@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
-import defaultMentionStyle from './defaultMentionStyle'
 import { MentionsInput, Mention } from 'react-mentions'
 import throttle from 'lodash/throttle'
 import merge from 'lodash/merge'
 import uniqBy from 'lodash/uniqBy'
 import sortBy from 'lodash/sortBy'
-import defaultStyle from './defaultStyle'
 import { Meteor } from 'meteor/meteor'
+import defaultStyle from '../defaultStyle'
+import defaultMentionStyle from '../defaultMentionStyle'
 
 let startsWith = function (string, searchString, position) {
   position = position || 0

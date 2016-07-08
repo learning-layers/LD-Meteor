@@ -1,6 +1,6 @@
 import { Mongo } from 'meteor/mongo'
-import { DocumentSchema, DocumentCommentSchema, DocumentAccessSchema } from './schema'
 import { Meteor } from 'meteor/meteor'
+import { DocumentSchema, DocumentCommentSchema, DocumentAccessSchema } from './schema'
 
 export const Documents = new Mongo.Collection('Documents')
 Documents.attachSchema(DocumentSchema)

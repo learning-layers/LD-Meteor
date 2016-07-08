@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
-import { DocumentComments } from '../../lib/collections'
+import { DocumentComments } from '../../../lib/collections'
 import Comment from './Comment'
 
 function onPropsChange (props, onData) {

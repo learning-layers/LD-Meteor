@@ -1,17 +1,18 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import { Meteor } from 'meteor/meteor'
-import { Documents } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
-import DocumentTags from './DocumentTags'
-import CommentingArea from './CommentingArea'
 import Loader from 'react-loader'
 import classNames from 'classnames'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
-import DocumentSharingModal from './DocumentSharingModal'
+import DocumentSharingModal from './sharing/DocumentSharingModal'
 import NotFound from '../../../../common/client/ui/mainLayout/NotFound'
 import ContentEditor from './ContentEditor'
+import { Documents } from '../../lib/collections'
+import DocumentTags from './DocumentTags'
+import CommentingArea from './comment/CommentingArea'
+import { RequestAccess } from './sharing/RequestAccess'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id}, {
@@ -116,11 +117,7 @@ class Document extends Component {
       if (err) {
         if (err.error === 403) {
           return <div className='container'>
-            You currently don't have access to this document.
-            If you want access ask the document author to grant you access to the document.
-            <button className='btn btn-default' onClick={() => window.location.reload()}>
-              Reload the page
-            </button>
+            <RequestAccess documentId={this.props.id} />
           </div>
         } else {
           return <div className='container'>

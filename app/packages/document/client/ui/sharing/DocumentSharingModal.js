@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import Modal from '../../../../../node_modules/react-bootstrap/lib/Modal'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
+import Modal from '../../../../../../node_modules/react-bootstrap/lib/Modal'
+import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 import DocumentSharing from './DocumentSharing'
 
 class DocumentSharingModal extends Component {

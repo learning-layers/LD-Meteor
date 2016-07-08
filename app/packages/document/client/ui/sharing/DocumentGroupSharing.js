@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import Row from '../../../../../node_modules/react-bootstrap/lib/Row'
-import Col from '../../../../../node_modules/react-bootstrap/lib/Col'
 import ReactSelectize from 'react-selectize'
-import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
-const SimpleSelect = ReactSelectize.SimpleSelect
 import Alert from 'react-s-alert'
+import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
+import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
+import Row from '../../../../../../node_modules/react-bootstrap/lib/Row'
+import Col from '../../../../../../node_modules/react-bootstrap/lib/Col'
+import { Groups } from '../../../../groups/lib/collections'
+const SimpleSelect = ReactSelectize.SimpleSelect
 
 class DocumentUserSharing extends Component {
   constructor (props) {
@@ -20,8 +21,8 @@ class DocumentUserSharing extends Component {
       ]
     }
   }
-  addUserAccess () {
-    let userItem = this.refs.userSelection.state.value
+  addGroupAccess () {
+    let groupItem = this.refs.groupSelection.state.value
     let permissionItem = this.refs.permissionSelection.state.value
     function camelCase (input) {
       if (input.length > 0) {
@@ -35,21 +36,21 @@ class DocumentUserSharing extends Component {
         return input
       }
     }
-    Meteor.call('addDocumentUserAccess', this.props.documentId, userItem.value, camelCase(permissionItem.value), function (err, res) {
+    Meteor.call('addDocumentGroupAccess', this.props.documentId, groupItem.value, camelCase(permissionItem.value), function (err, res) {
       if (err) {
-        Alert.error('Error: Sharing the document with user \'' + userItem.label + '.')
+        Alert.error('Error: Sharing the document with group \'' + groupItem.label + '.')
       }
       if (res) {
         Alert.success('Success: Sharing the document.')
       }
     })
   }
-  removeUserAccess (userId) {
-    let result = global.confirm('Do you want to unshare this document with the user ' + userId + '?')
+  removeGroupAccess (groupId) {
+    let result = global.confirm('Do you want to unshare this document with the group ' + groupId + '?')
     if (result) {
-      Meteor.call('removeDocumentUserAccess', this.props.documentId, userId, function (err, res) {
+      Meteor.call('removeDocumentGroupAccess', this.props.documentId, groupId, function (err, res) {
         if (err) {
-          Alert.error('Error: Unsharing the document with user \'' + userId + '.')
+          Alert.error('Error: Unsharing the document with group \'' + groupId + '.')
         }
         if (res) {
           Alert.success('Success: Unsharing the document.')
@@ -61,17 +62,17 @@ class DocumentUserSharing extends Component {
     const { documentAccess } = this.props
     let haveAccess = []
     if (documentAccess) {
-      haveAccess = haveAccess.concat(documentAccess.userCanComment.map(function (userAccessObject) {
-        userAccessObject.permission = 'CanComment'
-        return userAccessObject
+      haveAccess = haveAccess.concat(documentAccess.groupCanComment.map(function (groupAccessObject) {
+        groupAccessObject.permission = 'CanComment'
+        return groupAccessObject
       }))
-      haveAccess = haveAccess.concat(documentAccess.userCanView.map(function (userAccessObject) {
-        userAccessObject.permission = 'CanView'
-        return userAccessObject
+      haveAccess = haveAccess.concat(documentAccess.groupCanView.map(function (groupAccessObject) {
+        groupAccessObject.permission = 'CanView'
+        return groupAccessObject
       }))
-      haveAccess = haveAccess.concat(documentAccess.userCanEdit.map(function (userAccessObject) {
-        userAccessObject.permission = 'CanEdit'
-        return userAccessObject
+      haveAccess = haveAccess.concat(documentAccess.groupCanEdit.map(function (groupAccessObject) {
+        groupAccessObject.permission = 'CanEdit'
+        return groupAccessObject
       }))
     }
     return <Row>
@@ -80,25 +81,25 @@ class DocumentUserSharing extends Component {
       </Col>
       <Col xs={12} md={6}>
         <SimpleSelect
-          ref='userSelection'
+          ref='groupSelection'
           options={this.state.options}
-          placeholder='Select a user'
+          placeholder='Select a group'
           theme='material'
           onSearchChange={(search) => {
-            Meteor.call('getMentions', {mentionSearch: search}, (err, res) => {
+            Meteor.call('getGroupMentions', {mentionSearch: search}, (err, res) => {
               if (err) {
                 //
               }
               if (res) {
                 // create new tagOptions
-                let userOptions = res.map(function (user) {
+                let groupOptions = res.map(function (group) {
                   return {
-                    label: user.profile.name,
-                    value: user._id
+                    label: group.name,
+                    value: group._id
                   }
                 })
                 this.setState({
-                  options: userOptions
+                  options: groupOptions
                 })
               }
             })
@@ -117,7 +118,7 @@ class DocumentUserSharing extends Component {
       <Col xs={12}>
         <ButtonToolbar className='pull-right'>
           <br />
-          <Button className='delete-group-button' bsStyle='success' onClick={() => this.addUserAccess()}>
+          <Button className='delete-group-button' bsStyle='success' onClick={() => this.addGroupAccess()}>
             Add
           </Button>
         </ButtonToolbar>
@@ -135,20 +136,20 @@ class DocumentUserSharing extends Component {
               </tr>
             </thead>
             <tbody>
-              {haveAccess.map((userAccessObj) => {
-                let currentUser = Meteor.users.find({'_id': userAccessObj.userId})
-                return <tr key={'uao-' + userAccessObj.userId} className='user-access-list-item'>
-                  <td>{currentUser && currentUser.profile ? currentUser.profile.name : userAccessObj.userId}</td>
-                  <td>{userAccessObj.permission}</td>
-                  <td>
-                    <ButtonToolbar className='options-buttons'>
-                      <Button className='document-unshare-button' bsSize='small' bsStyle='info' onClick={() => this.removeUserAccess(userAccessObj.userId)}>
-                        Unshare
-                      </Button>
-                    </ButtonToolbar>
-                  </td>
-                </tr>
-              })}
+            {haveAccess.map((groupAccessObj) => {
+              let currentGroup = Groups.findOne({'_id': groupAccessObj.groupId})
+              return <tr key={'uao-' + groupAccessObj.groupId} className='group-access-list-item'>
+                <td>{currentGroup ? currentGroup.name : groupAccessObj.groupId}</td>
+                <td>{groupAccessObj.permission}</td>
+                <td>
+                  <ButtonToolbar className='options-buttons'>
+                    <Button className='document-unshare-button' bsSize='small' bsStyle='info' onClick={() => this.removeGroupAccess(groupAccessObj.groupId)}>
+                      Unshare
+                    </Button>
+                  </ButtonToolbar>
+                </td>
+              </tr>
+            })}
             </tbody>
           </table>
         </div>

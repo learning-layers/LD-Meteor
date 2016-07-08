@@ -5,6 +5,7 @@ import MainLayout from '../../../../common/client/ui/mainLayout/MainLayout'
 import Navbar from '../../../../common/client/ui/mainLayout/Navbar'
 import DocumentList from '../ui/DocumentList'
 import Document from '../ui/Document'
+import ShareDocumentAfterRequest from '../ui/sharing/ShareDocumentAfterRequest'
 
 FlowRouter.route('/documentList', {
   action: function (params, queryParams) {
@@ -44,6 +45,19 @@ FlowRouter.route('/document/:id/shared/:accessKey', {
       id: id,
       header: <Navbar />,
       content: null,
+      helpCenter: null
+    })
+  }
+})
+
+FlowRouter.route('/request-document-access/:token', {
+  action: function (params, queryParams) {
+    console.log('Params:', params)
+    console.log('Query Params:', queryParams)
+    let token = params.token
+    mount(MainLayout, {
+      header: <Navbar />,
+      content: <ShareDocumentAfterRequest token={token} />,
       helpCenter: null
     })
   }

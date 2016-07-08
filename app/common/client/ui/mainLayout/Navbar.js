@@ -66,7 +66,7 @@ class LDNavbar extends Component {
     let navbarClassNames = classNames({'ld-navbar': true, 'logged-in': !!loggedIn})
     return (
       <div className={navbarClassNames}>
-        <Navbar fluid bsStyle='default'>
+        <Navbar fluid>
           <Navbar.Header>
             <Navbar.Brand>
               <a href='/'>Living Documents</a>

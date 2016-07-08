@@ -78,6 +78,7 @@ class NotificationSettings extends Component {
         {this.quickNotificationSettingsExplanation(this.state.value)}
         <Rcslider dots tipFormatter={(value) => this.tipFormatter(value)} value={this.state.value} min={this.state.min} max={this.state.max} onChange={(value) => this.onSliderChange(value)} />
         {this.state.value === 2 ? <div className='subscription-interval-settings'>
+          <hr />
           <ul style={{marginTop: '14px'}}>
             <li>Receive notifications for my subscriptions immediately</li>
             <li>Receive notfications for my subscriptions in the specified interval:</li>

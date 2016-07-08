@@ -7,6 +7,13 @@ ul.quick-notification-settings-explanation {
     cursor: pointer;
     &.active {
       background-color: $brand-success;
+      color: white;
+      font-weight: bold;
+    }
+    &:hover {
+      background-color: #7cd87c;
+      color: white;
+      font-weight: bold;
     }
   }
 }

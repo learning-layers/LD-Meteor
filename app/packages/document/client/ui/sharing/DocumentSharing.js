@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
-import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
-import { DocumentAccess } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
 import Loader from 'react-loader'
 import DocumentUserSharing from './DocumentUserSharing'
 import DocumentGroupSharing from './DocumentGroupSharing'
+import Tabs from '../../../../../../node_modules/react-bootstrap/lib/Tabs'
+import Tab from '../../../../../../node_modules/react-bootstrap/lib/Tab'
+import { DocumentAccess } from '../../../lib/collections'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('documentAccess', {documentId: props.documentId})
