@@ -46,7 +46,7 @@ class HelpCenter extends Component {
           <div id='help-process-title'>
             Available Help-Tours for this page
             <FormGroup id='ld-help-search-form-group'>
-              <FormControl ref='filterTourInput' type='text' placeholder='Filter' bsSize=''
+              <FormControl ref='filterTourInput' type='text' placeholder='Filter'
                 className='ld-help-search-input' onChange={(event) => this.onFilterChange(event)} />
             </FormGroup>
           </div>
