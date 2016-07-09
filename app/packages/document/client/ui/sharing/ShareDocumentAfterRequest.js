@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import Loader from 'react-loader'
 import ReactSelectize from 'react-selectize'
+import Alert from 'react-s-alert'
 import { RequestAccessItems } from '../../../lib/sharing/collections'
 const SimpleSelect = ReactSelectize.SimpleSelect
 
@@ -28,11 +29,31 @@ class ShareDocumentAfterRequest extends Component {
   approveAccess () {
     const token = this.props.requestAccessItem.token
     const accessLevel = this.refs.permissionSelection.state.value
-    window.alert('approved access for token=' + token + ' accessLevel=' + accessLevel.value)
+    console.debug('approved access for token=' + token + ' accessLevel=' + accessLevel.value)
+    function camelCase (input) {
+      if (input.length > 0) {
+        var oldInput = input.substring(1)
+        var newfirstletter = input.charAt(0)
+        input = newfirstletter.toUpperCase() + oldInput
+        return input.replace(/_(.)/g, function (match, group1) {
+          return group1.toUpperCase()
+        })
+      } else {
+        return input
+      }
+    }
+    Meteor.call('addDocumentUserAccessAfterRequest', this.props.requestAccessItem.documentId, this.props.requestAccessItem.createdBy, camelCase(accessLevel.value), (err, res) => {
+      if (err) {
+        Alert.error('Error: Sharing the document with user \'' + this.props.requestAccessItem.createdBy + '.')
+      }
+      if (res) {
+        Alert.success('Success: Sharing the document.')
+      }
+    })
   }
   rejectAccess () {
     const token = this.props.requestAccessItem.token
-    window.alert('rejected access for token=' + token)
+    console.debug('rejected access for token=' + token)
   }
   render () {
     const { requestAccessItem } = this.props
