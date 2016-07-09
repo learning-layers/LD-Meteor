@@ -20,7 +20,7 @@ Meteor.methods({
         // create a request access item
         let token = uuid.v4()
         const document = Documents.findOne({'_id': documentId})
-        RequestAccessItems.insert({createdBy: this.userId, documentId: documentId, owner: document.createdBy, token: token})
+        RequestAccessItems.insert({createdBy: this.userId, createdAt: new Date(), documentId: documentId, owner: document.createdBy, token: token})
         // send a notification to the creator that someone wants to access the document
         var user = Meteor.users.findOne(this.userId)
         let options = {

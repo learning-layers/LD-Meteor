@@ -43,6 +43,6 @@ Thanks.`
 
 RequestAccess.urls = {
   requestAccess: function (token) {
-    return Meteor.absoluteUrl('/request-document-access/' + token)
+    return Meteor.absoluteUrl('request-document-access/' + token)
   }
 }

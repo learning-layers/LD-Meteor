@@ -12,7 +12,7 @@ import ContentEditor from './ContentEditor'
 import { Documents } from '../../lib/collections'
 import DocumentTags from './DocumentTags'
 import CommentingArea from './comment/CommentingArea'
-import { RequestAccess } from './sharing/RequestAccess'
+import RequestAccess from './sharing/RequestAccess'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('document', {id: props.id}, {
