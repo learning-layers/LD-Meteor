@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { moment } from 'meteor/momentjs:moment'
+import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 
 if (Meteor.isClient) {
   var { EventEmitter } = require('fbemitter')
@@ -25,3 +26,8 @@ if (Meteor.isServer) {
 }
 
 moment.locale('en')
+
+if (Meteor.isServer) {
+  var timeInMillis = 1000 * 10 // 10 secs
+  FlowRouter.setPageCacheTimeout(timeInMillis)
+}

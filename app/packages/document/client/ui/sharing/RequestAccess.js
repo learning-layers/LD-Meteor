@@ -4,6 +4,10 @@ import { composeWithTracker } from 'react-komposer'
 import Loader from 'react-loader'
 import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
+import FormGroup from '../../../../../../node_modules/react-bootstrap/lib/FormGroup'
+import ControlLabel from '../../../../../../node_modules/react-bootstrap/lib/ControlLabel'
+import FormControl from '../../../../../../node_modules/react-bootstrap/lib/FormControl'
+import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 
 import { RequestAccessItems } from '../../../lib/sharing/collections'
 
@@ -16,8 +20,10 @@ function onPropsChange (props, onData) {
 }
 
 class RequestAccess extends Component {
-  requestAccess () {
-    Meteor.call('requestAccessToDocument', this.props.documentId, function (err, res) {
+  requestAccess (event) {
+    event.preventDefault()
+    const message = event.target[0].value
+    Meteor.call('requestAccessToDocument', this.props.documentId, message, function (err, res) {
       if (err) {
         window.alert(JSON.stringify(err))
       }
@@ -53,9 +59,15 @@ class RequestAccess extends Component {
     } else {
       return <div className='request-access container'>
         You currently don't have access to this document. You can request access from the owner.
-        <button className='btn btn-default' onClick={() => this.requestAccess()}>
-          Request access
-        </button>
+        <form onSubmit={(event) => this.requestAccess(event)}>
+          <FormGroup controlId='requestAccessTextarea'>
+            <ControlLabel>Textarea</ControlLabel>
+            <FormControl componentClass='textarea' placeholder='Add an additional message to the owner of the document.' />
+          </FormGroup>
+          <Button type='submit' bsStyle='success'>
+            Request access
+          </Button>
+        </form>
       </div>
     }
   }

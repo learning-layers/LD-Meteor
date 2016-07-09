@@ -63,6 +63,11 @@ class ShareDocumentAfterRequest extends Component {
           <div className='col-lg-12'>
             Would you like to give {requestAccessItem.createdBy} access to the document {requestAccessItem.documentId}?
             <br />
+            {requestAccessItem.message ? <div>
+              There is also a message from the user:
+              "{requestAccessItem.message}"
+              <br />
+            </div> : null}
             Select the access permission that the user should get:
             <SimpleSelect
               className='access-select'

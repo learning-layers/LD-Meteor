@@ -11,7 +11,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  requestAccessToDocument: function (documentId) {
+  requestAccessToDocument: function (documentId, message) {
     if (this.userId) {
       const requestAccessItem = RequestAccessItems.findOne({createdBy: this.userId, documentId: documentId})
       if (requestAccessItem) {
@@ -20,22 +20,46 @@ Meteor.methods({
         // create a request access item
         let token = uuid.v4()
         const document = Documents.findOne({'_id': documentId})
-        RequestAccessItems.insert({createdBy: this.userId, createdAt: new Date(), documentId: documentId, owner: document.createdBy, token: token, result: null})
-        // send a notification to the creator that someone wants to access the document
-        var user = Meteor.users.findOne(this.userId)
-        let options = {
-          to: 'martin@bachl.pro',
-          from: RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.from
-            ? RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.from(user)
-            : RequestAccessEmailTemplates.emailTemplates.from,
-          subject: RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.subject(user)
-        }
+        if (document) {
+          if (message && message !== '') {
+            RequestAccessItems.insert({
+              createdBy: this.userId,
+              createdAt: new Date(),
+              documentId: documentId,
+              owner: document.createdBy,
+              token: token,
+              message: message,
+              result: null
+            })
+          } else {
+            RequestAccessItems.insert({
+              createdBy: this.userId,
+              createdAt: new Date(),
+              documentId: documentId,
+              owner: document.createdBy,
+              token: token,
+              result: null
+            })
+          }
+          // send a notification to the creator that someone wants to access the document
+          var sender = Meteor.users.findOne(this.userId)
+          var receiver = Meteor.users.findOne(document.createdBy)
+          let options = {
+            to: 'martin@bachl.pro',
+            from: RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.from
+              ? RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.from(sender)
+              : RequestAccessEmailTemplates.emailTemplates.from,
+            subject: RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.subject(sender, document.title)
+          }
 
-        if (typeof RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.text === 'function') {
-          options.text = RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.text(user, RequestAccessEmailTemplates.urls.requestAccess(token))
-        }
+          if (typeof RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.text === 'function') {
+            options.text = RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.text(sender, receiver, RequestAccessEmailTemplates.urls.requestAccess(token), message)
+          }
 
-        Email.send(options)
+          Email.send(options)
+        } else {
+          throw new Meteor.Error(400, 'Document doesn\'t exist.')
+        }
       }
     }
   },
