@@ -57,6 +57,7 @@ Meteor.methods({
           }
 
           Email.send(options)
+          return true
         } else {
           throw new Meteor.Error(400, 'Document doesn\'t exist.')
         }

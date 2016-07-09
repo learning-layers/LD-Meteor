@@ -8,6 +8,7 @@ import FormGroup from '../../../../../../node_modules/react-bootstrap/lib/FormGr
 import ControlLabel from '../../../../../../node_modules/react-bootstrap/lib/ControlLabel'
 import FormControl from '../../../../../../node_modules/react-bootstrap/lib/FormControl'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
+import Alert from 'react-s-alert'
 
 import { RequestAccessItems } from '../../../lib/sharing/collections'
 
@@ -25,10 +26,10 @@ class RequestAccess extends Component {
     const message = event.target[0].value
     Meteor.call('requestAccessToDocument', this.props.documentId, message, function (err, res) {
       if (err) {
-        window.alert(JSON.stringify(err))
+        Alert.error('Sending the request failed:' + err)
       }
       if (res) {
-        window.alert(JSON.stringify(res))
+        Alert.success('Sent the request')
       }
     })
   }
