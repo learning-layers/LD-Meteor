@@ -29,9 +29,6 @@ class RequestAccess extends Component {
     if (requestAccessItem) {
       if (requestAccessItem.result) {
         if (requestAccessItem.result === 'success') {
-          Meteor.setTimeout(function () {
-            window.location.reload()
-          }, 0)
           return <div className='request-access container'>
             You are allowed to access this document. Reloading this page...
           </div>
