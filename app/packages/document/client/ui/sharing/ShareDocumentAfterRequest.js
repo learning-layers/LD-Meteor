@@ -54,6 +54,7 @@ class ShareDocumentAfterRequest extends Component {
   rejectAccess () {
     const token = this.props.requestAccessItem.token
     console.debug('rejected access for token=' + token)
+    Meteor.call('rejectDocumentUserAccessAfterRequest', this.props.requestAccessItem.token)
   }
   render () {
     const { requestAccessItem } = this.props

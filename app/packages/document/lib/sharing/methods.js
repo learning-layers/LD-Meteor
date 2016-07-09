@@ -64,14 +64,32 @@ Meteor.methods({
     }
   },
   addDocumentUserAccessAfterRequest: function (documentId, userId, permission) {
-    Meteor.call('addDocumentUserAccess', documentId, userId, permission, (err, res) => {
-      if (err) {
-        //
-      }
-      if (res) {
-        console.log(res)
-        RequestAccessItems.update({documentId: documentId, createdBy: userId}, {$set: {result: true}})
-      }
-    })
+    if (this.userId) {
+      Meteor.call('addDocumentUserAccess', documentId, userId, permission, (err, res) => {
+        if (err) {
+          //
+        }
+        if (res) {
+          RequestAccessItems.update({ documentId: documentId, createdBy: userId, owner: this.userId }, { $set: { result: true } })
+        }
+      })
+    } else {
+      throw new Meteor.Error(401, 'Unauthorized')
+    }
+  },
+  rejectDocumentUserAccessAfterRequest: function (token) {
+    if (this.userId) {
+      const requestAccessItem = RequestAccessItems.findOne({ token: token, owner: this.userId })
+      Meteor.call('removeDocumentUserAccess', requestAccessItem.documentId, requestAccessItem.createdBy, (err, res) => {
+        if (err) {
+          RequestAccessItems.update({ token: token, owner: this.userId }, { $set: { result: false } })
+        }
+        if (res) {
+          RequestAccessItems.update({ token: token, owner: this.userId }, { $set: { result: false } })
+        }
+      })
+    } else {
+      throw new Meteor.Error(401, 'Unauthorized')
+    }
   }
 })
