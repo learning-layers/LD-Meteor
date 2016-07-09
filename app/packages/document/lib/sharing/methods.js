@@ -20,23 +20,34 @@ Meteor.methods({
         // create a request access item
         let token = uuid.v4()
         const document = Documents.findOne({'_id': documentId})
-        RequestAccessItems.insert({createdBy: this.userId, createdAt: new Date(), documentId: documentId, owner: document.createdBy, token: token})
+        RequestAccessItems.insert({createdBy: this.userId, createdAt: new Date(), documentId: documentId, owner: document.createdBy, token: token, result: null})
         // send a notification to the creator that someone wants to access the document
         var user = Meteor.users.findOne(this.userId)
         let options = {
           to: 'martin@bachl.pro',
-          from: RequestAccessEmailTemplates.emailTemplates.resetPassword.from
-            ? RequestAccessEmailTemplates.emailTemplates.resetPassword.from(user)
+          from: RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.from
+            ? RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.from(user)
             : RequestAccessEmailTemplates.emailTemplates.from,
-          subject: RequestAccessEmailTemplates.emailTemplates.resetPassword.subject(user)
+          subject: RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.subject(user)
         }
 
-        if (typeof RequestAccessEmailTemplates.emailTemplates.resetPassword.text === 'function') {
-          options.text = RequestAccessEmailTemplates.emailTemplates.resetPassword.text(user, RequestAccessEmailTemplates.urls.requestAccess(token))
+        if (typeof RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.text === 'function') {
+          options.text = RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.text(user, RequestAccessEmailTemplates.urls.requestAccess(token))
         }
 
         Email.send(options)
       }
     }
+  },
+  addDocumentUserAccessAfterRequest: function (documentId, userId, permission) {
+    Meteor.call('addDocumentUserAccess', documentId, userId, permission, (err, res) => {
+      if (err) {
+        //
+      }
+      if (res) {
+        console.log(res)
+        RequestAccessItems.update({documentId: documentId, createdBy: userId}, {$set: {result: true}})
+      }
+    })
   }
 })

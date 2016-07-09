@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import Loader from 'react-loader'
 import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
+import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 
 import { RequestAccessItems } from '../../../lib/sharing/collections'
 
@@ -28,8 +29,13 @@ class RequestAccess extends Component {
   render () {
     const { requestAccessItem } = this.props
     if (requestAccessItem) {
-      if (requestAccessItem.result) {
-        if (requestAccessItem.result === 'success') {
+      if (requestAccessItem.result !== null) {
+        if (requestAccessItem.result) {
+          if (Meteor.isClient) {
+            Meteor.setTimeout(function () {
+              FlowRouter.reload()
+            }, 0)
+          }
           return <div className='request-access container'>
             You are allowed to access this document. Reloading this page...
           </div>

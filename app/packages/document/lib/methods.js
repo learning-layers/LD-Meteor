@@ -102,9 +102,14 @@ Meteor.methods({
         addedBy: this.userId,
         addedOn: new Date()
       }
-      DocumentAccess.update({ '_id': docAccessId }, {
+      let updateId = DocumentAccess.update({ '_id': docAccessId }, {
         $addToSet: addToSetObject
       })
+      if (updateId) {
+        return true
+      } else {
+        return new Meteor.Error(500)
+      }
     } else {
       throw new Meteor.Error(401)
     }

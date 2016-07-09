@@ -9,6 +9,7 @@ export class TimeFromNow extends Component {
     }
   }
   componentDidMount () {
+    // TODO increase interval if the moment string contains "hour", "day" or "year"
     this.state.refreshInterval = setInterval(() => {
       this.setState({})
     }, 61 * 1000)
