@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import Loader from 'react-loader'
-import { moment } from 'meteor/momentjs:moment'
+import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
+
 import { RequestAccessItems } from '../../../lib/sharing/collections'
 
 function onPropsChange (props, onData) {
@@ -40,7 +41,7 @@ class RequestAccess extends Component {
       } else {
         return <div className='request-access container'>
           You notified the owner of the document that you would like to have access to this document.
-          Your issued you request to access {moment.max(moment(requestAccessItem.createdAt).fromNow())}.
+          Your issued you request to access <TimeFromNow date={requestAccessItem.createdAt} />.
         </div>
       }
     } else {

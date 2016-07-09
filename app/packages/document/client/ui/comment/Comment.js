@@ -14,6 +14,7 @@ import { Uploads } from '../../../../fileUpload/lib/collections'
 import CommentContent from './CommentContent'
 import CommentReply from './CommentReply'
 import RepliesArea from './RepliesArea'
+import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
 
 function onPropsChange (props, onData) {
   let path = JSON.parse(JSON.stringify(props.comment.parents))
@@ -131,7 +132,7 @@ class Comment extends Component {
         <div className='comment-content-wrapper'>
           <h4>{author.profile.name}</h4>
           <div className='datetime'>
-            {moment.max(moment(comment.createdAt).fromNow())}
+            <TimeFromNow date={comment.createdAt} />
           </div>
           <div className='content-text not-editable'>
             <CommentContent ref='commentContent' text={this.props.comment.text} editMode={this.state.editMode} />
