@@ -3,7 +3,7 @@ sudo: false
 
 language: node_js
 node_js:
-  - "0.10.45"
+  - "0.10.46"
 
 cache:
   directories:
