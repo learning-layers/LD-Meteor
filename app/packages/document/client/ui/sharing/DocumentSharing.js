@@ -4,6 +4,7 @@ import { composeWithTracker } from 'react-komposer'
 import Loader from 'react-loader'
 import DocumentUserSharing from './DocumentUserSharing'
 import DocumentGroupSharing from './DocumentGroupSharing'
+import { DocumentLinkSharing } from './DocumentLinkSharing'
 import Tabs from '../../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../../node_modules/react-bootstrap/lib/Tab'
 import { DocumentAccess } from '../../../lib/collections'
@@ -26,6 +27,9 @@ class DocumentSharing extends Component {
         </Tab>
         <Tab eventKey={2} title='Groups'>
           <DocumentGroupSharing documentId={documentId} documentAccess={documentAccess} />
+        </Tab>
+        <Tab eventKey={3} title='Sharing Urls'>
+          <DocumentLinkSharing documentId={documentId} documentAccess={documentAccess} />
         </Tab>
       </Tabs>
     </div>

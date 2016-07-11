@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { Email } from 'meteor/email'
 import uuid from 'node-uuid'
-import { Documents } from '../../lib/collections'
+import { Documents, DocumentAccess } from '../../lib/collections'
 import { RequestAccessItems } from './collections'
 
 let RequestAccessEmailTemplates
@@ -59,7 +59,7 @@ Meteor.methods({
           Email.send(options)
           return true
         } else {
-          throw new Meteor.Error(400, 'Document doesn\'t exist.')
+          throw new Meteor.Error(404, 'Document doesn\'t exist.')
         }
       }
     }
@@ -89,6 +89,34 @@ Meteor.methods({
           RequestAccessItems.update({ token: token, owner: this.userId }, { $set: { result: false } })
         }
       })
+    } else {
+      throw new Meteor.Error(401, 'Unauthorized')
+    }
+  },
+  generateDocumentSharingLink: function (documentId, permission) {
+    if (this.userId) {
+      // TODO check if the user is the owner
+      const document = Documents.findOne({'_id': documentId})
+      if (document) {
+        if (true) { // TODO check whether the user has editing permissions
+          let setObject = {}
+          let linkId = uuid.v4()
+          setObject['link' + permission] = {
+            linkId: linkId,
+            addedBy: this.userId,
+            addedOn: new Date() // TODO add expiresOn
+          }
+          // TODO add give yourself a name option
+          // TODO add document access generation if it doesn't exist
+          DocumentAccess.update({ 'documentId': documentId }, {
+            $set: setObject
+          })
+        } else {
+          throw new Meteor.Error(401, 'Unauthorized')
+        }
+      } else {
+        throw new Meteor.Error(404, 'Document doesn\'t exist.')
+      }
     } else {
       throw new Meteor.Error(401, 'Unauthorized')
     }

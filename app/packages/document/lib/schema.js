@@ -102,6 +102,33 @@ export const DocumentAccessSchema = new SimpleSchema({
     max: 40,
     min: 6
   },
+  'linkCanEdit.linkId': {
+    type: String
+  },
+  'linkCanEdit.addedBy': {
+    type: String
+  },
+  'linkCanEdit.addedOn': {
+    type: Date
+  },
+  'linkCanComment.linkId': {
+    type: String
+  },
+  'linkCanComment.addedBy': {
+    type: String
+  },
+  'linkCanComment.addedOn': {
+    type: Date
+  },
+  'linkCanView.linkId': {
+    type: String
+  },
+  'linkCanView.addedBy': {
+    type: String
+  },
+  'linkCanView.addedOn': {
+    type: Date
+  },
   'userCanView.$.userId': {
     type: String
   },
