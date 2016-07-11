@@ -62,33 +62,51 @@ class ShareDocumentAfterRequest extends Component {
       {requestAccessItem ? <div className='approval-dialog'>
         <div className='row'>
           <div className='col-lg-12'>
-            Would you like to give {requestAccessItem.createdBy} access to the document {requestAccessItem.documentId}?
-            <br />
-            {requestAccessItem.message ? <div>
-              There is also a message from the user:
-              "{requestAccessItem.message}"
-              <br />
-            </div> : null}
-            Select the access permission that the user should get:
-            <SimpleSelect
-              className='access-select'
-              ref='permissionSelection'
-              options={this.state.sharingOptions}
-              defaultValue={{label: 'Can Edit', value: 'can_edit'}}
-              placeholder='Select a permission'
-              theme='material'
-            />
+            <div className='panel panel-default'>
+              <div className='panel-heading'>
+                <h4>Answer the document access request</h4>
+              </div>
+              <div className='panel-body'>
+                Would you like to give {requestAccessItem.createdBy} access to the document {requestAccessItem.documentId}?
+                <br />
+                {requestAccessItem.message ? <div>
+                  There is also a message from the user:
+                  "{requestAccessItem.message}"
+                  <br />
+                </div> : null}
+                Select the access permission that the user should get:
+                <SimpleSelect
+                  className='access-select'
+                  ref='permissionSelection'
+                  options={this.state.sharingOptions}
+                  defaultValue={{label: 'Can Edit', value: 'can_edit'}}
+                  placeholder='Select a permission'
+                  theme='material'
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className='row'>
           <div className='col-lg-12'>
-            <br />
-            <button className='btn btn-success' onClick={() => this.approveAccess()}>
-              Approve access
-            </button>
-            <button className='btn btn-info' onClick={() => this.rejectAccess()}>
-              Reject access
-            </button>
+            <div className='well'>
+              {requestAccessItem.result ? <div className='alert alert-success'>You have approved the access to the document for user &lt;username&gt;</div> : <div className='access-request-result-neg'>
+                {requestAccessItem.result === null ? null : <div className='alert alert-danger'>
+                  You have denied the access to the document for user &lt;username&gt;
+                </div>}
+              </div>}
+              <br />
+              {!requestAccessItem.result ? (
+                <button className='btn btn-success' onClick={() => this.approveAccess()}>
+                  Approve access
+                </button>
+              ) : null}
+              {requestAccessItem.result === null || requestAccessItem.result === true ? (
+                <button className='btn btn-info' onClick={() => this.rejectAccess()}>
+                  Reject access
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
       </div> : 'There is no access request for you at this address.'}

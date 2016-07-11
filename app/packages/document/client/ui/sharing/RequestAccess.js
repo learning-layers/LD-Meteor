@@ -44,31 +44,59 @@ class RequestAccess extends Component {
             }, 0)
           }
           return <div className='request-access container'>
-            You are allowed to access this document. Reloading this page...
+            <div className='panel panel-success'>
+              <div className='panel-heading'>
+                <h4>Access granted</h4>
+              </div>
+              <div className='panel-body'>
+                You are allowed to access this document. Reloading this page...
+              </div>
+            </div>
           </div>
         } else {
           return <div className='request-access container'>
-            The owner has denied you access to this document.
+            <div className='panel panel-danger'>
+              <div className='panel-heading'>
+                <h4>Access denied</h4>
+              </div>
+              <div className='panel-body'>
+                The owner has denied you access to this document.
+              </div>
+            </div>
           </div>
         }
       } else {
         return <div className='request-access container'>
-          You notified the owner of the document that you would like to have access to this document.
-          Your issued you request to access <TimeFromNow date={requestAccessItem.createdAt} />.
+          <div className='panel panel-warning'>
+            <div className='panel-heading'>
+              <h4>Access request pending...</h4>
+            </div>
+            <div className='panel-body'>
+              You notified the owner of the document that you would like to have access to this document.
+              Your issued you request to access <TimeFromNow date={requestAccessItem.createdAt} />.
+            </div>
+          </div>
         </div>
       }
     } else {
       return <div className='request-access container'>
-        You currently don't have access to this document. You can request access from the owner.
-        <form onSubmit={(event) => this.requestAccess(event)}>
-          <FormGroup controlId='requestAccessTextarea'>
-            <ControlLabel>Textarea</ControlLabel>
-            <FormControl componentClass='textarea' placeholder='Add an additional message to the owner of the document.' />
-          </FormGroup>
-          <Button type='submit' bsStyle='success'>
-            Request access
-          </Button>
-        </form>
+        <div className='panel panel-default'>
+          <div className='panel-heading'>
+            <h4>Issue a document access request</h4>
+          </div>
+          <div className='panel-body'>
+            You currently don't have access to this document. You can request access from the owner.
+            <form onSubmit={(event) => this.requestAccess(event)}>
+              <FormGroup controlId='requestAccessTextarea'>
+                <ControlLabel>Textarea</ControlLabel>
+                <FormControl componentClass='textarea' placeholder='Add an additional message to the owner of the document.' />
+              </FormGroup>
+              <Button type='submit' bsStyle='success'>
+                Request access
+              </Button>
+            </form>
+          </div>
+        </div>
       </div>
     }
   }
