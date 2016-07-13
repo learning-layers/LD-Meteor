@@ -24,27 +24,18 @@ FlowRouter.route('/document/:id', {
     console.log('Params:', params)
     console.log('Query Params:', queryParams)
     let id = params.id
+    let action = queryParams.action
+    let permission = queryParams.permission
+    let accessKey = queryParams.accessKey
+    let isPublic = false
+    if (action && permission && accessKey) {
+      isPublic = true
+    }
     mount(MainLayout, {
       id: id,
+      isPublic: isPublic,
       header: <Navbar />,
-      content: <Document id={id} />,
-      helpCenter: null
-    })
-  }
-})
-
-FlowRouter.route('/document/:id/shared/:accessKey', {
-  action: function (params, queryParams) {
-    console.log('Params:', params)
-    console.log('Query Params:', queryParams)
-    let id = params.id
-    let accessKey = params.accessKey
-    mount(MainLayout, {
-      isPublic: true,
-      accessKey: accessKey,
-      id: id,
-      header: <Navbar />,
-      content: null,
+      content: <Document id={id} action={action} permission={permission} accessKey={accessKey} />,
       helpCenter: null
     })
   }

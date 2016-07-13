@@ -15,18 +15,34 @@ import CommentingArea from './comment/CommentingArea'
 import RequestAccess from './sharing/RequestAccess'
 
 function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('document', {id: props.id}, {
-    /* onReady: function () { // TODO cleanup -> find a better solution for reactive updates here
-      let document = Documents.findOne({'_id': props.id})
-      onData(null, {document})
-    },*/
-    onError: function (err) {
-      onData(null, {err: err})
+  if (props.action && props.action === 'shared' && props.permission && props.accessKey) {
+    let handle = Meteor.subscribe('document', { id: props.id, action: props.action, permission: props.permission, accessKey: props.accessKey }, {
+      /* onReady: function () { // TODO cleanup -> find a better solution for reactive updates here
+       let document = Documents.findOne({'_id': props.id})
+       onData(null, {document})
+       },*/
+      onError: function (err) {
+        onData(null, { err: err })
+      }
+    })
+    if (handle.ready()) {
+      let document = Documents.findOne({ '_id': props.id })
+      onData(null, { document })
     }
-  })
-  if (handle.ready()) {
-    let document = Documents.findOne({'_id': props.id})
-    onData(null, {document})
+  } else {
+    let handle = Meteor.subscribe('document', { id: props.id }, {
+      /* onReady: function () { // TODO cleanup -> find a better solution for reactive updates here
+       let document = Documents.findOne({'_id': props.id})
+       onData(null, {document})
+       },*/
+      onError: function (err) {
+        onData(null, { err: err })
+      }
+    })
+    if (handle.ready()) {
+      let document = Documents.findOne({ '_id': props.id })
+      onData(null, { document })
+    }
   }
 }
 
@@ -124,6 +140,8 @@ class Document extends Component {
             Ooops something went wrong. Please contact the administrator of this website.
           </div>
         }
+      } else if (this.props.action === 'shared') {
+        return <div className='document container-fluid'>'Sharing link action'</div>
       } else {
         return <NotFound />
       }

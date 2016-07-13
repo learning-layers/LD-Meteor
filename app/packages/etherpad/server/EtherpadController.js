@@ -95,6 +95,27 @@ class EtherpadController {
       }
     })
   }
+  getHTMLContent (groupPadId, callback) { // get the html representation of the etherpad content
+    HTTP.post(this.endpoint + '/getHTML', {
+      data: {
+        'apikey': this.apiKey,
+        'padID': groupPadId
+      }
+    }, function (error, response) {
+      if (error) {
+        console.log(error)
+        callback(error)
+      } else {
+        if (response.data.code === 0) {
+          // ok status
+          callback(null, response.data.data.html)
+        } else {
+          // TODO add error handling
+          callback('error')
+        }
+      }
+    })
+  }
 }
 
 export const EtherpadControllerInstance = new EtherpadController()

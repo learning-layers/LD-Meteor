@@ -92,6 +92,9 @@ Meteor.publish('document', function (args) {
         throw new Meteor.Error(403)
       }
     }
+  } else if (args.action && args.action === 'shared' && args.permission && args.accessKey) {
+    console.log('permission=', args.permission, ' accessKey=', args.accessKey)
+    return []
   } else {
     throw new Meteor.Error(401)
   }

@@ -2,13 +2,14 @@ import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { Documents } from '../../document/lib/collections'
 
-let createGroupSync, createGroupPadSync, createAuthorSync, createPadSessionSync
+let createGroupSync, createGroupPadSync, createAuthorSync, createPadSessionSync, getHTMLContentSync
 if (Meteor.isServer) {
   let { EtherpadControllerInstance } = require('../server/EtherpadController')
   createGroupSync = Meteor.wrapAsync(EtherpadControllerInstance.createGroup.bind(EtherpadControllerInstance))
   createGroupPadSync = Meteor.wrapAsync(EtherpadControllerInstance.createGroupPad.bind(EtherpadControllerInstance))
   createAuthorSync = Meteor.wrapAsync(EtherpadControllerInstance.createAuthor.bind(EtherpadControllerInstance))
   createPadSessionSync = Meteor.wrapAsync(EtherpadControllerInstance.createPadSession.bind(EtherpadControllerInstance))
+  getHTMLContentSync = Meteor.wrapAsync(EtherpadControllerInstance.getHTMLContent.bind(EtherpadControllerInstance))
 }
 
 Meteor.methods({
@@ -47,6 +48,21 @@ Meteor.methods({
             sessionId: createPadSessionSync(document.etherpadGroup, authorId, new Date().getTime() + (60 * 60 * 24)),
             domain: this.connection.httpHeaders.host
           }
+        } else {
+          throw new Meteor.Error(404)
+        }
+      }
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
+  getEtherpadHtmlContent: function (documentId, viewSharingLinkId) {
+    if (this.userId) {
+      if (Meteor.isServer) {
+        const document = Documents.findOne({ '_id': documentId }, { etherpadGroup: 1 })
+        if (document) {
+          // TODO check if the view sharing link id is valid
+          return getHTMLContentSync(document._id, viewSharingLinkId)
         } else {
           throw new Meteor.Error(404)
         }
