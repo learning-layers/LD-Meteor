@@ -5,7 +5,6 @@ import Loader from 'react-loader'
 import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import FormGroup from '../../../../../../node_modules/react-bootstrap/lib/FormGroup'
-import ControlLabel from '../../../../../../node_modules/react-bootstrap/lib/ControlLabel'
 import FormControl from '../../../../../../node_modules/react-bootstrap/lib/FormControl'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 import Alert from 'react-s-alert'
@@ -88,7 +87,6 @@ class RequestAccess extends Component {
             You currently don't have access to this document. You can request access from the owner.
             <form onSubmit={(event) => this.requestAccess(event)}>
               <FormGroup controlId='requestAccessTextarea'>
-                <ControlLabel>Textarea</ControlLabel>
                 <FormControl componentClass='textarea' placeholder='Add an additional message to the owner of the document.' />
               </FormGroup>
               <Button type='submit' bsStyle='success'>
