@@ -28,15 +28,15 @@ class ContentViewer extends Component {
       Meteor.setTimeout(() => {
         this.loadHtml()
       }, 0)
-      return <div id='content-editor'>
+      return <div id='content-viewer'>
         loading...
       </div>
     } else if (this.state.error) {
-      return <div id='content-editor'>
+      return <div id='content-viewer'>
         {JSON.stringify(this.state.error)}
       </div>
     } else {
-      return <div id='content-editor'>
+      return <div id='content-viewer'>
         <div dangerouslySetInnerHTML={{__html: this.state.html}}></div>
       </div>
     }
