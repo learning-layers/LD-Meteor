@@ -106,8 +106,25 @@ Meteor.methods({
             addedBy: this.userId,
             addedOn: new Date() // TODO add expiresOn
           }
+
+          const docAccess = DocumentAccess.findOne({documentId: documentId})
+          let docAccessId
+          if (docAccess) {
+            docAccessId = docAccess._id
+          }
+          if (!docAccessId) {
+            DocumentAccess.insert({
+              documentId: documentId,
+              userCanView: [],
+              userCanComment: [],
+              userCanEdit: [],
+              groupCanView: [],
+              groupCanComment: [],
+              groupCanEdit: []
+            })
+          }
+
           // TODO add give yourself a name option
-          // TODO add document access generation if it doesn't exist
           DocumentAccess.update({ 'documentId': documentId }, {
             $set: setObject
           })
