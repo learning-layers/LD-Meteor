@@ -93,8 +93,16 @@ Meteor.publish('document', function (args) {
       }
     }
   } else if (args.action && args.action === 'shared' && args.permission && args.accessKey) {
-    console.log('permission=', args.permission, ' accessKey=', args.accessKey)
-    return []
+    if (args.permission === 'view') {
+      const documentAccessObj = DocumentAccess.findOne({ documentId: args.id, 'linkCanView.linkId': args.accessKey })
+      if (documentAccessObj) {
+        return Documents.find({ '_id': args.id })
+      } else {
+        throw new Meteor.Error(401)
+      }
+    } else {
+      throw new Meteor.Error(401)
+    }
   } else {
     throw new Meteor.Error(401)
   }

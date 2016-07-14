@@ -13,6 +13,7 @@ import { Documents } from '../../lib/collections'
 import DocumentTags from './DocumentTags'
 import CommentingArea from './comment/CommentingArea'
 import RequestAccess from './sharing/RequestAccess'
+import AccessForbidden from '../../../../common/client/ui/mainLayout/AccessForbidden'
 
 function onPropsChange (props, onData) {
   if (props.action && props.action === 'shared' && props.permission && props.accessKey) {
@@ -135,6 +136,8 @@ class Document extends Component {
           return <div className='container'>
             <RequestAccess documentId={this.props.id} />
           </div>
+        } else if (err.error === 401) {
+          return <AccessForbidden />
         } else {
           return <div className='container'>
             Ooops something went wrong. Please contact the administrator of this website.
