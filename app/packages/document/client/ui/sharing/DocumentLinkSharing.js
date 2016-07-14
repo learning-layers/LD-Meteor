@@ -2,18 +2,7 @@ import React, {Component} from 'react'
 import ReactDom from 'react-dom'
 import { Meteor } from 'meteor/meteor'
 
-/* <li>
- Can edit&nbsp;
- {documentAccess && documentAccess.linkCanEdit ? documentAccess.linkCanEdit.linkId : <button className='btn btn-default gen-can-edit-link-btn' onClick={() => this.generateSharingLink('CanEdit')}>
- Generate Edit Link
- </button>}
- </li>
- <li>
- Can comment&nbsp;
- {documentAccess && documentAccess.linkCanComment ? documentAccess.linkCanComment.linkId : <button className='btn btn-default gen-can-comment-link-btn' onClick={() => this.generateSharingLink('CanComment')}>
- Generate Comment Link
- </button>}
- </li> */
+/*  */
 
 export class DocumentLinkSharing extends Component {
   generateSharingLink (permission) {
@@ -35,9 +24,27 @@ export class DocumentLinkSharing extends Component {
       DocumentLinkSharing
       <ul>
         <li>
+          Can edit (users have to login or register)&nbsp;
+          {documentAccess && documentAccess.linkCanEdit ? <div>
+            <input ref='editLink' type='text' value={Meteor.absoluteUrl() + 'document/' + this.props.documentId + '?action=shared&permission=edit&accessKey=' + documentAccess.linkCanEdit.linkId} />
+            <button className='btn btn-link' onClick={() => this.copyToClipboard('edit')}>Copy to clipboard</button>
+          </div> : <button className='btn btn-default gen-can-edit-link-btn' onClick={() => this.generateSharingLink('CanEdit')}>
+            Generate Edit Link
+          </button>}
+        </li>
+        <li>
+          Can comment (users have to login or register)&nbsp;
+          {documentAccess && documentAccess.linkCanComment ? <div>
+            <input ref='commentLink' type='text' value={Meteor.absoluteUrl() + 'document/' + this.props.documentId + '?action=shared&permission=comment&accessKey=' + documentAccess.linkCanComment.linkId} />
+            <button className='btn btn-link' onClick={() => this.copyToClipboard('comment')}>Copy to clipboard</button>
+          </div> : <button className='btn btn-default gen-can-comment-link-btn' onClick={() => this.generateSharingLink('CanComment')}>
+            Generate Commenting Link
+          </button>}
+        </li>
+        <li>
           Can view&nbsp;
           {documentAccess && documentAccess.linkCanView ? <div>
-            <input ref='viewLink' type='text' value={Meteor.absoluteUrl() + '/document/' + this.props.documentId + '?action=shared&permission=view&accessKey=' + documentAccess.linkCanView.linkId} />
+            <input ref='viewLink' type='text' value={Meteor.absoluteUrl() + 'document/' + this.props.documentId + '?action=shared&permission=view&accessKey=' + documentAccess.linkCanView.linkId} />
             <button className='btn btn-link' onClick={() => this.copyToClipboard('view')}>Copy to clipboard</button>
           </div> : <button className='btn btn-default gen-can-view-link-btn' onClick={() => this.generateSharingLink('CanView')}>
             Generate View Link

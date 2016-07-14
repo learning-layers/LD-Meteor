@@ -137,5 +137,35 @@ Meteor.methods({
     } else {
       throw new Meteor.Error(401, 'Unauthorized')
     }
+  },
+  assignDocumentEditOrCommentPermissions: function (documentId, permission, accessKey) {
+    if (this.userId) {
+      const document = Documents.findOne({'_id': documentId})
+      if (document) {
+        let filterObj = {documentId: documentId}
+        filterObj['link' + permission + '.linkId'] = accessKey
+        const docAccess = DocumentAccess.findOne(filterObj)
+        if (docAccess) {
+          let addToSetObject = {}
+          addToSetObject['user' + permission] = {
+            userId: this.userId,
+            addedBy: this.userId,
+            addedOn: new Date()
+          }
+          let updateId = DocumentAccess.update({ '_id': docAccess._id }, {
+            $addToSet: addToSetObject
+          })
+          if (updateId) {
+            return true
+          } else {
+            return new Meteor.Error(500)
+          }
+        } else {
+          return false
+        }
+      }
+    } else {
+      throw new Meteor.Error(401, 'Unauthorized')
+    }
   }
 })

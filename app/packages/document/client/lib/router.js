@@ -28,7 +28,7 @@ FlowRouter.route('/document/:id', {
     let permission = queryParams.permission
     let accessKey = queryParams.accessKey
     let isPublic = false
-    if (action && permission && accessKey) {
+    if (action === 'shared' && permission === 'view' && accessKey) {
       isPublic = true
     }
     mount(MainLayout, {
