@@ -25,6 +25,10 @@ if (Meteor.isServer) {
   DocumentAccess._ensureIndex({ documentId: 1, 'groupCanComment.groupId': 1 })
   DocumentAccess._ensureIndex({ documentId: 1, 'groupCanEdit.groupId': 1 })
 
+  DocumentAccess._ensureIndex({ documentId: 1, 'linkCanEdit.linkId': 1 })
+  DocumentAccess._ensureIndex({ documentId: 1, 'linkCanComment.linkId': 1 })
+  DocumentAccess._ensureIndex({ documentId: 1, 'linkCanView.linkId': 1 })
+
   DocumentAccess._ensureIndex({ 'userCanView.userId': 1 })
   DocumentAccess._ensureIndex({ 'userCanComment.userId': 1 })
   DocumentAccess._ensureIndex({ 'userCanEdit.userId': 1 })

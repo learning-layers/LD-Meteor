@@ -57,18 +57,14 @@ Meteor.methods({
     }
   },
   getEtherpadHtmlContent: function (documentId, viewSharingLinkId) {
-    if (this.userId) {
-      if (Meteor.isServer) {
-        const document = Documents.findOne({ '_id': documentId }, { etherpadGroup: 1 })
-        if (document) {
-          // TODO check if the view sharing link id is valid
-          return getHTMLContentSync(document._id, viewSharingLinkId)
-        } else {
-          throw new Meteor.Error(404)
-        }
+    if (Meteor.isServer) {
+      const document = Documents.findOne({ '_id': documentId }, { etherpadGroupPad: 1 })
+      if (document) {
+        // TODO check if the view sharing link id is valid
+        return getHTMLContentSync(document.etherpadGroupPad)
+      } else {
+        throw new Meteor.Error(404)
       }
-    } else {
-      throw new Meteor.Error(401)
     }
   }
 })

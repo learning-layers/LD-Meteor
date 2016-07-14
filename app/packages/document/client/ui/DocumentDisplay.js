@@ -7,6 +7,7 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import DocumentSharingModal from './sharing/DocumentSharingModal'
 import AttachmentsBar from './mainContent/AttachmentsBar'
+import ContentViewer from './ContentViewer'
 
 class DocumentDisplay extends Component {
   constructor (props) {
@@ -52,9 +53,9 @@ class DocumentDisplay extends Component {
   contentSection (activeTabName) {
     switch (activeTabName) {
       case 'Editor':
-        if (this.props.action && this.props.action === 'shared' && this.props.permission && this.props.accessKey) {
+        if (this.isViewMode()) {
           // if a sharing link has been used, no user logged in
-          return <div>Placeholder</div>
+          return <div><ContentViewer documentId={this.props.document._id} accessKey={this.props.accessKey} /></div>
         } else {
           // user is logged in
           return <div>{this.props.document ? <ContentEditor document={this.props.document} /> : null}</div>
@@ -66,6 +67,9 @@ class DocumentDisplay extends Component {
       default:
         return <div>No section found</div>
     }
+  }
+  isViewMode () {
+    return this.props.action && this.props.action === 'shared' && this.props.permission && this.props.permission === 'view' && this.props.accessKey
   }
   render () {
     let { document } = this.props
@@ -81,12 +85,12 @@ class DocumentDisplay extends Component {
       <div className='main-content panel panel-primary'>
         <div className='panel-heading'>
           <h4 className='document-title'>{document.title}</h4>
-          <ButtonToolbar className='options-buttons'>
+          {this.isViewMode() ? null : <ButtonToolbar className='options-buttons'>
             <Button className='delete-group-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
               <span className='glyphicon glyphicon glyphicon-share-alt' />
             </Button>
-          </ButtonToolbar>
-          <div ref='manageSharingModal'></div>
+          </ButtonToolbar>}
+          {this.isViewMode() ? null : <div ref='manageSharingModal'></div>}
         </div>
         <div className='panel-body'>
           <AttachmentsBar onChangeTabSelection={(tabName) => this.changeTab(tabName)} activeTabName={this.state.activeTabName} />
@@ -95,7 +99,7 @@ class DocumentDisplay extends Component {
           </div>
         </div>
       </div>
-      <CommentingArea documentId={document._id} />
+      {this.isViewMode() ? null : <CommentingArea documentId={document._id} />}
     </div>
   }
 }
