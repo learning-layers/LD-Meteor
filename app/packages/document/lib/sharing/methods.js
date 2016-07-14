@@ -138,6 +138,25 @@ Meteor.methods({
       throw new Meteor.Error(401, 'Unauthorized')
     }
   },
+  removeDocumentSharingLink: function (documentId, permission) {
+    if (this.userId) {
+      // TODO check if the user is the owner
+      const document = Documents.findOne({'_id': documentId})
+      if (document) {
+        if (true) { // TODO check whether the user has editing permissions
+          let unsetObject = {}
+          unsetObject['link' + permission] = 1
+          console.log(unsetObject)
+          const updated = DocumentAccess.update({documentId: document._id}, {$unset: unsetObject})
+          if (updated) {
+            return true
+          } else {
+            return false
+          }
+        }
+      }
+    }
+  },
   assignDocumentEditOrCommentPermissions: function (documentId, permission, accessKey) {
     if (this.userId) {
       const document = Documents.findOne({'_id': documentId})

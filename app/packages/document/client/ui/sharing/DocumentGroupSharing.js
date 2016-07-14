@@ -138,7 +138,7 @@ class DocumentUserSharing extends Component {
             <tbody>
             {haveAccess.map((groupAccessObj) => {
               let currentGroup = Groups.findOne({'_id': groupAccessObj.groupId})
-              return <tr key={'uao-' + groupAccessObj.groupId} className='group-access-list-item'>
+              return <tr key={'gao-' + groupAccessObj.groupId} className='group-access-list-item'>
                 <td>{currentGroup ? currentGroup.name : groupAccessObj.groupId}</td>
                 <td>{groupAccessObj.permission}</td>
                 <td>

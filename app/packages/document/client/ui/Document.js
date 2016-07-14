@@ -89,7 +89,6 @@ class Document extends Component {
   }
   render () {
     const { document, err, action, permission, accessKey } = this.props
-    console.debug(JSON.stringify(document), JSON.stringify(err), JSON.stringify(action), JSON.stringify(permission), JSON.stringify(accessKey))
     if (!document) {
       if (err) {
         if (err.error === 403) {
