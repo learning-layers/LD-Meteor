@@ -73,24 +73,25 @@ class DocumentDisplay extends Component {
   }
   render () {
     let { document } = this.props
+    const isViewMode = this.isViewMode()
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
         <div style={{display: 'none'}} className='hierarchy-bar'>Hierarchy:</div>
         <hr style={{display: 'none'}} />
         <div className='tag-bar'>
           <label for='document-tags' className={this.state.tagBarFocused ? 'active' : ''}>Tags</label>
-          <DocumentTags onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={document._id} />
+          <DocumentTags disabled={isViewMode} onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={document._id} />
         </div>
       </div>
       <div className='main-content panel panel-primary'>
         <div className='panel-heading'>
           <h4 className='document-title'>{document.title}</h4>
-          {this.isViewMode() ? null : <ButtonToolbar className='options-buttons'>
+          {isViewMode ? null : <ButtonToolbar className='options-buttons'>
             <Button className='delete-group-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
               <span className='glyphicon glyphicon glyphicon-share-alt' />
             </Button>
           </ButtonToolbar>}
-          {this.isViewMode() ? null : <div ref='manageSharingModal'></div>}
+          {isViewMode ? null : <div ref='manageSharingModal'></div>}
         </div>
         <div className='panel-body'>
           <AttachmentsBar onChangeTabSelection={(tabName) => this.changeTab(tabName)} activeTabName={this.state.activeTabName} />
@@ -99,7 +100,7 @@ class DocumentDisplay extends Component {
           </div>
         </div>
       </div>
-      {this.isViewMode() ? null : <CommentingArea documentId={document._id} />}
+      {isViewMode ? null : <CommentingArea documentId={document._id} />}
     </div>
   }
 }
