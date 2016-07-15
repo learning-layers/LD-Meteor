@@ -90,19 +90,19 @@ class LDNavbar extends Component {
                 </Navbar.Form>
               </NavItem> : null}
             </Nav>
-            <Nav pullRight ref='accountsLoginContainer'>
-              {loggedIn ? <NavItem className='avatar-nav-item' eventKey={1} href='#'>
-                <Avatar userAvatarPath={userAvatarPath} />
-              </NavItem> : null}
-              <NavItem className='sidebar-nav-item' eventKey={2} href='#' onClick={() => this.openSidebar()}>
-                <button className='sidebar-btn'>
-                  <span className='icon-bar' />
-                  <span className='icon-bar' />
-                  <span className='icon-bar' />
-                </button>
-              </NavItem>
-            </Nav>
           </Navbar.Collapse>
+          <Nav pullRight ref='accountsLoginContainer'>
+            {loggedIn ? <NavItem className='avatar-nav-item' eventKey={1} href='#'>
+              <Avatar userAvatarPath={userAvatarPath} />
+            </NavItem> : null}
+            <NavItem className='sidebar-nav-item' eventKey={2} href='#' onClick={() => this.openSidebar()}>
+              <button className='sidebar-btn'>
+                <span className='icon-bar' />
+                <span className='icon-bar' />
+                <span className='icon-bar' />
+              </button>
+            </NavItem>
+          </Nav>
         </Navbar>
         <div ref='createDocumentModal'></div>
       </div>
