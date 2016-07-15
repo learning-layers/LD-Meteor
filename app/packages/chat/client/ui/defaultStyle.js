@@ -1,7 +1,7 @@
 export default (props = {}) => ({
   root: {
     pointerEvents: 'none',
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
@@ -12,7 +12,7 @@ export default (props = {}) => ({
     pointerEvents: 'auto',
     backgroundColor: 'white',
     zIndex: 2,
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     bottom: 0,
     transition: 'transform .3s ease-out',
@@ -42,7 +42,7 @@ export default (props = {}) => ({
     opacity: 0,
     visibility: 'hidden',
     transition: 'opacity .3s ease-out',
-    backgroundColor: 'rgba(0,0,0,.3)'
+    backgroundColor: 'transparent' // 'rgba(0,0,0,.3)'
   },
   dragHandle: {
     backgroundColor: 'transparent',
