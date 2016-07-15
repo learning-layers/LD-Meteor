@@ -87,7 +87,7 @@ meteor@1.1.16
 meteor-base@1.0.4
 meteorhacks:fast-render@2.14.0
 meteorhacks:inject-data@2.0.0
-meteorhacks:kadira@2.29.1
+meteorhacks:kadira@2.30.0
 meteorhacks:meteorx@1.4.1
 meteorhacks:picker@1.0.3
 meteorhacks:subs-manager@1.6.4
@@ -103,7 +103,7 @@ mobile-experience@1.0.4
 mobile-status-bar@1.0.12
 modules@0.6.5
 modules-runtime@0.6.5
-momentjs:moment@2.14.1
+momentjs:moment@2.14.4
 mongo@1.1.9_1
 mongo-id@1.0.5
 mongo-livedata@1.0.12
