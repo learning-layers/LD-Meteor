@@ -142,7 +142,7 @@ class GroupList extends Component {
                       </Button>
                     </ButtonToolbar>
                   </td>
-                </tr> 
+                </tr>
               })}
             </tbody>
           </table>
