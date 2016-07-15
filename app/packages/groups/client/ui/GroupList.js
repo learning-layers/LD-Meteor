@@ -126,7 +126,7 @@ class GroupList extends Component {
                 return <tr key={'dli-' + group._id} className='group-list-item'>
                   <td>{group.name}</td>
                   <td>{group.members.length}</td>
-                  <td>{user.profile.name}</td>
+                  <td>{user && user.profile ? user.profile.name : group.createdBy}</td>
                   <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
                   <td>
                     <ButtonToolbar className='options-buttons'>
@@ -142,7 +142,7 @@ class GroupList extends Component {
                       </Button>
                     </ButtonToolbar>
                   </td>
-                </tr>
+                </tr> 
               })}
             </tbody>
           </table>
