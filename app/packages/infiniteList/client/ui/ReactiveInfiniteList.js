@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import ReactDom from 'react-dom'
+import ReactDOM from 'react-dom'
 import Infinite from 'react-infinite'
 import { Meteor } from 'meteor/meteor'
 import { InfiniteScrollItems } from '../../lib/collections'
@@ -70,7 +70,7 @@ class ReactiveInfiniteList extends Component {
   }
   componentDidMount () {
     window.addEventListener('resize', this.handleResize.bind(this))
-    let element = ReactDom.findDOMNode(this.refs.wrapper)
+    let element = ReactDOM.findDOMNode(this.refs.wrapper)
     this.setState({
       gotDimenstions: true,
       offsetHeight: element.offsetHeight
@@ -80,7 +80,7 @@ class ReactiveInfiniteList extends Component {
     window.removeEventListener('resize', this.handleResize.bind(this))
   }
   handleResize (e) {
-    let element = ReactDom.findDOMNode(this.refs.wrapper)
+    let element = ReactDOM.findDOMNode(this.refs.wrapper)
     this.setState({offsetHeight: element.offsetHeight})
   }
   handleInfiniteLoad () {

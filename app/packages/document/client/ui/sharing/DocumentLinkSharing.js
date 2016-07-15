@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import ReactDom from 'react-dom'
+import ReactDOM from 'react-dom'
 import { Meteor } from 'meteor/meteor'
 
 export class DocumentLinkSharing extends Component {
@@ -10,7 +10,7 @@ export class DocumentLinkSharing extends Component {
     Meteor.call('removeDocumentSharingLink', this.props.documentId, permission)
   }
   copyToClipboard (permission) {
-    ReactDom.findDOMNode(this.refs[permission + 'Link']).select()
+    ReactDOM.findDOMNode(this.refs[permission + 'Link']).select()
     try {
       var successful = document.execCommand('copy')
       var msg = successful ? 'successful' : 'unsuccessful'

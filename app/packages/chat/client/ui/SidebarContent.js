@@ -2,16 +2,22 @@ import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import { Template } from 'meteor/templating'
 import { Blaze } from 'meteor/blaze'
-import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
-import NavItem from '../../../../../node_modules/react-bootstrap/lib/NavItem'
-// import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
-// import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
-// import FriendList from './FriendList'
+import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
+import { jQuery } from 'meteor/jquery'
 import Avatar from './Avatar'
 import ChatLineCalculator from '../lib/chatLineCalculator'
 import { Uploads } from '../../../fileUpload/lib/collections'
-import { composeWithTracker } from 'react-komposer'
+import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
+import NavItem from '../../../../../node_modules/react-bootstrap/lib/NavItem'
+import Accordion from '../../../../../node_modules/react-bootstrap/lib/Accordion'
+import Panel from '../../../../../node_modules/react-bootstrap/lib/Panel'
+import NavDropdown from '../../../../../node_modules/react-bootstrap/lib/NavDropdown'
+import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
+import CreateDocumentModal from '../../../../packages/document/client/ui/CreateDocumentModal'
+// import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
+// import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
+// import FriendList from './FriendList'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -27,17 +33,48 @@ function onPropsChange (props, onData) {
 }
 
 class SidebarContent extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      gotDimenstions: false,
+      windowWidth: -1,
+      openChangeUserRolesModal: null
+    }
+  }
   componentDidMount () {
     // Use Meteor Blaze to render login buttons
     this.view = Blaze.render(Template._loginButtons,
       ReactDOM.findDOMNode(this.refs.accountsLoginContainer))
+
+    window.addEventListener('resize', this.handleResize.bind(this))
+    // let element = ReactDOM.findDOMNode(this.refs.wrapper)
+    this.setState({
+      gotDimenstions: true,
+      windowWidth: jQuery(window).width()
+    })
   }
   componentWillUnmount () {
     // Clean up Blaze view
     Blaze.remove(this.view)
+
+    window.removeEventListener('resize', this.handleResize.bind(this))
+  }
+  handleResize (e) {
+    // let element = ReactDOM.findDOMNode(this.refs.wrapper)
+    this.setState({
+      windowWidth: jQuery(window).width()
+    })
   }
   logout () {
     Meteor.logout()
+  }
+  openCreateDocumentModal () {
+    let renderToElement = this.refs.createDocumentModal
+    if (!this.state.openChangeUserRolesModal) {
+      this.state.openChangeUserRolesModal = ReactDOM.render(<CreateDocumentModal />, renderToElement)
+    } else {
+      this.state.openChangeUserRolesModal.open()
+    }
   }
   render () {
     const {userAvatarPath} = this.props
@@ -47,7 +84,8 @@ class SidebarContent extends Component {
     let emotes = {356: ['0-5', '40-45'], 25: ['12-16']}
     let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(message, emotes)
     console.log(messageWithEmotesObject)
-    return <div className='ld-sidebar-content'>
+    let loggedIn = Meteor.userId()
+    return <div className='ld-sidebar-content' ref='wrapper'>
       {this.props.open ? <div className='close-handle' onClick={() => this.props.onSetSidebarOpen(false)}>
         <span className='glyphicon glyphicon-chevron-right' />
       </div> : null}
@@ -59,6 +97,18 @@ class SidebarContent extends Component {
           <span className='glyphicon glyphicon-off' />
         </NavItem>
       </Nav>
+      <div className='clearfix'></div>
+      {this.state.windowWidth < 768 ? <Accordion defaultActiveKey='1'>
+        <Panel header='Navigation' eventKey='1'>
+          <div ref='createDocumentModal'></div>
+          <NavItem eventKey={1} href='/'>
+            Home
+          </NavItem>
+          {loggedIn ? <NavDropdown eventKey={3} title='Document' id='basic-nav-dropdown'>
+            <MenuItem eventKey={3.1} onClick={() => this.openCreateDocumentModal()}> New Document</MenuItem>
+          </NavDropdown> : null}
+        </Panel>
+      </Accordion> : null}
     </div>
   }
 }

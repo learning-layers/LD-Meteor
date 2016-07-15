@@ -3,7 +3,7 @@ import {composeWithTracker} from 'react-komposer'
 import {Meteor} from 'meteor/meteor'
 import { SearchItems } from '../../lib/collections'
 import { Session } from 'meteor/session'
-import ReactDom from 'react-dom'
+import ReactDOM from 'react-dom'
 
 Session.setDefault('search', '')
 
@@ -42,7 +42,7 @@ class Search extends Component {
   }
   handleSearchInputChange (event) {
     console.log('searchInputChange')
-    let searchString = ReactDom.findDOMNode(event.target).value
+    let searchString = ReactDOM.findDOMNode(event.target).value
     searchString = searchString.replace(/\u0073\b/ig, '')
     Session.set('search', searchString)
   }
