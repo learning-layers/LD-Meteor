@@ -31,3 +31,30 @@
     }
   }
 }
+
+@media (max-width: 767px) {
+  nav {
+    .container-fluid > .navbar-collapse.collapse {
+      display: none!important;
+    }
+    ul.nav.navbar-nav.navbar-right {
+      display: inline-block;
+      float: right;
+      > li {
+        display: inline-block;
+        float: left;
+      }
+      li.sidebar-nav-item {
+        margin-right: 14px;
+      }
+    }
+    .navbar-header {
+      display: inline-block;
+      button {
+        &.navbar-toggle.collapsed {
+          display: none;
+        }
+      }
+    }
+  }
+}
