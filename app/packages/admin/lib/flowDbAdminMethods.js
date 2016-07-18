@@ -10,7 +10,6 @@ let prevCollection // HACK should be done differently
 Meteor.methods({
   adminRemoveMongoDoc: function (collection, _id) {
     if (Meteor.isServer) {
-      console.log(arguments)
       check(arguments, [ Match.Any ])
       if (Roles.userIsInRole(this.userId, [ 'admin' ])) {
         if (collection === 'Users') {

@@ -117,7 +117,6 @@ class EtherpadController {
     })
   }
   getReadOnlyPadId (groupPadId, callback) {
-    console.log(JSON.stringify(arguments))
     HTTP.post(this.endpoint + '/getReadOnlyID', {
       data: {
         'apikey': this.apiKey,
