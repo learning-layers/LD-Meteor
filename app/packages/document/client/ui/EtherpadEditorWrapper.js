@@ -53,13 +53,22 @@ class EtherpadEditorWrapper extends Component {
     window.removeEventListener('unload', this.closingCode, false)
   }
   onIframeLoaded () {
-    console.debug('IFrame loaded')
+    if (this.props.etherpadGroupPad) {
+      console.debug('IFrame loaded with etherpad writing access')
+    } else {
+      console.debug('IFrame loaded with etherpad read only access')
+    }
   }
   render () {
-    const { etherpadGroupPad } = this.props
-    let etherpadPadUrl = etherpadEndpoint + '/p/' + etherpadGroupPad
+    const { etherpadGroupPad, etherpadReadOnlyId } = this.props
+    let etherpadPadUrl
+    if (etherpadGroupPad) {
+      etherpadPadUrl = etherpadEndpoint + '/p/' + etherpadGroupPad
+    } else {
+      etherpadPadUrl = etherpadEndpoint + '/p/' + etherpadReadOnlyId
+    }
     return <div className='etherpad-editor-wrapper'>
-      {this.state.cookieSet ? <IFrameWithOnLoad id='etherpadEditorIframe' name='etherpadEditor' src={etherpadPadUrl} scrolling='no' onLoaded={this.onIframeLoaded} seamless /> : null}
+      {this.state.cookieSet ? <IFrameWithOnLoad id='etherpadEditorIframe' name='etherpadEditor' src={etherpadPadUrl} scrolling='no' onLoaded={() => this.onIframeLoaded()} seamless /> : null}
     </div>
   }
 }

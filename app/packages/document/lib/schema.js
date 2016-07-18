@@ -41,6 +41,13 @@ export const DocumentSchema = new SimpleSchema({
     max: 100,
     min: 1,
     optional: true
+  },
+  etherpadReadOnlyId: {
+    type: String,
+    label: 'etherpadReadOnlyId',
+    max: 100,
+    min: 1,
+    optional: true
   }
 })
 

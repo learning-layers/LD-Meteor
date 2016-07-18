@@ -116,6 +116,28 @@ class EtherpadController {
       }
     })
   }
+  getReadOnlyPadId (groupPadId, callback) {
+    console.log(JSON.stringify(arguments))
+    HTTP.post(this.endpoint + '/getReadOnlyID', {
+      data: {
+        'apikey': this.apiKey,
+        'padID': groupPadId
+      }
+    }, function (error, response) {
+      if (error) {
+        console.log(error)
+        callback(error)
+      } else {
+        if (response.data.code === 0) {
+          // ok status
+          callback(null, response.data.data.readOnlyID)
+        } else {
+          // TODO add error handling
+          callback('error')
+        }
+      }
+    })
+  }
 }
 
 export const EtherpadControllerInstance = new EtherpadController()

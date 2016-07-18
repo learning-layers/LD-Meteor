@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
+import { Meteor } from 'meteor/meteor'
 import DocumentTags from './DocumentTags'
 import CommentingArea from './comment/CommentingArea'
 import ContentEditor from './ContentEditor'
@@ -58,7 +59,7 @@ class DocumentDisplay extends Component {
           return <div><ContentViewer documentId={this.props.document._id} accessKey={this.props.accessKey} /></div>
         } else {
           // user is logged in
-          return <div>{this.props.document ? <ContentEditor document={this.props.document} /> : null}</div>
+          return <div>{this.props.document ? <ContentEditor document={this.props.document} permissionLevel={this.getPermissionLevel()} /> : null}</div>
         }
       case 'Files':
         return 'Files'
@@ -71,9 +72,46 @@ class DocumentDisplay extends Component {
   isViewMode () {
     return this.props.action && this.props.action === 'shared' && this.props.permission && this.props.permission === 'view' && this.props.accessKey
   }
+  getPermissionLevel () {
+    if (this.props.document.createdBy === Meteor.userId()) {
+      return 'edit'
+    } else if (this.isViewMode()) {
+      return 'view'
+    } else if (this.props.documentAccess) {
+      const documentAccess = this.props.documentAccess
+      if (documentAccess) {
+        let permission
+        documentAccess.userCanEdit.forEach(function (userPermissionItem) {
+          if (userPermissionItem.userId === Meteor.userId()) {
+            permission = 'edit'
+          }
+        })
+        if (permission !== 'edit') {
+          documentAccess.userCanComment.forEach(function (userPermissionItem) {
+            if (userPermissionItem.userId === Meteor.userId()) {
+              permission = 'comment'
+            }
+          })
+          if (permission !== 'comment') {
+            return 'view'
+          }
+        }
+        return permission
+      } else {
+        return 'view'
+      }
+    } else {
+      console.error('Couldn\'t detect document permissions')
+      return 'view'
+    }
+  }
   render () {
     let { document } = this.props
     const isViewMode = this.isViewMode()
+    const permissionLevel = this.getPermissionLevel()
+    window.alert(permissionLevel)
+    console.debug('isViewMode=', isViewMode)
+    console.debug('permissions=', permissionLevel)
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
         <div style={{display: 'none'}} className='hierarchy-bar'>Hierarchy:</div>

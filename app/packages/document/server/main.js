@@ -96,7 +96,11 @@ Meteor.publish('document', function (args) {
           }
         )
         if (documentAccessObj) {
-          return Documents.find({ '_id': args.id })
+          return [
+            // TODO filter write url when read only permissions
+            Documents.find({ '_id': args.id }),
+            DocumentAccess.find({documentId: args.id})
+          ]
         } else {
           // the user doesn't have access
           throw new Meteor.Error(403)

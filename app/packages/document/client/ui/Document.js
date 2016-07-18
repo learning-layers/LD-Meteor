@@ -4,7 +4,7 @@ import { composeWithTracker } from 'react-komposer'
 import Loader from 'react-loader'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import NotFound from '../../../../common/client/ui/mainLayout/NotFound'
-import { Documents } from '../../lib/collections'
+import { Documents, DocumentAccess } from '../../lib/collections'
 import RequestAccess from './sharing/RequestAccess'
 import AccessForbidden from '../../../../common/client/ui/mainLayout/AccessForbidden'
 import DocumentDisplay from './DocumentDisplay'
@@ -49,7 +49,8 @@ function onPropsChange (props, onData) {
     })
     if (handle.ready()) {
       let document = Documents.findOne({ '_id': props.id })
-      onData(null, { document })
+      let documentAccess = DocumentAccess.findOne({documentId: props.id})
+      onData(null, { document, documentAccess })
     }
   }
 }
@@ -88,7 +89,7 @@ class Document extends Component {
     })
   }
   render () {
-    const { document, err, action, permission, accessKey } = this.props
+    const { document, documentAccess, err, action, permission, accessKey } = this.props
     if (!document) {
       if (err) {
         if (err.error === 403) {
@@ -114,7 +115,7 @@ class Document extends Component {
           Assigning new permissions ...
         </div>
       }
-      return <DocumentDisplay document={document} action={action} permission={permission} accessKey={accessKey} />
+      return <DocumentDisplay document={document} documentAccess={documentAccess} action={action} permission={permission} accessKey={accessKey} />
     }
   }
 }

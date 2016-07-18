@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { Documents } from '../../document/lib/collections'
 
-let createGroupSync, createGroupPadSync, createAuthorSync, createPadSessionSync, getHTMLContentSync
+let createGroupSync, createGroupPadSync, createAuthorSync, createPadSessionSync, getReadOnlyPadIdSync, getHTMLContentSync
 if (Meteor.isServer) {
   let { EtherpadControllerInstance } = require('../server/EtherpadController')
   createGroupSync = Meteor.wrapAsync(EtherpadControllerInstance.createGroup.bind(EtherpadControllerInstance))
@@ -10,9 +10,26 @@ if (Meteor.isServer) {
   createAuthorSync = Meteor.wrapAsync(EtherpadControllerInstance.createAuthor.bind(EtherpadControllerInstance))
   createPadSessionSync = Meteor.wrapAsync(EtherpadControllerInstance.createPadSession.bind(EtherpadControllerInstance))
   getHTMLContentSync = Meteor.wrapAsync(EtherpadControllerInstance.getHTMLContent.bind(EtherpadControllerInstance))
+  getReadOnlyPadIdSync = Meteor.wrapAsync(EtherpadControllerInstance.getReadOnlyPadId.bind(EtherpadControllerInstance))
 }
 
 Meteor.methods({
+  createEtherpadReadOnlyId: function (documentId) {
+    if (this.userId) {
+      check(documentId, String)
+      if (Meteor.isServer) {
+        const document = Documents.findOne({ '_id': documentId }, { etherpadGroup: 1 })
+        if (!document) {
+          throw new Meteor.Error(404)
+        } else {
+          const etherpadReadOnlyId = getReadOnlyPadIdSync(document.etherpadGroupPad)
+          Documents.update({ '_id': documentId }, { $set: { etherpadReadOnlyId: etherpadReadOnlyId } })
+        }
+      }
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
   createEtherpadGroupAndPad: function (documentId) {
     if (this.userId) {
       check(documentId, String)
