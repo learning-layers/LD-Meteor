@@ -122,6 +122,7 @@ class GroupList extends Component {
             <tbody>
               {ownGroups.map((group) => {
                 const user = Meteor.users.findOne(group.createdBy)
+                console.info(Meteor.users.find({}).fetch())
                 const isOwnUser = group.createdBy === ownUserId
                 return <tr key={'dli-' + group._id} className='group-list-item'>
                   <td>{group.name}</td>
