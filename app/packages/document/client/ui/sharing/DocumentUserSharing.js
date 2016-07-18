@@ -1,12 +1,34 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
+import { composeWithTracker } from 'react-komposer'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
+import Loader from 'react-loader'
 import Row from '../../../../../../node_modules/react-bootstrap/lib/Row'
 import Col from '../../../../../../node_modules/react-bootstrap/lib/Col'
 import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 const SimpleSelect = ReactSelectize.SimpleSelect
+
+function onPropsChange (props, onData) {
+  const documentAccess = props.documentAccess
+  let haveAccessUserIds = []
+  if (documentAccess) {
+    haveAccessUserIds = haveAccessUserIds.concat(documentAccess.userCanComment.map(function (userAccessObject) {
+      return userAccessObject.userId
+    }))
+    haveAccessUserIds = haveAccessUserIds.concat(documentAccess.userCanView.map(function (userAccessObject) {
+      return userAccessObject.userId
+    }))
+    haveAccessUserIds = haveAccessUserIds.concat(documentAccess.userCanEdit.map(function (userAccessObject) {
+      return userAccessObject.userId
+    }))
+  }
+  let handle = Meteor.subscribe('userprofiles', {userIds: haveAccessUserIds})
+  if (handle.ready()) {
+    onData(null, {})
+  }
+}
 
 class DocumentUserSharing extends Component {
   constructor (props) {
@@ -136,7 +158,7 @@ class DocumentUserSharing extends Component {
             </thead>
             <tbody>
               {haveAccess.map((userAccessObj) => {
-                let currentUser = Meteor.users.find({'_id': userAccessObj.userId})
+                let currentUser = Meteor.users.findOne({'_id': userAccessObj.userId})
                 return <tr key={'uao-' + userAccessObj.userId} className='user-access-list-item'>
                   <td>{currentUser && currentUser.profile ? currentUser.profile.name : userAccessObj.userId}</td>
                   <td>{userAccessObj.permission}</td>
@@ -157,4 +179,5 @@ class DocumentUserSharing extends Component {
   }
 }
 
-export default DocumentUserSharing
+const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
+export default composeWithTracker(onPropsChange, Loading)(DocumentUserSharing)

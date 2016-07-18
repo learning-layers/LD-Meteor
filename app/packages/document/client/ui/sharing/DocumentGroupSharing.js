@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
+import { composeWithTracker } from 'react-komposer'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
+import Loader from 'react-loader'
 import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 import Row from '../../../../../../node_modules/react-bootstrap/lib/Row'
@@ -9,7 +11,27 @@ import Col from '../../../../../../node_modules/react-bootstrap/lib/Col'
 import { Groups } from '../../../../groups/lib/collections'
 const SimpleSelect = ReactSelectize.SimpleSelect
 
-class DocumentUserSharing extends Component {
+function onPropsChange (props, onData) {
+  const documentAccess = props.documentAccess
+  let haveAccessGroupIds = []
+  if (documentAccess) {
+    haveAccessGroupIds = haveAccessGroupIds.concat(documentAccess.groupCanComment.map(function (groupAccessObject) {
+      return groupAccessObject.groupId
+    }))
+    haveAccessGroupIds = haveAccessGroupIds.concat(documentAccess.groupCanView.map(function (groupAccessObject) {
+      return groupAccessObject.groupId
+    }))
+    haveAccessGroupIds = haveAccessGroupIds.concat(documentAccess.groupCanEdit.map(function (groupAccessObject) {
+      return groupAccessObject.groupId
+    }))
+  }
+  let handle = Meteor.subscribe('groupList', {groupIds: haveAccessGroupIds})
+  if (handle.ready()) {
+    onData(null, {})
+  }
+}
+
+class DocumentGroupSharing extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -130,7 +152,7 @@ class DocumentUserSharing extends Component {
           <table className='table table-striped table-bordered table-hover'>
             <thead>
               <tr>
-                <th>User</th>
+                <th>Group</th>
                 <th>Access</th>
                 <th>Options</th>
               </tr>
@@ -158,4 +180,5 @@ class DocumentUserSharing extends Component {
   }
 }
 
-export default DocumentUserSharing
+const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
+export default composeWithTracker(onPropsChange, Loading)(DocumentGroupSharing)
