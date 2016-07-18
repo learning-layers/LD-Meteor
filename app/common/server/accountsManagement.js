@@ -4,6 +4,16 @@ import { ServiceConfiguration } from 'meteor/service-configuration'
 import { Roles } from 'meteor/alanning:roles'
 import _each from 'lodash/each'
 
+var meldDBCallback = function (srcUserId, destUserId) {
+  console.log('melding (' + srcUserId + '): srcUserId=', srcUserId)
+  console.log('melding (' + srcUserId + '): destUserId=', destUserId)
+}
+
+// TODO add additionla configuration for https://github.com/splendido/meteor-accounts-meld here
+global.AccountsMeld.configure({
+  meldDBCallback: meldDBCallback
+})
+
 Accounts.validateLoginAttempt(function (attempt) {
   if (!attempt || !attempt.user) {
     throw new Meteor.Error(403, 'Login failed, Email or password wrong')
