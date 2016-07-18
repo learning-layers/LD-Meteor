@@ -109,7 +109,6 @@ class DocumentDisplay extends Component {
     let { document } = this.props
     const isViewMode = this.isViewMode()
     const permissionLevel = this.getPermissionLevel()
-    window.alert(permissionLevel)
     console.debug('isViewMode=', isViewMode)
     console.debug('permissions=', permissionLevel)
     return <div className='document container-fluid'>
