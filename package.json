@@ -39,7 +39,7 @@
     "cookies-js": "^1.2.2",
     "fbemitter": "^2.0.2",
     "gridfs-stream": "^1.1.1",
-    "hopscotch": "^0.2.5",
+    "hopscotch": "^0.2.6",
     "indexof": "^0.0.1",
     "lodash": "^4.13.1",
     "meteor-node-stubs": "^0.2.3",
