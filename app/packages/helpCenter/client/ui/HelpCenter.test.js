@@ -24,7 +24,7 @@ let RBFormControlSimulateChangeOn = function (component, $el, value) {
   TestUtils.Simulate.change($node)
 }
 
-describe('help center', function () {
+describe('helpCenter/HelpCenter', function () {
   beforeEach(function () {
     let exampleTourList = global.exampleTourList = []
     let exampleTour1 = {

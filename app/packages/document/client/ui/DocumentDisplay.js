@@ -9,6 +9,7 @@ import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import DocumentSharingModal from './sharing/DocumentSharingModal'
 import AttachmentsBar from './mainContent/AttachmentsBar'
 import ContentViewer from './ContentViewer'
+import FileAttachmentArea from './mainContent/fileAttachments/FileAttachmentArea'
 
 class DocumentDisplay extends Component {
   constructor (props) {
@@ -54,15 +55,17 @@ class DocumentDisplay extends Component {
   contentSection (activeTabName) {
     switch (activeTabName) {
       case 'Editor':
-        if (this.isViewMode()) {
+        if (this.props.document && this.isViewMode()) {
           // if a sharing link has been used, no user logged in
-          return <div><ContentViewer documentId={this.props.document._id} accessKey={this.props.accessKey} /></div>
-        } else {
+          return <ContentViewer documentId={this.props.document._id} accessKey={this.props.accessKey} />
+        } else if (this.props.document) {
           // user is logged in
-          return <div>{this.props.document ? <ContentEditor document={this.props.document} permissionLevel={this.getPermissionLevel()} /> : null}</div>
+          return <ContentEditor document={this.props.document} permissionLevel={this.getPermissionLevel()} />
+        } else {
+          return null
         }
       case 'Files':
-        return 'Files'
+        return <FileAttachmentArea />
       case 'Media':
         return 'Media'
       default:
@@ -79,6 +82,7 @@ class DocumentDisplay extends Component {
       return 'view'
     } else if (this.props.documentAccess) {
       const documentAccess = this.props.documentAccess
+      // TODO add groups access check
       if (documentAccess) {
         let permission
         documentAccess.userCanEdit.forEach(function (userPermissionItem) {

@@ -3,8 +3,8 @@ import classNames from 'classnames'
 
 class AttachmentsBar extends Component {
   render () {
-    let editorTabClassNames = classNames({'active': this.props.activeTabName === 'Editor'})
-    // let filesTabClassNames = classNames({'active': this.props.activeTabName === 'Files'})
+    let editorTabClassNames = classNames({'active': this.props.activeTabName === 'Editor', 'editor-tab-btn': true})
+    let filesTabClassNames = classNames({'active': this.props.activeTabName === 'Files', 'files-tab-btn': true})
     // let mediaTabClassNames = classNames({'active': this.props.activeTabName === 'Media'})
     return <div className='attachments-bar'>
       <ul className='attachment-icons'>
@@ -13,17 +13,17 @@ class AttachmentsBar extends Component {
             <span className='glyphicon glyphicon-pencil' />
           </div>
         </li>
+        <li className={filesTabClassNames} onClick={() => this.props.onChangeTabSelection('Files')}>
+          <div className='icon-wrapper'>
+            <span className='glyphicon glyphicon-file' />
+          </div>
+        </li>
       </ul>
     </div>
   }
 }
 
-/* <li className={filesTabClassNames} onClick={() => this.props.onChangeTabSelection('Files')}>
- <div className='icon-wrapper'>
- <span className='glyphicon glyphicon-file' />
- </div>
- </li>
- <li className={mediaTabClassNames} onClick={() => this.props.onChangeTabSelection('Media')}>
+/* <li className={mediaTabClassNames} onClick={() => this.props.onChangeTabSelection('Media')}>
  <div className='icon-wrapper'>
  <span className='glyphicon glyphicon-picture' />
  </div>

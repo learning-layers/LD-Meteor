@@ -98,7 +98,7 @@ class CommentingArea extends Component {
       possibleSuggestions.push({id: user._id, display: user.profile.name})
     })
     const { documentComments, documentCommentsCount } = this.props
-    return <div class='commenting-section'>
+    return <div className='commenting-section'>
       <div className='create-new-comment-wrapper'>
         <MentionsInput appendSpaceOnAdd value={this.state.value}
           style={style} onChange={(ev, value, plainTextVal, mentions) => this.handleChange(ev, value, plainTextVal, mentions)}
