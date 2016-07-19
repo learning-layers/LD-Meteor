@@ -38,6 +38,10 @@ class VerifyEmailAddressPanel extends Component {
   }
 }
 
+VerifyEmailAddressPanel.propTypes = {
+  registeredEmails: React.PropTypes.array
+}
+
 class TermsOfService extends Component {
   agreeToTOS () {
     var result = global.confirm('Do you want to agree to the Terms of Service?')
@@ -66,6 +70,10 @@ class TermsOfService extends Component {
       </div>
     </div>
   }
+}
+
+TermsOfService.propTypes = {
+  acceptedTermsOfService: React.PropTypes.bool
 }
 
 class VerificationAndTOSInterceptor extends Component {
@@ -97,6 +105,12 @@ class VerificationAndTOSInterceptor extends Component {
       {acceptedTermsOfService ? null : <TermsOfService acceptedTermsOfService={acceptedTermsOfService} />}
     </div>
   }
+}
+
+VerificationAndTOSInterceptor.propTypes = {
+  isVerified: React.PropTypes.bool,
+  acceptedTermsOfService: React.PropTypes.bool,
+  registeredEmails: React.PropTypes.array
 }
 
 export default VerificationAndTOSInterceptor

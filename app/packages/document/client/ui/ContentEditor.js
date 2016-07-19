@@ -25,4 +25,9 @@ class ContentEditor extends Component {
   }
 }
 
+ContentEditor.propTypes = {
+  document: React.PropTypes.object,
+  permissionLevel: React.PropTypes.string
+}
+
 export default ContentEditor

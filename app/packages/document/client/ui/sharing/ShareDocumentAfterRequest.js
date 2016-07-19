@@ -114,5 +114,9 @@ class ShareDocumentAfterRequest extends Component {
   }
 }
 
+ShareDocumentAfterRequest.propTypes = {
+  requestAccessItem: React.PropTypes.object
+}
+
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
 export default composeWithTracker(onPropsChange, Loading)(ShareDocumentAfterRequest)

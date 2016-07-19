@@ -73,4 +73,10 @@ class EtherpadEditorWrapper extends Component {
   }
 }
 
+EtherpadEditorWrapper.propTypes = {
+  documentId: React.PropTypes.string,
+  etherpadGroupPad: React.PropTypes.string,
+  etherpadReadOnlyId: React.PropTypes.string
+}
+
 export default EtherpadEditorWrapper

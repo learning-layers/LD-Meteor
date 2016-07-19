@@ -8,6 +8,10 @@ class ActiveFilterTestComp extends Component {
   }
 }
 
+ActiveFilterTestComp.propTypes = {
+  activeFilter: React.PropTypes.bool
+}
+
 class FriendList extends Component {
   render () {
     return <div className='ld-friendlist'>

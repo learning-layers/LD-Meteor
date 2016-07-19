@@ -21,6 +21,18 @@ class ListItem extends Component {
   }
 }
 
+ListItem.propTypes = {
+  height: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.number
+  ]),
+  lineHeight: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.number
+  ]),
+  index: React.PropTypes.number
+}
+
 class Chat extends Component {
   constructor (props) {
     super(props)

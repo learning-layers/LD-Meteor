@@ -38,4 +38,8 @@ class ManageGroupMembersModal extends Component {
   }
 }
 
+ManageGroupMembersModal.propTypes = {
+  groupId: React.PropTypes.string
+}
+
 export default ManageGroupMembersModal

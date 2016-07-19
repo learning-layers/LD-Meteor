@@ -29,4 +29,9 @@ class AttachmentsBar extends Component {
  </div>
  </li> */
 
+AttachmentsBar.propTypes = {
+  activeTabName: React.PropTypes.string,
+  onChangeTabSelection: React.PropTypes.func
+}
+
 export default AttachmentsBar

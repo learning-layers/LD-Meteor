@@ -73,4 +73,9 @@ class CommentContent extends Component {
   }
 }
 
+CommentContent.propTypes = {
+  text: React.PropTypes.string,
+  editMode: React.PropTypes.bool
+}
+
 export default CommentContent

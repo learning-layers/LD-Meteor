@@ -31,4 +31,9 @@ class Avatar extends Component {
   }
 }
 
+Avatar.propTypes = {
+  onlineStatus: React.PropTypes.string,
+  userAvatarPath: React.PropTypes.string
+}
+
 export default Avatar

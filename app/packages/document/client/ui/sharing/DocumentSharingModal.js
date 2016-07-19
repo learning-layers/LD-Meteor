@@ -36,4 +36,8 @@ class DocumentSharingModal extends Component {
   }
 }
 
+DocumentSharingModal.propTypes = {
+  documentId: React.PropTypes.string
+}
+
 export default DocumentSharingModal

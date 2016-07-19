@@ -23,3 +23,7 @@ export class TimeFromNow extends Component {
     return <span>{moment.max(moment(this.props.date).fromNow())}</span>
   }
 }
+
+TimeFromNow.propTypes = {
+  date: React.PropTypes.object
+}

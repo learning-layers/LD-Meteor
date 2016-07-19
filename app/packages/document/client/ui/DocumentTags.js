@@ -154,4 +154,11 @@ class DocumentTags extends Component {
   }
 }
 
+DocumentTags.propTypes = {
+  documentId: React.PropTypes.string,
+  documentTags: React.PropTypes.array,
+  onFocus: React.PropTypes.func,
+  onBlur: React.PropTypes.func
+}
+
 export default composeWithTracker(onPropsChange)(DocumentTags)

@@ -20,6 +20,10 @@ class AvailableRole extends Component {
   }
 }
 
+AvailableRole.propTypes = {
+  name: React.PropTypes.string
+}
+
 class CoveredRole extends Component {
   toggleRole () {
     if (this.props.covered) {
@@ -34,6 +38,12 @@ class CoveredRole extends Component {
       <div className={roleActivationClasses} onClick={() => this.toggleRole()}></div>
     </td>
   }
+}
+
+CoveredRole.propTypes = {
+  covered: React.PropTypes.bool,
+  userId: React.PropTypes.string,
+  internalName: React.PropTypes.string
 }
 
 class ChangeUserRolesModal extends Component {
@@ -129,6 +139,10 @@ class ChangeUserRolesModal extends Component {
       </Modal.Footer>
     </Modal>
   }
+}
+
+ChangeUserRolesModal.propTypes = {
+  user: React.PropTypes.object
 }
 
 export default composeWithTracker(onPropsChange)(ChangeUserRolesModal)

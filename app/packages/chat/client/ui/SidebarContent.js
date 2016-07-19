@@ -113,6 +113,12 @@ class SidebarContent extends Component {
   }
 }
 
+SidebarContent.propTypes = {
+  userAvatarPath: React.PropTypes.string,
+  open: React.PropTypes.bool,
+  onSetSidebarOpen: React.PropTypes.func
+}
+
 /*
  <div className='clearfix'></div>
  <Tabs defaultActiveKey={1} id='communication-category-tabs'>

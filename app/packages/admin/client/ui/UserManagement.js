@@ -138,6 +138,10 @@ class User extends Component {
   }
 }
 
+User.propTypes = {
+  user: React.PropTypes.object
+}
+
 class UserManagement extends Component {
   render () {
     const { users } = this.props
@@ -170,6 +174,10 @@ class UserManagement extends Component {
       </div>
     )
   }
+}
+
+UserManagement.propTypes = {
+  users: React.PropTypes.array
 }
 
 export default composeWithTracker(onPropsChange)(UserManagement)

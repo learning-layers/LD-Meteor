@@ -8,7 +8,7 @@ class AccessForbidden extends Component {
         <div className='panel-body'>
           <div className='access-forbidden-panel-content-wrapper'>
             <img src='/stop-sign-35069.svg' alt='Stop Sign' />
-            You don't have permission to be here...
+            {'You don\'t have permission to be here...'}
           </div>
         </div>
       </div>

@@ -36,5 +36,10 @@ class DocumentSharing extends Component {
   }
 }
 
+DocumentSharing.propTypes = {
+  documentId: React.PropTypes.string,
+  documentAccess: React.PropTypes.object
+}
+
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
 export default composeWithTracker(onPropsChange, Loading)(DocumentSharing)

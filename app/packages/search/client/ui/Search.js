@@ -63,4 +63,8 @@ class Search extends Component {
   }
 }
 
+Search.propTypes = {
+  searchItems: React.PropTypes.array
+}
+
 export default composeWithTracker(onPropsChange)(Search)

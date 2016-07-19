@@ -174,4 +174,17 @@ class Comment extends Component {
   }
 }
 
+Comment.propTypes = {
+  comment: React.PropTypes.object,
+  commentRepliesCount: React.PropTypes.number,
+  'comment.text': React.PropTypes.string,
+  'comment._id': React.PropTypes.string,
+  'comment.createdAt': React.PropTypes.string,
+  'comment.createdBy': React.PropTypes.string,
+  userAvatarPath: React.PropTypes.string,
+  author: React.PropTypes.object,
+  revisionCount: React.PropTypes.number,
+  lastRevision: React.PropTypes.object
+}
+
 export default composeWithTracker(onPropsChange)(Comment)

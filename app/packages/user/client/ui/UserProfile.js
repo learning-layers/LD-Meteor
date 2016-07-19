@@ -32,6 +32,10 @@ class UserProfile extends Component {
   }
 }
 
+UserProfile.propTypes = {
+  user: React.PropTypes.object
+}
+
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
 export default composeWithTracker(onPropsChange, Loading)(UserProfile)
 

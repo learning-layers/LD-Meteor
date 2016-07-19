@@ -67,6 +67,10 @@ class DocumentList extends Component {
   }
 }
 
+DocumentList.propTypes = {
+  documents: React.PropTypes.array
+}
+
 // <ReactiveInfiniteList />
 
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)

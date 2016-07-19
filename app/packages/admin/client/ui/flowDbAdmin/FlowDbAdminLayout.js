@@ -277,4 +277,8 @@ class FlowDbAdminLayout extends Component {
   }
 }
 
+FlowDbAdminLayout.propTypes = {
+  content: React.PropTypes.object
+}
+
 export default composeWithTracker(onPropsChange)(FlowDbAdminLayout)

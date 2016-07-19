@@ -149,4 +149,9 @@ class UserTags extends Component {
   }
 }
 
+UserTags.propTypes = {
+  userId: React.PropTypes.string,
+  userTags: React.PropTypes.array
+}
+
 export default composeWithTracker(onPropsChange)(UserTags)

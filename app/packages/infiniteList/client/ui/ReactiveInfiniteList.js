@@ -30,6 +30,12 @@ class ListItem extends Component {
   }
 }
 
+ListItem.propTypes = {
+  expanded: React.PropTypes.bool,
+  name: React.PropTypes.string,
+  count: React.PropTypes.number
+}
+
 let buildElements = function (items, expandedItems) {
   var elements = []
   items.forEach(function (item) {
@@ -122,6 +128,10 @@ class ReactiveInfiniteList extends Component {
       </div>
     )
   }
+}
+
+ReactiveInfiniteList.propTypes = {
+  elements: React.PropTypes.array
 }
 
 export default composeWithTracker(onPropsChange)(ReactiveInfiniteList)

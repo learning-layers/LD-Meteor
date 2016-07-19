@@ -52,4 +52,8 @@ class EncryptionTest extends Component {
   }
 }
 
+EncryptionTest.propTypes = {
+  tests: React.PropTypes.array
+}
+
 export default composeWithTracker(onPropsChange)(EncryptionTest)

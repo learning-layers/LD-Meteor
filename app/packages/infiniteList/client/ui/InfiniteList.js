@@ -11,6 +11,10 @@ class ListItem extends Component {
   }
 }
 
+ListItem.propTypes = {
+  count: React.PropTypes.number
+}
+
 let buildElements = function (items) {
   var elements = []
   items.forEach(function (item) {

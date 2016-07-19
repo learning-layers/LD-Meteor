@@ -109,4 +109,9 @@ class UserProfileInfoForm extends Component {
   }
 }
 
+UserProfileInfoForm.propTypes = {
+  user: React.PropTypes.object,
+  schema: React.PropTypes.object
+}
+
 export default UserProfileInfoForm

@@ -55,4 +55,9 @@ class UserProfileContent extends Component {
   }
 }
 
+UserProfileContent.propTypes = {
+  user: React.PropTypes.object,
+  userAvatarPath: React.PropTypes.string
+}
+
 export default composeWithTracker(onPropsChange)(UserProfileContent)

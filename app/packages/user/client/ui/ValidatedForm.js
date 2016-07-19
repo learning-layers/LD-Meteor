@@ -45,4 +45,8 @@ class ValidatedForm extends Component {
   }
 }
 
+ValidatedForm.propTypes = {
+  schema: React.PropTypes.object
+}
+
 export default ValidatedForm

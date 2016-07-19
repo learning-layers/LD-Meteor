@@ -128,4 +128,10 @@ class CommentReply extends Component {
   }
 }
 
+CommentReply.propTypes = {
+  parentComment: React.PropTypes.object,
+  submitReplySuccess: React.PropTypes.func,
+  closeReply: React.PropTypes.func
+}
+
 export default CommentReply

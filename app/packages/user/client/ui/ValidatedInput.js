@@ -43,4 +43,10 @@ class ValidatedInput extends Component {
   }
 }
 
+ValidatedInput.propTypes = {
+  value: React.PropTypes.string,
+  onChange: React.PropTypes.func,
+  valid: React.PropTypes.bool
+}
+
 export default ValidatedInput

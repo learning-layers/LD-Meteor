@@ -66,4 +66,8 @@ class HelpCenter extends Component {
   }
 }
 
+HelpCenter.propTypes = {
+  helpTours: React.PropTypes.array
+}
+
 export default HelpCenter

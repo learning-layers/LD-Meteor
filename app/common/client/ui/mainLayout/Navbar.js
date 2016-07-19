@@ -109,4 +109,9 @@ class LDNavbar extends Component {
     )
   }
 }
+
+LDNavbar.propTypes = {
+  userAvatarPath: React.PropTypes.string
+}
+
 export default composeWithTracker(onPropsChange)(LDNavbar)

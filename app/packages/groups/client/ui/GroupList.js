@@ -153,5 +153,10 @@ class GroupList extends Component {
   }
 }
 
+GroupList.propTypes = {
+  groups: React.PropTypes.array,
+  ownGroups: React.PropTypes.array
+}
+
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
 export default composeWithTracker(onPropsChange, Loading)(GroupList)

@@ -58,3 +58,8 @@ export class DocumentLinkSharing extends Component {
     </div>
   }
 }
+
+DocumentLinkSharing.propTypes = {
+  documentId: React.PropTypes.string,
+  documentAccess: React.PropTypes.object
+}

@@ -26,4 +26,8 @@ class TodoList extends Component {
   }
 }
 
+TodoList.propTypes = {
+  todos: React.PropTypes.array
+}
+
 export default composeWithTracker(onPropsChange)(TodoList)

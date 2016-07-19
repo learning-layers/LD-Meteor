@@ -37,5 +37,10 @@ class ManageGroupMembers extends Component {
   }
 }
 
+ManageGroupMembers.propTypes = {
+  groupId: React.PropTypes.string,
+  group: React.PropTypes.object
+}
+
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
 export default composeWithTracker(onPropsChange, Loading)(ManageGroupMembers)

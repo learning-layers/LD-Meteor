@@ -28,4 +28,8 @@ class RepliesArea extends Component {
   }
 }
 
+RepliesArea.propTypes = {
+  replies: React.PropTypes.array
+}
+
 export default composeWithTracker(onPropsChange)(RepliesArea)

@@ -43,4 +43,9 @@ class ContentViewer extends Component {
   }
 }
 
+ContentViewer.propTypes = {
+  documentId: React.PropTypes.string,
+  accessKey: React.PropTypes.string
+}
+
 export default ContentViewer

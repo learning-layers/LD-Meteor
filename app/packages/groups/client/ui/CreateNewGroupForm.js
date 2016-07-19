@@ -99,4 +99,8 @@ class CreateNewGroupForm extends Component {
   }
 }
 
+CreateNewGroupForm.propTypes = {
+  value: React.PropTypes.string
+}
+
 export default CreateNewGroupForm

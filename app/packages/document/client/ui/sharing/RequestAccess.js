@@ -84,7 +84,7 @@ class RequestAccess extends Component {
             <h4>Issue a document access request</h4>
           </div>
           <div className='panel-body'>
-            You currently don't have access to this document. You can request access from the owner.
+            {'You currently don\'t have access to this document. You can request access from the owner.'}
             <form onSubmit={(event) => this.requestAccess(event)}>
               <FormGroup controlId='requestAccessTextarea'>
                 <FormControl componentClass='textarea' placeholder='Add an additional message to the owner of the document.' />
@@ -98,6 +98,11 @@ class RequestAccess extends Component {
       </div>
     }
   }
+}
+
+RequestAccess.propTypes = {
+  documentId: React.PropTypes.string,
+  requestAccessItem: React.PropTypes.object
 }
 
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)

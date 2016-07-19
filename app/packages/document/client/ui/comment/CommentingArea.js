@@ -136,4 +136,10 @@ class CommentingArea extends Component {
   }
 }
 
+CommentingArea.propTypes = {
+  documentId: React.PropTypes.string,
+  documentComments: React.PropTypes.array,
+  documentCommentsCount: React.PropTypes.number
+}
+
 export default composeWithTracker(onPropsChange)(CommentingArea)

@@ -93,9 +93,9 @@ class FileUpload extends Component {
         Uploading <b>{currentFileUpload.file.name}</b>:
         <div className='progress'>
           {this.state.uploadSuccess ? <div style={{width: this.state.progress + '%'}} className='progress-bar progress-bar-success'>
-            <span class='sr-only'>{this.state.progress}%</span>
+            <span className='sr-only'>{this.state.progress}%</span>
           </div> : <div style={{width: this.state.progress + '%'}} className='progress-bar progress-bar-striped active'>
-            <span class='sr-only'>{this.state.progress}%</span>
+            <span className='sr-only'>{this.state.progress}%</span>
           </div>}
         </div>
       </div> : null}
@@ -105,6 +105,12 @@ class FileUpload extends Component {
       </p>
     </div>
   }
+}
+
+FileUpload.propTypes = {
+  collection: React.PropTypes.string,
+  elementId: React.PropTypes.string,
+  uploadType: React.PropTypes.string
 }
 
 export default FileUpload

@@ -160,4 +160,9 @@ class AddGroupMember extends Component {
   }
 }
 
+AddGroupMember.propTypes = {
+  groupId: React.PropTypes.string,
+  groupMembers: React.PropTypes.array
+}
+
 export default AddGroupMember

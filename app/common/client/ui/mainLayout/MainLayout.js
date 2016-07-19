@@ -130,7 +130,7 @@ class MainLayout extends Component {
                     <div className='panel-body'>
                       <div className='access-forbidden-panel-content-wrapper'>
                         <img src='/stop-sign-35069.svg' alt='Stop Sign' />
-                        You don't have permission to be here...
+                        {'You don\'t have permission to be here...'}
                       </div>
                     </div>
                   </div>
@@ -144,6 +144,17 @@ class MainLayout extends Component {
       </div>
     )
   }
+}
+
+MainLayout.propTypes = {
+  user: React.PropTypes.object,
+  isPublic: React.PropTypes.bool,
+  requiredRoles: React.PropTypes.array,
+  tosNotNeeded: React.PropTypes.bool,
+  canRequestAccess: React.PropTypes.bool,
+  header: React.PropTypes.object,
+  content: React.PropTypes.object,
+  helpCenter: React.PropTypes.object
 }
 
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)

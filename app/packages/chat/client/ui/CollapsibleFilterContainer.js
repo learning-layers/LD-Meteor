@@ -53,4 +53,11 @@ class CollapsibleFilterContainer extends Component {
   }
 }
 
+CollapsibleFilterContainer.propTypes = {
+  filters: React.PropTypes.array,
+  activeFilter: React.PropTypes.object,
+  alwaysOpen: React.PropTypes.bool,
+  children: React.PropTypes.array
+}
+
 export default CollapsibleFilterContainer

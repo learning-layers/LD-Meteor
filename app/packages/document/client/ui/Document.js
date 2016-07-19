@@ -120,5 +120,15 @@ class Document extends Component {
   }
 }
 
+Document.propTypes = {
+  id: React.PropTypes.string,
+  document: React.PropTypes.object,
+  documentAccess: React.PropTypes.object,
+  err: React.PropTypes.object,
+  action: React.PropTypes.string,
+  permission: React.PropTypes.string,
+  accessKey: React.PropTypes.string
+}
+
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
 export default composeWithTracker(onPropsChange, Loading)(Document)

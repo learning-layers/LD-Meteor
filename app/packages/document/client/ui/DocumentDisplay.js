@@ -116,7 +116,7 @@ class DocumentDisplay extends Component {
         <div style={{display: 'none'}} className='hierarchy-bar'>Hierarchy:</div>
         <hr style={{display: 'none'}} />
         <div className='tag-bar'>
-          <label for='document-tags' className={this.state.tagBarFocused ? 'active' : ''}>Tags</label>
+          <label htmlFor='document-tags' className={this.state.tagBarFocused ? 'active' : ''}>Tags</label>
           <DocumentTags disabled={isViewMode} onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={document._id} />
         </div>
       </div>
@@ -140,6 +140,14 @@ class DocumentDisplay extends Component {
       {isViewMode ? null : <CommentingArea documentId={document._id} />}
     </div>
   }
+}
+
+DocumentDisplay.propTypes = {
+  document: React.PropTypes.object,
+  action: React.PropTypes.string,
+  permission: React.PropTypes.string,
+  accessKey: React.PropTypes.string,
+  documentAccess: React.PropTypes.object
 }
 
 export default DocumentDisplay
