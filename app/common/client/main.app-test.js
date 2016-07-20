@@ -8,7 +8,7 @@ describe('main', function (done) {
     Meteor.loginWithPassword('martin@bachl.pro', 'changeme1', function (err, res) {
       if (err) {
         chai.assert.equal(false, true)
-        done()
+        done(err)
       } else {
         chai.assert.equal(true, true)
         done()

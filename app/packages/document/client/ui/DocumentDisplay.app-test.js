@@ -72,6 +72,16 @@ describe('document/DocumentDisplay default', function () {
   })
 
   it('has an attached AttachmentsBar', function (done) {
+    let loginWithPassword = Meteor.wrapAsync(Meteor.loginWithPassword)
+    if (!Meteor.userId()) {
+      try {
+        let result = loginWithPassword('martin@bachl.pro', 'changeme1')
+        console.log(result)
+      } catch (loginErr) {
+        console.error(JSON.stringify(loginErr))
+        done(loginErr)
+      }
+    }
     let el = ReactDOM.findDOMNode(global.defComponent)
     Meteor.setTimeout(function () {
       try {
@@ -81,12 +91,22 @@ describe('document/DocumentDisplay default', function () {
         done()
       } catch (e) {
         console.error(JSON.stringify(e))
-        chai.assert.fail()
+        done(e)
       }
-    }, 1000)
+    }, 300)
   })
 
   it('switches to file attachments if the file icon is clicked', function (done) {
+    let loginWithPassword = Meteor.wrapAsync(Meteor.loginWithPassword)
+    if (!Meteor.userId()) {
+      try {
+        let result = loginWithPassword('martin@bachl.pro', 'changeme1')
+        console.log(result)
+      } catch (loginErr) {
+        console.error(JSON.stringify(loginErr))
+        done(loginErr)
+      }
+    }
     let el = ReactDOM.findDOMNode(global.defComponent)
     Meteor.setTimeout(function () {
       try {
@@ -112,9 +132,9 @@ describe('document/DocumentDisplay default', function () {
         done()
       } catch (e) {
         console.error(JSON.stringify(e))
-        chai.assert.fail()
+        done(e)
       }
-    }, 1000)
+    }, 300)
   })
 })
 
