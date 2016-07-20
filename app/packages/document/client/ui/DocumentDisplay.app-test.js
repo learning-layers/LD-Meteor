@@ -78,11 +78,10 @@ describe('document/DocumentDisplay default', function () {
         let $el = $(el).find('.attachments-bar')
         let hasClassResult = hasClass($el[0], 'attachments-bar')
         chai.assert.equal(hasClassResult, true)
+        done()
       } catch (e) {
         console.error(JSON.stringify(e))
         chai.assert.fail()
-      } finally {
-        done()
       }
     }, 1000)
   })
@@ -110,11 +109,10 @@ describe('document/DocumentDisplay default', function () {
         let $spanElements2 = $($attachmentsBarElements[0]).find('li.active span')
         let hasClassResult5 = hasClass($spanElements2[0], 'glyphicon-file') // file attachment tab is active
         chai.assert.equal(hasClassResult5, true)
+        done()
       } catch (e) {
         console.error(JSON.stringify(e))
         chai.assert.fail()
-      } finally {
-        done()
       }
     }, 1000)
   })
