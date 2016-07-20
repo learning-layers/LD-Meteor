@@ -78,7 +78,7 @@ describe('document/DocumentDisplay default', function () {
       let hasClassResult = hasClass($el[0], 'attachments-bar')
       chai.assert.equal(hasClassResult, true)
       done()
-    }, 150)
+    }, 300)
   })
 
   it('switches to file attachments if the file icon is clicked', function () {
@@ -104,7 +104,7 @@ describe('document/DocumentDisplay default', function () {
       let hasClassResult5 = hasClass($spanElements2[0], 'glyphicon-file') // file attachment tab is active
       chai.assert.equal(hasClassResult5, true)
       done()
-    }, 150)
+    }, 300)
   })
 })
 
