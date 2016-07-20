@@ -80,6 +80,7 @@ describe('document/DocumentDisplay default', function () {
         chai.assert.equal(hasClassResult, true)
       } catch (e) {
         console.error(JSON.stringify(e))
+        chai.assert.fail()
       } finally {
         done()
       }
@@ -111,6 +112,7 @@ describe('document/DocumentDisplay default', function () {
         chai.assert.equal(hasClassResult5, true)
       } catch (e) {
         console.error(JSON.stringify(e))
+        chai.assert.fail()
       } finally {
         done()
       }
