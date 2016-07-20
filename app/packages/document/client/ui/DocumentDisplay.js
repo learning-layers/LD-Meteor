@@ -135,7 +135,10 @@ class DocumentDisplay extends Component {
           {isViewMode ? null : <div ref='manageSharingModal'></div>}
         </div>
         <div className='panel-body'>
-          <AttachmentsBar onChangeTabSelection={(tabName) => this.changeTab(tabName)} activeTabName={this.state.activeTabName} />
+          {this.props.document ? <AttachmentsBar
+            documentId={this.props.document._id}
+            onChangeTabSelection={(tabName) => this.changeTab(tabName)}
+            activeTabName={this.state.activeTabName} /> : null}
           <div className='content'>
             {this.contentSection(this.state.activeTabName)}
           </div>

@@ -1,8 +1,25 @@
 import React, {Component} from 'react'
+import { Meteor } from 'meteor/meteor'
 import classNames from 'classnames'
+import Loader from 'react-loader'
+import { composeWithTracker } from 'react-komposer'
+import { DocumentInfoCaches } from '../../../lib/attachments/collections'
+
+function onPropsChange (props, onData) {
+  let handle = Meteor.subscribe('documentInfoCache', {documentId: props.documentId})
+  if (handle.ready()) {
+    let documentInfoCache = DocumentInfoCaches.findOne({documentId: props.documentId})
+    onData(null, { documentInfoCache })
+  }
+}
 
 class AttachmentsBar extends Component {
   render () {
+    const { documentInfoCache } = this.props
+    let fileAttachmentCounter = documentInfoCache.fileAttachmentCounter
+    if (!fileAttachmentCounter) {
+      fileAttachmentCounter = 0
+    }
     let editorTabClassNames = classNames({'active': this.props.activeTabName === 'Editor', 'editor-tab-btn': true})
     let filesTabClassNames = classNames({'active': this.props.activeTabName === 'Files', 'files-tab-btn': true})
     // let mediaTabClassNames = classNames({'active': this.props.activeTabName === 'Media'})
@@ -16,6 +33,11 @@ class AttachmentsBar extends Component {
         <li className={filesTabClassNames} onClick={() => this.props.onChangeTabSelection('Files')}>
           <div className='icon-wrapper'>
             <span className='glyphicon glyphicon-file' />
+          </div>
+          <div style={{display: 'flex', margin: 'auto'}}>
+            <div style={{display: 'flex', margin: 'auto'}}>
+              {documentInfoCache ? <span className='badge'>{fileAttachmentCounter}</span> : null}
+            </div>
           </div>
         </li>
       </ul>
@@ -31,7 +53,9 @@ class AttachmentsBar extends Component {
 
 AttachmentsBar.propTypes = {
   activeTabName: React.PropTypes.string,
-  onChangeTabSelection: React.PropTypes.func
+  onChangeTabSelection: React.PropTypes.func,
+  documentInfoCache: React.PropTypes.object
 }
 
-export default AttachmentsBar
+const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
+export default composeWithTracker(onPropsChange, Loading)(AttachmentsBar)

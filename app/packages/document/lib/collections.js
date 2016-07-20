@@ -18,6 +18,7 @@ if (Meteor.isServer) {
 export const DocumentAccess = new Mongo.Collection('DocumentAccess')
 DocumentAccess.attachSchema(DocumentAccessSchema)
 if (Meteor.isServer) {
+  DocumentAccess._ensureIndex({ documentId: 1 }, {'unique': true})
   DocumentAccess._ensureIndex({ documentId: 1, 'userCanView.userId': 1 })
   DocumentAccess._ensureIndex({ documentId: 1, 'userCanComment.userId': 1 })
   DocumentAccess._ensureIndex({ documentId: 1, 'userCanEdit.userId': 1 })

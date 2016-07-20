@@ -1,11 +1,33 @@
 /* eslint-env mocha */
 
-import DocumentDisplay from './DocumentDisplay'
 import React from 'react'
+import { Meteor } from 'meteor/meteor'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import { chai } from 'meteor/practicalmeteor:chai'
 import { $ } from 'meteor/jquery'
+import DocumentDisplay from './DocumentDisplay'
+
+global.loadingSpinner = {
+  options: {
+    lines: 13,
+    length: 20,
+    width: 10,
+    radius: 30,
+    corners: 1,
+    rotate: 0,
+    direction: 1,
+    color: '#000',
+    speed: 1,
+    trail: 60,
+    shadow: false,
+    hwaccel: false,
+    zIndex: 2e9,
+    top: '50%',
+    left: '50%',
+    scale: 1.00
+  }
+}
 
 let renderComponent = function (comp, props) {
   return TestUtils.renderIntoDocument(
@@ -49,35 +71,40 @@ describe('document/DocumentDisplay default', function () {
     chai.assert.equal(hasClassResult, true)
   })
 
-  it('has an attached AttachmentsBar', function () {
+  it('has an attached AttachmentsBar', function (done) {
     let el = ReactDOM.findDOMNode(global.defComponent)
-    let $el = $(el).find('.attachments-bar')
-
-    let hasClassResult = hasClass($el[0], 'attachments-bar')
-    chai.assert.equal(hasClassResult, true)
+    Meteor.setTimeout(function () {
+      let $el = $(el).find('.attachments-bar')
+      let hasClassResult = hasClass($el[0], 'attachments-bar')
+      chai.assert.equal(hasClassResult, true)
+      done()
+    }, 150)
   })
 
   it('switches to file attachments if the file icon is clicked', function () {
     let el = ReactDOM.findDOMNode(global.defComponent)
-    let hasClassResult1 = hasClass(el, 'document')
-    chai.assert.equal(hasClassResult1, true)
-    let $attachmentsBarElements = $(el).find('.attachments-bar')
-    let hasClassResult2 = hasClass($attachmentsBarElements[0], 'attachments-bar')
-    chai.assert.equal(hasClassResult2, true)
-    let $spanElements = $($attachmentsBarElements[0]).find('li.active span')
-    console.log($spanElements)
-    // check the current active tab
-    let hasClassResult3 = hasClass($spanElements[0], 'glyphicon-pencil') // content editor is active
-    chai.assert.equal(hasClassResult3, true)
-    // change the tab via clicking the file icon
-    let $liElements = $($attachmentsBarElements[0]).find('.files-tab-btn')
-    let hasClassResult4 = hasClass($liElements[0], 'files-tab-btn')
-    chai.assert.equal(hasClassResult4, true)
-    simulateClickOn($($liElements[0]))
-    // check if the active tab changed
-    let $spanElements2 = $($attachmentsBarElements[0]).find('li.active span')
-    let hasClassResult5 = hasClass($spanElements2[0], 'glyphicon-file') // file attachment tab is active
-    chai.assert.equal(hasClassResult5, true)
+    Meteor.setTimeout(function (done) {
+      let hasClassResult1 = hasClass(el, 'document')
+      chai.assert.equal(hasClassResult1, true)
+      let $attachmentsBarElements = $(el).find('.attachments-bar')
+      let hasClassResult2 = hasClass($attachmentsBarElements[0], 'attachments-bar')
+      chai.assert.equal(hasClassResult2, true)
+      let $spanElements = $($attachmentsBarElements[0]).find('li.active span')
+      console.log($spanElements)
+      // check the current active tab
+      let hasClassResult3 = hasClass($spanElements[0], 'glyphicon-pencil') // content editor is active
+      chai.assert.equal(hasClassResult3, true)
+      // change the tab via clicking the file icon
+      let $liElements = $($attachmentsBarElements[0]).find('.files-tab-btn')
+      let hasClassResult4 = hasClass($liElements[0], 'files-tab-btn')
+      chai.assert.equal(hasClassResult4, true)
+      simulateClickOn($($liElements[0]))
+      // check if the active tab changed
+      let $spanElements2 = $($attachmentsBarElements[0]).find('li.active span')
+      let hasClassResult5 = hasClass($spanElements2[0], 'glyphicon-file') // file attachment tab is active
+      chai.assert.equal(hasClassResult5, true)
+      done()
+    }, 150)
   })
 })
 
