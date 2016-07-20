@@ -38,6 +38,7 @@
     "classnames": "^2.2.5",
     "cookies-js": "^1.2.2",
     "fbemitter": "^2.0.2",
+    "fireball-js": "^1.1.5",
     "gridfs-stream": "^1.1.1",
     "hopscotch": "^0.2.6",
     "indexof": "^0.0.1",

@@ -99,6 +99,9 @@ Meteor.startup(function () {
     BrowserPolicy.content.allowScriptOrigin(origin)
   })
 
+  BrowserPolicy.content.allowOriginForAll('blob:')
+  BrowserPolicy.content.allowScriptOrigin('blob:')
+
   BrowserPolicy.content.allowFrameOrigin('https://*.youtube.com')
   console.log('BrowserPolicy configured')
 
