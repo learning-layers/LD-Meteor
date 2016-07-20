@@ -17,7 +17,6 @@ function onPropsChange (props, onData) {
 class DocumentTags extends Component {
   constructor (props) {
     super(props)
-    console.log(props)
     this.state = {
       tagOptions: [
         // {label: 'test', name: 'test', value: 'test'}

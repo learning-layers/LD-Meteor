@@ -45,6 +45,32 @@ let simulateClickOn = function ($el) {
 }
 
 describe('document/DocumentDisplay default', function () {
+  before(function (done) {
+    let loginWithPassword = Meteor.wrapAsync(Meteor.loginWithPassword)
+    if (!Meteor.userId()) {
+      try {
+        let result = loginWithPassword('martin@bachl.pro', 'changeme1')
+        console.log(result)
+      } catch (loginErr) {
+        console.error(JSON.stringify(loginErr))
+        done(loginErr)
+      }
+    }
+    let loginWaitCounter = 0
+    let interval = setInterval(function () {
+      if (loginWaitCounter < 20) {
+        if (Meteor.userId() !== null) {
+          clearInterval(interval)
+          done()
+        } else {
+          loginWaitCounter++
+        }
+      } else {
+        clearInterval(interval)
+        done(new Error('login unsuccessful'))
+      }
+    }, 200)
+  })
   beforeEach(function () {
     let component = renderComponent(DocumentDisplay, {
       document: {
@@ -72,41 +98,23 @@ describe('document/DocumentDisplay default', function () {
   })
 
   it('has an attached AttachmentsBar', function (done) {
-    let loginWithPassword = Meteor.wrapAsync(Meteor.loginWithPassword)
-    if (!Meteor.userId()) {
-      try {
-        let result = loginWithPassword('martin@bachl.pro', 'changeme1')
-        console.log(result)
-      } catch (loginErr) {
-        console.error(JSON.stringify(loginErr))
-        done(loginErr)
-      }
-    }
     let el = ReactDOM.findDOMNode(global.defComponent)
     Meteor.setTimeout(function () {
       try {
-        let $el = $(el).find('.attachments-bar')
-        let hasClassResult = hasClass($el[0], 'attachments-bar')
-        chai.assert.equal(hasClassResult, true)
+        let hasClassResult1 = hasClass(el, 'document')
+        chai.assert.equal(hasClassResult1, true)
+        let $attachmentsBarElements = $(el).find('.attachments-bar')
+        let hasClassResult2 = hasClass($attachmentsBarElements[0], 'attachments-bar')
+        chai.assert.equal(hasClassResult2, true)
         done()
       } catch (e) {
         console.error(JSON.stringify(e))
         done(e)
       }
-    }, 300)
+    }, 1500)
   })
 
   it('switches to file attachments if the file icon is clicked', function (done) {
-    let loginWithPassword = Meteor.wrapAsync(Meteor.loginWithPassword)
-    if (!Meteor.userId()) {
-      try {
-        let result = loginWithPassword('martin@bachl.pro', 'changeme1')
-        console.log(result)
-      } catch (loginErr) {
-        console.error(JSON.stringify(loginErr))
-        done(loginErr)
-      }
-    }
     let el = ReactDOM.findDOMNode(global.defComponent)
     Meteor.setTimeout(function () {
       try {
@@ -116,7 +124,6 @@ describe('document/DocumentDisplay default', function () {
         let hasClassResult2 = hasClass($attachmentsBarElements[0], 'attachments-bar')
         chai.assert.equal(hasClassResult2, true)
         let $spanElements = $($attachmentsBarElements[0]).find('li.active span')
-        console.log($spanElements)
         // check the current active tab
         let hasClassResult3 = hasClass($spanElements[0], 'glyphicon-pencil') // content editor is active
         chai.assert.equal(hasClassResult3, true)
@@ -134,7 +141,7 @@ describe('document/DocumentDisplay default', function () {
         console.error(JSON.stringify(e))
         done(e)
       }
-    }, 300)
+    }, 1500)
   })
 })
 
