@@ -23,8 +23,8 @@ before_install:
 # TODO activate test-packages again when needed
 # "meteor reset"
 # "npm run test-packages"
+# - "npm run test-travis"
+# - "meteor reset"
 script:
-  - "npm run test-travis"
-  - "meteor reset"
   - "npm run testall-travis"
   - "npm run lint"
