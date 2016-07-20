@@ -106,7 +106,7 @@ class MainLayout extends Component {
       isVerified = userEmailIsVerified(user)
       acceptedTermsOfService = isUserAgreeingWithTOS(user)
     }
-    console.info(isPublic)
+    // console.info(isPublic)
     return (
       <div>
         <div ref='status'></div>

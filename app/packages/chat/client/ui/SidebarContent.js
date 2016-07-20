@@ -6,7 +6,7 @@ import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { jQuery } from 'meteor/jquery'
 import Avatar from './Avatar'
-import ChatLineCalculator from '../lib/chatLineCalculator'
+// import ChatLineCalculator from '../lib/chatLineCalculator'
 import { Uploads } from '../../../fileUpload/lib/collections'
 import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
 import NavItem from '../../../../../node_modules/react-bootstrap/lib/NavItem'
@@ -80,10 +80,10 @@ class SidebarContent extends Component {
     const {userAvatarPath} = this.props
     // let messageObject = new ChatLineCalculator().getChatMessageObject('LabelLabelLabelLabelLabelLabelLabelLabel!HelloWorld')
     // let message = 'LabelLabelLabelLabel LabelLabelLabelLabel!HelloWorld' // 'OpieOP haha Kappa lel'
-    let message = 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
-    let emotes = {356: ['0-5', '40-45'], 25: ['12-16']}
-    let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(message, emotes)
-    console.log(messageWithEmotesObject)
+    // let message = 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
+    // let emotes = {356: ['0-5', '40-45'], 25: ['12-16']}
+    // let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(message, emotes)
+    // console.log(messageWithEmotesObject)
     let loggedIn = Meteor.userId()
     return <div className='ld-sidebar-content' ref='wrapper'>
       {this.props.open ? <div className='close-handle' onClick={() => this.props.onSetSidebarOpen(false)}>

@@ -7,8 +7,8 @@ import { Meteor } from 'meteor/meteor'
 
 if (Meteor.isClient) {
   global.window.adminCollectionObject = function (collection) {
-    console.info('Expected=' + Session.get('admin_collection_name'))
-    console.info('Observed=' + collection)
+    // console.info('Expected=' + Session.get('admin_collection_name'))
+    // console.info('Observed=' + collection)
     if (collection === undefined) {
       collection = Session.get('admin_collection_name')
     }

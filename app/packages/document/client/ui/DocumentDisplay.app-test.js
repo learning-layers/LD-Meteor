@@ -8,6 +8,8 @@ import { chai } from 'meteor/practicalmeteor:chai'
 import { $ } from 'meteor/jquery'
 import DocumentDisplay from './DocumentDisplay'
 
+process.env.NODE_ENV = 'production'
+
 global.loadingSpinner = {
   options: {
     lines: 13,

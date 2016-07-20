@@ -46,7 +46,7 @@
     "meteor-node-stubs": "^0.2.3",
     "mobx": "^2.3.7",
     "node-uuid": "^1.4.7",
-    "radium": "^0.18.0",
+    "radium": "^0.18.1",
     "rc-slider": "^3.7.4",
     "react": "^15.2.1",
     "react-addons-css-transition-group": "^15.2.1",

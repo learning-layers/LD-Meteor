@@ -112,9 +112,9 @@ class DocumentDisplay extends Component {
   render () {
     let { document } = this.props
     const isViewMode = this.isViewMode()
-    const permissionLevel = this.getPermissionLevel()
-    console.debug('isViewMode=', isViewMode)
-    console.debug('permissions=', permissionLevel)
+    // const permissionLevel = this.getPermissionLevel()
+    // console.debug('isViewMode=', isViewMode)
+    // console.debug('permissions=', permissionLevel)
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
         <div style={{display: 'none'}} className='hierarchy-bar'>Hierarchy:</div>
