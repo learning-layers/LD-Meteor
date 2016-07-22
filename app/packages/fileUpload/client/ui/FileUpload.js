@@ -51,7 +51,7 @@ class FileUpload extends Component {
         meta: metaData,
         onUploaded: function (error, fileObj) {
           if (error) {
-            Alert.error('Error during upload of file \'' + fileObj.name + '\' ' + error)
+            Alert.error('Error during upload of a file error=' + error)
           } else {
             self.setState({progress: 100, uploadSuccess: true})
             Alert.success('File \'' + fileObj.name + '\' successfully uploaded')

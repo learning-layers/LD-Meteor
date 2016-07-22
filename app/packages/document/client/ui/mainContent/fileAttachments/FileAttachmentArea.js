@@ -3,6 +3,7 @@ import Loader from 'react-loader'
 import { composeWithTracker } from 'react-komposer'
 import Collapse from '../../../../../../../node_modules/react-bootstrap/lib/Collapse'
 import Well from '../../../../../../../node_modules/react-bootstrap/lib/Well'
+import FileUpload from '../../../../../fileUpload/client/ui/FileUpload'
 
 function onPropsChange (props, onData) {
   onData(null, {})
@@ -21,24 +22,30 @@ class FileAttachmentArea extends Component {
     })
   }
   render () {
+    const { documentId } = this.props
     return <div className='file-attachments'>
       <div className='uploading-panel'>
-        <Collapse in={this.state.open}>
-          <Well>
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
-            Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-          </Well>
-        </Collapse>
-        <div className='open-close-handle'>
-          <button id='open-close-file-upload' className='btn btn-default' onClick={() => this.toggle()}>
-            {this.state.open ? 'Close Upload Area' : 'Upload new file'}
-          </button>
-        </div>
+        <Well style={{padding: 0, marginBottom: 0}}>
+          <Collapse in={this.state.open}>
+            <Well style={{backgroundColor: 'white', marginBottom: 0}}>
+              <FileUpload collection='document' elementId={documentId} uploadType='attachment' />
+            </Well>
+          </Collapse>
+          <div className='open-close-handle'>
+            <button id='open-close-file-upload' className='btn btn-default' onClick={() => this.toggle()} style={{margin: '7px'}}>
+              {this.state.open ? 'Close Upload Area' : 'Upload new file'}
+            </button>
+          </div>
+        </Well>
       </div>
       <div className='uploaded-files'>
       </div>
     </div>
   }
+}
+
+FileAttachmentArea.propTypes = {
+  documentId: React.PropTypes.string
 }
 
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)

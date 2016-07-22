@@ -65,7 +65,7 @@ class DocumentDisplay extends Component {
           return null
         }
       case 'Files':
-        return <FileAttachmentArea />
+        return <FileAttachmentArea documentId={this.props.document._id} />
       case 'Media':
         return 'Media'
       default:
