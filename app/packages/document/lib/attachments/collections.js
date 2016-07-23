@@ -43,5 +43,10 @@ fileUpload.interceptors.push({
     } else {
       return 'Max. file size is ' + humanFileSize(allowedMaxSize, true) + ' you\'ve tried to upload ' + humanFileSize(file.size, true)
     }
+  },
+  onAfterUpload: function (file) {
+    if (file && file.meta && file.meta.parent && file.meta.parent.collection === 'document' && file.meta.parent.elementId && file.meta.parent.uploadType === 'attachment') {
+      DocumentInfoCaches.update({documentId: file.meta.parent.elementId}, {$inc: {fileAttachmentCounter: 1}})
+    }
   }
 })

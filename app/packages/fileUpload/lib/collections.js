@@ -124,3 +124,7 @@ if (Meteor.isServer) {
 }
 
 Uploads.cacheControl = 'public, max-age=31536000'
+
+if (Meteor.isServer) {
+  Uploads.collection._ensureIndex({'meta.parent.collection': 1, 'meta.parent.uploadType': 1, 'meta.parent.elementId': 1, type: 1})
+}

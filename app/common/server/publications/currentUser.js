@@ -10,7 +10,7 @@ Meteor.publish('currentUserDetails', function () {
           'status': 0
         }
       }),
-      Uploads.collection.find({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': this.userId})
+      Uploads.collection.find({'meta.parent.collection': 'user', 'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': this.userId})
     ]
   }
   return []

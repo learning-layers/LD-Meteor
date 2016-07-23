@@ -21,7 +21,7 @@ import CreateDocumentModal from '../../../../packages/document/client/ui/CreateD
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
-  const userAvatar = Uploads.collection.findOne({'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()})
+  const userAvatar = Uploads.collection.findOne({'meta.parent.collection': 'user', 'meta.parent.uploadType': 'avatar', 'meta.parent.elementId': Meteor.userId()})
   let userAvatarPath
   if (userAvatar) {
     userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension

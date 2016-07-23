@@ -29,7 +29,7 @@ fileUpload.interceptors.push({
   collection: 'user',
   uploadType: 'avatar',
   allowedExtensions: ['png', 'jpg', 'jpeg'],
-  allowedSize: 100000 * 10 * 400, // 400 MB
+  allowedSize: 100000 * 10 * 10, // 10 MB
   onBeforeUpload: function (file) {
     var allowedExt = this.allowedExtensions
     var allowedMaxSize = this.allowedSize
