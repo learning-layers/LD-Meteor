@@ -13,7 +13,8 @@
   border-radius: 4px;
   margin: auto;
   margin-bottom: 20px;
-  width: 100%;
+  width: 90%;
+  width: calc(100% - 28px);
   height: 30%;
 }
 .infinite-list-item {

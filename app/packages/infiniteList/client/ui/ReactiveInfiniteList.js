@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import Infinite from 'react-infinite'
+// import Infinite from 'react-infinite'
+import InfiniteAnyHeight from './InfiniteAnyHeight'
 import { Meteor } from 'meteor/meteor'
 import { InfiniteScrollItems } from '../../lib/collections'
 import {composeWithTracker} from 'react-komposer'
@@ -48,7 +49,7 @@ let buildElements = function (items, expandedItems) {
   return elements
 }
 
-let buildElementHeights = function (items, expandedItems) {
+/* let buildElementHeights = function (items, expandedItems) {
   var elementHeights = []
   items.forEach(function (item) {
     if (expandedItems.indexOf(item.name) !== -1) {
@@ -58,7 +59,7 @@ let buildElementHeights = function (items, expandedItems) {
     }
   })
   return elementHeights
-}
+}*/
 
 class ReactiveInfiniteList extends Component {
   constructor (props) {
@@ -71,7 +72,7 @@ class ReactiveInfiniteList extends Component {
       isInfiniteLoading: false,
       gotDimenstions: false,
       offsetHeight: -1,
-      expandedItems: [200]
+      expandedItems: [100, 200, 300, 400, 500]
     }
   }
   componentDidMount () {
@@ -114,17 +115,18 @@ class ReactiveInfiniteList extends Component {
     </div>
   }
   render () {
+    // elementHeight={buildElementHeights(this.props.elements, this.state.expandedItems)}
     return (
       <div className='infinite-example' ref='wrapper'>
-        {this.state.gotDimenstions ? <Infinite elementHeight={buildElementHeights(this.props.elements, this.state.expandedItems)}
+        {this.state.gotDimenstions ? <InfiniteAnyHeight
           containerHeight={this.state.offsetHeight}
-          infiniteLoadingBeginBottomOffset={200}
           onInfiniteLoad={() => this.handleInfiniteLoad()}
           loadingSpinnerDelegate={this.elementInfiniteLoad()}
           isInfiniteLoading={this.state.isInfiniteLoading}
-          infiniteLoadBeginEdgeOffset={20}>
-          {buildElements(this.props.elements, this.state.expandedItems)}
-        </Infinite> : this.elementInfiniteLoad()}
+          scrollContainer={this}
+          infiniteLoadingBeginBottomOffset={200}
+          infiniteLoadBeginEdgeOffset={20}
+          list={buildElements(this.props.elements, this.state.expandedItems)} /> : this.elementInfiniteLoad()}
       </div>
     )
   }

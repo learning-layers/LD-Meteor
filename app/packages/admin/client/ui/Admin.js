@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import ReactiveInfiniteList from '../../../infiniteList/client/ui/ReactiveInfiniteList'
-import GridFSFileUpload from '../../../gridfsFileUpload/client/ui/GridFSFileUpload'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -19,7 +18,6 @@ class Admin extends Component {
           <li><a href='/logging'>Logging</a></li>
         </ul>
         <ReactiveInfiniteList />
-        <GridFSFileUpload collection='user' elementId='xXXFztWFrTkTeMHpk' uploadType='avatar' />
       </div>
     )
   }
