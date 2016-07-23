@@ -10,7 +10,7 @@ import { Uploads } from '../../../../../fileUpload/lib/collections'
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('documentAttachments', {documentId: props.documentId})
   if (handle.ready()) {
-    let fileAttachments = Uploads.collection.find({'meta.parent.collection': 'document', 'meta.parent.uploadType': 'attachment', 'meta.parent.elementId': props.documentId, type: 'application/x-deb'}).fetch()
+    let fileAttachments = Uploads.collection.find({'meta.parent.collection': 'document', 'meta.parent.uploadType': 'attachment', 'meta.parent.elementId': props.documentId}).fetch()
     onData(null, {fileAttachments})
   }
 }

@@ -69,7 +69,7 @@ describe('document/DocumentDisplay default', function () {
         }
       } else {
         clearInterval(interval)
-        done(new Error('login unsuccessful'))
+        done(new Error('login failed'))
       }
     }, 200)
   })
