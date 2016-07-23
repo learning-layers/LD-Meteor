@@ -14,3 +14,46 @@
 .infinite-list-item-chat {
   height: 51px;
 }
+
+.div-table-header {
+  display: block;
+  clear: both;
+  font-weight: bold;
+  .div-table-col {
+    border-bottom: 2px;
+    &.last {
+      border-right: 0;
+    }
+  }
+}
+
+.div-table-row {
+  display: block;
+  width: 100%;
+  clear: both;
+  border: 0;
+}
+
+.infinite-example {
+  .div-table-row {
+    &:nth-of-type(odd) {
+      background-color: #f9f9f9;
+    }
+    .div-table-col.last {
+      border-right: 0;
+    }
+  }
+}
+
+.div-table-col {
+  float: left;
+  display: inline-block;
+  padding: 7px;
+  text-align: left;
+  height: 100%;
+  transition: all 0.2s;
+  border: 1px solid #ddd;
+  padding: 8px;
+  line-height: 1.42857;
+  vertical-align: top;
+}

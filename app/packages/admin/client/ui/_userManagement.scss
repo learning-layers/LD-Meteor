@@ -10,12 +10,19 @@
 
 .infinite-example {
   border: 1px solid #ddd;
-  border-radius: 4px;
   margin: auto;
   margin-bottom: 20px;
   width: 90%;
   width: calc(100% - 28px);
   height: 30%;
+}
+.infinite-example-header {
+  border: 1px solid #ddd;
+  margin: auto;
+  margin-bottom: 0;
+  margin-top: 0;
+  width: 90%;
+  width: calc(100% - 28px);
 }
 .infinite-list-item {
   text-align: center;

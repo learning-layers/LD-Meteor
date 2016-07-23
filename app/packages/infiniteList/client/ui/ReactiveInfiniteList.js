@@ -24,8 +24,14 @@ function onPropsChange (props, onData) {
 class ListItem extends Component {
   render () {
     let listItemClasses = classNames({'infinite-list-item': true, expanded: this.props.expanded})
-    return <div className={listItemClasses}>
-      List Item {this.props.name} - {this.props.count}
+    const { colWidth } = this.props
+    return <div ref='listItem' className={'div-table-row ' + listItemClasses}>
+      <div className='div-table-col' style={{width: colWidth + 'px'}}>
+        List Item {this.props.name}
+      </div>
+      <div className='div-table-col last' style={{width: colWidth + 'px'}}>
+        {this.props.count}
+      </div>
     </div>
   }
 }
@@ -33,16 +39,17 @@ class ListItem extends Component {
 ListItem.propTypes = {
   expanded: React.PropTypes.bool,
   name: React.PropTypes.string,
-  count: React.PropTypes.number
+  count: React.PropTypes.number,
+  colWidth: React.PropTypes.number
 }
 
-let buildElements = function (items, expandedItems) {
+let buildElements = function (items, expandedItems, colWidth) {
   var elements = []
   items.forEach(function (item) {
     if (expandedItems.indexOf(item.name) !== -1) {
-      elements.push(<ListItem key={'list-item-' + item._id} count={item._id} name={item.name} expanded />)
+      elements.push(<ListItem key={'list-item-' + item._id} count={item._id} name={item.name} colWidth={colWidth} expanded />)
     } else {
-      elements.push(<ListItem key={'list-item-' + item._id} count={item._id} name={item.name} expanded={false} />)
+      elements.push(<ListItem key={'list-item-' + item._id} count={item._id} name={item.name} colWidth={colWidth} expanded={false} />)
     }
   })
   return elements
@@ -71,6 +78,7 @@ class ReactiveInfiniteList extends Component {
       isInfiniteLoading: false,
       gotDimenstions: false,
       offsetHeight: -1,
+      offsetWidth: -1,
       expandedItems: [100, 200, 300, 400, 500]
     }
   }
@@ -79,7 +87,8 @@ class ReactiveInfiniteList extends Component {
     let element = ReactDOM.findDOMNode(this.refs.wrapper)
     this.setState({
       gotDimenstions: true,
-      offsetHeight: element.offsetHeight
+      offsetHeight: element.offsetHeight,
+      offsetWidth: element.offsetWidth
     })
   }
   componentWillUnmount () {
@@ -87,7 +96,7 @@ class ReactiveInfiniteList extends Component {
   }
   handleResize (e) {
     let element = ReactDOM.findDOMNode(this.refs.wrapper)
-    this.setState({offsetHeight: element.offsetHeight})
+    this.setState({offsetHeight: element.offsetHeight, offsetWidth: element.offsetWidth})
   }
   handleInfiniteLoad () {
     this.setState({
@@ -114,19 +123,33 @@ class ReactiveInfiniteList extends Component {
     </div>
   }
   render () {
+    let offsetWidth = this.state.offsetWidth
+    let colWidth = 200
+    if (offsetWidth > 0) {
+      let numberOfCols = 2
+      let offsetWidth = this.state.offsetWidth - 25
+      colWidth = offsetWidth / numberOfCols
+    }
     return (
-      <div className='infinite-example' ref='wrapper'>
-        {this.state.gotDimenstions ? <Infinite
-          elementHeight={buildElementHeights(this.props.elements, this.state.expandedItems)}
-          containerHeight={this.state.offsetHeight}
-          onInfiniteLoad={() => this.handleInfiniteLoad()}
-          loadingSpinnerDelegate={this.elementInfiniteLoad()}
-          isInfiniteLoading={this.state.isInfiniteLoading}
-          scrollContainer={this}
-          infiniteLoadingBeginBottomOffset={200}
-          infiniteLoadBeginEdgeOffset={20}>
-          {buildElements(this.props.elements, this.state.expandedItems)}
-        </Infinite> : this.elementInfiniteLoad()}
+      <div>
+        <div className='infinite-example-header div-table-header'>
+          <div className='div-table-col' style={{width: colWidth + 'px'}}>Name</div>
+          <div className='div-table-col last' style={{width: colWidth + 'px'}}>Id</div>
+          <div className='clearfix'></div>
+        </div>
+        <div className='div-table infinite-example' ref='wrapper'>
+          {this.state.gotDimenstions ? <Infinite
+            elementHeight={buildElementHeights(this.props.elements, this.state.expandedItems)}
+            containerHeight={this.state.offsetHeight}
+            onInfiniteLoad={() => this.handleInfiniteLoad()}
+            loadingSpinnerDelegate={this.elementInfiniteLoad()}
+            isInfiniteLoading={this.state.isInfiniteLoading}
+            scrollContainer={this}
+            infiniteLoadingBeginBottomOffset={200}
+            infiniteLoadBeginEdgeOffset={20}>
+            {buildElements(this.props.elements, this.state.expandedItems, colWidth)}
+          </Infinite> : this.elementInfiniteLoad()}
+        </div>
       </div>
     )
   }
