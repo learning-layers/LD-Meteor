@@ -15,7 +15,7 @@ Session.setDefault(subsSessionLimitName, initialLimit)
 function onPropsChange (props, onData) {
   let handle = InfiniteScrollItemsSubs.subscribe(subsName, {limit: initialLimit})
   if (handle.ready()) {
-    let items = InfiniteScrollItems.find({}, { limit: Session.get(subsSessionLimitName) }).fetch()
+    let items = InfiniteScrollItems.find({}, { sort: {name: 1}, limit: Session.get(subsSessionLimitName) }).fetch()
     console.log(items.length)
     onData(null, {items})
   }
@@ -31,7 +31,7 @@ class ListItem extends Component {
         List Item {item.name}
       </div>
       <div className='div-table-col last' style={{width: colWidth + 'px'}}>
-        {item.count}
+        {item._id}
       </div>
     </div>
   }

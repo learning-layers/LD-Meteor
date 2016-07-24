@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import { check } from 'meteor/check'
 import { ServerArgs } from './collections'
 
 Meteor.methods({
@@ -27,6 +28,17 @@ Meteor.methods({
       } else {
         ServerArgs.insert({'itemId': itemId, createdBy: this.userId, args: args})
       }
+      return true
+    }
+    return false
+  },
+  setArgsReactiveDocumentList: function (args) {
+    check(args, {
+      limit: Number
+    })
+    if (this.userId && Meteor.isServer) {
+      let itemId = 'reactiveDocumentList'
+      ServerArgs.upsert({'itemId': itemId, createdBy: this.userId}, {'itemId': itemId, createdBy: this.userId, args: args})
       return true
     }
     return false

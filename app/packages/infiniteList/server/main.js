@@ -59,34 +59,34 @@ Meteor.publish('reactiveInfiniteItems2', function (initialArgs) {
   check(initialArgs, {
     limit: Number
   })
-  initialArgs.itemId = 'reactiveInfiniteItems2'
+  let itemId = 'reactiveInfiniteItems2'
   if (this.userId) {
-    let serverItemArgs = ServerArgs.findOne({'itemId': initialArgs.itemId, createdBy: this.userId})
+    let serverItemArgs = ServerArgs.findOne({'itemId': itemId, createdBy: this.userId})
     if (serverItemArgs) {
-      console.log('updating serverargs for itemId \'' + initialArgs.itemId + '\'')
-      ServerArgs.update({'_id': serverItemArgs._id}, {'itemId': initialArgs.itemId, args: initialArgs})
+      console.log('updating serverargs for itemId \'' + itemId + '\'')
+      ServerArgs.update({'_id': serverItemArgs._id}, {'itemId': itemId, args: initialArgs})
     } else {
-      console.log('inserting serverargs for itemId \'' + initialArgs.itemId + '\'')
-      ServerArgs.insert({'itemId': initialArgs.itemId, createdBy: this.userId, args: initialArgs})
+      console.log('inserting serverargs for itemId \'' + itemId + '\'')
+      ServerArgs.insert({'itemId': itemId, createdBy: this.userId, args: initialArgs})
     }
     this.autorun(function () {
-      let serverArgs = ServerArgs.findOne({'itemId': initialArgs.itemId, createdBy: this.userId})
+      let serverArgs = ServerArgs.findOne({'itemId': itemId, createdBy: this.userId})
       if (serverArgs) {
         console.log(serverArgs)
         console.log('serverArgs - sending ' + serverArgs.args.limit + ' items to the client')
         return [
-          InfiniteScrollItems.find({}, { limit: serverArgs.args.limit })
+          InfiniteScrollItems.find({}, { sort: {name: 1}, limit: serverArgs.args.limit })
         ]
       } else {
-        console.log('serverargs for itemId \'' + initialArgs.itemId + '\' not present')
+        console.log('serverargs for itemId \'' + itemId + '\' not present')
         console.log('initialArgs - sending ' + initialArgs.limit + ' items to the client')
         return [
-          InfiniteScrollItems.find({}, { limit: initialArgs.limit })
+          InfiniteScrollItems.find({}, { sort: {name: 1}, limit: initialArgs.limit })
         ]
       }
     })
     this.onStop(() => {
-      ServerArgs.remove({'itemId': initialArgs.itemId, createdBy: this.userId})
+      ServerArgs.remove({'itemId': itemId, createdBy: this.userId})
     })
   }
 })

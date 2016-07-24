@@ -12,6 +12,7 @@
   "main": "app/common/lib/main.js",
   "scripts": {
     "dev": "meteor --settings settings-dev.json",
+    "debug": "meteor debug --settings settings-dev.json",
     "prod": "meteor run --production --settings settings-dev.json",
     "test": "meteor test --settings settings-dev.json --driver-package practicalmeteor:mocha --port 3100",
     "testall": "meteor test --settings settings-dev.json --full-app --driver-package practicalmeteor:mocha --port 3101",

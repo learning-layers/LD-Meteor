@@ -1,19 +1,47 @@
 import React, { Component } from 'react'
-// import ReactiveInfiniteList from '../../../infiniteList/client/ui/ReactiveInfiniteList'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
-import { Documents } from '../../lib/collections'
-import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
+import { Session } from 'meteor/session'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import Loader from 'react-loader'
+import { SubsManager } from 'meteor/meteorhacks:subs-manager'
+import { Documents } from '../../lib/collections'
+import ReactiveInfiniteList from '../../../infiniteList/client/ui/GeneralReactiveInfiniteList'
+
+let DocumentListSubs = new SubsManager()
+let initialLimit = 20
+let subsSessionLimitName = 'documentListSubsInitialLimit'
+let subsName = 'reactiveDocumentList'
+Session.setDefault(subsSessionLimitName, initialLimit)
 
 function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('documentList')
+  let handle = DocumentListSubs.subscribe(subsName, {limit: initialLimit})
   if (handle.ready()) {
-    let documents = Documents.find({}).fetch()
+    let documents = Documents.find({}, { sort: {name: 1}, limit: Session.get(subsSessionLimitName) }).fetch()
+    console.log(documents.length)
     onData(null, {documents})
   }
+  return () => { Session.set(subsSessionLimitName, 20) }
+}
+
+class ListItem extends Component {
+  render () {
+    const { colWidth, item } = this.props
+    const document = item
+    return <div ref='listItem' className='div-table-row '>
+      <div className='div-table-col' style={{width: colWidth + 'px'}}>
+        List Item {document._id}
+      </div>
+      <div className='div-table-col last' style={{width: colWidth + 'px'}}>
+        {document.title}
+      </div>
+    </div>
+  }
+}
+
+ListItem.propTypes = {
+  item: React.PropTypes.object,
+  colWidth: React.PropTypes.number
 }
 
 class DocumentList extends Component {
@@ -31,38 +59,13 @@ class DocumentList extends Component {
   }
   render () {
     const { documents } = this.props
-    const ownUserId = Meteor.userId()
+    // const ownUserId = Meteor.userId()
     return <div className='document-list container-fluid'>
-      <div className='table-responsive'>
-        <table className='table table-striped table-bordered table-hover'>
-          <thead>
-            <tr>
-              <th>Document title</th>
-              <th>Author</th>
-              <th>Last update</th>
-              <th>Options</th>
-            </tr>
-          </thead>
-          <tbody>
-            {documents.map((document) => {
-              const user = Meteor.users.findOne(document.createdBy)
-              const isOwnUser = document.createdBy === ownUserId
-              return <tr key={'dli-' + document._id} className='document-list-item'>
-                <td onClick={() => this.openDocument(document._id)}>{document.title}</td>
-                <td onClick={() => this.openDocument(document._id)}>{user.profile.name}</td>
-                <td onClick={() => this.openDocument(document._id)}>{document.modifiedAt}</td>
-                <td>
-                  <ButtonToolbar className='options-buttons'>
-                    {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteDocument(document._id)}>
-                      <span className='glyphicon glyphicon-trash' />
-                    </Button> : null}
-                  </ButtonToolbar>
-                </td>
-              </tr>
-            })}
-          </tbody>
-        </table>
-      </div>
+      <ReactiveInfiniteList
+        items={documents}
+        ListItemComponent={ListItem}
+        subsName={subsName}
+        subsLimitSessionVarName={subsSessionLimitName} />
     </div>
   }
 }
@@ -70,8 +73,6 @@ class DocumentList extends Component {
 DocumentList.propTypes = {
   documents: React.PropTypes.array
 }
-
-// <ReactiveInfiniteList />
 
 const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
 export default composeWithTracker(onPropsChange, Loading)(DocumentList)
