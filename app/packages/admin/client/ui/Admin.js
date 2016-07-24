@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
-import ReactiveInfiniteList from '../../../infiniteList/client/ui/ReactiveInfiniteList'
+import ReactiveInfiniteList from '../../../infiniteList/client/ui/GeneralReactiveInfiniteListTestWrapper'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
