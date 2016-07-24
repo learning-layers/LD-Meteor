@@ -6,7 +6,10 @@ import { composeWithTracker } from 'react-komposer'
 import ReactiveInfiniteList from './GeneralReactiveInfiniteList'
 import { InfiniteScrollItems } from '../../lib/collections'
 
-let InfiniteScrollItemsSubs = new SubsManager()
+let InfiniteScrollItemsSubs = new SubsManager({
+  cacheLimit: 2,
+  expireIn: 1
+})
 let initialLimit = 20
 let subsSessionLimitName = 'infiniteItemsSubsInitialLimit'
 let subsName = 'reactiveInfiniteItems2'

@@ -5,12 +5,17 @@ import { Session } from 'meteor/session'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import Loader from 'react-loader'
 import { SubsManager } from 'meteor/meteorhacks:subs-manager'
+import classNames from 'classnames'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { Documents } from '../../lib/collections'
 import ReactiveInfiniteList from '../../../infiniteList/client/ui/GeneralReactiveInfiniteList'
 
-let DocumentListSubs = new SubsManager()
+let DocumentListSubs = new SubsManager({
+  cacheLimit: 2,
+  expireIn: 1
+})
+
 let initialLimit = 20
 let subsSessionLimitName = 'documentListSubsInitialLimit'
 let subsName = 'reactiveDocumentList'
@@ -20,10 +25,12 @@ function onPropsChange (props, onData) {
   let handle = DocumentListSubs.subscribe(subsName, {limit: initialLimit})
   if (handle.ready()) {
     let documents = Documents.find({}, { sort: {name: 1}, limit: Session.get(subsSessionLimitName) }).fetch()
-    console.log(documents.length)
     onData(null, {documents})
   }
-  return () => { Session.set(subsSessionLimitName, 20) }
+  return () => {
+    Session.set(subsSessionLimitName, 20)
+    DocumentListSubs.clear()
+  }
 }
 
 class ListItem extends Component {
@@ -40,11 +47,12 @@ class ListItem extends Component {
     }
   }
   render () {
-    const { colWidth, item } = this.props
+    const { colWidth, item, expanded } = this.props
     const document = item
     const user = Meteor.users.findOne(document.createdBy)
     const isOwnUser = document.createdBy === Meteor.userId()
-    return <div ref='listItem' className='div-table-row '>
+    let documentItemClasses = classNames({'div-table-row document-list-item': true, expanded: expanded})
+    return <div ref='listItem' className={documentItemClasses}>
       <div className='div-table-col' style={{width: colWidth + 'px'}} onClick={() => this.openDocument(document._id)}>
         {document.title}
       </div>
@@ -67,16 +75,26 @@ class ListItem extends Component {
 }
 
 ListItem.propTypes = {
+  expanded: React.PropTypes.bool,
   item: React.PropTypes.object,
   colWidth: React.PropTypes.number
 }
 
 class DocumentList extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      expandedItems: []
+    }
+  }
   render () {
     const { documents } = this.props
-    // const ownUserId = Meteor.userId()
+    const expandedItems = this.state.expandedItems
     return <div className='document-list container-fluid'>
       <ReactiveInfiniteList
+        normalHeight={46}
+        expandedHeight={100}
+        expandedItems={expandedItems}
         headerLabels={['Document title', 'Author', 'Last update', 'Options']}
         items={documents}
         ListItemComponent={ListItem}

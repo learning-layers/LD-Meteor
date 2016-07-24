@@ -180,9 +180,10 @@
   transform: rotate(-90deg);
 }
 
-tr.document-list-item {
+.document-list-item {
+  height: 46px;
   &:hover {
-    td {
+    .div-table-col {
       background-color: lightblue;
     }
   }

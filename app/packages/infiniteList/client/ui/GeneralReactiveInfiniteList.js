@@ -8,7 +8,7 @@ let buildElements = function (ListItemComponent, items, expandedItems, colWidth)
   var elements = []
   if (items) {
     items.forEach(function (item) {
-      if (expandedItems.indexOf(item.name) !== -1) {
+      if (expandedItems.indexOf(item._id) !== -1) {
         elements.push(<ListItemComponent key={'list-item-' + item._id} item={item} colWidth={colWidth} expanded />)
       } else {
         elements.push(<ListItemComponent key={'list-item-' + item._id} item={item} colWidth={colWidth} expanded={false} />)
@@ -18,14 +18,14 @@ let buildElements = function (ListItemComponent, items, expandedItems, colWidth)
   return elements
 }
 
-let buildElementHeights = function (items, expandedItems) {
+let buildElementHeights = function (items, expandedItems, normalHeight, expandedHeight) {
   var elementHeights = []
   if (items) {
     items.forEach(function (item) {
-      if (expandedItems.indexOf(item.name) !== -1) {
-        elementHeights.push(100)
+      if (expandedItems.indexOf(item._id) !== -1) {
+        elementHeights.push(expandedHeight)
       } else {
-        elementHeights.push(40)
+        elementHeights.push(normalHeight)
       }
     })
   }
@@ -41,8 +41,7 @@ class ReactiveInfiniteList extends Component {
       isInfiniteLoading: false,
       gotDimenstions: false,
       offsetHeight: -1,
-      offsetWidth: -1,
-      expandedItems: [100, 200, 300, 400, 500]
+      offsetWidth: -1
     }
   }
   componentDidMount () {
@@ -58,8 +57,10 @@ class ReactiveInfiniteList extends Component {
     window.removeEventListener('resize', this.handleResize.bind(this))
   }
   handleResize (e) {
-    let element = ReactDOM.findDOMNode(this.refs.wrapper)
-    this.setState({offsetHeight: element.offsetHeight, offsetWidth: element.offsetWidth})
+    if (this.refs.wrapper) {
+      let element = ReactDOM.findDOMNode(this.refs.wrapper)
+      this.setState({offsetHeight: element.offsetHeight, offsetWidth: element.offsetWidth})
+    }
   }
   handleInfiniteLoad () {
     this.setState({
@@ -90,7 +91,7 @@ class ReactiveInfiniteList extends Component {
     </div>
   }
   render () {
-    const { ListItemComponent, items, headerLabels } = this.props
+    const { ListItemComponent, items, headerLabels, expandedItems, normalHeight, expandedHeight } = this.props
     let headerLabelsLength = headerLabels.length
     let offsetWidth = this.state.offsetWidth
     let colWidth = 200
@@ -113,7 +114,7 @@ class ReactiveInfiniteList extends Component {
         </div>
         <div className='div-table infinite-example' ref='wrapper'>
           {this.state.gotDimenstions ? <Infinite
-            elementHeight={buildElementHeights(items, this.state.expandedItems)}
+            elementHeight={buildElementHeights(items, expandedItems, normalHeight, expandedHeight)}
             containerHeight={this.state.offsetHeight}
             onInfiniteLoad={() => this.handleInfiniteLoad()}
             loadingSpinnerDelegate={this.elementInfiniteLoad()}
@@ -121,7 +122,7 @@ class ReactiveInfiniteList extends Component {
             scrollContainer={this}
             infiniteLoadingBeginBottomOffset={200}
             infiniteLoadBeginEdgeOffset={20}>
-            {buildElements(ListItemComponent, items, this.state.expandedItems, colWidth)}
+            {buildElements(ListItemComponent, items, expandedItems, colWidth)}
           </Infinite> : this.elementInfiniteLoad()}
         </div>
       </div>
@@ -130,11 +131,14 @@ class ReactiveInfiniteList extends Component {
 }
 
 ReactiveInfiniteList.propTypes = {
-  items: React.PropTypes.array,
-  ListItemComponent: React.PropTypes.func,
-  subsName: React.PropTypes.string,
-  subsLimitSessionVarName: React.PropTypes.string,
-  headerLabels: React.PropTypes.array
+  normalHeight: React.PropTypes.number.isRequired,
+  expandedHeight: React.PropTypes.number.isRequired,
+  expandedItems: React.PropTypes.array.isRequired,
+  items: React.PropTypes.array.isRequired,
+  ListItemComponent: React.PropTypes.func.isRequired,
+  subsName: React.PropTypes.string.isRequired,
+  subsLimitSessionVarName: React.PropTypes.string.isRequired,
+  headerLabels: React.PropTypes.array.isRequired
 }
 
 export default ReactiveInfiniteList
