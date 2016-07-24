@@ -5,6 +5,8 @@ import { Session } from 'meteor/session'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import Loader from 'react-loader'
 import { SubsManager } from 'meteor/meteorhacks:subs-manager'
+import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
+import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { Documents } from '../../lib/collections'
 import ReactiveInfiniteList from '../../../infiniteList/client/ui/GeneralReactiveInfiniteList'
 
@@ -25,26 +27,6 @@ function onPropsChange (props, onData) {
 }
 
 class ListItem extends Component {
-  render () {
-    const { colWidth, item } = this.props
-    const document = item
-    return <div ref='listItem' className='div-table-row '>
-      <div className='div-table-col' style={{width: colWidth + 'px'}}>
-        List Item {document._id}
-      </div>
-      <div className='div-table-col last' style={{width: colWidth + 'px'}}>
-        {document.title}
-      </div>
-    </div>
-  }
-}
-
-ListItem.propTypes = {
-  item: React.PropTypes.object,
-  colWidth: React.PropTypes.number
-}
-
-class DocumentList extends Component {
   openDocument (documentId) {
     FlowRouter.go('/document/' + documentId)
   }
@@ -58,10 +40,44 @@ class DocumentList extends Component {
     }
   }
   render () {
+    const { colWidth, item } = this.props
+    const document = item
+    const user = Meteor.users.findOne(document.createdBy)
+    const isOwnUser = document.createdBy === Meteor.userId()
+    return <div ref='listItem' className='div-table-row '>
+      <div className='div-table-col' style={{width: colWidth + 'px'}} onClick={() => this.openDocument(document._id)}>
+        {document.title}
+      </div>
+      <div className='div-table-col' style={{width: colWidth + 'px'}} onClick={() => this.openDocument(document._id)}>
+        {user.profile.name}
+      </div>
+      <div className='div-table-col' style={{width: colWidth + 'px'}} onClick={() => this.openDocument(document._id)}>
+        {document.modifiedAt}{' '}
+      </div>
+      <div className='div-table-col last' style={{width: colWidth + 'px'}}>
+        <ButtonToolbar className='options-buttons'>
+          {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteDocument(document._id)}>
+            <span className='glyphicon glyphicon-trash' />
+          </Button> : null}
+          {' '}
+        </ButtonToolbar>
+      </div>
+    </div>
+  }
+}
+
+ListItem.propTypes = {
+  item: React.PropTypes.object,
+  colWidth: React.PropTypes.number
+}
+
+class DocumentList extends Component {
+  render () {
     const { documents } = this.props
     // const ownUserId = Meteor.userId()
     return <div className='document-list container-fluid'>
       <ReactiveInfiniteList
+        headerLabels={['Document title', 'Author', 'Last update', 'Options']}
         items={documents}
         ListItemComponent={ListItem}
         subsName={subsName}

@@ -48,6 +48,7 @@ class GeneralReactiveInfiniteListTestWrapper extends Component {
     const { items } = this.props
     return <div className='infinite-test-wrapper'>
       <ReactiveInfiniteList
+        headerLabels={['Count', 'Id']}
         items={items}
         ListItemComponent={ListItem}
         subsName={subsName}

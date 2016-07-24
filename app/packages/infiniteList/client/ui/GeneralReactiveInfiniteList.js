@@ -90,19 +90,25 @@ class ReactiveInfiniteList extends Component {
     </div>
   }
   render () {
-    const { ListItemComponent, items } = this.props
+    const { ListItemComponent, items, headerLabels } = this.props
+    let headerLabelsLength = headerLabels.length
     let offsetWidth = this.state.offsetWidth
     let colWidth = 200
     if (offsetWidth > 0) {
-      let numberOfCols = 2
+      let numberOfCols = headerLabelsLength
       let offsetWidth = this.state.offsetWidth - 25
       colWidth = offsetWidth / numberOfCols
     }
     return (
       <div>
         <div className='infinite-example-header div-table-header'>
-          <div className='div-table-col' style={{width: colWidth + 'px'}}>Name</div>
-          <div className='div-table-col last' style={{width: colWidth + 'px'}}>Id</div>
+          {headerLabels.map(function (headerLabel, i) {
+            if (i + 1 === headerLabelsLength) {
+              return <div className='div-table-col last' style={{width: colWidth + 'px'}}>{headerLabel}</div>
+            } else {
+              return <div className='div-table-col' style={{width: colWidth + 'px'}}>{headerLabel}</div>
+            }
+          })}
           <div className='clearfix'></div>
         </div>
         <div className='div-table infinite-example' ref='wrapper'>
@@ -127,7 +133,8 @@ ReactiveInfiniteList.propTypes = {
   items: React.PropTypes.array,
   ListItemComponent: React.PropTypes.func,
   subsName: React.PropTypes.string,
-  subsLimitSessionVarName: React.PropTypes.string
+  subsLimitSessionVarName: React.PropTypes.string,
+  headerLabels: React.PropTypes.array
 }
 
 export default ReactiveInfiniteList
