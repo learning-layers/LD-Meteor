@@ -69,7 +69,7 @@ class ReactiveInfiniteList extends Component {
     setTimeout(() => {
       if (this.props.items) {
         let itemsLength = this.props.items.length
-        Session.set(this.props.subsLimitSessionVarName, itemsLength + 100)
+        // Session.set(this.props.subsLimitSessionVarName, itemsLength + 100)
         let subsName = this.props.subsName.substring(0, 1).toUpperCase() + this.props.subsName.substring(1, this.props.subsName.length)
         let argsObj = {limit: itemsLength + 100}
         argsObj.additionalMethodArgs = this.props.additionalMethodArgs

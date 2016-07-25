@@ -15,10 +15,12 @@ let subsSessionLimitName = 'infiniteItemsSubsInitialLimit'
 let subsName = 'reactiveInfiniteItems2'
 Session.setDefault(subsSessionLimitName, initialLimit)
 
+// TODO remove session variables to prevent rerendering, but update the limit
+
 function onPropsChange (props, onData) {
   let handle = InfiniteScrollItemsSubs.subscribe(subsName, {limit: initialLimit})
   if (handle.ready()) {
-    let items = InfiniteScrollItems.find({}, { sort: {name: 1}, limit: Session.get(subsSessionLimitName) }).fetch()
+    let items = InfiniteScrollItems.find({}, { sort: {name: 1} }).fetch()
     console.log(items.length)
     onData(null, {items})
   }
@@ -51,6 +53,11 @@ class GeneralReactiveInfiniteListTestWrapper extends Component {
     const { items } = this.props
     return <div className='infinite-test-wrapper'>
       <ReactiveInfiniteList
+        additionalMethodArgs={[
+        ]}
+        normalHeight={40}
+        expandedHeight={100}
+        expandedItems={[]}
         headerLabels={['Count', 'Id']}
         items={items}
         ListItemComponent={ListItem}
