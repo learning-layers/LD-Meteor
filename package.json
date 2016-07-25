@@ -43,12 +43,12 @@
     "gridfs-stream": "^1.1.1",
     "hopscotch": "^0.2.6",
     "indexof": "^0.0.1",
-    "lodash": "^4.13.1",
+    "lodash": "^4.14.0",
     "meteor-node-stubs": "^0.2.3",
-    "mobx": "^2.3.7",
+    "mobx": "^2.4.0",
     "node-uuid": "^1.4.7",
     "radium": "^0.18.1",
-    "rc-slider": "^3.7.4",
+    "rc-slider": "^3.8.1",
     "react": "^15.2.1",
     "react-addons-css-transition-group": "^15.2.1",
     "react-addons-shallow-compare": "^15.2.1",
@@ -64,7 +64,7 @@
     "react-rating": "^0.4.0",
     "react-s-alert": "^1.1.4",
     "react-selectize": "^2.0.3",
-    "react-sidebar": "^2.1.4"
+    "react-sidebar": "^2.2.1"
   },
   "devDependencies": {
     "babel-plugin-react-transform": "^2.0.2",

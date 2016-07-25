@@ -52,7 +52,7 @@ facebook@1.2.8
 fastclick@1.0.12
 fortawesome:fontawesome@4.5.0
 fourseven:scss@3.8.0_1
-francocatena:status@1.5.1
+francocatena:status@1.5.3
 geojson-utils@1.0.9
 google@1.1.13
 hot-code-push@1.0.4
@@ -81,7 +81,7 @@ less@2.6.5
 livedata@1.0.18
 localstorage@1.0.11
 logging@1.0.14
-matb33:collection-hooks@0.8.1
+matb33:collection-hooks@0.8.3
 mdg:validation-error@0.5.1
 meteor@1.1.16
 meteor-base@1.0.4
