@@ -33,9 +33,16 @@ Meteor.methods({
     return false
   },
   setArgsReactiveDocumentList: function (args) {
-    check(args, {
-      limit: Number
-    })
+    check(args.limit, Number)
+    if (args.additionalMethodArgs) {
+      check(args.additionalMethodArgs, Array)
+      if (!args.searchTerm) {
+        args.searchTerm = args.additionalMethodArgs[0]
+        check(args.searchTerm, String)
+      }
+      delete args.additionalMethodArgs
+    }
+    console.log(args)
     if (this.userId && Meteor.isServer) {
       let itemId = 'reactiveDocumentList'
       ServerArgs.upsert({'itemId': itemId, createdBy: this.userId}, {'itemId': itemId, createdBy: this.userId, args: args})

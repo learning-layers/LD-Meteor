@@ -37,38 +37,80 @@ let getDocumentPublishersForUser = function (args) {
 
   // retrieve all documents where the user is either the owner or
   // he has access via the documentAccessObject
-  const documents = Documents.find({ $or: [ { createdBy: this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] }, { sort: {createdBy: -1}, limit: args.limit, createdBy: 1 }).fetch()
-
-  let userList = []
-  documents.forEach(function (document) {
-    userList.push(document.createdBy)
-  })
-  return [
-    Meteor.users.find({ '_id': { $in: userList } }), // fetches all users that are owners of the documents
-    // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
-    Documents.find({ $or: [ { 'createdBy': this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] })
-  ]
+  let documents
+  if (!args.searchTerm || args.searchTerm === '') {
+    documents = Documents.find({ $or: [ { createdBy: this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] }, { sort: {createdBy: -1}, limit: args.limit, createdBy: 1 }).fetch()
+    let userList = []
+    documents.forEach(function (document) {
+      userList.push(document.createdBy)
+    })
+    return [
+      Meteor.users.find({ '_id': { $in: userList } }), // fetches all users that are owners of the documents
+      // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
+      Documents.find({ $or: [ { 'createdBy': this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] })
+    ]
+  } else {
+    console.log('searchTerm=', args.searchTerm)
+    documents = Documents.find({
+      $and: [
+        {$or: [
+            {createdBy: this.userId},
+            {'_id': {$in: documentAccessDocumentIds}}
+        ]},
+        {$text: { $search: args.searchTerm, $language: args.language }}
+      ]
+    }, { sort: {createdBy: -1}, limit: args.limit, createdBy: 1 }).fetch()
+    let userList = []
+    documents.forEach(function (document) {
+      userList.push(document.createdBy)
+    })
+    return [
+      Meteor.users.find({ '_id': { $in: userList } }), // fetches all users that are owners of the documents
+      // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
+      Documents.find({
+        $and: [
+          {$or: [
+            {'createdBy': this.userId},
+            {'_id': {$in: documentAccessDocumentIds}}
+          ]},
+          {$text: { $search: args.searchTerm, $language: args.language }}
+        ]
+      })
+    ]
+  }
 }
 
 Meteor.publish('reactiveDocumentList', function (initialArgs) {
-  check(initialArgs, {
-    limit: Number
-  })
+  check(initialArgs.limit, Number)
   let itemId = 'reactiveDocumentList'
   if (this.userId) {
     ServerArgs.upsert({'itemId': itemId, createdBy: this.userId}, {'itemId': itemId, createdBy: this.userId, args: initialArgs})
     this.autorun(function () {
       let serverArgs = ServerArgs.findOne({'itemId': itemId, createdBy: this.userId})
       if (serverArgs) {
+        if (!serverArgs.args.language) {
+          serverArgs.args.language = 'en'
+        }
         // use server args
-        return getDocumentPublishersForUser.call(this, {limit: serverArgs.args.limit})
+        return getDocumentPublishersForUser.call(this, {
+          language: serverArgs.args.language,
+          searchTerm: serverArgs.args.searchTerm,
+          limit: serverArgs.args.limit
+        })
       } else {
+        if (!initialArgs.language) {
+          initialArgs.language = 'en'
+        }
         // use initial args, server args not yet accessible
-        return getDocumentPublishersForUser.call(this, {limit: initialArgs.limit})
+        return getDocumentPublishersForUser.call(this, {
+          language: initialArgs.language,
+          searchTerm: initialArgs.searchTerm,
+          limit: initialArgs.limit
+        })
       }
     })
     this.onStop(() => {
-      ServerArgs.remove({'itemId': itemId, createdBy: this.userId})
+      // ServerArgs.remove({'itemId': itemId, createdBy: this.userId})
     })
   }
 })

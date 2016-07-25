@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
@@ -6,6 +7,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import Loader from 'react-loader'
 import { SubsManager } from 'meteor/meteorhacks:subs-manager'
 import classNames from 'classnames'
+import debounce from 'lodash/debounce'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { Documents } from '../../lib/collections'
@@ -17,18 +19,23 @@ let DocumentListSubs = new SubsManager({
 })
 
 let initialLimit = 20
-let subsSessionLimitName = 'documentListSubsInitialLimit'
-let subsName = 'reactiveDocumentList'
+const subsSessionLimitName = 'documentListSubsInitialLimit'
+const subsName = 'reactiveDocumentList'
 Session.setDefault(subsSessionLimitName, initialLimit)
+Session.setDefault('documentListSearchTerm', '')
+let documentListSearchTermObj = {
+  searchTerm: ''
+}
 
 function onPropsChange (props, onData) {
-  let handle = DocumentListSubs.subscribe(subsName, {limit: initialLimit})
+  let handle = DocumentListSubs.subscribe(subsName, {searchTerm: documentListSearchTermObj.searchTerm, limit: initialLimit})
   if (handle.ready()) {
     let documents = Documents.find({}, { sort: {name: 1}, limit: Session.get(subsSessionLimitName) }).fetch()
     onData(null, {documents})
   }
   return () => {
     Session.set(subsSessionLimitName, 20)
+    Session.set('documentListSearchTerm', '')
     DocumentListSubs.clear()
   }
 }
@@ -80,6 +87,40 @@ ListItem.propTypes = {
   colWidth: React.PropTypes.number
 }
 
+class DocumentListSearchBar extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      documentListSearchTerm: documentListSearchTermObj.searchTerm
+    }
+  }
+  prepareToSearch () {}
+  componentWillMount () {
+    var startSearch = (subsNameCamelCase, argsObj) => {
+      Meteor.call('setArgs' + subsNameCamelCase, argsObj)
+    }
+    // wait until the user starts typing, and then stops
+    this.prepareToSearch = debounce(startSearch, 230, {
+      'maxWait': 350
+    })
+  }
+  handleSearchInputChange (event, subsName) {
+    let searchString = ReactDOM.findDOMNode(event.target).value
+    // Session.set('documentListSearchTerm', searchString)
+    documentListSearchTermObj.searchTerm = searchString
+    let subsNameCamelCase = subsName.substring(0, 1).toUpperCase() + subsName.substring(1, subsName.length)
+    let argsObj = {limit: Session.get(subsSessionLimitName)}
+    argsObj.searchTerm = searchString
+    this.setState({documentListSearchTerm: searchString})
+    this.prepareToSearch(subsNameCamelCase, argsObj)
+  }
+  render () {
+    return <input type='text'
+      onChange={(event) => this.handleSearchInputChange(event, subsName)}
+      placeholder='Find...' value={this.state.documentListSearchTerm} />
+  }
+}
+
 class DocumentList extends Component {
   constructor (props) {
     super(props)
@@ -91,7 +132,11 @@ class DocumentList extends Component {
     const { documents } = this.props
     const expandedItems = this.state.expandedItems
     return <div className='document-list container-fluid'>
+      <DocumentListSearchBar />
       <ReactiveInfiniteList
+        additionalMethodArgs={[
+          documentListSearchTermObj.searchTerm
+        ]}
         normalHeight={46}
         expandedHeight={100}
         expandedItems={expandedItems}

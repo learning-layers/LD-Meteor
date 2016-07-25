@@ -71,7 +71,9 @@ class ReactiveInfiniteList extends Component {
         let itemsLength = this.props.items.length
         Session.set(this.props.subsLimitSessionVarName, itemsLength + 100)
         let subsName = this.props.subsName.substring(0, 1).toUpperCase() + this.props.subsName.substring(1, this.props.subsName.length)
-        Meteor.call('setArgs' + subsName, {limit: itemsLength + 100}, (err, res) => {
+        let argsObj = {limit: itemsLength + 100}
+        argsObj.additionalMethodArgs = this.props.additionalMethodArgs
+        Meteor.call('setArgs' + subsName, argsObj, (err, res) => {
           // TODO check error cases here
           if (err) {
             //
@@ -131,6 +133,7 @@ class ReactiveInfiniteList extends Component {
 }
 
 ReactiveInfiniteList.propTypes = {
+  additionalMethodArgs: React.PropTypes.array,
   normalHeight: React.PropTypes.number.isRequired,
   expandedHeight: React.PropTypes.number.isRequired,
   expandedItems: React.PropTypes.array.isRequired,

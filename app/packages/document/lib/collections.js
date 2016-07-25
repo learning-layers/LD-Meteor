@@ -6,6 +6,7 @@ export const Documents = new Mongo.Collection('Documents')
 Documents.attachSchema(DocumentSchema)
 if (Meteor.isServer) {
   Documents._ensureIndex({ createdBy: 1 })
+  Documents._ensureIndex({ title: 'text' }, {'weights': { title: 10 }, name: 'DocumentTextIndex'})
 }
 global['Documents'] = Documents
 
