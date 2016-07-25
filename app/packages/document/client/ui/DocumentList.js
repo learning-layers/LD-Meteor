@@ -42,6 +42,25 @@ function onPropsChange (props, onData) {
   }
 }
 
+let highlightText = function (sectionToHighlight, text) {
+  if (sectionToHighlight !== '') {
+    let splittedText = text.split(sectionToHighlight)
+    let count = 0
+    return <span>
+      {splittedText.map(function (textPart) {
+        if (count === 0) {
+          count++
+          return <span>{textPart}</span>
+        } else {
+          return <span><span className='highlighted'>{sectionToHighlight}</span>{textPart}</span>
+        }
+      })}
+    </span>
+  } else {
+    return <span>{text}</span>
+  }
+}
+
 class ListItem extends Component {
   openDocument (documentId) {
     FlowRouter.go('/document/' + documentId)
@@ -63,7 +82,7 @@ class ListItem extends Component {
     let documentItemClasses = classNames({'div-table-row document-list-item': true, expanded: expanded})
     return <div ref='listItem' className={documentItemClasses}>
       <div className='div-table-col' style={{width: colWidth + 'px'}} onClick={() => this.openDocument(document._id)}>
-        {document.title}
+        {highlightText(documentListSearchTermObj.searchTerm, document.title)}
       </div>
       <div className='div-table-col' style={{width: colWidth + 'px'}} onClick={() => this.openDocument(document._id)}>
         {user.profile.name}
@@ -118,6 +137,7 @@ class DocumentListSearchBar extends Component {
   }
   render () {
     return <input type='text'
+      style={{margin: '0 auto 14px auto', width: 'calc(100% - 28px)'}}
       onChange={(event) => this.handleSearchInputChange(event, subsName)}
       placeholder='Find...' value={this.state.documentListSearchTerm} />
   }
@@ -134,7 +154,9 @@ class DocumentList extends Component {
     const { documents } = this.props
     const expandedItems = this.state.expandedItems
     return <div className='document-list container-fluid'>
-      <DocumentListSearchBar />
+      <div style={{textAlign: 'center'}}>
+        <DocumentListSearchBar />
+      </div>
       <ReactiveInfiniteList
         additionalMethodArgs={[
           documentListSearchTermObj.searchTerm
