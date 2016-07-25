@@ -11,6 +11,74 @@ import AttachmentsBar from './mainContent/AttachmentsBar'
 import ContentViewer from './ContentViewer'
 import FileAttachmentArea from './mainContent/fileAttachments/FileAttachmentArea'
 
+class EditableDocumentTitleInput extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      editMode: false,
+      inputDisabled: false,
+      documentTitle: this.props.documentTitle
+    }
+  }
+  setNewDocumentTitle () {
+    this.setState({
+      inputDisabled: true
+    })
+    Meteor.call('changeDocumentTitle', this.props.documentId, this.state.documentTitle, (err, res) => {
+      if (err) {
+        this.setState({
+          inputDisabled: false
+        })
+      }
+      if (res) {
+        this.setEditMode(false)
+        this.setState({
+          inputDisabled: false
+        })
+      }
+    })
+  }
+  setEditMode (newEditMode) {
+    this.setState({
+      documentTitle: this.props.documentTitle,
+      editMode: newEditMode
+    })
+  }
+  handleChange (event) {
+    let changedDocumentTitle = ReactDOM.findDOMNode(event.target).value
+    this.setState({
+      documentTitle: changedDocumentTitle
+    })
+  }
+  render () {
+    const { documentTitle } = this.props
+    if (this.state.editMode) {
+      return <div className='document-title-area'>
+        <input type='text'
+          value={this.state.documentTitle}
+          style={{color: 'black'}}
+          onChange={(event) => this.handleChange(event)}
+          disabled={this.state.inputDisabled} />
+        <ButtonToolbar className='change-document-title-btns' style={{marginLeft: '7px'}}>
+          <Button className='delete-group-button' bsStyle='success' bsSize='small' onClick={() => this.setNewDocumentTitle()}>
+            <span className='glyphicon glyphicon-ok'></span>
+          </Button>
+          <Button className='delete-group-button' bsSize='small' onClick={() => this.setEditMode(false)}>
+            Cancel
+          </Button>
+        </ButtonToolbar>
+      </div>
+    } else {
+      return <h4 className='document-title' onClick={() => this.setEditMode(true)}>{documentTitle}</h4>
+    }
+  }
+}
+
+EditableDocumentTitleInput.propTypes = {
+  documentId: React.PropTypes.string,
+  documentTitle: React.PropTypes.string
+}
+
 class DocumentDisplay extends Component {
   constructor (props) {
     super(props)
@@ -126,7 +194,7 @@ class DocumentDisplay extends Component {
       </div>
       <div className='main-content panel panel-primary'>
         <div className='panel-heading'>
-          <h4 className='document-title'>{document.title}</h4>
+          <EditableDocumentTitleInput documentId={this.props.document._id} documentTitle={document.title} />
           {isViewMode ? null : <ButtonToolbar className='options-buttons'>
             <Button className='delete-group-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
               <span className='glyphicon glyphicon glyphicon-share-alt' />

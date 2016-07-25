@@ -58,7 +58,7 @@
   .document-title {
     background-color: #E8880C;
     display: inline-block;
-    padding: 10px;
+    padding: 7px;
     word-wrap: break-word;
     margin-left: calc(4.000rem - 15px);
   }
@@ -278,6 +278,20 @@
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+.document-title-area {
+  display: inline-block;
+  input {
+    font-size: 18px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 3px;
+  }
+}
+
+.change-document-title-btns {
+  display: inline-block;
 }
 
 @import './sharing/_sharing';

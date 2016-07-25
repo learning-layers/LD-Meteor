@@ -6,6 +6,15 @@ import { Tags } from '../../tags/lib/collections'
 import { DocumentComments, DocumentAccess } from '../lib/collections'
 
 Meteor.methods({
+  changeDocumentTitle: function (documentId, documentTitle) {
+    if (this.userId) {
+      check(documentId, String)
+      check(documentTitle, String)
+      Documents.update({'_id': documentId}, {$set: {title: documentTitle}})
+      return true
+    }
+    return false
+  },
   createDocument: function (document) {
     document.createdAt = new Date()
     document.createdBy = this.userId
