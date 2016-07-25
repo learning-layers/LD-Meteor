@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import Infinite from 'react-infinite'
 import { Meteor } from 'meteor/meteor'
-import { Session } from 'meteor/session'
+// import { Session } from 'meteor/session'
 
 let buildElements = function (ListItemComponent, items, expandedItems, colWidth) {
   var elements = []
