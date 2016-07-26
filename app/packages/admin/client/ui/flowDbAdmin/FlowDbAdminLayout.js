@@ -72,8 +72,8 @@ Template.AdminDashboardEdit.helpers({
   fadmin_doc: function () {
     let editcollectionName = FlowRouter.getParam('collectionName')
     let editId	= FlowRouter.getParam('_id')
-    console.debug('editcollectionName=' + editcollectionName)
-    console.debug('editId=' + editId)
+    console.log('editcollectionName=' + editcollectionName)
+    console.log('editId=' + editId)
     if (Meteor.isClient) {
       return global.window[ editcollectionName ].findOne({ '_id': editId })
     } else {
@@ -82,7 +82,7 @@ Template.AdminDashboardEdit.helpers({
   },
   action: function () {
     let action = FlowRouter.getQueryParam('action')
-    console.debug('action=' + action)
+    console.log('action=' + action)
     return action
   }
 })
@@ -93,7 +93,7 @@ Template.AdminDashboardUsersEdit.helpers({
   },
   action: function () {
     let action = FlowRouter.getQueryParam('action')
-    console.debug('action=' + action)
+    console.log('action=' + action)
     return action
   },
   roles: function () {
@@ -115,7 +115,7 @@ function onPropsChange (props, onData) {
 
   switch (props.content) {
     case 'AdminDashboard':
-      console.debug('Render prep> ' + props.content)
+      console.log('Render prep> ' + props.content)
       Session.set('admin_title', 'Dashboard')
       Session.set('admin_subtitle', null)
       Session.set('admin_collection_name', null)
@@ -123,7 +123,7 @@ function onPropsChange (props, onData) {
       Session.set('admin_id', null)
       break
     case 'AdminDashboardView':
-      console.debug('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
+      console.log('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
       Session.set('admin_title', props.params.collectionName)
       Session.set('admin_subtitle', 'View')
       Session.set('admin_collection_page', 'view')
@@ -131,7 +131,7 @@ function onPropsChange (props, onData) {
       Session.set('admin_id', null)
       break
     case 'AdminDashboardUsersNew':
-      console.debug('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
+      console.log('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
       Session.set('admin_title', props.params.collectionName)
       Session.set('admin_subtitle', 'Create New')
       Session.set('admin_collection_page', 'new')
@@ -139,7 +139,7 @@ function onPropsChange (props, onData) {
       Session.set('admin_id', null)
       break
     case 'AdminDashboardNew':
-      console.debug('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
+      console.log('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
       Session.set('admin_title', props.params.collectionName)
       Session.set('admin_subtitle', 'Create New')
       Session.set('admin_collection_page', 'new')
@@ -147,7 +147,7 @@ function onPropsChange (props, onData) {
       Session.set('admin_id', null)
       break
     case 'AdminDashboardUsersEdit':
-      console.debug('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
+      console.log('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
       Session.set('admin_title', props.params.collectionName)
       Session.set('admin_subtitle', 'Edit')
       Session.set('admin_collection_page', 'edit')
@@ -155,7 +155,7 @@ function onPropsChange (props, onData) {
       Session.set('admin_id', props.params._id)
       break
     case 'AdminDashboardEdit':
-      console.debug('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
+      console.log('Render prep> ' + props.content + ' with collection=' + props.params.collectionName)
       Session.set('admin_title', props.params.collectionName)
       Session.set('admin_subtitle', 'Edit')
       Session.set('admin_collection_page', 'edit')
@@ -171,13 +171,13 @@ function onPropsChange (props, onData) {
 
   let handle4
   if (props.content === 'AdminDashboardEdit' && props.params && props.params.collectionName !== 'Users') {
-    console.debug('Subscribing handle4> ' + props.content + ' with collection=' + props.params.collectionName)
+    console.log('Subscribing handle4> ' + props.content + ' with collection=' + props.params.collectionName)
     handle4 = Meteor.subscribe('adminCollectionDoc', props.params.collectionName, parseID(props.params._id))
   }
 
   let handle5
   if (props.content === 'AdminDashboardUsersEdit' && props.params && props.params.collectionName === 'Users') {
-    console.debug('Subscribing handle5> ' + props.content + ' with collection=' + props.params.collectionName)
+    console.log('Subscribing handle5> ' + props.content + ' with collection=' + props.params.collectionName)
     handle5 = Meteor.subscribe('userprofile', {userId: parseID(props.params._id)})
   }
 
@@ -190,23 +190,23 @@ function onPropsChange (props, onData) {
   } else if (props.content === 'AdminDashboardEdit' && handle.ready() && handle2.ready() && handle3.ready() && handle4.ready()) {
     if (!adminDoc || adminDoc === null) {
       let item = global.window[props.params.collectionName].findOne({'_id': props.params._id})
-      console.debug(item)
+      console.log(item)
       Session.set('admin_doc', item)
       if (Session.get('admin_doc') && Session.get('admin_doc')._id === props.params._id) {
-        console.debug('onData (1)')
+        console.log('onData (1)')
         onData(null, {rerender})
       }
     } else if (adminDoc._id === props.params._id) {
-      console.debug('onData (2)')
+      console.log('onData (2)')
       onData(null, {rerender})
     } else {
       let item = global.window[props.params.collectionName].findOne({'_id': props.params._id})
       Session.set('admin_doc', item)
       if (Session.get('admin_doc') && Session.get('admin_doc')._id === props.params._id) {
-        console.debug('onData (3)')
+        console.log('onData (3)')
         onData(null, {rerender})
       } else {
-        console.debug('no onData')
+        console.log('no onData')
       }
     }
   } else if (props.content === 'AdminDashboardUsersEdit' && handle.ready() && handle2.ready() && handle3.ready() && handle5.ready()) {
@@ -226,7 +226,7 @@ class FlowDbAdminLayout extends Component {
     this.mountComponents(this.props)
   }
   componentWillReceiveProps (nextProps) {
-    console.debug('Rendering> Receiving new props')
+    console.log('Rendering> Receiving new props')
     this.props = nextProps
     BlazeLayout.render('fAdminLayout', {main: 'AdminLoading'})
     this.mountComponents(nextProps)
@@ -239,29 +239,29 @@ class FlowDbAdminLayout extends Component {
     }
     switch (props.content) {
       case 'AdminDashboard':
-        console.debug('Rendering> ' + props.content)
+        console.log('Rendering> ' + props.content)
         BlazeLayout.render('fAdminLayout', { main: 'AdminDashboard' })
         break
       case 'AdminDashboardView':
-        console.debug('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
+        console.log('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
         BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardView' })
         break
       case 'AdminDashboardUsersNew':
-        console.debug('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
+        console.log('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
         BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardUsersNew' })
         break
       case 'AdminDashboardNew':
-        console.debug('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
+        console.log('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
         BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardNew' })
         break
       case 'AdminDashboardUsersEdit':
-        console.debug('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
+        console.log('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
         BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardUsersEdit' })
         break
       case 'AdminDashboardEdit':
-        console.debug('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
+        console.log('Rendering> ' + props.content + ' with collection=' + props.params.collectionName)
         let adminDoc = Session.get('admin_doc')
-        console.debug(adminDoc)
+        console.log(adminDoc)
         BlazeLayout.render('fAdminLayout', { main: 'AdminDashboardEdit' })
         break
       default:

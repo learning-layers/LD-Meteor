@@ -2,8 +2,6 @@ import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import Fireball from 'fireball-js'
 
-global.Users = Meteor.users
-
 global.window.AdminConfig = {
   name: 'Living Documents',
   adminEmails: [ Meteor.settings.public.initialUser.email ],
@@ -27,10 +25,10 @@ Meteor.startup(function () {
       Fireball.run({
         runs: 2,
         speedRanges: [
-            {min: 0, className: 'speed-of-sloth'},
-            {min: 4000, className: 'speed-of-tortoise'},
-            {min: 8000, className: 'speed-of-puppy'},
-            {min: 16000, className: 'speed-of-cheetah'}
+          {min: 0, className: 'speed-of-sloth'},
+          {min: 4000, className: 'speed-of-tortoise'},
+          {min: 8000, className: 'speed-of-puppy'},
+          {min: 16000, className: 'speed-of-cheetah'}
         ]
       })
       Fireball.onSuccess(function (score) {

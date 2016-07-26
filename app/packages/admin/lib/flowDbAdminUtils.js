@@ -1,4 +1,3 @@
-import { Session } from 'meteor/session'
 import { Meteor } from 'meteor/meteor'
 
 // The code below is originally written by Sachin 'sachinbhutani' (https://github.com/sachinbhutani)
@@ -6,9 +5,10 @@ import { Meteor } from 'meteor/meteor'
 // It has been adjusted that it works fine together with Meteor 1.3 and React
 
 if (Meteor.isClient) {
+  const { Session } = require('meteor/session')
   global.window.adminCollectionObject = function (collection) {
-    // console.info('Expected=' + Session.get('admin_collection_name'))
-    // console.info('Observed=' + collection)
+    // console.log('Expected=' + Session.get('admin_collection_name'))
+    // console.log('Observed=' + collection)
     if (collection === undefined) {
       collection = Session.get('admin_collection_name')
     }

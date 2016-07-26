@@ -1,0 +1,139 @@
+@import "../../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "_variables";
+@import "_bootswatch"; /* bootswatch paper theme */
+@import "_paper_theme_fixes";
+@import "_hopscoth";
+@import "_s_alert.scss";
+
+#nav-app-search {
+  padding: 0;
+  max-width: 0;
+}
+
+/**
+Fixes for ian:accounts-ui-bootstrap-3
+**/
+#login-dropdown-list input:last-of-type {
+  border-bottom-left-radius: 0!important;
+  border-bottom-right-radius: 0!important;
+}
+
+#cookie-consent {
+  top: auto;
+  bottom: 0;
+}
+
+.modal-content {
+  border-radius: 0!important;
+}
+
+html, body, #react-root, [data-reactroot], main {
+  height: 100%;
+}
+
+main {
+  height: calc(100% - 75px);
+}
+
+.highlighted {
+  background-color: yellow;
+}
+
+.ld-navbar.logged-in {
+  #login-dropdown-list {
+    display: none;
+  }
+  li.sidebar-nav-item {
+    display: block!important;
+  }
+}
+
+li.avatar-nav-item {
+  a {
+    padding-top: 2px;
+    padding-right: 7px;
+    padding-bottom: 0;
+  }
+  .avatar-online-status {
+    margin-right: -5px;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+.status-indicator-base {
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+}
+
+.verified, .online, .role-active {
+  background-color: lightgreen;
+}
+
+.not-verified, .not-online, .not-role-active {
+  background-color: lightsalmon;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0;
+}
+
+.panel-heading {
+  h1, h2, h3, h4 {
+    margin-bottom: 0;
+  }
+}
+
+.access-forbidden-panel-content-wrapper {
+  text-align: center;
+  img {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+input {
+  &.form-control {
+    &.invalid {
+      &:focus {
+        box-shadow: inset 0 -2px 0 #f44336;
+      }
+      box-shadow: inset 0 -2px 0 #f44336;
+    }
+  }
+  &.invalid {
+    &:focus {
+      box-shadow: inset 0 -2px 0 #f44336;
+    }
+    box-shadow: inset 0 -2px 0 #f44336;
+  }
+}
+
+.react-selectize-reset-button-container {
+  display: none!important;
+}
+
+hr {
+  &.no-margin-top {
+    margin-top: 0;
+  }
+  &.no-margin-bottom {
+    margin-bottom: 0;
+  }
+}
+
+@import "mainLayout/_mainLayout";
+@import "mainLayout/_flowDBAdmin";
+@import "mainLayout/_login";
+@import "_slider";
+@import "../../../packages/document/both/ui/_document";
+@import "../../../packages/home/both/ui/_home";
+@import "../../../packages/helpCenter/both/ui/_help_center";
+@import "../../../packages/admin/both/ui/_userManagement";
+@import "../../../packages/infiniteList/both/ui/_chat";
+@import "../../../packages/chat/both/ui/_sidebar";
+@import "../../../packages/user/both/ui/_index";
+@import "../../../packages/groups/both/ui/_groups";
+@import "../../../packages/fileUpload/both/ui/_fileUpload";
+@import "../../../packages/notifications/both/ui/_notification_settings";

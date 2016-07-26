@@ -3,7 +3,7 @@ import { Tests } from './collections'
 
 let _insertNewTestItem = {}
 if (Meteor.isClient) {
-  let { encryptTestItem } = require('../client/helper')
+  let { encryptTestItem } = require('../both/helper')
   _insertNewTestItem = function (doc, callback) {
     Meteor.call('insertNewTestItem', encryptTestItem(doc), true, callback)
   }
