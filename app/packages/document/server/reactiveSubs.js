@@ -50,7 +50,6 @@ let getDocumentPublishersForUser = function (args) {
       Documents.find({ $or: [ { 'createdBy': this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] })
     ]
   } else {
-    console.log('searchTerm=', args.searchTerm)
     documents = Documents.find({
       $and: [
         {$or: [

@@ -24,11 +24,13 @@ function onPropsChange (props, onData) {
 
 let userEmailIsVerified = function (user) {
   let isVerified = false
-  user.registered_emails.forEach(function (email) {
-    if (email.verified) {
-      isVerified = true
-    }
-  })
+  if (user.registered_emails) {
+    user.registered_emails.forEach(function (email) {
+      if (email.verified) {
+        isVerified = true
+      }
+    })
+  }
   return isVerified
 }
 

@@ -16,9 +16,9 @@ function onPropsChange (props, onData) {
 class AttachmentsBar extends Component {
   render () {
     const { documentInfoCache } = this.props
-    let fileAttachmentCounter = documentInfoCache.fileAttachmentCounter
-    if (!fileAttachmentCounter) {
-      fileAttachmentCounter = 0
+    let fileAttachmentCounter = 0
+    if (documentInfoCache && documentInfoCache.fileAttachmentCounter) {
+      fileAttachmentCounter = documentInfoCache.fileAttachmentCounter
     }
     let editorTabClassNames = classNames({'active': this.props.activeTabName === 'Editor', 'editor-tab-btn': true})
     let filesTabClassNames = classNames({'active': this.props.activeTabName === 'Files', 'files-tab-btn': true})

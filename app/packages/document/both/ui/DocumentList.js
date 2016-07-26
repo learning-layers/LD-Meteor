@@ -56,6 +56,14 @@ let highlightText = function (sectionToHighlight, text) {
 }
 
 class ListItem extends Component {
+  componentDidMount () {
+    this.searchTermSubscription = global.emitter.addListener('documentListSearchTerm', (searchString) => { this.setState({}) })
+  }
+  componentWillUnmount () {
+    if (this.searchTermSubscription) {
+      this.searchTermSubscription.remove()
+    }
+  }
   openDocument (documentId) {
     FlowRouter.go('/document/' + documentId)
   }
@@ -74,7 +82,7 @@ class ListItem extends Component {
     const user = Meteor.users.findOne(document.createdBy)
     const isOwnUser = document.createdBy === Meteor.userId()
     let documentItemClasses = classNames({'div-table-row document-list-item': true, expanded: expanded})
-    return <div key={'dli-' + document._id} ref='listItem' className={documentItemClasses}>
+    return <div key={'dli-' + document._id} className={documentItemClasses}>
       <div className='div-table-col' style={{width: colWidth + 'px'}} onClick={() => this.openDocument(document._id)}>
         {highlightText(documentListSearchTermObj.searchTerm, document.title)}
       </div>
@@ -111,23 +119,29 @@ class DocumentListSearchBar extends Component {
   }
   prepareToSearch () {}
   componentWillMount () {
-    var startSearch = (subsNameCamelCase, argsObj) => {
-      Meteor.call('setArgs' + subsNameCamelCase, argsObj)
+    if (Meteor.isClient) {
+      var startSearch = (subsNameCamelCase, argsObj) => {
+        Meteor.call('setArgs' + subsNameCamelCase, argsObj)
+      }
+      // wait until the user starts typing, and then stops
+      this.prepareToSearch = debounce(startSearch, 230, {
+        'maxWait': 350
+      })
     }
-    // wait until the user starts typing, and then stops
-    this.prepareToSearch = debounce(startSearch, 230, {
-      'maxWait': 350
-    })
   }
   handleSearchInputChange (event, subsName) {
     let searchString = ReactDOM.findDOMNode(event.target).value
     documentListSearchTermObj.searchTerm = searchString
     let subsNameCamelCase = subsName.substring(0, 1).toUpperCase() + subsName.substring(1, subsName.length)
-    let documentsLength = this.props.documents.length
+    let documentsLength = 0
+    if (this.props.documents) {
+      documentsLength = this.props.documents.length
+    }
     let argsObj = {limit: documentsLength + 100}
     argsObj.searchTerm = searchString
     this.setState({documentListSearchTerm: searchString})
     this.prepareToSearch(subsNameCamelCase, argsObj)
+    global.emitter.emit('documentListSearchTerm', searchString)
   }
   render () {
     return <input type='text'
