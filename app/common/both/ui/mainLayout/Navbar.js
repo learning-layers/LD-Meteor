@@ -15,6 +15,7 @@ import classNames from 'classnames'
 import Avatar from '../../../../packages/chat/both/ui/Avatar'
 import { Uploads } from '../../../../packages/fileUpload/lib/collections'
 import CreateDocumentModal from '../../../../packages/document/both/ui/CreateDocumentModal'
+import RoundTripTimeDisplay from './RoundTripTimeDisplay'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -71,6 +72,7 @@ class LDNavbar extends Component {
             <Navbar.Brand>
               <a href='/'>Living Documents</a>
             </Navbar.Brand>
+            <RoundTripTimeDisplay />
             <Navbar.Toggle />
           </Navbar.Header>
           <Navbar.Collapse>
