@@ -63,3 +63,4 @@ tmeasday:publish-counts
 sach:flow-db-admin
 fortawesome:fontawesome
 percolate:synced-cron
+appcache
