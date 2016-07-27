@@ -20,7 +20,7 @@ class RoundTripTimeDisplay extends Component {
     }
   }
   componentDidMount () {
-    Meteor.call('getServerTimeLD', (error, result) => {
+    Meteor.call('getServerTimeLD', {clientTime: new Date()}, (error, result) => {
       if (!error) {
         this.setState({
           roundTripTime: Math.abs(Date.now() - result),
@@ -30,7 +30,7 @@ class RoundTripTimeDisplay extends Component {
     })
     this.rttInterval = setInterval(() => {
       if (this.props.status.connected) {
-        Meteor.call('getServerTimeLD', (error, result) => {
+        Meteor.call('getServerTimeLD', {clientTime: new Date()}, (error, result) => {
           if (!error) {
             this.setState({
               roundTripTime: Math.abs(Date.now() - result),

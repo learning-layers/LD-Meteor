@@ -4,16 +4,16 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-base             # Packages every Meteor app needs to have
-mobile-experience       # Packages for a great mobile UX
-mongo                   # The database Meteor supports right now
-blaze-html-templates    # Compile .html files into Meteor Blaze views
-session                 # Client-side reactive dictionary for your app
-jquery                  # Helpful client-side library
-tracker                 # Meteor's client-side reactive programming library
+meteor-base@1.0.4             # Packages every Meteor app needs to have
+mobile-experience@1.0.4       # Packages for a great mobile UX
+mongo@1.1.10                   # The database Meteor supports right now
+blaze-html-templates@1.0.4    # Compile .html files into Meteor Blaze views
+session@1.1.6                 # Client-side reactive dictionary for your app
+jquery@1.11.9                  # Helpful client-side library
+tracker@1.1.0                 # Meteor's client-side reactive programming library
 
-es5-shim                # ECMAScript 5 compatibility for older browsers.
-ecmascript              # Enable ECMAScript2015+ syntax in app code
+es5-shim@4.6.13                # ECMAScript 5 compatibility for older browsers.
+ecmascript@0.5.7              # Enable ECMAScript2015+ syntax in app code
 #gadicc:ecmascript-hot
 
 #autopublish             # Publish all data to the clients (for prototyping)
@@ -21,7 +21,7 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 fourseven:scss          # Sass and SCSS support for Meteor.js (with autoprefixer and sourcemaps).
 seba:minifiers-autoprefixer # Standard minifiers used with Meteor apps by default + css autoprefixer.
-standard-minifier-js    # Standard javascript minifiers used with Meteor apps by default.
+standard-minifier-js@1.1.8    # Standard javascript minifiers used with Meteor apps by default.
 
 practicalmeteor:mocha   # Write package tests with mocha and run them in the browser or from the command line with spacejam.
 kadira:flow-router-ssr  # Same as kadira:flow-router, but with SSR support
@@ -29,26 +29,26 @@ kadira:flow-router-ssr  # Same as kadira:flow-router, but with SSR support
 twbs:bootstrap
 ian:accounts-ui-bootstrap-3
 
-accounts-base
+accounts-base@1.2.9
 aur0r:accounts-learninglayers
-accounts-facebook
-accounts-google
-service-configuration
+accounts-facebook@1.0.10
+accounts-google@1.0.10
+service-configuration@1.0.10
 
-browser-policy
+browser-policy@1.0.9
 simple:rest
 alanning:roles
 aur0r:accounts-trashmailfilter
 splendido:accounts-meld
-email
+email@1.1.16
 juliancwirko:s-alert
 kadira:debug
-accounts-password
+accounts-password@1.2.12
 selaias:cookie-consent
 ostrio:logger
 ostrio:loggermongo
 ostrio:i18n
-coffeescript
+coffeescript@1.2.3
 jparker:crypto-aes
 matb33:collection-hooks
 aldeed:simple-schema
@@ -63,4 +63,4 @@ tmeasday:publish-counts
 sach:flow-db-admin
 fortawesome:fontawesome
 percolate:synced-cron
-appcache
+appcache@1.0.11

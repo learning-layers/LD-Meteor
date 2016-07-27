@@ -32,10 +32,10 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": "0.10.46"
+    "node": "4.4.7"
   },
   "dependencies": {
-    "bootstrap-sass": "^3.3.6",
+    "bootstrap-sass": "^3.3.7",
     "classnames": "^2.2.5",
     "cookies-js": "^1.2.2",
     "fbemitter": "^2.0.2",
@@ -48,7 +48,7 @@
     "mobx": "^2.4.0",
     "node-uuid": "^1.4.7",
     "radium": "^0.18.1",
-    "rc-slider": "^3.8.1",
+    "rc-slider": "^3.8.2",
     "react": "^15.2.1",
     "react-addons-css-transition-group": "^15.2.1",
     "react-addons-shallow-compare": "^15.2.1",
@@ -75,7 +75,7 @@
     "babel-preset-meteor": "^6.11.1",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
-    "babel-runtime": "^6.9.2",
+    "babel-runtime": "^6.11.6",
     "eslint": "^2.13.1",
     "eslint-config-standard": "^5.3.5",
     "eslint-config-standard-jsx": "^1.2.2",

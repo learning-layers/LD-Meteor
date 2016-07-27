@@ -92,7 +92,7 @@ class User extends Component {
     })
     let verificationClasses = classNames({ 'status-indicator-base': true, verified: isVerified, 'not-verified': !isVerified })
 
-    let isOnline = user.status.online
+    let isOnline = user && user.status ? user.status.online : false
     let onlineStatusClasses = classNames({ 'status-indicator-base': true, online: isOnline, 'not-online': !isOnline })
 
     let roles = this.state.roles
