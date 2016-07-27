@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import React, { Component } from 'react'
 import { composeWithTracker } from 'react-komposer'
+import { Tracker } from 'meteor/tracker'
 
 function onPropsChange (props, onData) {
   let status = {
@@ -20,11 +21,21 @@ class RoundTripTimeDisplay extends Component {
     }
   }
   componentDidMount () {
-    Meteor.call('getServerTimeLD', {clientTime: new Date()}, (error, result) => {
-      if (!error) {
+    this.trackerHandle = Tracker.autorun(() => {
+      let status = Meteor.status()
+      if (status.connected) {
+        Meteor.call('getServerTimeLD', {clientTime: new Date()}, (error, result) => {
+          if (!error) {
+            this.setState({
+              roundTripTime: Math.abs(Date.now() - result),
+              offline: false
+            })
+          }
+        })
+      } else {
         this.setState({
-          roundTripTime: Math.abs(Date.now() - result),
-          offline: false
+          roundTripTime: '',
+          offline: true
         })
       }
     })
@@ -38,12 +49,20 @@ class RoundTripTimeDisplay extends Component {
             })
           }
         })
+      } else {
+        this.setState({
+          roundTripTime: '',
+          offline: true
+        })
       }
     }, 10001)
   }
   componentWillUnmount () {
     if (this.rttInterval) {
       clearInterval(this.rttInterval)
+    }
+    if (this.trackerHandle) {
+      this.trackerHandle.stop()
     }
   }
   render () {
