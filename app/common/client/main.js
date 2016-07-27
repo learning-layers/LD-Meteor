@@ -1,8 +1,15 @@
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import Fireball from 'fireball-js'
+import { Tracker } from 'meteor/tracker'
+
+let updateFailedTrackerHandler
 
 window.applicationCache.addEventListener('updateready', function (e) {
+  if (updateFailedTrackerHandler) {
+    updateFailedTrackerHandler.stop()
+    updateFailedTrackerHandler = undefined
+  }
   if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
     // Browser downloaded a new app cache.
     // Swap it in and reload the page to get the new hotness.
@@ -11,9 +18,21 @@ window.applicationCache.addEventListener('updateready', function (e) {
     } catch (e) {
       //
     }
+
     if (global.confirm('A new version of this site is available. Do you want to refresh?')) {
       window.location.reload()
     }
+  }
+}, false)
+
+window.applicationCache.addEventListener('error', function (e) {
+  if (!updateFailedTrackerHandler) {
+    updateFailedTrackerHandler = Tracker.autorun(() => {
+      let status = Meteor.status()
+      if (status.connected) {
+        window.applicationCache.update()
+      }
+    })
   }
 }, false)
 
