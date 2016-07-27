@@ -2,6 +2,17 @@ import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import Fireball from 'fireball-js'
 
+window.applicationCache.addEventListener('updateready', function (e) {
+  if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+    // Browser downloaded a new app cache.
+    // Swap it in and reload the page to get the new hotness.
+    window.applicationCache.swapCache()
+    if (global.confirm('A new version of this site is available. Do you want to refresh?')) {
+      window.location.reload()
+    }
+  }
+}, false)
+
 global.window.AdminConfig = {
   name: 'Living Documents',
   adminEmails: [ Meteor.settings.public.initialUser.email ],

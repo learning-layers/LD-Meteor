@@ -3,7 +3,12 @@ import React, { Component } from 'react'
 import { composeWithTracker } from 'react-komposer'
 
 function onPropsChange (props, onData) {
-  let status = Meteor.status()
+  let status = {
+    connected: true
+  }
+  if (Meteor.isClient) {
+    status = Meteor.status()
+  }
   onData(null, {status})
 }
 
@@ -15,18 +20,26 @@ class RoundTripTimeDisplay extends Component {
     }
   }
   componentDidMount () {
+    Meteor.call('getServerTimeLD', (error, result) => {
+      if (!error) {
+        this.setState({
+          roundTripTime: Math.abs(Date.now() - result),
+          offline: false
+        })
+      }
+    })
     this.rttInterval = setInterval(() => {
-      if (this.props.connected) {
+      if (this.props.status.connected) {
         Meteor.call('getServerTimeLD', (error, result) => {
           if (!error) {
             this.setState({
-              roundTripTime: Date.now() - result,
+              roundTripTime: Math.abs(Date.now() - result),
               offline: false
             })
           }
         })
       }
-    }, 1001)
+    }, 10001)
   }
   componentWillUnmount () {
     if (this.rttInterval) {
@@ -37,7 +50,7 @@ class RoundTripTimeDisplay extends Component {
     const { status } = this.props
     return <div className='rtt-display' style={{position: 'absolute', top: '40px', opacity: 0.7, fontSize: '11px'}}>
       {status.connected ? <span>
-        {this.state.roundTripTime !== '' ? <span>last RTT: {this.state.roundTripTime} ms</span> : null}
+        {this.state.roundTripTime !== '' ? <span>last RTT: {this.state.roundTripTime} ms</span> : <span>Connected</span>}
       </span> : <span>Offline</span>}
     </div>
   }
