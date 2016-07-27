@@ -50,8 +50,62 @@ class RoundTripTimeDisplay extends Component {
     const { status } = this.props
     return <div className='rtt-display' style={{position: 'absolute', top: '40px', opacity: 0.7, fontSize: '11px'}}>
       {status.connected ? <span>
-        {this.state.roundTripTime !== '' ? <span>last RTT: {this.state.roundTripTime} ms</span> : <span>Connected</span>}
-      </span> : <span>Offline</span>}
+        {this.state.roundTripTime !== '' ? <span>
+          <div style={{display: 'inline-block', marginRight: '3px', fontSize: '13px'}}>
+            <span className='glyphicon glyphicon-flash' />
+          </div>
+          <div style={{
+            boxShadow: 'rgb(0, 0, 0) 0px -1px, rgb(0, 0, 0) 0px -1px 1px, rgba(83, 255, 139, 0.34902) 0px 0px 4px 2px',
+            opacity: 1,
+            flex: '1 0 auto',
+            height: '10px',
+            borderRadius: '4px',
+            transition: 'all 0.25s',
+            margin: '3px 1px 0px',
+            backgroundColor: 'rgb(53, 231, 109)',
+            width: '15px',
+            display: 'inline-block',
+            marginRight: '5px'
+          }}></div>
+          <div style={{display: 'inline-block'}}>{this.state.roundTripTime} ms</div>
+        </span> : <span>
+          <div style={{display: 'inline-block', marginRight: '3px', fontSize: '13px'}}>
+            <span className='glyphicon glyphicon-flash' />
+          </div>
+          <div style={{
+            boxShadow: 'rgb(0, 0, 0) 0px -1px, rgb(0, 0, 0) 0px -1px 1px, rgba(255, 255, 51, 0.34902) 0px 0px 4px 2px',
+            opacity: 1,
+            flex: '1 0 auto',
+            height: '10px',
+            borderRadius: '4px',
+            transition: 'all 0.25s',
+            margin: '3px 1px 0px',
+            backgroundColor: 'rgb(231, 231, 51)',
+            width: '15px',
+            display: 'inline-block',
+            marginRight: '5px'
+          }}></div>
+          <div style={{display: 'inline-block'}}>Connected</div>
+        </span>}
+      </span> : <span>
+        <div style={{display: 'inline-block', marginRight: '3px', fontSize: '13px'}}>
+          <span className='glyphicon glyphicon-flash' />
+        </div>
+        <div style={{
+          boxShadow: 'rgb(0, 0, 0) 0px -1px, rgb(0, 0, 0) 0px -1px 1px, rgba(83, 255, 139, 0.34902) 0px 0px 4px 2px',
+          opacity: 1,
+          flex: '1 0 auto',
+          height: '10px',
+          borderRadius: '4px',
+          transition: 'all 0.25s',
+          margin: '3px 1px 0px',
+          backgroundColor: 'rgb(249, 39, 39)',
+          width: '15px',
+          display: 'inline-block',
+          marginRight: '5px'
+        }}></div>
+        <div style={{display: 'inline-block'}}>Offline</div>
+      </span>}
     </div>
   }
 }
