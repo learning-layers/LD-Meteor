@@ -25,6 +25,6 @@ before_install:
 # "npm run test-packages"
 # - "npm run test-travis"
 # - "meteor reset"
+# - "npm run testall-travis"
 script:
-  - "npm run testall-travis"
   - "npm run lint"

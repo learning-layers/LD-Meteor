@@ -1,5 +1,6 @@
 {
   "public": {
+    "isTestEnv": true,
     "app": {
       "name": "Living Documents",
       "version": "0.0.1"

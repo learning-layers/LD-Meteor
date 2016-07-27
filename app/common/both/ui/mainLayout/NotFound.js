@@ -8,7 +8,7 @@ class NotFound extends Component {
         <div className='panel-body'>
           <div className='access-forbidden-panel-content-wrapper'>
             <img src='/smiley-150656.svg' alt='Unhappy Smiley' />
-            {'Sorry we have tried, but we couldn\'t find anything...&nbsp;&nbsp;'}
+            {'Sorry we have tried, but we couldn\'t find anything...'}&nbsp;&nbsp;
             <a className='btn btn-success' href='/'>Go back to the front page</a>
           </div>
         </div>

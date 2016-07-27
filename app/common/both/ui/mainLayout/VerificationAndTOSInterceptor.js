@@ -20,7 +20,7 @@ class VerifyEmailAddressPanel extends Component {
             <th>Verification Status</th>
           </thead>
           <tbody>
-            {registeredEmails.map((registeredEmail) => {
+            {registeredEmails && registeredEmails.map((registeredEmail) => {
               return <tr key={'registered-email-' + registeredEmail.address}>
                 <td>{registeredEmail.address}</td>
                 <td>

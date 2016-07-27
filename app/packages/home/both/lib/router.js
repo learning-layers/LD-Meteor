@@ -93,4 +93,3 @@ FlowRouter.route('/home', {
     })
   }
 })
-

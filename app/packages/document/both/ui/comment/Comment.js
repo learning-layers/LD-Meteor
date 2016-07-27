@@ -35,22 +35,27 @@ function onPropsChange (props, onData) {
       }).count()
     }
     const author = Meteor.users.findOne({'_id': props.comment.createdBy})
-    let userId = author._id
-    const userAvatar = Uploads.collection.findOne({
-      'meta.parent.uploadType': 'avatar',
-      'meta.parent.elementId': userId
-    })
-    let userAvatarPath
-    if (userAvatar) {
-      userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension
+    if (author) {
+      let userId = author._id
+      const userAvatar = Uploads.collection.findOne({
+        'meta.parent.uploadType': 'avatar',
+        'meta.parent.elementId': userId
+      })
+      let userAvatarPath
+      if (userAvatar) {
+        userAvatarPath = userAvatar._downloadRoute + '/' + userAvatar._collectionName + '/' + userAvatar._id + '/original/' + userAvatar._id + '.' + userAvatar.extension
+      }
+      if (!userAvatarPath) {
+        userAvatarPath = '/img/Portrait_placeholder.png'
+      }
+      // retrieve revisions
+      const revisionCount = DocumentComments.find({ revisionOf: props.comment._id }).count()
+      const lastRevision = DocumentComments.findOne({ revisionOf: props.comment._id }, {
+        limit: 1,
+        sort: { movedToRevisionsAt: -1 }
+      })
+      onData(null, { commentRepliesCount, author, userAvatarPath, revisionCount, lastRevision })
     }
-    if (!userAvatarPath) {
-      userAvatarPath = '/img/Portrait_placeholder.png'
-    }
-    // retrieve revisions
-    const revisionCount = DocumentComments.find({revisionOf: props.comment._id}).count()
-    const lastRevision = DocumentComments.findOne({revisionOf: props.comment._id}, {limit: 1, sort: {movedToRevisionsAt: -1}})
-    onData(null, {commentRepliesCount, author, userAvatarPath, revisionCount, lastRevision})
   }
 }
 
