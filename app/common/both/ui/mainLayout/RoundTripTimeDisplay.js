@@ -129,4 +129,8 @@ class RoundTripTimeDisplay extends Component {
   }
 }
 
+RoundTripTimeDisplay.propTypes = {
+  status: React.PropTypes.object
+}
+
 export default composeWithTracker(onPropsChange)(RoundTripTimeDisplay)

@@ -4,7 +4,6 @@ import Fireball from 'fireball-js'
 import { Tracker } from 'meteor/tracker'
 
 let updateFailedTrackerHandler
-
 window.applicationCache.addEventListener('updateready', function (e) {
   if (updateFailedTrackerHandler) {
     updateFailedTrackerHandler.stop()
@@ -46,6 +45,45 @@ global.window.AdminConfig = {
 }
 
 Meteor.startup(function () {
+  let reconnect = function () {
+    if (!Meteor.status().connected) {
+      Meteor.reconnect()
+    }
+  }
+  reconnect()
+  // Set the name of the hidden property and the change event for visibility
+  let hidden, visibilityChange
+  if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+    hidden = 'hidden'
+    visibilityChange = 'visibilitychange'
+  } else if (typeof document.mozHidden !== 'undefined') {
+    hidden = 'mozHidden'
+    visibilityChange = 'mozvisibilitychange'
+  } else if (typeof document.msHidden !== 'undefined') {
+    hidden = 'msHidden'
+    visibilityChange = 'msvisibilitychange'
+  } else if (typeof document.webkitHidden !== 'undefined') {
+    hidden = 'webkitHidden'
+    visibilityChange = 'webkitvisibilitychange'
+  }
+
+  // If the page is hidden, pause the video;
+  // if the page is shown, play the video
+  function handleVisibilityChange () {
+    if (document[hidden]) {
+    } else {
+      reconnect()
+    }
+  }
+
+  // Warn if the browser doesn't support addEventListener or the Page Visibility API
+  if (typeof document.addEventListener === 'undefined' || typeof document[hidden] === 'undefined') {
+    // global.alert('This webapp requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.')
+  } else {
+    // Handle page visibility change
+    document.addEventListener(visibilityChange, handleVisibilityChange, false)
+  }
+
   Meteor.setTimeout(function () {
     let scoreObj = Session.get('deviceScore')
     console.debug('scoreObj=' + JSON.stringify(scoreObj))
