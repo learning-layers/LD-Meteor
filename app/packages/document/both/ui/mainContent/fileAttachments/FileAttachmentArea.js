@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import Loader from 'react-loader'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import Collapse from '../../../../../../../node_modules/react-bootstrap/lib/Collapse'
@@ -66,5 +65,4 @@ FileAttachmentArea.propTypes = {
   fileAttachments: React.PropTypes.array
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(FileAttachmentArea)
+export default composeWithTracker(onPropsChange)(FileAttachmentArea)

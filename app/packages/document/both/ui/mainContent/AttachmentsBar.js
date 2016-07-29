@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import classNames from 'classnames'
-import Loader from 'react-loader'
 import { composeWithTracker } from 'react-komposer'
 import { DocumentInfoCaches } from '../../../lib/attachments/collections'
 
@@ -57,5 +56,4 @@ AttachmentsBar.propTypes = {
   documentInfoCache: React.PropTypes.object
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(AttachmentsBar)
+export default composeWithTracker(onPropsChange)(AttachmentsBar)

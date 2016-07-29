@@ -4,7 +4,6 @@ import { Meteor } from 'meteor/meteor'
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import UserProfileContent from './UserProfileContent'
-import Loader from 'react-loader'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('userprofile', {userId: props.userId})
@@ -36,8 +35,7 @@ UserProfile.propTypes = {
   user: React.PropTypes.object
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(UserProfile)
+export default composeWithTracker(onPropsChange)(UserProfile)
 
 // TODO move this code to common package or fileUpload
 /* var formatFileURL = function (fileRef, version, pub) {

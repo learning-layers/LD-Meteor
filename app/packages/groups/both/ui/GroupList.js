@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import Loader from 'react-loader'
 import { Groups } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
@@ -13,10 +12,16 @@ import { moment } from 'meteor/momentjs:moment'
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupList')
   let handle2 = Meteor.subscribe('ownGroupsList')
+  let loading = true
   if (handle.ready() && handle2.ready()) {
     let groups = Groups.find({createdBy: Meteor.userId()}).fetch()
     let ownGroups = Groups.find({'members.userId': Meteor.userId()}).fetch()
-    onData(null, {groups, ownGroups})
+    loading = false
+    onData(null, {groups, ownGroups, loading})
+  } else {
+    let groups = Groups.find({createdBy: Meteor.userId()}).fetch()
+    let ownGroups = Groups.find({'members.userId': Meteor.userId()}).fetch()
+    onData(null, {groups, ownGroups, loading})
   }
 }
 
@@ -60,7 +65,7 @@ class GroupList extends Component {
     }
   }
   render () {
-    const { groups, ownGroups } = this.props
+    const { groups, ownGroups, loading } = this.props
     const ownUserId = Meteor.userId()
     return <div className='group-list container'>
       <div className='well'>
@@ -70,83 +75,117 @@ class GroupList extends Component {
           <CreateNewGroupForm />
         </div>
         <div className='table-responsive'>
-          <table className='table table-striped table-bordered table-hover'>
-            <thead>
-              <tr>
-                <th>Team name</th>
-                <th>Members</th>
-                <th>Creator</th>
-                <th>Last update</th>
-                <th>Options</th>
-              </tr>
-            </thead>
-            <tbody>
-              {groups.map((group) => {
-                const user = Meteor.users.findOne(group.createdBy)
-                const isOwnUser = group.createdBy === ownUserId
-                return <tr key={'dli-' + group._id} className='group-list-item'>
-                  <td>{group.name}</td>
-                  <td>{group.members.length}</td>
-                  <td>{user.profile.name}</td>
-                  <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
-                  <td>
-                    <ButtonToolbar className='options-buttons'>
-                      <Button className='delete-group-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
-                        <span className='glyphicon glyphicon-user' />
-                        <span className='glyphicon glyphicon-plus' />
-                      </Button>
-                      {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
-                        <span className='glyphicon glyphicon-trash' />
-                      </Button> : null}
-                    </ButtonToolbar>
-                  </td>
+          {loading ? <span>
+            <table className='table table-striped table-bordered table-hover'>
+              <thead>
+                <tr>
+                  <th>Team name</th>
+                  <th>Members</th>
+                  <th>Creator</th>
+                  <th>Last update</th>
+                  <th>Options</th>
                 </tr>
-              })}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <td colSpan={5}>Loading...</td>
+              </tbody>
+            </table>
+          </span> : <span>
+            <table className='table table-striped table-bordered table-hover'>
+              <thead>
+                <tr>
+                  <th>Team name</th>
+                  <th>Members</th>
+                  <th>Creator</th>
+                  <th>Last update</th>
+                  <th>Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                {groups.map((group) => {
+                  const user = Meteor.users.findOne(group.createdBy)
+                  const isOwnUser = group.createdBy === ownUserId
+                  return <tr key={'dli-' + group._id} className='group-list-item'>
+                    <td>{group.name}</td>
+                    <td>{group.members.length}</td>
+                    <td>{user.profile.name}</td>
+                    <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
+                    <td>
+                      <ButtonToolbar className='options-buttons'>
+                        <Button className='delete-group-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
+                          <span className='glyphicon glyphicon-user' />
+                          <span className='glyphicon glyphicon-plus' />
+                        </Button>
+                        {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
+                          <span className='glyphicon glyphicon-trash' />
+                        </Button> : null}
+                      </ButtonToolbar>
+                    </td>
+                  </tr>
+                })}
+              </tbody>
+            </table>
+          </span>}
         </div>
       </div>
       <div className='well'>
         <p>Groups that you are a member in:</p>
         <div className='table-responsive'>
-          <table className='table table-striped table-bordered table-hover'>
-            <thead>
-              <tr>
-                <th>Team name</th>
-                <th>Members</th>
-                <th>Creator</th>
-                <th>Last update</th>
-                <th>Options</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ownGroups.map((group) => {
-                const user = Meteor.users.findOne(group.createdBy)
-                console.log(Meteor.users.find({}).fetch())
-                const isOwnUser = group.createdBy === ownUserId
-                return <tr key={'dli-' + group._id} className='group-list-item'>
-                  <td>{group.name}</td>
-                  <td>{group.members.length}</td>
-                  <td>{user && user.profile ? user.profile.name : group.createdBy}</td>
-                  <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
-                  <td>
-                    <ButtonToolbar className='options-buttons'>
-                      <Button className='delete-group-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
-                        <span className='glyphicon glyphicon-user' />
-                        <span className='glyphicon glyphicon-plus' />
-                      </Button>
-                      {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
-                        <span className='glyphicon glyphicon-trash' />
-                      </Button> : null}
-                      <Button className='leave-group-button' bsSize='small' bsStyle='info' onClick={() => this.leaveGroup(group._id)}>
-                        <span className='glyphicon glyphicon-log-out' />{' '}leave
-                      </Button>
-                    </ButtonToolbar>
-                  </td>
+          {loading ? <span>
+            <table className='table table-striped table-bordered table-hover'>
+              <thead>
+                <tr>
+                  <th>Team name</th>
+                  <th>Members</th>
+                  <th>Creator</th>
+                  <th>Last update</th>
+                  <th>Options</th>
                 </tr>
-              })}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <td colSpan={5}>Loading...</td>
+              </tbody>
+            </table>
+          </span> : <span>
+            <table className='table table-striped table-bordered table-hover'>
+              <thead>
+                <tr>
+                  <th>Team name</th>
+                  <th>Members</th>
+                  <th>Creator</th>
+                  <th>Last update</th>
+                  <th>Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ownGroups.map((group) => {
+                  const user = Meteor.users.findOne(group.createdBy)
+                  console.log(Meteor.users.find({}).fetch())
+                  const isOwnUser = group.createdBy === ownUserId
+                  return <tr key={'dli-' + group._id} className='group-list-item'>
+                    <td>{group.name}</td>
+                    <td>{group.members.length}</td>
+                    <td>{user && user.profile ? user.profile.name : group.createdBy}</td>
+                    <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
+                    <td>
+                      <ButtonToolbar className='options-buttons'>
+                        <Button className='delete-group-button' bsSize='small' onClick={() => this.openManageMembersModal(group._id)}>
+                          <span className='glyphicon glyphicon-user' />
+                          <span className='glyphicon glyphicon-plus' />
+                        </Button>
+                        {isOwnUser ? <Button className='delete-doc-button' bsSize='small' onClick={() => this.deleteGroup(group._id)}>
+                          <span className='glyphicon glyphicon-trash' />
+                        </Button> : null}
+                        <Button className='leave-group-button' bsSize='small' bsStyle='info' onClick={() => this.leaveGroup(group._id)}>
+                          <span className='glyphicon glyphicon-log-out' />{' '}leave
+                        </Button>
+                      </ButtonToolbar>
+                    </td>
+                  </tr>
+                })}
+              </tbody>
+            </table>
+          </span>}
         </div>
       </div>
     </div>
@@ -155,8 +194,8 @@ class GroupList extends Component {
 
 GroupList.propTypes = {
   groups: React.PropTypes.array,
-  ownGroups: React.PropTypes.array
+  ownGroups: React.PropTypes.array,
+  loading: React.PropTypes.bool
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(GroupList)
+export default composeWithTracker(onPropsChange)(GroupList)

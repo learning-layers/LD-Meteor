@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
-import Loader from 'react-loader'
 import DocumentUserSharing from './DocumentUserSharing'
 import DocumentGroupSharing from './DocumentGroupSharing'
 import { DocumentLinkSharing } from './DocumentLinkSharing'
@@ -41,5 +40,4 @@ DocumentSharing.propTypes = {
   documentAccess: React.PropTypes.object
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(DocumentSharing)
+export default composeWithTracker(onPropsChange)(DocumentSharing)

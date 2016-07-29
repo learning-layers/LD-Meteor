@@ -3,7 +3,6 @@ import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
-import Loader from 'react-loader'
 import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 import Row from '../../../../../../node_modules/react-bootstrap/lib/Row'
@@ -185,5 +184,4 @@ DocumentGroupSharing.propTypes = {
   documentAccess: React.PropTypes.object
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(DocumentGroupSharing)
+export default composeWithTracker(onPropsChange)(DocumentGroupSharing)

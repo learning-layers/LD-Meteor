@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
-import Loader from 'react-loader'
 import { SubsManager } from 'meteor/meteorhacks:subs-manager'
 import classNames from 'classnames'
 import debounce from 'lodash/debounce'
@@ -184,5 +183,4 @@ DocumentList.propTypes = {
   documents: React.PropTypes.array
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(DocumentList)
+export default composeWithTracker(onPropsChange)(DocumentList)

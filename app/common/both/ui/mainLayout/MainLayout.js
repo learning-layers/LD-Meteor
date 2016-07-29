@@ -4,20 +4,21 @@ import { Blaze } from 'meteor/blaze'
 import { Template } from 'meteor/templating'
 import LDSidebar from '../../../../packages/chat/both/ui/Sidebar'
 import { Meteor } from 'meteor/meteor'
-import {composeWithTracker} from 'react-komposer'
+import { composeWithTracker } from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 import Alert from 'react-s-alert'
-import Loader from 'react-loader'
 import Login from './Login'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('currentUserDetails')
   let accessKeyHandle
-  if (props && props.id && props.accessKey) {
+  /* if (props && props.id && props.accessKey) {
     accessKeyHandle = Meteor.subscribe('accessKeys', {type: 'document', id: props.id, accessKey: props.accessKey})
-  }
+  }*/
+  const user = Meteor.users.findOne({'_id': Meteor.userId()})
   if (!accessKeyHandle && handle.ready() || accessKeyHandle && accessKeyHandle.ready() && handle.ready()) {
-    const user = Meteor.users.findOne({'_id': Meteor.userId()})
+    onData(null, {user, accessKey: props.accessKey})
+  } else {
     onData(null, {user, accessKey: props.accessKey})
   }
 }
@@ -159,5 +160,4 @@ MainLayout.propTypes = {
   helpCenter: React.PropTypes.object
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(MainLayout)
+export default composeWithTracker(onPropsChange)(MainLayout)

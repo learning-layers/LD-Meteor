@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { Groups } from '../../lib/collections'
 import { composeWithTracker } from 'react-komposer'
-import Loader from 'react-loader'
 import AddGroupMember from './AddGroupMember'
 
 function onPropsChange (props, onData) {
@@ -42,5 +41,4 @@ ManageGroupMembers.propTypes = {
   group: React.PropTypes.object
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(ManageGroupMembers)
+export default composeWithTracker(onPropsChange)(ManageGroupMembers)

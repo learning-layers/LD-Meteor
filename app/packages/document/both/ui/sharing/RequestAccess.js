@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
-import Loader from 'react-loader'
 import { TimeFromNow } from '../../../../../common/both/ui/util/TimeFromNow'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import FormGroup from '../../../../../../node_modules/react-bootstrap/lib/FormGroup'
@@ -105,5 +104,4 @@ RequestAccess.propTypes = {
   requestAccessItem: React.PropTypes.object
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(RequestAccess)
+export default composeWithTracker(onPropsChange)(RequestAccess)

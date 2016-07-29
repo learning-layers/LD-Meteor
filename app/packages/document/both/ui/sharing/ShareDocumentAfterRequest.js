@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
-import Loader from 'react-loader'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
 import { RequestAccessItems } from '../../../lib/sharing/collections'
@@ -118,5 +117,4 @@ ShareDocumentAfterRequest.propTypes = {
   requestAccessItem: React.PropTypes.object
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(ShareDocumentAfterRequest)
+export default composeWithTracker(onPropsChange)(ShareDocumentAfterRequest)

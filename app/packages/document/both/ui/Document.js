@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
-import Loader from 'react-loader'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import NotFound from '../../../../common/both/ui/mainLayout/NotFound'
 import { Documents, DocumentAccess } from '../../lib/collections'
@@ -130,5 +129,4 @@ Document.propTypes = {
   accessKey: React.PropTypes.string
 }
 
-const Loading = () => (<Loader loaded={false} options={global.loadingSpinner.options} />)
-export default composeWithTracker(onPropsChange, Loading)(Document)
+export default composeWithTracker(onPropsChange)(Document)
