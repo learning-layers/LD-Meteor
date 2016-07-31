@@ -104,7 +104,7 @@ class RoundTripTimeDisplay extends Component {
             display: 'inline-block',
             marginRight: '5px'
           }}></div>
-          <div style={{display: 'inline-block'}}>Connected</div>
+          <div style={{display: 'inline-block'}}>Connecting...</div>
         </span>}
       </span> : <span>
         <div style={{display: 'inline-block', marginRight: '3px', fontSize: '13px'}}>

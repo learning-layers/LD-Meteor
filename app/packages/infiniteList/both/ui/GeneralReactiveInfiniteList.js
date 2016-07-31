@@ -86,7 +86,7 @@ class ReactiveInfiniteList extends Component {
     }, 0)
   }
   elementInfiniteLoad () {
-    return <div className='infinite-list-item'>
+    return <div key='infinite-list-item' className='infinite-list-item'>
       Loading...
     </div>
   }

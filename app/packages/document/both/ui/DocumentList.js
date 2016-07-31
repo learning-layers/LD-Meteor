@@ -26,9 +26,13 @@ let documentListSearchTermObj = {
 
 function onPropsChange (props, onData) {
   let handle = DocumentListSubs.subscribe(subsName, {searchTerm: documentListSearchTermObj.searchTerm, limit: initialLimit})
+  let loading = true
   if (handle.ready()) {
+    loading = false
     let documents = Documents.find({}, { sort: {name: 1} }).fetch()
-    onData(null, {documents})
+    onData(null, {documents, loading})
+  } else if (Meteor.isClient) {
+    onData(null, {documents: [], loading})
   }
   return () => {
     DocumentListSubs.clear()
@@ -150,6 +154,10 @@ class DocumentListSearchBar extends Component {
   }
 }
 
+DocumentListSearchBar.propTypes = {
+  documents: React.PropTypes.array
+}
+
 class DocumentList extends Component {
   constructor (props) {
     super(props)
@@ -158,13 +166,42 @@ class DocumentList extends Component {
     }
   }
   render () {
-    const { documents } = this.props
+    const { documents, loading } = this.props
     const expandedItems = this.state.expandedItems
     return <div className='document-list container-fluid'>
       <div style={{textAlign: 'center'}}>
         <DocumentListSearchBar />
       </div>
-      <ReactiveInfiniteList
+      {loading ? <div key='document-infinite-scoll-list'>
+        <div className='infinite-example-header div-table-header'>
+          <div className='div-table-col'>
+            Document title
+          </div>
+          <div className='div-table-col'>
+            Author
+          </div>
+          <div className='div-table-col'>
+            Last update
+          </div>
+          <div className='div-table-col last'>
+            Options
+          </div>
+          <div className='clearfix'></div>
+        </div>
+        <div className='div-table infinite-example'>
+          <div className=''>
+            <div>
+              <div style={{width: '100%', height: '0px'}}></div>
+              <div key='doc-list-loading' className='div-table-row document-list-item'>
+                <div className='div-table-col' style={{display: 'block', width: '100%', textAlign: 'center'}}>
+                  Loading...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> : <ReactiveInfiniteList
+        key='document-infinite-scoll-list'
         additionalMethodArgs={[
           documentListSearchTermObj.searchTerm
         ]}
@@ -175,12 +212,14 @@ class DocumentList extends Component {
         items={documents}
         ListItemComponent={ListItem}
         subsName={subsName} />
+      }
     </div>
   }
 }
 
 DocumentList.propTypes = {
-  documents: React.PropTypes.array
+  documents: React.PropTypes.array,
+  loading: React.PropTypes.bool
 }
 
 export default composeWithTracker(onPropsChange)(DocumentList)
