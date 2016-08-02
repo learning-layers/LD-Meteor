@@ -95,7 +95,7 @@ class EtherpadController {
       }
     })
   }
-  removePadSession (sessionID, callback) {
+  removeSession (sessionID, callback) {
     HTTP.post(this.endpoint + '/deleteSession', {
       data: {
         'apikey': this.apiKey,

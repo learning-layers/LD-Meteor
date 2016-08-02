@@ -3,6 +3,11 @@ import { Documents, DocumentComments, DocumentAccess } from '../lib/collections'
 import { Tags } from '../../tags/lib/collections'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import { Groups } from '../../groups/lib/collections'
+import { EtherpadControllerInstance } from '../../etherpad/server/EtherpadController'
+import _sortBy from 'lodash/sortBy'
+
+let listSessionsOfAuthorSync = Meteor.wrapAsync(EtherpadControllerInstance.listSessionsOfAuthor.bind(EtherpadControllerInstance))
+let removeSessionSync = Meteor.wrapAsync(EtherpadControllerInstance.removeSession.bind(EtherpadControllerInstance))
 
 Meteor.publish('documentList', function () {
   this.autorun(function () {
@@ -53,16 +58,62 @@ Meteor.publish('documentList', function () {
 })
 
 Meteor.publish('document', function (args) {
-  this.onStop(function () {
-    // TODO clear etherpad sessions for the user for this document
-    // (1) Get groupPadID of the document
-    // (2) Get sessions of the author
-    // (3) Match session's groupIDs against the document's groupPadID group part
-    // (4) When matching delete oldest session
-    // (5) Check if there are more than 3 sessions matching the criteria
-    //     then delete all but two
-  })
   if (this.userId) {
+    let document
+    this.onStop(() => {
+      // console.log('BEGIN document onStop')
+      // TODO clear etherpad sessions for the user for this document
+      // (1) Get groupPadID of the document
+      if (document) {
+        let documentEtherpadGroup = document.etherpadGroup
+        // (2) Get sessions of the user (author)
+        let user = Meteor.users.findOne({'_id': this.userId})
+        if (user && user.etherpadAuthorId) {
+          // console.log('> document onStop: user.profile.name=' + user.profile.name)
+          let authorSessions
+          try {
+            authorSessions = listSessionsOfAuthorSync(user.etherpadAuthorId)
+          } catch (e) {
+            console.log(JSON.stringify(e))
+          }
+          if (authorSessions) {
+            // (3) Match session's groupIDs against the document's groupPadID group part
+            let sessionsForThisDocumentsGroup = []
+            let sessionIDs = Object.keys(authorSessions)
+            sessionIDs.forEach(function (sessionID) {
+              let sessionObj = authorSessions[sessionID]
+              if (sessionObj.groupID === documentEtherpadGroup) {
+                sessionObj.sessionID = sessionID
+                sessionsForThisDocumentsGroup.push(sessionObj)
+              }
+            })
+            let sortedSessions = _sortBy(sessionsForThisDocumentsGroup, function (sessionObj) {
+              return sessionObj.validUntil
+            })
+            // (4) When matching delete older sessions first
+            // (5) delete all but five
+            //     (it is not likely that
+            //      the user has more than five times opened a document
+            //      accross all devices)
+            let sortedSessionsLength = sortedSessions.length
+            let currentItemCount = 0
+            // console.log('> document onStop: sortedSessionsLength=' + sortedSessionsLength)
+            try {
+              sortedSessions.forEach(function (session) {
+                if (sortedSessionsLength - currentItemCount > 5) {
+                  // console.log('> document onStop: deleted session=' + session.sessionID)
+                  removeSessionSync(session.sessionID)
+                  currentItemCount++
+                }
+              })
+            } catch (e) {
+              console.log(JSON.stringify(e))
+            }
+          }
+        }
+      }
+      // console.log('END document onStop')
+    })
     if (args.action === 'shared' && (args.permission === 'CanEdit' || args.permission === 'CanComment') && args.accessKey) {
       let filterObj = {documentId: args.id}
       filterObj['link' + args.permission + '.linkId'] = args.accessKey
@@ -73,7 +124,7 @@ Meteor.publish('document', function (args) {
         throw new Meteor.Error(403)
       }
     } else {
-      let document = Documents.findOne({ '_id': args.id, createdBy: this.userId })
+      document = Documents.findOne({ '_id': args.id, createdBy: this.userId })
       if (document) {
         return Documents.find({ '_id': args.id })
       } else {
