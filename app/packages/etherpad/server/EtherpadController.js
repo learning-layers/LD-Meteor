@@ -95,6 +95,48 @@ class EtherpadController {
       }
     })
   }
+  removePadSession (sessionID, callback) {
+    HTTP.post(this.endpoint + '/deleteSession', {
+      data: {
+        'apikey': this.apiKey,
+        'sessionID': sessionID
+      }
+    }, function (error, response) {
+      if (error) {
+        console.log(error)
+        callback(error)
+      } else {
+        if (response.data.code === 0) {
+          // ok status
+          callback(null, null)
+        } else {
+          // TODO add error handling
+          callback('error')
+        }
+      }
+    })
+  }
+  listSessionsOfAuthor (authorID, callback) {
+    HTTP.post(this.endpoint + '/listSessionsOfAuthor', {
+      data: {
+        'apikey': this.apiKey,
+        'authorID': authorID
+      }
+    }, function (error, response) {
+      if (error) {
+        console.log(error)
+        callback(error)
+      } else {
+        if (response.data.code === 0) {
+          // ok status
+          callback(null, response.data.data)
+        } else {
+          // TODO add error handling
+          callback('error')
+        }
+      }
+    })
+  }
   getHTMLContent (groupPadId, callback) { // get the html representation of the etherpad content
     HTTP.post(this.endpoint + '/getHTML', {
       data: {

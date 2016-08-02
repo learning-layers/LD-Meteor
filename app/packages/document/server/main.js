@@ -53,6 +53,15 @@ Meteor.publish('documentList', function () {
 })
 
 Meteor.publish('document', function (args) {
+  this.onStop(function () {
+    // TODO clear etherpad sessions for the user for this document
+    // (1) Get groupPadID of the document
+    // (2) Get sessions of the author
+    // (3) Match session's groupIDs against the document's groupPadID group part
+    // (4) When matching delete oldest session
+    // (5) Check if there are more than 3 sessions matching the criteria
+    //     then delete all but two
+  })
   if (this.userId) {
     if (args.action === 'shared' && (args.permission === 'CanEdit' || args.permission === 'CanComment') && args.accessKey) {
       let filterObj = {documentId: args.id}
