@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
-import { Documents } from '../../document/lib/collections'
+import { Documents, DocumentAccess } from '../../document/lib/collections'
 
 let createGroupSync, createGroupPadSync, createAuthorSync, createPadSessionSync, getReadOnlyPadIdSync, getHTMLContentSync
 if (Meteor.isServer) {
@@ -74,10 +74,14 @@ Meteor.methods({
     if (Meteor.isServer) {
       const document = Documents.findOne({ '_id': documentId }, { etherpadGroupPad: 1 })
       if (document) {
-        // TODO check if the view sharing link id is valid
-        return getHTMLContentSync(document.etherpadGroupPad)
+        const documentAccess = DocumentAccess.findOne({documentId: documentId})
+        if (documentAccess && documentAccess.linkCanView && documentAccess.linkCanView.linkId === viewSharingLinkId) {
+          return getHTMLContentSync(document.etherpadGroupPad)
+        } else {
+          throw new Meteor.Error(401, 'Unauthorized')
+        }
       } else {
-        throw new Meteor.Error(404)
+        throw new Meteor.Error(404, 'Not found')
       }
     }
   }

@@ -1,6 +1,5 @@
 import { HTTP } from 'meteor/http'
 import { Meteor } from 'meteor/meteor'
-import { Documents } from '../../document/lib/collections'
 
 class EtherpadController {
   constructor () {
@@ -138,52 +137,19 @@ class EtherpadController {
       }
     })
   }
-  getHTMLContentByDocumentId (documentId, callback) { // get the html representation of the etherpad content
-    console.log('BEGIN getHTMLContent')
-    console.log('getHTMLContent> documentId=' + documentId)
-    const document = Documents.findOne({ '_id': this.props.documentId }, { etherpadGroupPad: 1 })
-    console.log(document)
-    HTTP.post(this.endpoint + '/getHTML', {
-      data: {
-        'apikey': this.apiKey,
-        'padID': document.etherpadGroupPad
-      }
-    }, function (error, response) {
-      console.log(arguments)
-      if (error) {
-        console.log(error)
-        callback(error)
-      } else {
-        if (response.data.code === 0) {
-          // ok status
-          callback(null, response.data.data.html)
-        } else {
-          // TODO add error handling
-          console.log(response)
-          callback('error')
-        }
-      }
-      console.log('END getHTMLContent')
-    })
-  }
   getHTMLContent (groupPadId, callback) { // get the html representation of the etherpad content
-    console.log('BEGIN getHTMLContent')
-    console.log('getHTMLContent> groupPadId=' + groupPadId)
     HTTP.post(this.endpoint + '/getHTML', {
       data: {
         'apikey': this.apiKey,
         'padID': groupPadId
       }
     }, function (error, response) {
-      console.log(arguments)
       if (error) {
         console.log(error)
         callback(error)
       } else {
-        console.log('response.data.code=', response.data.code)
         if (response.data.code === 0) {
           // ok status
-          console.log('ok status')
           callback(null, response.data.data.html)
         } else {
           // TODO add error handling
@@ -191,7 +157,6 @@ class EtherpadController {
           callback('error')
         }
       }
-      console.log('END getHTMLContent')
     })
   }
   getReadOnlyPadId (groupPadId, callback) {
