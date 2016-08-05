@@ -10,17 +10,9 @@ import Alert from 'react-s-alert'
 import Login from './Login'
 
 function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('currentUserDetails')
-  let accessKeyHandle
-  /* if (props && props.id && props.accessKey) {
-    accessKeyHandle = Meteor.subscribe('accessKeys', {type: 'document', id: props.id, accessKey: props.accessKey})
-  }*/
-  const user = Meteor.users.findOne({'_id': Meteor.userId()})
-  if (!accessKeyHandle && handle.ready() || accessKeyHandle && accessKeyHandle.ready() && handle.ready()) {
-    onData(null, {user, accessKey: props.accessKey})
-  } else {
-    onData(null, {user, accessKey: props.accessKey})
-  }
+  Meteor.subscribe('currentUserDetails')
+  const user = Meteor.user()
+  onData(null, {user, accessKey: props.accessKey})
 }
 
 let userEmailIsVerified = function (user) {
@@ -109,7 +101,6 @@ class MainLayout extends Component {
       isVerified = userEmailIsVerified(user)
       acceptedTermsOfService = isUserAgreeingWithTOS(user)
     }
-    // console.log(isPublic)
     return (
       <div>
         <div ref='status'></div>

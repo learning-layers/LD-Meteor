@@ -3,10 +3,9 @@ import { Meteor } from 'meteor/meteor'
 import EtherpadEditorWrapper from './EtherpadEditorWrapper'
 
 class ContentEditor extends Component {
-  render () {
+  componentDidMount () {
     const { document, permissionLevel } = this.props
     const etherpadGroup = document.etherpadGroup
-    const etherpadGroupPad = document.etherpadGroupPad
     const etherpadReadOnlyId = document.etherpadReadOnlyId
     if (permissionLevel === 'edit' && !etherpadGroup) {
       // send a request to the server that the server should create a group and a pad in etherpad
@@ -16,6 +15,12 @@ class ContentEditor extends Component {
       // and create a read only id for the document as well
       Meteor.call('createEtherpadReadOnlyId', document._id)
     }
+  }
+  render () {
+    const { document, permissionLevel } = this.props
+    const etherpadGroup = document.etherpadGroup
+    const etherpadGroupPad = document.etherpadGroupPad
+    const etherpadReadOnlyId = document.etherpadReadOnlyId
     // 'etherpad exists (2/2)'
     return <div id='content-editor'>
       {etherpadGroup ? <div>{etherpadGroupPad ? null : 'etherpad exists (1/2)'}</div> : 'etherpad doesn\'t exist (0/2)'}

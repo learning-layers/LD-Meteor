@@ -59,6 +59,7 @@ Meteor.publish('documentList', function () {
 })
 
 Meteor.publish('document', function (args) {
+  check(args, Match.Any)
   check(args, {
     id: String,
     action: Match.Maybe(String),
@@ -69,7 +70,6 @@ Meteor.publish('document', function (args) {
     let document
     this.onStop(() => {
       // console.log('BEGIN document onStop')
-      // TODO clear etherpad sessions for the user for this document
       // (1) Get groupPadID of the document
       if (document) {
         let documentEtherpadGroup = document.etherpadGroup
@@ -81,7 +81,7 @@ Meteor.publish('document', function (args) {
           try {
             authorSessions = listSessionsOfAuthorSync(user.etherpadAuthorId)
           } catch (e) {
-            console.log(JSON.stringify(e))
+            console.error(JSON.stringify(e))
           }
           if (authorSessions) {
             // (3) Match session's groupIDs against the document's groupPadID group part
@@ -114,7 +114,7 @@ Meteor.publish('document', function (args) {
                 }
               })
             } catch (e) {
-              console.log(JSON.stringify(e))
+              console.error(JSON.stringify(e))
             }
           }
         }
@@ -126,14 +126,24 @@ Meteor.publish('document', function (args) {
       filterObj['link' + args.permission + '.linkId'] = args.accessKey
       const docAccess = DocumentAccess.findOne(filterObj)
       if (docAccess) {
-        return Documents.find({ '_id': args.id })
+        return [
+          Documents.find({ '_id': args.id }),
+          DocumentAccess.find({documentId: args.id})
+        ]
       } else {
         throw new Meteor.Error(403)
       }
     } else {
-      document = Documents.findOne({ '_id': args.id, createdBy: this.userId })
-      if (document) {
-        return Documents.find({ '_id': args.id })
+      document = Documents.findOne({ '_id': args.id })
+      if (document && document.createdBy === this.userId) {
+        return [
+          Documents.find({ '_id': args.id }),
+          DocumentAccess.find({documentId: args.id})
+        ]
+      } else if (!document) {
+        // no document found for this id
+        console.error('Did not find the document with id=', args.id)
+        throw new Meteor.Error(404)
       } else {
         // the user is not the creator of this document hence there has to be a more extensive
         // search if the user has access or not
@@ -177,7 +187,10 @@ Meteor.publish('document', function (args) {
   } else if (args.action === 'shared' && args.permission === 'CanView' && args.accessKey) {
     const documentAccessObj = DocumentAccess.findOne({ documentId: args.id, 'linkCanView.linkId': args.accessKey })
     if (documentAccessObj) {
-      return Documents.find({ '_id': args.id })
+      return [
+        Documents.find({ '_id': args.id }),
+        DocumentAccess.find({documentId: args.id})
+      ]
     } else {
       throw new Meteor.Error(403)
     }

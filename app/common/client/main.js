@@ -3,37 +3,45 @@ import { Session } from 'meteor/session'
 import Fireball from 'fireball-js'
 import { Tracker } from 'meteor/tracker'
 
-let updateFailedTrackerHandler
-window.applicationCache.addEventListener('updateready', function (e) {
-  if (updateFailedTrackerHandler) {
-    updateFailedTrackerHandler.stop()
-    updateFailedTrackerHandler = undefined
-  }
-  if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
-    // Browser downloaded a new app cache.
-    // Swap it in and reload the page to get the new hotness.
-    try {
-      window.applicationCache.swapCache()
-    } catch (e) {
-      //
+if (window.applicationCache) {
+  let updateFailedTrackerHandler
+  window.applicationCache.addEventListener('updateready', function (e) {
+    if (updateFailedTrackerHandler) {
+      updateFailedTrackerHandler.stop()
+      updateFailedTrackerHandler = undefined
     }
-
-    if (global.confirm('A new version of this site is available. Do you want to refresh?')) {
-      window.location.reload()
-    }
-  }
-}, false)
-
-window.applicationCache.addEventListener('error', function (e) {
-  if (!updateFailedTrackerHandler) {
-    updateFailedTrackerHandler = Tracker.autorun(() => {
-      let status = Meteor.status()
-      if (status.connected) {
-        window.applicationCache.update()
+    if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+      // Browser downloaded a new app cache.
+      // Swap it in and reload the page to get the new hotness.
+      try {
+        window.applicationCache.swapCache()
+      } catch (e) {
+        //
       }
-    })
-  }
-}, false)
+
+      if (global.confirm('A new version of this site is available. Do you want to refresh?')) {
+        window.location.reload()
+      }
+    }
+  }, false)
+
+  window.applicationCache.addEventListener('error', function (e) {
+    if (!updateFailedTrackerHandler) {
+      updateFailedTrackerHandler = Tracker.autorun(() => {
+        let status = Meteor.status()
+        if (status.connected) {
+          try {
+            window.applicationCache.update()
+          } catch (e) {
+            console.error('No application cache found. (2)')
+          }
+        }
+      })
+    }
+  }, false)
+} else {
+  console.error('No application cache found. (1)')
+}
 
 global.window.AdminConfig = {
   name: 'Living Documents',

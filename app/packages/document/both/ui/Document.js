@@ -22,34 +22,65 @@ function camelCase (input) {
 }
 
 function onPropsChange (props, onData) {
-  if (props.action && props.action === 'shared' && props.permission && props.accessKey) {
-    let handle = Meteor.subscribe('document', { id: props.id, action: props.action, permission: camelCase('can_' + props.permission), accessKey: props.accessKey }, {
-      /* onReady: function () { // TODO cleanup -> find a better solution for reactive updates here
-       let document = Documents.findOne({'_id': props.id})
-       onData(null, {document})
-       },*/
+  let subscribe = function () {
+    let argumentsArray = [].splice.call(arguments, 0)
+    let args = argumentsArray.concat([{
       onError: function (err) {
-        onData(null, { err: err })
+        console.log(JSON.stringify(err))
+        if (err && err.error !== 401 && err.error !== 403 && err.error !== 404) {
+          // don't call onData
+          console.log(err.error)
+        } else {
+          onData(null, { err: err })
+        }
       }
-    })
+    }])
+    return Meteor.subscribe.apply(Meteor, args)
+  }
+  let subscribeServer = function () {
+    return Meteor.subscribe.apply(Meteor, arguments)
+  }
+  if (props.action && props.action === 'shared' && props.permission && props.accessKey) {
+    let handle = subscribe('document', { id: props.id, action: props.action, permission: camelCase('can_' + props.permission), accessKey: props.accessKey })
     if (handle.ready()) {
       let document = Documents.findOne({ '_id': props.id })
-      onData(null, { document })
-    }
-  } else {
-    let handle = Meteor.subscribe('document', { id: props.id }, {
-      /* onReady: function () { // TODO cleanup -> find a better solution for reactive updates here
-       let document = Documents.findOne({'_id': props.id})
-       onData(null, {document})
-       },*/
-      onError: function (err) {
-        onData(null, { err: err })
+      if (document === undefined && Meteor.isServer) {
+        let handleServer = subscribeServer('document', { id: props.id, action: props.action, permission: camelCase('can_' + props.permission), accessKey: props.accessKey })
+        if (handleServer.ready()) {
+          document = Documents.findOne({ '_id': props.id })
+          let documentAccess = DocumentAccess.findOne({documentId: props.id})
+          onData(null, { document, documentAccess })
+        }
+      } else {
+        let documentAccess = DocumentAccess.findOne({documentId: props.id})
+        onData(null, { document, documentAccess })
       }
-    })
-    if (handle.ready()) {
+    } else {
+      let loading = true
       let document = Documents.findOne({ '_id': props.id })
       let documentAccess = DocumentAccess.findOne({documentId: props.id})
-      onData(null, { document, documentAccess })
+      onData(null, { document, documentAccess, loading })
+    }
+  } else {
+    let handle = subscribe('document', { id: props.id })
+    if (handle.ready()) {
+      let document = Documents.findOne({ '_id': props.id })
+      if (document === undefined && Meteor.isServer) {
+        let handleServer = subscribeServer('document', { id: props.id })
+        if (handleServer.ready()) {
+          document = Documents.findOne({ '_id': props.id })
+          let documentAccess = DocumentAccess.findOne({documentId: props.id})
+          onData(null, { document, documentAccess })
+        }
+      } else {
+        let documentAccess = DocumentAccess.findOne({documentId: props.id})
+        onData(null, { document, documentAccess })
+      }
+    } else {
+      let loading = true
+      let document = Documents.findOne({ '_id': props.id })
+      let documentAccess = DocumentAccess.findOne({documentId: props.id})
+      onData(null, { document, documentAccess, loading })
     }
   }
 }
@@ -59,6 +90,14 @@ class Document extends Component {
     super(props)
     this.state = {
       error: null
+    }
+  }
+  componentDidMount () {
+    const { action, permission, accessKey } = this.props
+    if (action === 'shared' && (permission === 'edit' || permission === 'comment') && accessKey) {
+      Meteor.setTimeout(() => {
+        this.assignEditOrCommentPermissions()
+      }, 0)
     }
   }
   assignEditOrCommentPermissions () {
@@ -88,30 +127,24 @@ class Document extends Component {
     })
   }
   render () {
-    const { document, documentAccess, err, action, permission, accessKey } = this.props
-    if (!document) {
-      if (err) {
-        if (err.error === 403) {
-          return <div className='container'>
-            <RequestAccess documentId={this.props.id} />
-          </div>
-        } else if (err.error === 401) {
-          return <AccessForbidden />
-        } else {
-          return <div className='container'>
-            Ooops something went wrong. Please contact the administrator of this website.
-          </div>
-        }
-      } else {
-        return <NotFound />
-      }
+    const { err, action, permission, accessKey, loading } = this.props
+    let { document, documentAccess } = this.props
+    if (err && err.error === 403) {
+      return <div className='container'>
+        <RequestAccess documentId={this.props.id} />
+      </div>
+    } else if (err && err.error === 401) {
+      return <AccessForbidden />
+    } else if (err && err.error === 404) {
+      return <NotFound />
     } else {
       if (action === 'shared' && (permission === 'edit' || permission === 'comment') && accessKey) {
-        Meteor.setTimeout(() => {
-          this.assignEditOrCommentPermissions()
-        }, 0)
         return <div className='container'>
-          Assigning new permissions ...
+          {'Assigning new permissions ...'}
+        </div>
+      } else if (loading) {
+        return <div className='container'>
+          Loading...
         </div>
       }
       return <DocumentDisplay document={document} documentAccess={documentAccess} action={action} permission={permission} accessKey={accessKey} />
@@ -126,7 +159,8 @@ Document.propTypes = {
   err: React.PropTypes.object,
   action: React.PropTypes.string,
   permission: React.PropTypes.string,
-  accessKey: React.PropTypes.string
+  accessKey: React.PropTypes.string,
+  loading: React.PropTypes.bool
 }
 
 export default composeWithTracker(onPropsChange)(Document)
