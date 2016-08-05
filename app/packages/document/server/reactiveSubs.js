@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { check } from 'meteor/check'
+import { check, Match } from 'meteor/check'
 import { Documents, DocumentAccess } from '../lib/collections'
 import { Groups } from '../../groups/lib/collections'
 import { ServerArgs } from '../../serverargs/lib/collections'
@@ -80,7 +80,11 @@ let getDocumentPublishersForUser = function (args) {
 }
 
 Meteor.publish('reactiveDocumentList', function (initialArgs) {
-  check(initialArgs.limit, Number)
+  check(initialArgs, {
+    limit: Number,
+    searchTerm: Match.Maybe(String),
+    language: Match.Maybe(String)
+  })
   let itemId = 'reactiveDocumentList'
   if (this.userId) {
     ServerArgs.upsert({'itemId': itemId, createdBy: this.userId}, {'itemId': itemId, createdBy: this.userId, args: initialArgs})

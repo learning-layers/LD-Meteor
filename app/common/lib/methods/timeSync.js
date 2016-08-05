@@ -1,9 +1,11 @@
 import { Meteor } from 'meteor/meteor'
+import { check } from 'meteor/check'
 
 Meteor.methods({
-  'getServerTimeLD': function (args) {
-    if (Meteor.isServer && args && args.clientTime) {
-      return args.clientTime
+  'getServerTimeLD': function (clientTime) {
+    check(clientTime, Date)
+    if (Meteor.isServer && clientTime) {
+      return clientTime
     }
   }
 })

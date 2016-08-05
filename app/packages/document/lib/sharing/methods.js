@@ -3,6 +3,7 @@ import { Email } from 'meteor/email'
 import uuid from 'node-uuid'
 import { Documents, DocumentAccess } from '../../lib/collections'
 import { RequestAccessItems } from './collections'
+import { check } from 'meteor/check'
 
 let RequestAccessEmailTemplates
 if (Meteor.isServer) {
@@ -12,6 +13,8 @@ if (Meteor.isServer) {
 
 Meteor.methods({
   requestAccessToDocument: function (documentId, message) {
+    check(documentId, String)
+    check(message, String)
     if (this.userId) {
       const requestAccessItem = RequestAccessItems.findOne({createdBy: this.userId, documentId: documentId})
       if (requestAccessItem) {
@@ -65,6 +68,9 @@ Meteor.methods({
     }
   },
   addDocumentUserAccessAfterRequest: function (documentId, userId, permission) {
+    check(documentId, String)
+    check(userId, String)
+    check(permission, String)
     if (this.userId) {
       Meteor.call('addDocumentUserAccess', documentId, userId, permission, (err, res) => {
         if (err) {
@@ -79,6 +85,7 @@ Meteor.methods({
     }
   },
   rejectDocumentUserAccessAfterRequest: function (token) {
+    check(token, String)
     if (this.userId) {
       const requestAccessItem = RequestAccessItems.findOne({ token: token, owner: this.userId })
       Meteor.call('removeDocumentUserAccess', requestAccessItem.documentId, requestAccessItem.createdBy, (err, res) => {
@@ -94,6 +101,8 @@ Meteor.methods({
     }
   },
   generateDocumentSharingLink: function (documentId, permission) {
+    check(documentId, String)
+    check(permission, String)
     if (this.userId) {
       // TODO check if the user is the owner
       const document = Documents.findOne({'_id': documentId})
@@ -139,6 +148,8 @@ Meteor.methods({
     }
   },
   removeDocumentSharingLink: function (documentId, permission) {
+    check(documentId, String)
+    check(permission, String)
     if (this.userId) {
       // TODO check if the user is the owner
       const document = Documents.findOne({'_id': documentId})
@@ -158,6 +169,9 @@ Meteor.methods({
     }
   },
   assignDocumentEditOrCommentPermissions: function (documentId, permission, accessKey) {
+    check(documentId, String)
+    check(permission, String)
+    check(accessKey, String)
     if (this.userId) {
       const document = Documents.findOne({'_id': documentId})
       if (document) {

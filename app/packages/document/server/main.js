@@ -5,6 +5,7 @@ import { Counts } from 'meteor/tmeasday:publish-counts'
 import { Groups } from '../../groups/lib/collections'
 import { EtherpadControllerInstance } from '../../etherpad/server/EtherpadController'
 import _sortBy from 'lodash/sortBy'
+import { check, Match } from 'meteor/check'
 
 let listSessionsOfAuthorSync = Meteor.wrapAsync(EtherpadControllerInstance.listSessionsOfAuthor.bind(EtherpadControllerInstance))
 let removeSessionSync = Meteor.wrapAsync(EtherpadControllerInstance.removeSession.bind(EtherpadControllerInstance))
@@ -58,6 +59,12 @@ Meteor.publish('documentList', function () {
 })
 
 Meteor.publish('document', function (args) {
+  check(args, {
+    id: String,
+    action: Match.Maybe(String),
+    permission: Match.Maybe(String),
+    accessKey: Match.Maybe(String)
+  })
   if (this.userId) {
     let document
     this.onStop(() => {
@@ -180,26 +187,46 @@ Meteor.publish('document', function (args) {
 })
 
 Meteor.publish('documentTags', function (args) {
+  check(args, {
+    documentId: String
+  })
   return Tags.find({ parentId: args.documentId, type: 'document' })
 })
 
 Meteor.publish('documentComments', function (args) {
+  check(args, {
+    documentId: String
+  })
   return DocumentComments.find({ documentId: args.documentId, parents: { $type: 10 } })
 })
 
 Meteor.publish('documentCommentsCount', function (args) {
+  check(args, {
+    documentId: String
+  })
   Counts.publish(this, 'documentCommentsCount', DocumentComments.find({ documentId: args.documentId }))
 })
 
 Meteor.publish('documentAccess', function (args) {
+  check(args, {
+    documentId: String
+  })
   return DocumentAccess.find({ documentId: args.documentId })
 })
 
 Meteor.publish('commentReplies', function (args) {
+  check(args, {
+    documentId: String,
+    parent: [String]
+  })
   return DocumentComments.find({ documentId: args.documentId, parents: { $all: [ args.parent ] } })
 })
 
 Meteor.publish('commentRepliesCount', function (args) {
+  check(args, {
+    documentId: String,
+    parent: [String]
+  })
   Counts.publish(this, 'crc-' + args.parent.join(','), DocumentComments.find({
     documentId: args.documentId,
     parents: { $all: [ args.parent ] }

@@ -1,7 +1,11 @@
 import { Meteor } from 'meteor/meteor'
 import { ServerArgs } from '../../serverargs/lib/collections'
+import { check } from 'meteor/check'
 
 Meteor.publish('mentions', function (initialArgs) {
+  check(initialArgs, {
+    mentionSearch: String
+  })
   let connectionId = this.connection.id
   let serverArgs = ServerArgs.findOne({'connectionId': connectionId, 'itemName': 'mentions'})
   if (serverArgs) {

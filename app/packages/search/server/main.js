@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { SearchItems } from '../lib/collections'
 import { MongoInternals } from 'meteor/mongo'
+import { check, Match } from 'meteor/check'
 
 let db = null
 Meteor.startup(function () {
@@ -63,6 +64,10 @@ availableSearchLanguages['sv'] = 'swedish'
 availableSearchLanguages['tr'] = 'turkish'
 
 Meteor.publish('search', function (args) {
+  check(args, {
+    search: String,
+    lang: Match.Maybe(String)
+  })
   if (!args.lang) {
     args.lang = 'en'
   }

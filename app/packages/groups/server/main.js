@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Groups } from '../lib/collections'
+import { check, Match } from 'meteor/check'
 
 Meteor.publish('ownGroupsList', function () {
   // TODO add projections here:
@@ -10,6 +11,7 @@ Meteor.publish('ownGroupsList', function () {
 Meteor.publish('groupList', function (args) {
   // TODO add projections here:
   // { name: 1, createdBy: 1, createdAt: 1, modifiedAt: 1 }
+  check(args, Match.OneOf({ groupIds: [String] }, undefined))
   this.autorun(function () {
     if (args && args.groupIds) {
       const groups = Groups.find({'_id': {$in: args.groupIds}})
@@ -36,6 +38,9 @@ Meteor.publish('groupList', function (args) {
 })
 
 Meteor.publish('groupMemberList', function (args) {
+  check(args, {
+    groupId: String
+  })
   const groups = Groups.find({'_id': args.groupId})
   let userIds = []
   groups.forEach(function (group) {

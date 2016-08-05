@@ -1,9 +1,10 @@
 import { Meteor } from 'meteor/meteor'
-import { check } from 'meteor/check'
+import { check, Match } from 'meteor/check'
 import { ServerArgs } from './collections'
 
 Meteor.methods({
   setArgs: function (args) {
+    check(args, Match.Any)
     if (this.userId && Meteor.isServer) {
       console.log(this.userId)
       let serverItemArgs = ServerArgs.findOne({itemId: args.itemId})
@@ -18,6 +19,7 @@ Meteor.methods({
     return false
   },
   setArgsReactiveInfiniteItems2: function (args) {
+    check(args, Match.Any)
     if (this.userId && Meteor.isServer) {
       let itemId = 'reactiveInfiniteItems2'
       ServerArgs.upsert({'itemId': itemId, createdBy: this.userId}, {'itemId': itemId, createdBy: this.userId, args: args})
@@ -26,9 +28,12 @@ Meteor.methods({
     return false
   },
   setArgsReactiveDocumentList: function (args) {
-    check(args.limit, Number)
+    check(args, {
+      limit: Number,
+      searchTerm: Match.Maybe(String),
+      additionalMethodArgs: Match.Maybe([String])
+    })
     if (args.additionalMethodArgs) {
-      check(args.additionalMethodArgs, Array)
       if (!args.searchTerm) {
         args.searchTerm = args.additionalMethodArgs[0]
         check(args.searchTerm, String)

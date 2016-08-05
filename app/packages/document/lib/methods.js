@@ -7,9 +7,9 @@ import { DocumentComments, DocumentAccess } from '../lib/collections'
 
 Meteor.methods({
   changeDocumentTitle: function (documentId, documentTitle) {
+    check(documentId, String)
+    check(documentTitle, String)
     if (this.userId) {
-      check(documentId, String)
-      check(documentTitle, String)
       Documents.update({'_id': documentId}, {$set: {title: documentTitle}})
       return true
     }
@@ -22,6 +22,9 @@ Meteor.methods({
     return Documents.insert(document)
   },
   addTagToDocument: function (tagLabel, tagValue, documentId) {
+    check(tagLabel, String)
+    check(tagValue, String)
+    check(documentId, String)
     if (this.userId) {
       // TODO check that the user has access and is allowed to add tags
       return Tags.insert({label: tagLabel, value: tagValue, parentId: documentId, type: 'document'})
@@ -30,6 +33,7 @@ Meteor.methods({
     }
   },
   removeTagFromDocument: function (tagId) {
+    check(tagId, String)
     if (this.userId) {
       return Tags.remove({'_id': tagId})
     } else {
@@ -57,6 +61,7 @@ Meteor.methods({
     }
   },
   deleteDocument: function (documentId) {
+    check(documentId, String)
     if (this.userId) {
       Documents.remove({'_id': documentId, 'createdBy': this.userId})
     } else {
@@ -64,6 +69,7 @@ Meteor.methods({
     }
   },
   updateComment: function (commentId, comment) {
+    check(commentId, String)
     comment.modifiedAt = new Date()
     delete comment.movedToRevisionsAt
     delete comment.revisionOf
@@ -88,6 +94,9 @@ Meteor.methods({
     }
   },
   addDocumentUserAccess: function (documentId, userId, permission) {
+    check(documentId, String)
+    check(userId, String)
+    check(permission, String)
     if (this.userId) {
       let docAccess = DocumentAccess.findOne({documentId: documentId})
       let docAccessId
@@ -124,6 +133,8 @@ Meteor.methods({
     }
   },
   removeDocumentUserAccess (documentId, userId) {
+    check(documentId, String)
+    check(userId, String)
     if (this.userId) {
       let docAccess = DocumentAccess.findOne({documentId: documentId})
       if (docAccess) {
@@ -133,6 +144,9 @@ Meteor.methods({
     }
   },
   addDocumentGroupAccess: function (documentId, groupId, permission) {
+    check(documentId, String)
+    check(groupId, String)
+    check(permission, String)
     if (this.userId) {
       let docAccess = DocumentAccess.findOne({documentId: documentId})
       let docAccessId
@@ -164,6 +178,8 @@ Meteor.methods({
     }
   },
   removeDocumentGroupAccess (documentId, groupId) {
+    check(documentId, String)
+    check(groupId, String)
     if (this.userId) {
       let docAccess = DocumentAccess.findOne({documentId: documentId})
       if (docAccess) {
@@ -172,6 +188,7 @@ Meteor.methods({
     }
   },
   checkHasAccessToDocument (documentId) {
+    check(documentId, String)
     return {
       result: true
     }

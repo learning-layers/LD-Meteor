@@ -11,6 +11,7 @@ Meteor.methods({
     return Groups.insert(group)
   },
   deleteGroup: function (groupId) {
+    check(groupId, String)
     if (this.userId) {
       Groups.remove({'_id': groupId, 'createdBy': this.userId})
     } else {
@@ -18,6 +19,7 @@ Meteor.methods({
     }
   },
   leaveGroup: function (groupId) {
+    check(groupId, String)
     if (this.userId) {
       Groups.update({'_id': groupId}, {$set: {modifiedAt: new Date()}, $pull: {members: {userId: this.userId}}})
     } else {
@@ -25,6 +27,8 @@ Meteor.methods({
     }
   },
   addUserToGroup: function (groupId, userId) {
+    check(groupId, String)
+    check(userId, String)
     if (this.userId) {
       // check if user is in group first
       const group = Groups.find({'_id': userId})
@@ -53,11 +57,16 @@ Meteor.methods({
     }
   },
   removeUserFromGroup: function (groupId, userId) {
+    check(groupId, String)
+    check(userId, String)
     if (this.userId) {
       Groups.update({'_id': groupId}, {$set: {modifiedAt: new Date()}, $pull: {members: {userId: userId}}})
     }
   },
   getGroupMentions: function (args) {
+    check(args, {
+      mentionSearch: String
+    })
     if (args.mentionSearch.length >= 4) {
       return Groups.find({ name: { $regex: '^' + args.mentionSearch, $options: 'i' } }).fetch()
     } else {

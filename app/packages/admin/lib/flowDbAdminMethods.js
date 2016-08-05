@@ -9,6 +9,8 @@ import { Roles } from 'meteor/alanning:roles'
 let prevCollection // HACK should be done differently
 Meteor.methods({
   adminRemoveMongoDoc: function (collection, _id) {
+    check(collection, String)
+    check(_id, String)
     if (Meteor.isServer) {
       check(arguments, [ Match.Any ])
       if (Roles.userIsInRole(this.userId, [ 'admin' ])) {
@@ -31,4 +33,3 @@ Meteor.methods({
     }
   }
 })
-

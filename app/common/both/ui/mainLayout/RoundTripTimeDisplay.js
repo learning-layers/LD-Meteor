@@ -24,10 +24,10 @@ class RoundTripTimeDisplay extends Component {
     this.trackerHandle = Tracker.autorun(() => {
       let status = Meteor.status()
       if (status.connected) {
-        Meteor.call('getServerTimeLD', {clientTime: new Date()}, (error, result) => {
+        Meteor.call('getServerTimeLD', new Date(), (error, result) => {
           if (!error) {
             this.setState({
-              roundTripTime: Math.abs(Date.now() - result),
+              roundTripTime: Math.abs(Date.now() - new Date(result)),
               offline: false
             })
           }
@@ -41,7 +41,7 @@ class RoundTripTimeDisplay extends Component {
     })
     this.rttInterval = setInterval(() => {
       if (this.props.status.connected) {
-        Meteor.call('getServerTimeLD', {clientTime: new Date()}, (error, result) => {
+        Meteor.call('getServerTimeLD', new Date(), (error, result) => {
           if (!error) {
             this.setState({
               roundTripTime: Math.abs(Date.now() - result),

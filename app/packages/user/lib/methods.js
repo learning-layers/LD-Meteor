@@ -1,10 +1,13 @@
 import { Tags } from '../../tags/lib/collections'
 import { Meteor } from 'meteor/meteor'
-import { Match } from 'meteor/check'
+import { check, Match } from 'meteor/check'
 import { UserProfileSchema } from '../lib/schema'
 
 Meteor.methods({
   addTagToUser: function (tagLabel, tagValue, userId) {
+    check(tagLabel, String)
+    check(tagValue, String)
+    check(userId, String)
     if (this.userId) {
       return Tags.insert({label: tagLabel, value: tagValue, parentId: userId, type: 'user'})
     } else {
@@ -12,6 +15,7 @@ Meteor.methods({
     }
   },
   removeTagFromUser: function (tagId) {
+    check(tagId, String)
     if (this.userId) {
       return Tags.remove({'_id': tagId})
     } else {
@@ -19,6 +23,9 @@ Meteor.methods({
     }
   },
   sendNewProfileInfoData: function (newDisplayName, newFullName, newDescription) {
+    check(newDisplayName, String)
+    check(newFullName, String)
+    check(newDescription, String)
     if (this.userId) {
       const isValid = Match.test({
         displayName: newDisplayName,

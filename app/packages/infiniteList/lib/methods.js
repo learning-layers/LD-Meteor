@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { InfiniteScrollItems } from './collections'
+import { check } from 'meteor/check'
 
 Meteor.methods({
   insertInfiniteScrollTestData: function () {
@@ -16,6 +17,8 @@ Meteor.methods({
     }
   },
   getItems: function (offset, amount) {
+    check(offset, Number)
+    check(amount, Number)
     return InfiniteScrollItems.find({}, { skip: offset, limit: amount }).fetch()
   }
 })

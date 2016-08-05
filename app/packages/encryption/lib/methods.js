@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Tests } from './collections'
+import { check, Match } from 'meteor/check'
 
 let _insertNewTestItem = {}
 if (Meteor.isClient) {
@@ -13,6 +14,7 @@ export const insertNewTestItem = _insertNewTestItem
 
 Meteor.methods({
   insertNewTestItem: function (doc, notDirectlyCalled) {
+    check(notDirectlyCalled, Match.OneOf(Boolean, undefined))
     if (notDirectlyCalled) {
       Tests.insert(doc)
     }
