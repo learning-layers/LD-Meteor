@@ -1,9 +1,10 @@
 import { Meteor } from 'meteor/meteor'
 import { Documents } from './collections'
 import { DocumentSchema, DocumentCommentSchema } from './schema'
-import { check } from 'meteor/check'
+import { check, Match } from 'meteor/check'
 import { Tags } from '../../tags/lib/collections'
 import { DocumentComments, DocumentAccess } from '../lib/collections'
+import { Groups } from '../../groups/lib/collections'
 
 Meteor.methods({
   changeDocumentTitle: function (documentId, documentTitle) {
@@ -194,3 +195,98 @@ Meteor.methods({
     }
   }
 })
+
+export const getDocument = function (id, action, permission, accessKey, callback) {
+  let args = {
+    id: id,
+    action: action,
+    permission: permission,
+    accessKey: accessKey
+  }
+  check(args, Match.OneOf({
+    id: String
+  }, {
+    id: String,
+    action: String,
+    permission: String,
+    accessKey: String
+  }))
+  check(arguments, Match.Any)
+  if (this.userId) {
+    let document
+    if (action === 'shared' && permission === 'CanView' && accessKey) {
+      const documentAccessObj = DocumentAccess.findOne({ documentId: id, 'linkCanView.linkId': accessKey })
+      if (documentAccessObj) {
+        return [
+          Documents.findOne({ '_id': id }),
+          DocumentAccess.findOne({documentId: id})
+        ]
+      } else {
+        throw new Meteor.Error(403, 'Access denied for this sharing link')
+      }
+    } else if (action === 'shared' && (permission === 'CanEdit' || permission === 'CanComment') && accessKey) {
+      let filterObj = {documentId: id}
+      filterObj['link' + permission + '.linkId'] = accessKey
+      const docAccess = DocumentAccess.findOne(filterObj)
+      if (docAccess) {
+        return [
+          Documents.findOne({ '_id': id }),
+          DocumentAccess.findOne({documentId: id})
+        ]
+      } else {
+        throw new Meteor.Error(403, 'This sharing link is not valid')
+      }
+    } else {
+      document = Documents.findOne({ '_id': id })
+      if (document && document.createdBy === this.userId) {
+        return [
+          document,
+          DocumentAccess.findOne({documentId: id})
+        ]
+      } else if (!document) {
+        // no document found for this id
+        console.error('Did not find the document with id=', id)
+        throw new Meteor.Error(404, 'Did not find the document with id=' + id)
+      } else {
+        // the user is not the creator of this document hence there has to be a more extensive
+        // search if the user has access or not
+        // find all groups the user is a member in
+        let groups = Groups.find({ 'members.userId': this.userId }, { name: 0, members: 0 }).fetch()
+
+        // collect all groupIds
+        let groupIds = []
+        groups.forEach(function (group) {
+          groupIds.push(group._id)
+        })
+        const documentAccessObj = DocumentAccess.findOne(
+          {
+            $and: [
+              { documentId: id },
+              {
+                $or: [
+                  { 'userCanView.userId': this.userId },
+                  { 'userCanComment.userId': this.userId },
+                  { 'userCanEdit.userId': this.userId },
+                  { 'groupCanView.groupId': { $in: groupIds } },
+                  { 'groupCanComment.groupId': { $in: groupIds } },
+                  { 'groupCanEdit.groupId': { $in: groupIds } }
+                ]
+              }
+            ]
+          }
+        )
+        if (documentAccessObj) {
+          return [
+            document,
+            DocumentAccess.findOne({documentId: id})
+          ]
+        } else {
+          // the user doesn't have access
+          throw new Meteor.Error(403, 'Access denied')
+        }
+      }
+    }
+  } else {
+    throw new Meteor.Error(401, 'Unauthorized')
+  }
+}

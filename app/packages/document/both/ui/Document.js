@@ -7,6 +7,9 @@ import { Documents, DocumentAccess } from '../../lib/collections'
 import RequestAccess from './sharing/RequestAccess'
 import AccessForbidden from '../../../../common/both/ui/mainLayout/AccessForbidden'
 import DocumentDisplay from './DocumentDisplay'
+import { getDocument } from '../../lib/methods'
+
+let getDocumentSync = Meteor.wrapAsync(getDocument)
 
 function camelCase (input) {
   if (input.length > 0) {
@@ -22,66 +25,42 @@ function camelCase (input) {
 }
 
 function onPropsChange (props, onData) {
-  let subscribe = function () {
-    let argumentsArray = [].splice.call(arguments, 0)
-    let args = argumentsArray.concat([{
-      onError: function (err) {
-        console.log(JSON.stringify(err))
-        if (err && err.error !== 401 && err.error !== 403 && err.error !== 404) {
-          // don't call onData
-          console.log(err.error)
-        } else {
-          onData(null, { err: err })
-        }
-      }
-    }])
-    return Meteor.subscribe.apply(Meteor, args)
-  }
-  let subscribeServer = function () {
-    return Meteor.subscribe.apply(Meteor, arguments)
-  }
+  let args
   if (props.action && props.action === 'shared' && props.permission && props.accessKey) {
-    let handle = subscribe('document', { id: props.id, action: props.action, permission: camelCase('can_' + props.permission), accessKey: props.accessKey })
-    if (handle.ready()) {
-      let document = Documents.findOne({ '_id': props.id })
-      if (document === undefined && Meteor.isServer) {
-        let handleServer = subscribeServer('document', { id: props.id, action: props.action, permission: camelCase('can_' + props.permission), accessKey: props.accessKey })
-        if (handleServer.ready()) {
-          document = Documents.findOne({ '_id': props.id })
-          let documentAccess = DocumentAccess.findOne({documentId: props.id})
+    args = { id: props.id, action: props.action, permission: camelCase('can_' + props.permission), accessKey: props.accessKey }
+  } else {
+    args = { id: props.id }
+  }
+  let handle = Meteor.subscribe('document', args)
+  if (handle.ready()) {
+    let document = Documents.findOne({ '_id': props.id })
+    let documentAccess = DocumentAccess.findOne({documentId: props.id})
+    if (!document) {
+      // check what the reason is
+      if (args.accessKey) {
+        try {
+          document = getDocumentSync(props.id, props.action, props.permission, props.accessKey)
           onData(null, { document, documentAccess })
+        } catch (err) {
+          console.log(err)
+          onData(null, { err, document, documentAccess })
         }
       } else {
-        let documentAccess = DocumentAccess.findOne({documentId: props.id})
-        onData(null, { document, documentAccess })
+        try {
+          document = getDocumentSync(props.id, undefined, undefined, undefined)
+          onData(null, { document, documentAccess })
+        } catch (err) {
+          console.log(err)
+          onData(null, { err, document, documentAccess })
+        }
       }
     } else {
-      let loading = true
-      let document = Documents.findOne({ '_id': props.id })
-      let documentAccess = DocumentAccess.findOne({documentId: props.id})
-      onData(null, { document, documentAccess, loading })
+      onData(null, { document, documentAccess })
     }
   } else {
-    let handle = subscribe('document', { id: props.id })
-    if (handle.ready()) {
-      let document = Documents.findOne({ '_id': props.id })
-      if (document === undefined && Meteor.isServer) {
-        let handleServer = subscribeServer('document', { id: props.id })
-        if (handleServer.ready()) {
-          document = Documents.findOne({ '_id': props.id })
-          let documentAccess = DocumentAccess.findOne({documentId: props.id})
-          onData(null, { document, documentAccess })
-        }
-      } else {
-        let documentAccess = DocumentAccess.findOne({documentId: props.id})
-        onData(null, { document, documentAccess })
-      }
-    } else {
-      let loading = true
-      let document = Documents.findOne({ '_id': props.id })
-      let documentAccess = DocumentAccess.findOne({documentId: props.id})
-      onData(null, { document, documentAccess, loading })
-    }
+    let document = Documents.findOne({ '_id': props.id })
+    let documentAccess = DocumentAccess.findOne({documentId: props.id})
+    onData(null, { document, documentAccess })
   }
 }
 
@@ -90,6 +69,14 @@ class Document extends Component {
     super(props)
     this.state = {
       error: null
+    }
+  }
+  propsWillChange (nextProps) {
+    const { action, permission, accessKey } = this.props
+    if (action === 'shared' && (permission === 'edit' || permission === 'comment') && accessKey) {
+      Meteor.setTimeout(() => {
+        this.assignEditOrCommentPermissions()
+      }, 0)
     }
   }
   componentDidMount () {
@@ -129,6 +116,8 @@ class Document extends Component {
   render () {
     const { err, action, permission, accessKey, loading } = this.props
     let { document, documentAccess } = this.props
+    console.log('err=', err)
+    console.log('document=', document)
     if (err && err.error === 403) {
       return <div className='container'>
         <RequestAccess documentId={this.props.id} />
@@ -137,6 +126,8 @@ class Document extends Component {
       return <AccessForbidden />
     } else if (err && err.error === 404) {
       return <NotFound />
+    } else if (err) {
+      return <div>Unidentified error: {JSON.stringify(document)}<NotFound /></div>
     } else {
       if (action === 'shared' && (permission === 'edit' || permission === 'comment') && accessKey) {
         return <div className='container'>
@@ -144,8 +135,10 @@ class Document extends Component {
         </div>
       } else if (loading) {
         return <div className='container'>
-          Loading...
+          Loading ... Loading ...
         </div>
+      } else if (!document) {
+        return <div>{JSON.stringify(err)}{JSON.stringify(document)}<NotFound /></div>
       }
       return <DocumentDisplay document={document} documentAccess={documentAccess} action={action} permission={permission} accessKey={accessKey} />
     }

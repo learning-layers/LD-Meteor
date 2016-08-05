@@ -58,70 +58,86 @@ Meteor.publish('documentList', function () {
   })
 })
 
+function stopDocumentPublisher (self, document) {
+  // console.log('BEGIN document onStop')
+  // (1) Get groupPadID of the document
+  if (document) {
+    let documentEtherpadGroup = document.etherpadGroup
+    // (2) Get sessions of the user (author)
+    let user = Meteor.users.findOne({'_id': self.userId})
+    if (user && user.etherpadAuthorId) {
+      // console.log('> document onStop: user.profile.name=' + user.profile.name)
+      let authorSessions
+      try {
+        authorSessions = listSessionsOfAuthorSync(user.etherpadAuthorId)
+      } catch (e) {
+        console.error(JSON.stringify(e))
+      }
+      if (authorSessions) {
+        // (3) Match session's groupIDs against the document's groupPadID group part
+        let sessionsForThisDocumentsGroup = []
+        let sessionIDs = Object.keys(authorSessions)
+        sessionIDs.forEach(function (sessionID) {
+          let sessionObj = authorSessions[sessionID]
+          if (sessionObj.groupID === documentEtherpadGroup) {
+            sessionObj.sessionID = sessionID
+            sessionsForThisDocumentsGroup.push(sessionObj)
+          }
+        })
+        let sortedSessions = _sortBy(sessionsForThisDocumentsGroup, function (sessionObj) {
+          return sessionObj.validUntil
+        })
+        // (4) When matching delete older sessions first
+        // (5) delete all but five
+        //     (it is not likely that
+        //      the user has more than five times opened a document
+        //      accross all devices)
+        let sortedSessionsLength = sortedSessions.length
+        let currentItemCount = 0
+        // console.log('> document onStop: sortedSessionsLength=' + sortedSessionsLength)
+        try {
+          sortedSessions.forEach(function (session) {
+            if (sortedSessionsLength - currentItemCount > 5) {
+              // console.log('> document onStop: deleted session=' + session.sessionID)
+              removeSessionSync(session.sessionID)
+              currentItemCount++
+            }
+          })
+        } catch (e) {
+          console.error(JSON.stringify(e))
+        }
+      }
+    }
+  }
+  // console.log('END document onStop')
+}
+
 Meteor.publish('document', function (args) {
-  check(args, Match.Any)
-  check(args, {
+  check(args, Match.OneOf({
+    id: String
+  }, {
     id: String,
-    action: Match.Maybe(String),
-    permission: Match.Maybe(String),
-    accessKey: Match.Maybe(String)
-  })
+    action: String,
+    permission: String,
+    accessKey: String
+  }))
+  check(arguments, Match.Any)
   if (this.userId) {
     let document
     this.onStop(() => {
-      // console.log('BEGIN document onStop')
-      // (1) Get groupPadID of the document
-      if (document) {
-        let documentEtherpadGroup = document.etherpadGroup
-        // (2) Get sessions of the user (author)
-        let user = Meteor.users.findOne({'_id': this.userId})
-        if (user && user.etherpadAuthorId) {
-          // console.log('> document onStop: user.profile.name=' + user.profile.name)
-          let authorSessions
-          try {
-            authorSessions = listSessionsOfAuthorSync(user.etherpadAuthorId)
-          } catch (e) {
-            console.error(JSON.stringify(e))
-          }
-          if (authorSessions) {
-            // (3) Match session's groupIDs against the document's groupPadID group part
-            let sessionsForThisDocumentsGroup = []
-            let sessionIDs = Object.keys(authorSessions)
-            sessionIDs.forEach(function (sessionID) {
-              let sessionObj = authorSessions[sessionID]
-              if (sessionObj.groupID === documentEtherpadGroup) {
-                sessionObj.sessionID = sessionID
-                sessionsForThisDocumentsGroup.push(sessionObj)
-              }
-            })
-            let sortedSessions = _sortBy(sessionsForThisDocumentsGroup, function (sessionObj) {
-              return sessionObj.validUntil
-            })
-            // (4) When matching delete older sessions first
-            // (5) delete all but five
-            //     (it is not likely that
-            //      the user has more than five times opened a document
-            //      accross all devices)
-            let sortedSessionsLength = sortedSessions.length
-            let currentItemCount = 0
-            // console.log('> document onStop: sortedSessionsLength=' + sortedSessionsLength)
-            try {
-              sortedSessions.forEach(function (session) {
-                if (sortedSessionsLength - currentItemCount > 5) {
-                  // console.log('> document onStop: deleted session=' + session.sessionID)
-                  removeSessionSync(session.sessionID)
-                  currentItemCount++
-                }
-              })
-            } catch (e) {
-              console.error(JSON.stringify(e))
-            }
-          }
-        }
-      }
-      // console.log('END document onStop')
+      stopDocumentPublisher(this, document)
     })
-    if (args.action === 'shared' && (args.permission === 'CanEdit' || args.permission === 'CanComment') && args.accessKey) {
+    if (args.action === 'shared' && args.permission === 'CanView' && args.accessKey) {
+      const documentAccessObj = DocumentAccess.findOne({ documentId: args.id, 'linkCanView.linkId': args.accessKey })
+      if (documentAccessObj) {
+        return [
+          Documents.find({ '_id': args.id }),
+          DocumentAccess.find({documentId: args.id})
+        ]
+      } else {
+        throw new Meteor.Error(403)
+      }
+    } else if (args.action === 'shared' && (args.permission === 'CanEdit' || args.permission === 'CanComment') && args.accessKey) {
       let filterObj = {documentId: args.id}
       filterObj['link' + args.permission + '.linkId'] = args.accessKey
       const docAccess = DocumentAccess.findOne(filterObj)
@@ -183,16 +199,6 @@ Meteor.publish('document', function (args) {
           throw new Meteor.Error(403)
         }
       }
-    }
-  } else if (args.action === 'shared' && args.permission === 'CanView' && args.accessKey) {
-    const documentAccessObj = DocumentAccess.findOne({ documentId: args.id, 'linkCanView.linkId': args.accessKey })
-    if (documentAccessObj) {
-      return [
-        Documents.find({ '_id': args.id }),
-        DocumentAccess.find({documentId: args.id})
-      ]
-    } else {
-      throw new Meteor.Error(403)
     }
   } else {
     throw new Meteor.Error(401)
