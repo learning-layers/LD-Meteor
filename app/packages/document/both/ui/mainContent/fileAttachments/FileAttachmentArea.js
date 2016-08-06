@@ -46,7 +46,6 @@ class FileAttachmentArea extends Component {
       <div className='uploaded-files'>
         <ul>
           {fileAttachments.map((fileAttachment) => {
-            console.log(JSON.stringify(fileAttachment))
             let downloadPath = fileAttachment._downloadRoute + '/' + fileAttachment._collectionName + '/' + fileAttachment._id + '/original/' + fileAttachment._id + '.' + fileAttachment.extension
             return <li className='presentation'>
               <a href={downloadPath + '?download=true'} download={fileAttachment.name} target='_parent'>

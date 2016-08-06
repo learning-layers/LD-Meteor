@@ -25,7 +25,7 @@ Meteor.startup(function () {
 export const Uploads = new FilesCollection({
   collectionName: 'Uploads',
   allowClientCode: false,
-  debug: Meteor.isServer && process.env.NODE_ENV === 'development',
+  debug: Meteor.isServer && process && process.env && process.env.NODE_ENV === 'development',
   onBeforeUpload (file) {
     let interceptor = interceptorMap[file.meta.parent.collection + '#' + file.meta.parent.uploadType]
     if (!interceptor || !interceptor.onBeforeUpload) {

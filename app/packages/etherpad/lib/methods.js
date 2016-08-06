@@ -24,7 +24,7 @@ Meteor.methods({
         const etherpadReadOnlyId = getReadOnlyPadIdSync(document.etherpadGroupPad)
         Documents.update({ '_id': documentId }, { $set: { etherpadReadOnlyId: etherpadReadOnlyId } })
       }
-    } else {
+    } else if (Meteor.isServer) {
       throw new Meteor.Error(401)
     }
   },
@@ -42,7 +42,7 @@ Meteor.methods({
         const newGroupPadId = createGroupPadSync(newGroupId, 'doc' + documentId)
         Documents.update({ '_id': documentId }, { $set: { etherpadGroupPad: newGroupPadId } })
       }
-    } else {
+    } else if (Meteor.isServer) {
       throw new Meteor.Error(401)
     }
   },
@@ -64,7 +64,7 @@ Meteor.methods({
       } else {
         throw new Meteor.Error(404)
       }
-    } else {
+    } else if (Meteor.isServer) {
       throw new Meteor.Error(401)
     }
   },
@@ -83,6 +83,8 @@ Meteor.methods({
       } else {
         throw new Meteor.Error(404, 'Not found')
       }
+    } else if (Meteor.isServer) {
+      throw new Meteor.Error(401)
     }
   }
 })

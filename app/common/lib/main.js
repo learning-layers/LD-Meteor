@@ -21,7 +21,7 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
   global.isProdEnv = function () {
-    return process.env.NODE_ENV === 'production'
+    return process && process.env && process.env.NODE_ENV === 'production'
   }
 }
 
