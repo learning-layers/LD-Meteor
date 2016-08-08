@@ -22,8 +22,6 @@ let documentListSearchTermObj = {
   searchTerm: ''
 }
 
-// TODO remove session variables to prevent rerendering, but update the limit
-
 function onPropsChange (props, onData) {
   let handle = DocumentListSubs.subscribe(subsName, {searchTerm: documentListSearchTermObj.searchTerm, limit: initialLimit})
   let loading = true
