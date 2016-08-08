@@ -3,6 +3,8 @@ import { Session } from 'meteor/session'
 import Fireball from 'fireball-js'
 import { Tracker } from 'meteor/tracker'
 
+global.Users = Meteor.users
+
 if (window.applicationCache) {
   let updateFailedTrackerHandler
   window.applicationCache.addEventListener('updateready', function (e) {

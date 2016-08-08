@@ -4,7 +4,7 @@ import { check, Match } from 'meteor/check'
 
 let _insertNewTestItem = {}
 if (Meteor.isClient) {
-  let { encryptTestItem } = require('../both/helper')
+  let { encryptTestItem } = require('../client/helper')
   _insertNewTestItem = function (doc, callback) {
     Meteor.call('insertNewTestItem', encryptTestItem(doc), true, callback)
   }

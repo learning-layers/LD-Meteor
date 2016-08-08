@@ -19,7 +19,7 @@ fourseven:scss          # Sass and SCSS support for Meteor.js (with autoprefixer
 seba:minifiers-autoprefixer # Standard minifiers used with Meteor apps by default + css autoprefixer.
 standard-minifier-js@1.1.8    # Standard javascript minifiers used with Meteor apps by default.
 
-practicalmeteor:mocha   # Write package tests with mocha and run them in the browser or from the command line with spacejam.
+practicalmeteor:mocha@2.4.5_5   # Write package tests with mocha and run them in the browser or from the command line with spacejam.
 kadira:flow-router-ssr  # Same as kadira:flow-router, but with SSR support
 
 twbs:bootstrap
