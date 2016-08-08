@@ -25,6 +25,7 @@ class AddFriendModal extends Component {
         <Modal.Title>Add a friend</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        Add a friend
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={() => this.close()}>Close</Button>
