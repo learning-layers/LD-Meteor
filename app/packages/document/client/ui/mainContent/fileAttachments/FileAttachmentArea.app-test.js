@@ -95,7 +95,7 @@ describe('document/mainContent/fileAttachments/FileAttachmentArea', function () 
   })
 
   it('opens on click', function (done) {
-    let componentWrapper = renderComponent(FileAttachmentArea, { documentId: 'testDocumentId'})
+    let componentWrapper = renderComponent(FileAttachmentArea, { documentId: 'testDocumentId' })
     Meteor.setTimeout(function () {
       try {
         let component = getReactKomposerInstance(componentWrapper)
