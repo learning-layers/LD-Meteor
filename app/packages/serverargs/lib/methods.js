@@ -1,11 +1,12 @@
 import { Meteor } from 'meteor/meteor'
 import { check, Match } from 'meteor/check'
+import { Roles } from 'meteor/alanning:roles'
 import { ServerArgs } from './collections'
 
 Meteor.methods({
   setArgs: function (args) {
     check(args, Match.Any)
-    if (this.userId && Meteor.isServer) {
+    if (this.userId && Meteor.isServer && Roles.userIsInRole(this.userId, ['admin'])) {
       console.log(this.userId)
       let serverItemArgs = ServerArgs.findOne({itemId: args.itemId})
       console.log(serverItemArgs)
@@ -20,7 +21,7 @@ Meteor.methods({
   },
   setArgsReactiveInfiniteItems2: function (args) {
     check(args, Match.Any)
-    if (this.userId && Meteor.isServer) {
+    if (this.userId && Meteor.isServer && Roles.userIsInRole(this.userId, ['admin'])) {
       let itemId = 'reactiveInfiniteItems2'
       ServerArgs.upsert({'itemId': itemId, createdBy: this.userId}, {'itemId': itemId, createdBy: this.userId, args: args})
       return true

@@ -29,6 +29,8 @@ Meteor.methods({
             console.log('no collection and no previous collection found')
           }
         }
+      } else {
+        throw new Meteor.Error(401)
       }
     }
   }

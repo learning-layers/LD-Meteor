@@ -6,10 +6,12 @@ Meteor.methods({
     check(args, {
       mentionSearch: String
     })
-    if (args.mentionSearch.length >= 4) {
+    if (this.userId && args.mentionSearch.length >= 4) {
       return Meteor.users.find({ 'profile.name': { $regex: '^' + args.mentionSearch, $options: 'i' } }).fetch()
-    } else {
+    } else if (this.userId) {
       return []
+    } else {
+      throw new Meteor.Error(401)
     }
   }
 })

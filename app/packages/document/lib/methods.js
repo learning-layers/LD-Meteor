@@ -10,24 +10,28 @@ Meteor.methods({
   changeDocumentTitle: function (documentId, documentTitle) {
     check(documentId, String)
     check(documentTitle, String)
-    if (this.userId) {
+    if (this.userId) { // TODO check whether the user has access to this document
       Documents.update({'_id': documentId}, {$set: {title: documentTitle}})
-      return true
+    } else {
+      throw new Meteor.Error(401)
     }
-    return false
   },
   createDocument: function (document) {
     document.createdAt = new Date()
     document.createdBy = this.userId
     check(document, DocumentSchema)
-    return Documents.insert(document)
+    if (this.userId) {
+      return Documents.insert(document)
+    } else {
+      throw new Meteor.Error(401)
+    }
   },
   addTagToDocument: function (tagLabel, tagValue, documentId) {
     check(tagLabel, String)
     check(tagValue, String)
     check(documentId, String)
     if (this.userId) {
-      // TODO check that the user has access and is allowed to add tags
+      // TODO check that the user has access to the document and is allowed to add tags
       return Tags.insert({label: tagLabel, value: tagValue, parentId: documentId, type: 'document'})
     } else {
       throw new Meteor.Error(401)
@@ -36,6 +40,7 @@ Meteor.methods({
   removeTagFromDocument: function (tagId) {
     check(tagId, String)
     if (this.userId) {
+      // TODO check that the user has access to the document and is allowed to add tags
       return Tags.remove({'_id': tagId})
     } else {
       throw new Meteor.Error(401)
@@ -56,6 +61,7 @@ Meteor.methods({
     }
     check(comment, DocumentCommentSchema)
     if (this.userId) {
+      // TODO check that the user has access to the document and is allowed to add comments
       return DocumentComments.insert(comment)
     } else {
       throw new Meteor.Error(401)
@@ -64,6 +70,7 @@ Meteor.methods({
   deleteDocument: function (documentId) {
     check(documentId, String)
     if (this.userId) {
+      // TODO move the document rather than deleting it directly to a trash folder instead
       Documents.remove({'_id': documentId, 'createdBy': this.userId})
     } else {
       throw new Meteor.Error(401)
@@ -84,6 +91,7 @@ Meteor.methods({
     check(comment, DocumentCommentSchema)
     if (this.userId) {
       const oldComment = DocumentComments.findOne({'_id': commentId, createdBy: this.userId})
+      // create a revision for the old comment
       oldComment.revisionOf = oldComment._id
       delete oldComment._id
       oldComment.movedToRevisionsAt = new Date()
@@ -98,7 +106,7 @@ Meteor.methods({
     check(documentId, String)
     check(userId, String)
     check(permission, String)
-    if (this.userId) {
+    if (this.userId) { // TODO check if the user is allowed to change the user access of this document
       let docAccess = DocumentAccess.findOne({documentId: documentId})
       let docAccessId
       if (docAccess) {
@@ -136,19 +144,21 @@ Meteor.methods({
   removeDocumentUserAccess (documentId, userId) {
     check(documentId, String)
     check(userId, String)
-    if (this.userId) {
+    if (this.userId) { // TODO check if the user is allowed to change the user access of this document
       let docAccess = DocumentAccess.findOne({documentId: documentId})
       if (docAccess) {
         DocumentAccess.update({documentId: documentId}, {$pull: {userCanComment: {userId: userId}, userCanEdit: {userId: userId}, userCanView: {userId: userId}}})
       }
       return true
+    } else {
+      throw new Meteor.Error(401)
     }
   },
   addDocumentGroupAccess: function (documentId, groupId, permission) {
     check(documentId, String)
     check(groupId, String)
     check(permission, String)
-    if (this.userId) {
+    if (this.userId) { // TODO check if the user is allowed to change the user access of this document
       let docAccess = DocumentAccess.findOne({documentId: documentId})
       let docAccessId
       if (docAccess) {
@@ -181,17 +191,13 @@ Meteor.methods({
   removeDocumentGroupAccess (documentId, groupId) {
     check(documentId, String)
     check(groupId, String)
-    if (this.userId) {
+    if (this.userId) { // TODO check if the user is allowed to change the user access of this document
       let docAccess = DocumentAccess.findOne({documentId: documentId})
       if (docAccess) {
         DocumentAccess.update({documentId: documentId}, {$pull: {groupCanComment: {groupId: groupId}, groupCanEdit: {groupId: groupId}, groupCanView: {groupId: groupId}}})
       }
-    }
-  },
-  checkHasAccessToDocument (documentId) {
-    check(documentId, String)
-    return {
-      result: true
+    } else {
+      throw new Meteor.Error(401)
     }
   }
 })

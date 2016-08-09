@@ -8,7 +8,11 @@ Meteor.methods({
     group.createdAt = new Date()
     group.createdBy = this.userId
     check(group, GroupSchema)
-    return Groups.insert(group)
+    if (this.userId) {
+      return Groups.insert(group)
+    } else {
+      throw new Meteor.Error(401)
+    }
   },
   deleteGroup: function (groupId) {
     check(groupId, String)
@@ -30,7 +34,7 @@ Meteor.methods({
     check(groupId, String)
     check(userId, String)
     if (this.userId) {
-      // check if user is in group first
+      // TODO check if user is in group first
       const group = Groups.find({'_id': userId})
       let found = false
       if (group.members) {
@@ -54,23 +58,29 @@ Meteor.methods({
       } else {
         throw new Meteor.Error(400, 'User already member of the group')
       }
+    } else {
+      throw new Meteor.Error(401)
     }
   },
   removeUserFromGroup: function (groupId, userId) {
     check(groupId, String)
     check(userId, String)
-    if (this.userId) {
+    if (this.userId) { // TODO check that the user has access to the Group
       Groups.update({'_id': groupId}, {$set: {modifiedAt: new Date()}, $pull: {members: {userId: userId}}})
+    } else {
+      throw new Meteor.Error(401)
     }
   },
   getGroupMentions: function (args) {
     check(args, {
       mentionSearch: String
     })
-    if (args.mentionSearch.length >= 4) {
+    if (this.userId && args.mentionSearch.length >= 4) {
       return Groups.find({ name: { $regex: '^' + args.mentionSearch, $options: 'i' } }).fetch()
-    } else {
+    } else if (this.userId) {
       return []
+    } else {
+      throw new Meteor.Error(401)
     }
   }
 })
