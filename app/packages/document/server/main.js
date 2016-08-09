@@ -6,6 +6,7 @@ import { Groups } from '../../groups/lib/collections'
 import { EtherpadControllerInstance } from '../../etherpad/server/EtherpadController'
 import _sortBy from 'lodash/sortBy'
 import { check, Match } from 'meteor/check'
+import { USERS_DEFAULT } from '../../user/server/userProjections'
 
 let listSessionsOfAuthorSync = Meteor.wrapAsync(EtherpadControllerInstance.listSessionsOfAuthor.bind(EtherpadControllerInstance))
 let removeSessionSync = Meteor.wrapAsync(EtherpadControllerInstance.removeSession.bind(EtherpadControllerInstance))
@@ -51,7 +52,7 @@ Meteor.publish('documentList', function () {
       userList.push(document.createdBy)
     })
     return [
-      Meteor.users.find({ '_id': { $in: userList } }), // fetches all users that are owners of the documents
+      Meteor.users.find({ '_id': { $in: userList } }, USERS_DEFAULT), // fetches all users that are owners of the documents
       // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
       Documents.find({ $or: [ { 'createdBy': this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] })
     ]

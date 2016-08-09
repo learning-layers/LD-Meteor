@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { DocumentInfoCaches } from '../../lib/attachments/collections'
 import { Uploads } from '../../../fileUpload/lib/collections'
 import { check } from 'meteor/check'
+import { UPLOADS_DEFAULT } from '../../../fileUpload/server/uploadProjections'
 
 Meteor.publish('documentInfoCache', function (args) {
   check(args, {
@@ -27,5 +28,9 @@ Meteor.publish('documentAttachments', function (args) {
   check(args, {
     documentId: String
   })
-  return Uploads.collection.find({'meta.parent.collection': 'document', 'meta.parent.uploadType': 'attachment', 'meta.parent.elementId': args.documentId})
+  return Uploads.collection.find({
+    'meta.parent.collection': 'document',
+    'meta.parent.uploadType': 'attachment',
+    'meta.parent.elementId': args.documentId
+  }, UPLOADS_DEFAULT)
 })

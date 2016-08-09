@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { ServerArgs } from '../../serverargs/lib/collections'
 import { check } from 'meteor/check'
+import { USERS_DEFAULT } from '../../user/server/userProjections'
 
 Meteor.publish('mentions', function (initialArgs) {
   check(initialArgs, {
@@ -16,7 +17,9 @@ Meteor.publish('mentions', function (initialArgs) {
   this.autorun(function () {
     let serverArgs = ServerArgs.findOne({'connectionId': connectionId, 'itemName': 'mentions'})
     if (serverArgs && serverArgs.args.mentionSearch.length > 0) {
-      return Meteor.users.find({'profile.name': {$regex: '^' + serverArgs.args.mentionSearch, $options: 'i'}})
+      return Meteor.users.find({
+        'profile.name': {$regex: '^' + serverArgs.args.mentionSearch, $options: 'i'}
+      }, USERS_DEFAULT)
     } else {
       return []
     }

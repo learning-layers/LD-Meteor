@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { Tags } from '../../tags/lib/collections'
 import { check } from 'meteor/check'
+import { USERS_DEFAULT } from './userProjections'
 
 Meteor.publish('userTags', function (args) {
   check(args, {
@@ -15,7 +16,7 @@ Meteor.publish('userprofile', function (args) {
   check(args, {
     userId: String
   })
-  return Meteor.users.find({'_id': args.userId})
+  return Meteor.users.find({'_id': args.userId}, USERS_DEFAULT)
 })
 
 Meteor.publish('userprofiles', function (args) {
@@ -24,5 +25,5 @@ Meteor.publish('userprofiles', function (args) {
   check(args, {
     userIds: [String]
   })
-  return Meteor.users.find({'_id': {$in: args.userIds}})
+  return Meteor.users.find({'_id': {$in: args.userIds}}, USERS_DEFAULT)
 })

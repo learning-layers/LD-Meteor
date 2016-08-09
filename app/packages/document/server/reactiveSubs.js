@@ -3,6 +3,7 @@ import { check, Match } from 'meteor/check'
 import { Documents, DocumentAccess } from '../lib/collections'
 import { Groups } from '../../groups/lib/collections'
 import { ServerArgs } from '../../serverargs/lib/collections'
+import { USERS_DEFAULT } from '../../user/server/userProjections'
 
 let getDocumentPublishersForUser = function (args) {
   // find all groups the user is a member in
@@ -45,7 +46,7 @@ let getDocumentPublishersForUser = function (args) {
       userList.push(document.createdBy)
     })
     return [
-      Meteor.users.find({ '_id': { $in: userList } }), // fetches all users that are owners of the documents
+      Meteor.users.find({ '_id': { $in: userList } }, USERS_DEFAULT), // fetches all users that are owners of the documents
       // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
       Documents.find({ $or: [ { 'createdBy': this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] })
     ]
@@ -64,7 +65,7 @@ let getDocumentPublishersForUser = function (args) {
       userList.push(document.createdBy)
     })
     return [
-      Meteor.users.find({ '_id': { $in: userList } }), // fetches all users that are owners of the documents
+      Meteor.users.find({ '_id': { $in: userList } }, USERS_DEFAULT), // fetches all users that are owners of the documents
       // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
       Documents.find({
         $and: [

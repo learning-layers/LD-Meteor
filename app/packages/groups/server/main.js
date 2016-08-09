@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { Groups } from '../lib/collections'
 import { check, Match } from 'meteor/check'
+import { USERS_DEFAULT } from '../../user/server/userProjections'
 
 Meteor.publish('ownGroupsList', function () {
   // TODO add projections here:
@@ -20,7 +21,7 @@ Meteor.publish('groupList', function (args) {
         userIds.push(group.createdBy)
       })
       return [
-        Meteor.users.find({ '_id': { $in: userIds } }),
+        Meteor.users.find({ '_id': { $in: userIds } }, USERS_DEFAULT),
         Groups.find({'_id': {$in: args.groupIds}})
       ]
     } else {
@@ -30,7 +31,7 @@ Meteor.publish('groupList', function (args) {
         userIds.push(groupMembership.createdBy)
       })
       return [
-        Meteor.users.find({ '_id': { $in: userIds } }),
+        Meteor.users.find({ '_id': { $in: userIds } }, USERS_DEFAULT),
         Groups.find({ 'members.userId': this.userId })
       ]
     }
