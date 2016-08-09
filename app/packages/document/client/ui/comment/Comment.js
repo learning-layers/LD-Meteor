@@ -15,6 +15,7 @@ import CommentContent from './CommentContent'
 import CommentReply from './CommentReply'
 import RepliesArea from './RepliesArea'
 import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
+import EventEmitterInstance from '../../../../../common/client/EventEmitter'
 
 function onPropsChange (props, onData) {
   let path = JSON.parse(JSON.stringify(props.comment.parents))
@@ -70,7 +71,7 @@ class Comment extends Component {
     }
   }
   handleReplyClick () {
-    global.emitter.emit('reply-opened')
+    EventEmitterInstance.emit('reply-opened')
     setTimeout(() => {
       this.setState({
         replyActive: true,

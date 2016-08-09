@@ -16,8 +16,10 @@ class VerifyEmailAddressPanel extends Component {
       <div className='panel-body'>
         <table className='table table-striped table-bordered table-hover'>
           <thead>
-            <th>Address</th>
-            <th>Verification Status</th>
+            <tr>
+              <th key='tos-reg-emails-address-h'>Address</th>
+              <th key='tos-reg-emails-status-h'>Verification Status</th>
+            </tr>
           </thead>
           <tbody>
             {registeredEmails && registeredEmails.map((registeredEmail) => {

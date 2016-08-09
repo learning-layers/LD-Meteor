@@ -4,6 +4,7 @@ import { Template } from 'meteor/templating'
 import { Blaze } from 'meteor/blaze'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
+import EventEmitterInstance from '../../EventEmitter'
 import Navbar from '../../../../../node_modules/react-bootstrap/lib/Navbar'
 import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
 import NavItem from '../../../../../node_modules/react-bootstrap/lib/NavItem'
@@ -51,7 +52,7 @@ class LDNavbar extends Component {
     }
   }
   openSidebar () {
-    global.emitter.emit('sidebar-toggle', true)
+    EventEmitterInstance.emit('sidebar-toggle', true)
   }
   openCreateDocumentModal () {
     let renderToElement = this.refs.createDocumentModal

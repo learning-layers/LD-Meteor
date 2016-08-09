@@ -3,8 +3,6 @@ import { moment } from 'meteor/momentjs:moment'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 
 if (Meteor.isClient) {
-  var { EventEmitter } = require('fbemitter')
-  global.emitter = new EventEmitter()
   var isProdEnv = global.isProdEnv = function () {
     if (Meteor.settings.public.isProdEnv && Meteor.settings.public.isProdEnv === true) {
       return true

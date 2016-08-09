@@ -7,7 +7,12 @@ Meteor.methods({
       mentionSearch: String
     })
     if (this.userId && args.mentionSearch.length >= 4) {
-      return Meteor.users.find({ 'profile.name': { $regex: '^' + args.mentionSearch, $options: 'i' } }).fetch()
+      if (Meteor.isServer) {
+        let { USERS_DEFAULT } = require('../../user/server/userProjections')
+        return Meteor.users.find({ 'profile.name': { $regex: '^' + args.mentionSearch, $options: 'i' } }, USERS_DEFAULT).fetch()
+      } else {
+        return Meteor.users.find({ 'profile.name': { $regex: '^' + args.mentionSearch, $options: 'i' } }).fetch()
+      }
     } else if (this.userId) {
       return []
     } else {

@@ -10,6 +10,7 @@ import defaultStyle from '../defaultStyle'
 import defaultMentionStyle from '../defaultMentionStyle'
 import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
+import EventEmitterInstance from '../../../../../common/client/EventEmitter'
 
 const style = merge({}, defaultStyle(), {
   suggestions: {
@@ -71,7 +72,7 @@ class CommentReply extends Component {
     })
   }
   componentDidMount () {
-    this.replyOpenedSubscription = global.emitter.addListener('reply-opened', () => { this.closeReply() })
+    this.replyOpenedSubscription = EventEmitterInstance.addListener('reply-opened', () => { this.closeReply() })
   }
   componentWillUnmount () {
     if (this.replyOpenedSubscription) {

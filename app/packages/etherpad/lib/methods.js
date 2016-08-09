@@ -74,7 +74,7 @@ Meteor.methods({
     if (Meteor.isServer) {
       const document = Documents.findOne({ '_id': documentId }, { etherpadGroupPad: 1 })
       if (document) {
-        const documentAccess = DocumentAccess.findOne({documentId: documentId})
+        const documentAccess = DocumentAccess.findOne({documentId: documentId}, { fields: { linkCanView: 1 } })
         if (documentAccess && documentAccess.linkCanView && documentAccess.linkCanView.linkId === viewSharingLinkId) {
           return getHTMLContentSync(document.etherpadGroupPad)
         } else {

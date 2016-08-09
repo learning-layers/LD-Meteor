@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Sidebar from 'react-sidebar'
 import defaultStyle from './defaultStyle'
 import merge from 'lodash/merge'
+import EventEmitterInstance from '../../../../common/client/EventEmitter'
 import SidebarContent from './SidebarContent'
 
 const style = merge({}, defaultStyle())
@@ -19,7 +20,7 @@ class LDSidebar extends Component {
     this.trackerComputation = null
   }
   componentDidMount () {
-    this.sidebarToggleSubscription = global.emitter.addListener('sidebar-toggle', (open) => { this.onSetSidebarOpen(open) })
+    this.sidebarToggleSubscription = EventEmitterInstance.addListener('sidebar-toggle', (open) => { this.onSetSidebarOpen(open) })
   }
   componentWillUnmount () {
     if (this.sidebarToggleSubscription) {

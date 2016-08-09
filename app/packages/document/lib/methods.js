@@ -107,7 +107,7 @@ Meteor.methods({
     check(userId, String)
     check(permission, String)
     if (this.userId) { // TODO check if the user is allowed to change the user access of this document
-      let docAccess = DocumentAccess.findOne({documentId: documentId})
+      let docAccess = DocumentAccess.findOne({documentId: documentId}, { fields: { _id: 1 } })
       let docAccessId
       if (docAccess) {
         docAccessId = docAccess._id
@@ -145,7 +145,7 @@ Meteor.methods({
     check(documentId, String)
     check(userId, String)
     if (this.userId) { // TODO check if the user is allowed to change the user access of this document
-      let docAccess = DocumentAccess.findOne({documentId: documentId})
+      let docAccess = DocumentAccess.findOne({documentId: documentId}, { fields: { _id: 1 } })
       if (docAccess) {
         DocumentAccess.update({documentId: documentId}, {$pull: {userCanComment: {userId: userId}, userCanEdit: {userId: userId}, userCanView: {userId: userId}}})
       }
@@ -159,7 +159,7 @@ Meteor.methods({
     check(groupId, String)
     check(permission, String)
     if (this.userId) { // TODO check if the user is allowed to change the user access of this document
-      let docAccess = DocumentAccess.findOne({documentId: documentId})
+      let docAccess = DocumentAccess.findOne({documentId: documentId}, { fields: { _id: 1 } })
       let docAccessId
       if (docAccess) {
         docAccessId = docAccess._id
@@ -192,7 +192,7 @@ Meteor.methods({
     check(documentId, String)
     check(groupId, String)
     if (this.userId) { // TODO check if the user is allowed to change the user access of this document
-      let docAccess = DocumentAccess.findOne({documentId: documentId})
+      let docAccess = DocumentAccess.findOne({documentId: documentId}, { fields: { _id: 1 } })
       if (docAccess) {
         DocumentAccess.update({documentId: documentId}, {$pull: {groupCanComment: {groupId: groupId}, groupCanEdit: {groupId: groupId}, groupCanView: {groupId: groupId}}})
       }
@@ -221,7 +221,7 @@ export const getDocument = function (id, action, permission, accessKey, callback
   if (this.userId) {
     let document
     if (action === 'shared' && permission === 'CanView' && accessKey) {
-      const documentAccessObj = DocumentAccess.findOne({ documentId: id, 'linkCanView.linkId': accessKey })
+      const documentAccessObj = DocumentAccess.findOne({ documentId: id, 'linkCanView.linkId': accessKey }, { fields: { _id: 1 } })
       if (documentAccessObj) {
         return [
           Documents.findOne({ '_id': id }),
@@ -233,7 +233,7 @@ export const getDocument = function (id, action, permission, accessKey, callback
     } else if (action === 'shared' && (permission === 'CanEdit' || permission === 'CanComment') && accessKey) {
       let filterObj = {documentId: id}
       filterObj['link' + permission + '.linkId'] = accessKey
-      const docAccess = DocumentAccess.findOne(filterObj)
+      const docAccess = DocumentAccess.findOne(filterObj, { fields: { _id: 1 } })
       if (docAccess) {
         return [
           Documents.findOne({ '_id': id }),

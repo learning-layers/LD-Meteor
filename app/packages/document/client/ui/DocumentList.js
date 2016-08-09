@@ -10,6 +10,7 @@ import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/Butto
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { Documents } from '../../lib/collections'
 import ReactiveInfiniteList from '../../../infiniteList/client/ui/GeneralReactiveInfiniteList'
+import EventEmitterInstance from '../../../../common/client/EventEmitter'
 
 let DocumentListSubs = new SubsManager({
   cacheLimit: 2,
@@ -58,7 +59,7 @@ let highlightText = function (sectionToHighlight, text) {
 
 class ListItem extends Component {
   componentDidMount () {
-    this.searchTermSubscription = global.emitter.addListener('documentListSearchTerm', (searchString) => { this.setState({}) })
+    this.searchTermSubscription = EventEmitterInstance.addListener('documentListSearchTerm', (searchString) => { this.setState({}) })
   }
   componentWillUnmount () {
     if (this.searchTermSubscription) {
@@ -142,7 +143,7 @@ class DocumentListSearchBar extends Component {
     argsObj.searchTerm = searchString
     this.setState({documentListSearchTerm: searchString})
     this.prepareToSearch(subsNameCamelCase, argsObj)
-    global.emitter.emit('documentListSearchTerm', searchString)
+    EventEmitterInstance.emit('documentListSearchTerm', searchString)
   }
   render () {
     return <input type='text'

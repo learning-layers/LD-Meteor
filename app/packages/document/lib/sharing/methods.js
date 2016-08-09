@@ -22,7 +22,7 @@ Meteor.methods({
       } else {
         // create a request access item
         let token = uuid.v4()
-        const document = Documents.findOne({'_id': documentId})
+        const document = Documents.findOne({'_id': documentId}, { fields: { title: 1, createdBy: 1 } })
         if (document) {
           if (message && message !== '') {
             RequestAccessItems.insert({
@@ -105,7 +105,7 @@ Meteor.methods({
     check(permission, String)
     if (this.userId) {
       // TODO check if the user is the owner
-      const document = Documents.findOne({'_id': documentId})
+      const document = Documents.findOne({'_id': documentId}, { fields: { _id: 1 } })
       if (document) {
         if (true) { // TODO check whether the user has editing permissions
           let setObject = {}
@@ -152,7 +152,7 @@ Meteor.methods({
     check(permission, String)
     if (this.userId) {
       // TODO check if the user is the owner
-      const document = Documents.findOne({'_id': documentId})
+      const document = Documents.findOne({'_id': documentId}, { fields: { _id: 1 } })
       if (document) {
         if (true) { // TODO check whether the user has editing permissions
           let unsetObject = {}
@@ -173,7 +173,7 @@ Meteor.methods({
     check(permission, String)
     check(accessKey, String)
     if (this.userId) {
-      const document = Documents.findOne({'_id': documentId})
+      const document = Documents.findOne({'_id': documentId}, { fields: { _id: 1 } })
       if (document) {
         let filterObj = {documentId: documentId}
         filterObj['link' + permission + '.linkId'] = accessKey
