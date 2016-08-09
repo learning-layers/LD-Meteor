@@ -4,6 +4,7 @@ import { Documents, DocumentAccess } from '../lib/collections'
 import { Groups } from '../../groups/lib/collections'
 import { ServerArgs } from '../../serverargs/lib/collections'
 import { USERS_DEFAULT } from '../../user/server/userProjections'
+import { DOCUMENTS_PREVIEW } from './documentProjections'
 
 let getDocumentPublishersForUser = function (args) {
   // find all groups the user is a member in
@@ -48,7 +49,12 @@ let getDocumentPublishersForUser = function (args) {
     return [
       Meteor.users.find({ '_id': { $in: userList } }, USERS_DEFAULT), // fetches all users that are owners of the documents
       // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
-      Documents.find({ $or: [ { 'createdBy': this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] })
+      Documents.find({
+        $or: [
+          { 'createdBy': this.userId },
+          { '_id': { $in: documentAccessDocumentIds } }
+        ]
+      }, DOCUMENTS_PREVIEW)
     ]
   } else {
     documents = Documents.find({
@@ -75,7 +81,7 @@ let getDocumentPublishersForUser = function (args) {
           ]},
           {$text: { $search: args.searchTerm, $language: args.language }}
         ]
-      })
+      }, DOCUMENTS_PREVIEW)
     ]
   }
 }

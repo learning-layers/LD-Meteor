@@ -7,6 +7,7 @@ import { EtherpadControllerInstance } from '../../etherpad/server/EtherpadContro
 import _sortBy from 'lodash/sortBy'
 import { check, Match } from 'meteor/check'
 import { USERS_DEFAULT } from '../../user/server/userProjections'
+import { DOCUMENTS_PREVIEW, DOCUMENTS_EDIT, DOCUMENTS_READ } from './documentProjections'
 
 let listSessionsOfAuthorSync = Meteor.wrapAsync(EtherpadControllerInstance.listSessionsOfAuthor.bind(EtherpadControllerInstance))
 let removeSessionSync = Meteor.wrapAsync(EtherpadControllerInstance.removeSession.bind(EtherpadControllerInstance))
@@ -54,7 +55,12 @@ Meteor.publish('documentList', function () {
     return [
       Meteor.users.find({ '_id': { $in: userList } }, USERS_DEFAULT), // fetches all users that are owners of the documents
       // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
-      Documents.find({ $or: [ { 'createdBy': this.userId }, { '_id': { $in: documentAccessDocumentIds } } ] })
+      Documents.find({
+        $or: [
+          { 'createdBy': this.userId },
+          { '_id': { $in: documentAccessDocumentIds } }
+        ]
+      }, DOCUMENTS_PREVIEW)
     ]
   })
 })
@@ -132,7 +138,7 @@ Meteor.publish('document', function (args) {
       const documentAccessObj = DocumentAccess.findOne({ documentId: args.id, 'linkCanView.linkId': args.accessKey })
       if (documentAccessObj) {
         return [
-          Documents.find({ '_id': args.id }),
+          Documents.find({ '_id': args.id }, DOCUMENTS_READ),
           DocumentAccess.find({documentId: args.id})
         ]
       } else {
@@ -144,7 +150,7 @@ Meteor.publish('document', function (args) {
       const docAccess = DocumentAccess.findOne(filterObj)
       if (docAccess) {
         return [
-          Documents.find({ '_id': args.id }),
+          Documents.find({ '_id': args.id }, DOCUMENTS_EDIT),
           DocumentAccess.find({documentId: args.id})
         ]
       } else {
@@ -154,7 +160,7 @@ Meteor.publish('document', function (args) {
       document = Documents.findOne({ '_id': args.id })
       if (document && document.createdBy === this.userId) {
         return [
-          Documents.find({ '_id': args.id }),
+          Documents.find({ '_id': args.id }, DOCUMENTS_EDIT),
           DocumentAccess.find({documentId: args.id})
         ]
       } else if (!document) {
@@ -192,7 +198,7 @@ Meteor.publish('document', function (args) {
         if (documentAccessObj) {
           return [
             // TODO filter write url when read only permissions
-            Documents.find({ '_id': args.id }),
+            Documents.find({ '_id': args.id }, DOCUMENTS_EDIT),
             DocumentAccess.find({documentId: args.id})
           ]
         } else {
