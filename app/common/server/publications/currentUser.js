@@ -7,7 +7,7 @@ Meteor.publish('currentUserDetails', function () {
   if (this.userId) {
     return [
       Meteor.users.find({'_id': this.userId}, USERS_DEFAULT),
-      Uploads.collection.find({
+      Uploads.collection.find({ // TODO add a preview image of the avatar instead of the large version
         'meta.parent.collection': 'user',
         'meta.parent.uploadType': 'avatar',
         'meta.parent.elementId': this.userId

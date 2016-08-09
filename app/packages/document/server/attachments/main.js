@@ -18,6 +18,8 @@ Meteor.publish('documentInfoCache', function (args) {
         })
       }
       return DocumentInfoCaches.find({documentId: args.documentId})
+    } else {
+      throw new Meteor.Error(400, 'No documentId provided')
     }
   } else {
     throw new Meteor.Error(403)
@@ -28,6 +30,7 @@ Meteor.publish('documentAttachments', function (args) {
   check(args, {
     documentId: String
   })
+  // TODO check for viewSharingId
   return Uploads.collection.find({
     'meta.parent.collection': 'document',
     'meta.parent.uploadType': 'attachment',

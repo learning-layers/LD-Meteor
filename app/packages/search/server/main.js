@@ -1,7 +1,8 @@
 import { Meteor } from 'meteor/meteor'
-import { SearchItems } from '../lib/collections'
 import { MongoInternals } from 'meteor/mongo'
 import { check, Match } from 'meteor/check'
+import { Roles } from 'meteor/alanning:roles'
+import { SearchItems } from '../lib/collections'
 
 let db = null
 Meteor.startup(function () {
@@ -68,13 +69,17 @@ Meteor.publish('search', function (args) {
     search: String,
     lang: Match.Maybe(String)
   })
-  if (!args.lang) {
-    args.lang = 'en'
-  }
-  if (args.search === '') {
-    return SearchItems.find({})
+  if (this.userId && Roles.userIsInRole(this.userId, ['admin'])) {
+    if (!args.lang) {
+      args.lang = 'en'
+    }
+    if (args.search === '') {
+      return SearchItems.find({})
+    } else {
+      return SearchItems.find({$text: { $search: args.search, $language: args.language }}, {score: {$meta: 'textScore'}}, {sort: 'textScore', limit: 100})
+    }
   } else {
-    return SearchItems.find({$text: { $search: args.search, $language: args.language }}, {score: {$meta: 'textScore'}}, {sort: 'textScore', limit: 100})
+    throw new Meteor.Error(401)
   }
 })
 
@@ -107,24 +112,28 @@ let reduce = function (key, count, docId, sum) {
 }
 
 Meteor.publish('searchAutocomplete', function () {
-  let docs = SearchItems.find({}).fetch()
-  let foundOccurences = []
-  docs.forEach(function (doc) {
-    foundOccurences = foundOccurences.concat(map(doc))
-  })
-  let sum = []
-  foundOccurences.forEach(function (foundOccurence) {
-    sum = reduce(foundOccurence.searchTerm, foundOccurence.count, foundOccurence.docId, sum)
-  })
-  // console.log('map=')
-  // console.log(foundOccurences)
-  // console.log('reduce=')
-  let sumKeys = Object.keys(sum)
-  sumKeys.forEach(function (sumKey) {
-    let currentItem = sum[sumKey]
-    if (currentItem.count > 1) {
-      console.log({word: sumKey, currentItem})
-    }
-  })
-  return []
+  if (this.userId && Roles.userIsInRole(this.userId, ['admin'])) {
+    let docs = SearchItems.find({}).fetch()
+    let foundOccurences = []
+    docs.forEach(function (doc) {
+      foundOccurences = foundOccurences.concat(map(doc))
+    })
+    let sum = []
+    foundOccurences.forEach(function (foundOccurence) {
+      sum = reduce(foundOccurence.searchTerm, foundOccurence.count, foundOccurence.docId, sum)
+    })
+    // console.log('map=')
+    // console.log(foundOccurences)
+    // console.log('reduce=')
+    let sumKeys = Object.keys(sum)
+    sumKeys.forEach(function (sumKey) {
+      let currentItem = sum[sumKey]
+      if (currentItem.count > 1) {
+        console.log({word: sumKey, currentItem})
+      }
+    })
+    return []
+  } else {
+    throw new Meteor.Error(401)
+  }
 })

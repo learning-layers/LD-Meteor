@@ -122,5 +122,7 @@ Meteor.publish('reactiveDocumentList', function (initialArgs) {
     this.onStop(() => {
       // ServerArgs.remove({'itemId': itemId, createdBy: this.userId})
     })
+  } else {
+    throw new Meteor.Error(401)
   }
 })

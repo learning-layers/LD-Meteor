@@ -7,7 +7,11 @@ Meteor.publish('userTags', function (args) {
   check(args, {
     userId: String
   })
-  return Tags.find({ parentId: args.userId, type: 'user' })
+  if (this.userId) {
+    return Tags.find({ parentId: args.userId, type: 'user' })
+  } else {
+    throw new Meteor.Error(401)
+  }
 })
 
 Meteor.publish('userprofile', function (args) {
@@ -16,7 +20,11 @@ Meteor.publish('userprofile', function (args) {
   check(args, {
     userId: String
   })
-  return Meteor.users.find({'_id': args.userId}, USERS_DEFAULT)
+  if (this.userId) {
+    return Meteor.users.find({'_id': args.userId}, USERS_DEFAULT)
+  } else {
+    throw new Meteor.Error(401)
+  }
 })
 
 Meteor.publish('userprofiles', function (args) {
@@ -25,5 +33,9 @@ Meteor.publish('userprofiles', function (args) {
   check(args, {
     userIds: [String]
   })
-  return Meteor.users.find({'_id': {$in: args.userIds}}, USERS_DEFAULT)
+  if (this.userId) {
+    return Meteor.users.find({'_id': {$in: args.userIds}}, USERS_DEFAULT)
+  } else {
+    throw new Meteor.Error(401)
+  }
 })

@@ -116,11 +116,11 @@ if (Meteor.isServer) {
    fileName: 'Big-Buck-Bunny.mp4'
    });
    }); */
-  Meteor.publish('files.videos.all', function () {
+  /* Meteor.publish('files.videos.all', function () {
     return Uploads.collection.find({})
-  })
+  }) */
 } else {
-  Meteor.subscribe('files.videos.all')
+  // Meteor.subscribe('files.videos.all')
 }
 
 Uploads.cacheControl = 'public, max-age=31536000'
