@@ -11,7 +11,7 @@ Meteor.methods({
   changeDocumentTitle: function (documentId, documentTitle) {
     check(documentId, String)
     check(documentTitle, String)
-    if (this.userId) { // TODO check whether the user has access to this document
+    if (this.userId) {
       const userAccessLevel = getAccessLevel(documentId, this.userId)
       if (userAccessLevel && userAccessLevel === 'edit') {
         Documents.update({'_id': documentId}, {$set: {title: documentTitle}})

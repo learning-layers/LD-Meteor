@@ -1,9 +1,10 @@
 import { Meteor } from 'meteor/meteor'
 import { Email } from 'meteor/email'
+import { check } from 'meteor/check'
 import uuid from 'node-uuid'
 import { Documents, DocumentAccess } from '../../lib/collections'
 import { RequestAccessItems } from './collections'
-import { check } from 'meteor/check'
+import { getAccessLevel } from '../util'
 
 let RequestAccessEmailTemplates
 if (Meteor.isServer) {
@@ -48,7 +49,7 @@ Meteor.methods({
           var sender = Meteor.users.findOne(this.userId)
           var receiver = Meteor.users.findOne(document.createdBy)
           let options = {
-            to: 'martin@bachl.pro',
+            to: Meteor.settings.private.initialUser.email,
             from: RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.from
               ? RequestAccessEmailTemplates.emailTemplates.requestDocumentAccess.from(sender)
               : RequestAccessEmailTemplates.emailTemplates.from,
@@ -65,6 +66,8 @@ Meteor.methods({
           throw new Meteor.Error(404, 'Document doesn\'t exist.')
         }
       }
+    } else {
+      throw new Meteor.Error(401)
     }
   },
   addDocumentUserAccessAfterRequest: function (documentId, userId, permission) {
@@ -81,7 +84,7 @@ Meteor.methods({
         }
       })
     } else {
-      throw new Meteor.Error(401, 'Unauthorized')
+      throw new Meteor.Error(401)
     }
   },
   rejectDocumentUserAccessAfterRequest: function (token) {
@@ -104,10 +107,10 @@ Meteor.methods({
     check(documentId, String)
     check(permission, String)
     if (this.userId) {
-      // TODO check if the user is the owner
       const document = Documents.findOne({'_id': documentId}, { fields: { _id: 1 } })
       if (document) {
-        if (true) { // TODO check whether the user has editing permissions
+        const userAccessLevel = getAccessLevel(documentId, this.userId)
+        if (userAccessLevel && userAccessLevel === 'edit') {
           let setObject = {}
           let linkId = uuid.v4()
           setObject['link' + permission] = {
@@ -138,7 +141,7 @@ Meteor.methods({
             $set: setObject
           })
         } else {
-          throw new Meteor.Error(401, 'Unauthorized')
+          throw new Meteor.Error(403, 'Not enough access rights to generate a sharing link')
         }
       } else {
         throw new Meteor.Error(404, 'Document doesn\'t exist.')
@@ -154,7 +157,8 @@ Meteor.methods({
       // TODO check if the user is the owner
       const document = Documents.findOne({'_id': documentId}, { fields: { _id: 1 } })
       if (document) {
-        if (true) { // TODO check whether the user has editing permissions
+        const userAccessLevel = getAccessLevel(documentId, this.userId)
+        if (userAccessLevel && userAccessLevel === 'edit') {
           let unsetObject = {}
           unsetObject['link' + permission] = 1
           console.log(unsetObject)
@@ -164,6 +168,8 @@ Meteor.methods({
           } else {
             return false
           }
+        } else {
+          throw new Meteor.Error(403, 'Not enough access rights to remove a sharing link')
         }
       }
     }
@@ -175,26 +181,31 @@ Meteor.methods({
     if (this.userId) {
       const document = Documents.findOne({'_id': documentId}, { fields: { _id: 1 } })
       if (document) {
-        let filterObj = {documentId: documentId}
-        filterObj['link' + permission + '.linkId'] = accessKey
-        const docAccess = DocumentAccess.findOne(filterObj)
-        if (docAccess) {
-          let addToSetObject = {}
-          addToSetObject['user' + permission] = {
-            userId: this.userId,
-            addedBy: this.userId,
-            addedOn: new Date()
-          }
-          let updateId = DocumentAccess.update({ '_id': docAccess._id }, {
-            $addToSet: addToSetObject
-          })
-          if (updateId) {
-            return true
+        const userAccessLevel = getAccessLevel(documentId, this.userId)
+        if (userAccessLevel && userAccessLevel === 'edit') {
+          let filterObj = {documentId: documentId}
+          filterObj['link' + permission + '.linkId'] = accessKey
+          const docAccess = DocumentAccess.findOne(filterObj)
+          if (docAccess) {
+            let addToSetObject = {}
+            addToSetObject['user' + permission] = {
+              userId: this.userId,
+              addedBy: this.userId,
+              addedOn: new Date()
+            }
+            let updateId = DocumentAccess.update({ '_id': docAccess._id }, {
+              $addToSet: addToSetObject
+            })
+            if (updateId) {
+              return true
+            } else {
+              return new Meteor.Error(500)
+            }
           } else {
-            return new Meteor.Error(500)
+            return false
           }
         } else {
-          return false
+          throw new Meteor.Error(403, 'Not enough access rights to assign permissions')
         }
       }
     } else {
