@@ -1,5 +1,6 @@
 export const UPLOADS_DEFAULT = {
   fields: {
+    meta: 1,
     name: 1,
     extension: 1,
     type: 1,

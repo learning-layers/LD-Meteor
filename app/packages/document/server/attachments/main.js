@@ -31,6 +31,7 @@ Meteor.publish('documentAttachments', function (args) {
     documentId: String
   })
   // TODO check for viewSharingId
+  // TODO check if the user has access to the document
   return Uploads.collection.find({
     'meta.parent.collection': 'document',
     'meta.parent.uploadType': 'attachment',
