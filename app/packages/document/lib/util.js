@@ -1,4 +1,4 @@
-import { DocumentAccess } from './collections'
+import { Documents, DocumentAccess } from './collections'
 import { Groups } from '../../groups/lib/collections'
 
 const getHighestAccessLevel = function (currentAccessLevel, newAccessLevel) {
@@ -13,6 +13,10 @@ const getHighestAccessLevel = function (currentAccessLevel, newAccessLevel) {
 }
 
 export const getAccessLevel = function (documentId, userId) {
+  const document = Documents.findOne({'_id': documentId}, { createdBy: 1 })
+  if (document.createdBy === userId) {
+    return 'edit'
+  }
   const documentAccess = DocumentAccess.findOne({ documentId: documentId })
   if (documentAccess) {
     let accessLevel
@@ -33,7 +37,7 @@ export const getAccessLevel = function (documentId, userId) {
       const userGroups = Groups.find({ 'members.userId': userId }, {'_id': 1})
       let userGroupIds = []
       userGroups.forEach(function (userGroup) {
-        userGroupIds.push(userGroup.groupId)
+        userGroupIds.push(userGroup._id)
       })
       let found = false
       documentAccess.groupCanEdit.forEach(function (groupCanEditItem) {
