@@ -33,7 +33,8 @@ Meteor.methods({
   addUserToGroup: function (groupId, userId) {
     check(groupId, String)
     check(userId, String)
-    if (this.userId) { // TODO check if this is still working
+    if (this.userId) {
+      // TODO check if this is still working
       // TODO check if user is in group first
       const group = Groups.find({'_id': groupId}, { fields: { members: 1 } })
       let found = false
