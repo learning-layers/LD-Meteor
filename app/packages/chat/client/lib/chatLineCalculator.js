@@ -36,6 +36,7 @@ class ChatLineCalculator {
     let currentLineContent = ''
     let prevSpacePosition = -1
     let lineContainsEmoticons = false
+    let messageHeight = 0
     for (let i = 0, len = splitText.length; i < len; i++) {
       let c = splitText[i]
       if (c !== '' && c.length <= 1) {
@@ -49,6 +50,11 @@ class ChatLineCalculator {
           currentLineContent = ''
           prevSpacePosition = -1
           lines.push({ lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons })
+          if (lineContainsEmoticons) {
+            messageHeight += lineHeightWithEmoticons
+          } else {
+            messageHeight += lineHeight
+          }
           lineContainsEmoticons = false
           currentLineContents = []
           currentLineLength = 0
@@ -62,6 +68,11 @@ class ChatLineCalculator {
             currentLineContent = ''
             prevSpacePosition = -1
             lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+            if (lineContainsEmoticons) {
+              messageHeight += lineHeightWithEmoticons
+            } else {
+              messageHeight += lineHeight
+            }
             lineContainsEmoticons = false
             currentLineContents = []
           }
@@ -104,6 +115,11 @@ class ChatLineCalculator {
             currentLineLength = 0
             currentLineContents.push(currentLineContent)
             lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+            if (lineContainsEmoticons) {
+              messageHeight += lineHeightWithEmoticons
+            } else {
+              messageHeight += lineHeight
+            }
             lineContainsEmoticons = false
             currentLineContents = []
             currentLineContent = ''
@@ -116,6 +132,11 @@ class ChatLineCalculator {
             let lineToPush = currentLineContent.substring(0, prevSpacePosition)
             currentLineContents.push(lineToPush)
             lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+            if (lineContainsEmoticons) {
+              messageHeight += lineHeightWithEmoticons
+            } else {
+              messageHeight += lineHeight
+            }
             lineContainsEmoticons = false
             currentLineContents = []
             // console.log('Pushing line with line length=' + lineToPush.length + ', value=' + lineToPush)
@@ -132,25 +153,27 @@ class ChatLineCalculator {
           currentLineLength = 0
           currentLineContents.push(currentLineContent)
           lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+          if (lineContainsEmoticons) {
+            messageHeight += lineHeightWithEmoticons
+          } else {
+            messageHeight += lineHeight
+          }
           lineContainsEmoticons = false
           currentLineContents = []
           currentLineContent = ''
         }
       }
     }
-    let messageHeight = 0
     if (currentLineContent !== '') {
       // console.log('Pushing line with line length=' + currentLineLength + ', value=' + currentLine)
       currentLineContents.push(currentLineContent)
       lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
-    }
-    lines.forEach(function (line) {
-      if (line.containsEmoticons) {
+      if (lineContainsEmoticons) {
         messageHeight += lineHeightWithEmoticons
       } else {
         messageHeight += lineHeight
       }
-    })
+    }
     console.timeEnd('Function #2')
     return {
       messageHeight: messageHeight,
