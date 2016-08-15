@@ -17,7 +17,7 @@ class ChatLineCalculator {
         if (typeof mote === 'string') {
           // parse the emote position info string
           mote = mote.split('-')
-          mote = [parseInt(mote[0]), parseInt(mote[1])]
+          mote = [parseInt(mote[0], 10), parseInt(mote[1], 10)]
           let length = mote[1] - mote[0]
           let empty = Array.apply(null, new Array(length + 1)).map(function () { return '' })
           // replace the emote string with empty array values to preserve the original indexes
@@ -31,6 +31,7 @@ class ChatLineCalculator {
     let currentLineLength = 0
     let lines = []
     let lineHeight = 17
+    let lineHeightWithEmoticons = 26
     let currentLineContents = []
     let currentLineContent = ''
     let prevSpacePosition = -1
@@ -137,12 +138,19 @@ class ChatLineCalculator {
         }
       }
     }
+    let messageHeight = 0
     if (currentLineContent !== '') {
       // console.log('Pushing line with line length=' + currentLineLength + ', value=' + currentLine)
       currentLineContents.push(currentLineContent)
       lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
     }
-    let messageHeight = Math.ceil(lines.length * lineHeight)
+    lines.forEach(function (line) {
+      if (line.containsEmoticons) {
+        messageHeight += lineHeightWithEmoticons
+      } else {
+        messageHeight += lineHeight
+      }
+    })
     console.timeEnd('Function #2')
     return {
       messageHeight: messageHeight,

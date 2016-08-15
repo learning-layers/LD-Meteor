@@ -114,7 +114,7 @@ class SidebarContent extends Component {
         <Tab eventKey={1} title='Friendlist'><FriendList /></Tab>
         <Tab eventKey={2} title='Groups'>
           <div className='chat-message-wrapper'>
-          Tab 2 content
+          {false ? <span>Tab 2 content</span> : null}
           {false ? messageObject.lines.map(function (line) {
             return <div style={{display: 'block', height: '17px'}}>{line}</div>
           }) : null}
