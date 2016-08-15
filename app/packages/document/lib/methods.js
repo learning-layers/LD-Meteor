@@ -6,6 +6,7 @@ import { Tags } from '../../tags/lib/collections'
 import { DocumentComments, DocumentAccess } from '../lib/collections'
 import { Groups } from '../../groups/lib/collections'
 import { getAccessLevel } from './util'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
   changeDocumentTitle: function (documentId, documentTitle) {
@@ -352,3 +353,28 @@ export const getDocument = function (id, action, permission, accessKey, callback
     throw new Meteor.Error(401, 'Unauthorized')
   }
 }
+
+rateLimit({
+  methods: [
+    'changeDocumentTitle',
+    'createDocument',
+    'createComment',
+    'deleteDocument',
+    'updateComment',
+    'addDocumentUserAccess',
+    'removeDocumentUserAccess',
+    'addDocumentGroupAccess',
+    'removeDocumentGroupAccess'
+  ],
+  limit: 20,
+  timeRange: 10000
+})
+
+rateLimit({
+  methods: [
+    'addTagToDocument',
+    'removeTagFromDocument'
+  ],
+  limit: 50,
+  timeRange: 10000
+})

@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { check, Match } from 'meteor/check'
 import { Roles } from 'meteor/alanning:roles'
 import { ServerArgs } from './collections'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
   setArgs: function (args) {
@@ -48,4 +49,14 @@ Meteor.methods({
     }
     return false
   }
+})
+
+rateLimit({
+  methods: [
+    'setArgs',
+    'setArgsReactiveInfiniteItems2',
+    'setArgsReactiveDocumentList'
+  ],
+  limit: 20,
+  timeRange: 10000
 })

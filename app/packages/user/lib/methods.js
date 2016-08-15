@@ -2,6 +2,7 @@ import { Tags } from '../../tags/lib/collections'
 import { Meteor } from 'meteor/meteor'
 import { check, Match } from 'meteor/check'
 import { UserProfileSchema } from '../lib/schema'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
   addTagToUser: function (tagLabel, tagValue, userId) {
@@ -47,4 +48,21 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'sendNewProfileInfoData'
+  ],
+  limit: 20,
+  timeRange: 10000
+})
+
+rateLimit({
+  methods: [
+    'addTagToUser',
+    'removeTagFromUser'
+  ],
+  limit: 50,
+  timeRange: 10000
 })

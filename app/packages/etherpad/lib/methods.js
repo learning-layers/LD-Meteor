@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { Documents, DocumentAccess } from '../../document/lib/collections'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 let createGroupSync, createGroupPadSync, createAuthorSync, createPadSessionSync, getReadOnlyPadIdSync, getHTMLContentSync
 if (Meteor.isServer) {
@@ -87,4 +88,15 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'createEtherpadReadOnlyId',
+    'createEtherpadGroupAndPad',
+    'getEtherpadSession',
+    'getEtherpadHtmlContent'
+  ],
+  limit: 30,
+  timeRange: 10000
 })

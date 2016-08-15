@@ -5,6 +5,7 @@ import uuid from 'node-uuid'
 import { Documents, DocumentAccess } from '../../lib/collections'
 import { RequestAccessItems } from './collections'
 import { getAccessLevel } from '../util'
+import { rateLimit } from '../../../../common/lib/rate-limit'
 
 let RequestAccessEmailTemplates
 if (Meteor.isServer) {
@@ -212,4 +213,17 @@ Meteor.methods({
       throw new Meteor.Error(401, 'Unauthorized')
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'requestAccessToDocument',
+    'addDocumentUserAccessAfterRequest',
+    'rejectDocumentUserAccessAfterRequest',
+    'generateDocumentSharingLink',
+    'removeDocumentSharingLink',
+    'assignDocumentEditOrCommentPermissions'
+  ],
+  limit: 20,
+  timeRange: 10000
 })

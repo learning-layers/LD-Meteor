@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { Roles } from 'meteor/alanning:roles'
 import { InfiniteScrollItems } from './collections'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
   insertInfiniteScrollTestData: function () {
@@ -28,4 +29,12 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'getItems'
+  ],
+  limit: 50,
+  timeRange: 10000
 })

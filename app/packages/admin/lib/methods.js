@@ -3,12 +3,20 @@ import { Roles } from 'meteor/alanning:roles'
 import { Accounts } from 'meteor/accounts-base'
 import { check } from 'meteor/check'
 // import { UserRoles } from '../../../common/lib/roles'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
   getRoles: function (userId) {
     check(userId, String)
-    if (this.userId) { // TODO check for whom this should be available
+    if (this.userId && Roles.userIsInRole(this.userId, 'super-admin', Roles.GLOBAL_GROUP)) {
       let user = Meteor.users.findOne({'_id': userId}, { fields: { roles: 1 } })
+      if (user) {
+        return user.roles
+      } else {
+        return []
+      }
+    } else if (this.userId && this.userId === userId) {
+      let user = Meteor.users.findOne({'_id': this.userId}, { fields: { roles: 1 } })
       if (user) {
         return user.roles
       } else {
@@ -20,15 +28,23 @@ Meteor.methods({
   },
   getRegisteredEmails: function (userId) {
     check(userId, String)
-    if (this.userId) { // TODO check for whom this should be available
+    if (this.userId && Roles.userIsInRole(this.userId, 'super-admin', Roles.GLOBAL_GROUP)) {
       let user = Meteor.users.findOne({'_id': userId}, { fields: { registered_emails: 1 } })
       if (user) {
         return user.registered_emails
       } else {
         return []
       }
+    } else if (this.userId && this.userId === userId) {
+      let user = Meteor.users.findOne({'_id': this.userId}, { fields: { registered_emails: 1 } })
+      if (user) {
+        return user.registered_emails
+      } else {
+        return []
+      }
+    } else {
+      throw new Meteor.Error(401)
     }
-    return []
   },
   resendUserVerificationMail: function (userId, address) {
     check(userId, String)
@@ -86,4 +102,16 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'getRoles',
+    'getRegisteredEmails',
+    'resendUserVerificationMail',
+    'activateUserRole',
+    'deactivateUserRole'
+  ],
+  limit: 10,
+  timeRange: 10000
 })

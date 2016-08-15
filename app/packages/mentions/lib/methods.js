@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
   getMentions: function (args) {
@@ -19,4 +20,12 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'getMentions'
+  ],
+  limit: 50,
+  timeRange: 10000
 })

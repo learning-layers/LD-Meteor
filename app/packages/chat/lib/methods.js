@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { FriendRequests, FriendLists } from './collections'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 const createFriendListIfNotExists = function (userId, callback) {
   let friendList = FriendLists.findOne({userId: userId}, {_id: 1})
@@ -73,4 +74,15 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'sendFriendRequest',
+    'acceptFriendRequest',
+    'denyFriendRequest',
+    'ignoreFriendRequest'
+  ],
+  limit: 20,
+  timeRange: 10000
 })

@@ -3,6 +3,7 @@ import { Groups } from './collections'
 import { GroupSchema } from './schema'
 import { check } from 'meteor/check'
 import { isMemberInGroup } from './util'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
   createGroup: function (group) {
@@ -92,4 +93,24 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'createGroup',
+    'deleteGroup',
+    'leaveGroup',
+    'addUserToGroup',
+    'removeUserFromGroup'
+  ],
+  limit: 20,
+  timeRange: 10000
+})
+
+rateLimit({
+  methods: [
+    'getGroupMentions'
+  ],
+  limit: 50,
+  timeRange: 10000
 })

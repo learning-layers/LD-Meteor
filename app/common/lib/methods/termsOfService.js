@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
   agreeToTOS: function () {
@@ -20,4 +21,12 @@ Meteor.methods({
       return true // TODO check why this is needed and document it
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'agreeToTOS'
+  ],
+  limit: 5,
+  timeRange: 5000
 })

@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { check, Match } from 'meteor/check'
 import { Roles } from 'meteor/alanning:roles'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 // The code below is originally written by Sachin 'sachinbhutani' (https://github.com/sachinbhutani)
 // for the package flow-db-admin (https://github.com/sachinbhutani/flow-db-admin).
@@ -34,4 +35,12 @@ Meteor.methods({
       }
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'adminRemoveMongoDoc'
+  ],
+  limit: 10,
+  timeRange: 10000
 })

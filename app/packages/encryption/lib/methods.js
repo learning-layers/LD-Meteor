@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { check, Match } from 'meteor/check'
 import { Roles } from 'meteor/alanning:roles'
 import { Tests } from './collections'
+import { rateLimit } from '../../../common/lib/rate-limit'
 
 let _insertNewTestItem = {}
 if (Meteor.isClient) {
@@ -22,4 +23,12 @@ Meteor.methods({
       }
     }
   }
+})
+
+rateLimit({
+  methods: [
+    'insertNewTestItem'
+  ],
+  limit: 10,
+  timeRange: 10000
 })
