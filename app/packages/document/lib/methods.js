@@ -1,12 +1,43 @@
 import { Meteor } from 'meteor/meteor'
-import { Documents } from './collections'
-import { DocumentSchema, DocumentCommentSchema } from './schema'
 import { check, Match } from 'meteor/check'
+import { Email } from 'meteor/email'
 import { Tags } from '../../tags/lib/collections'
 import { DocumentComments, DocumentAccess } from '../lib/collections'
 import { Groups } from '../../groups/lib/collections'
 import { getAccessLevel } from './util'
 import { rateLimit } from '../../../common/lib/rate-limit'
+import { DocumentSchema, DocumentCommentSchema } from './schema'
+import { Documents } from './collections'
+
+let CommentMentioningEmailTemplates
+if (Meteor.isServer) {
+  const { CommentMentioning } = require('../server/commentMentioningEmailTemplates')
+  CommentMentioningEmailTemplates = CommentMentioning
+}
+
+function sendMentioningEmail (documentId, documentTitle, commentText, senderId, receiverId) {
+  var sender = Meteor.users.findOne(senderId)
+  var receiver = Meteor.users.findOne(receiverId)
+  let options = {
+    to: Meteor.settings.private.initialUser.email,
+    from: CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.from
+      ? CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.from(sender)
+      : CommentMentioningEmailTemplates.emailTemplates.from,
+    subject: CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.subject(sender, documentTitle)
+  }
+
+  if (typeof CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.text === 'function') {
+    options.text = CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.text(
+      sender,
+      receiver,
+      CommentMentioningEmailTemplates.urls.commentMentioning(documentId),
+      commentText,
+      documentTitle
+    )
+  }
+
+  Email.send(options)
+}
 
 Meteor.methods({
   changeDocumentTitle: function (documentId, documentTitle) {
@@ -83,6 +114,14 @@ Meteor.methods({
     if (this.userId) {
       const userAccessLevel = getAccessLevel(comment.documentId, this.userId)
       if (userAccessLevel && userAccessLevel !== 'view') {
+        if (Meteor.isServer && comment.mentions && comment.mentions.length > 0) {
+          const document = Documents.findOne({_id: comment.documentId})
+          if (document) {
+            comment.mentions.forEach((mentionUserId) => {
+              sendMentioningEmail(document._id, document.title, comment.text, this.userId, mentionUserId)
+            })
+          }
+        }
         return DocumentComments.insert(comment)
       } else {
         throw new Meteor.Error(403, 'Not enough access rights to add a comment')
