@@ -15,7 +15,7 @@ tracker@1.1.0                 # Meteor's client-side reactive programming librar
 es5-shim@4.6.13                # ECMAScript 5 compatibility for older browsers.
 ecmascript@0.5.7              # Enable ECMAScript2015+ syntax in app code
 
-fourseven:scss          # Sass and SCSS support for Meteor.js (with autoprefixer and sourcemaps).
+fourseven:scss@=3.8.0_1          # Sass and SCSS support for Meteor.js (with autoprefixer and sourcemaps).
 seba:minifiers-autoprefixer # Standard minifiers used with Meteor apps by default + css autoprefixer.
 standard-minifier-js@1.1.8    # Standard javascript minifiers used with Meteor apps by default.
 
