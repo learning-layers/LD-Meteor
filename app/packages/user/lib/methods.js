@@ -16,8 +16,8 @@ Meteor.methods({
   },
   removeTagFromUser: function (tagId) {
     check(tagId, String)
-    if (this.userId) { // TODO limit this to only the user himself that can remove the tags
-      return Tags.remove({'_id': tagId})
+    if (this.userId) {
+      return Tags.remove({'_id': tagId, parentId: this.userId})
     } else {
       throw new Meteor.Error(401)
     }

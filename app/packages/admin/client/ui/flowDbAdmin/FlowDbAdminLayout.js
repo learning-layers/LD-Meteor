@@ -10,7 +10,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import { Template } from 'meteor/templating'
 import _difference from 'lodash/difference'
 import _map from 'lodash/map'
-import jQuery from 'meteor/jquery'
+import { jQuery } from 'meteor/jquery'
 
 // The code below is originally written by Sachin 'sachinbhutani' (https://github.com/sachinbhutani)
 // for the package flow-db-admin (https://github.com/sachinbhutani/flow-db-admin).
