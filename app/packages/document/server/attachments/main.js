@@ -3,6 +3,7 @@ import { DocumentInfoCaches } from '../../lib/attachments/collections'
 import { Uploads } from '../../../fileUpload/lib/collections'
 import { check } from 'meteor/check'
 import { UPLOADS_DEFAULT } from '../../../fileUpload/server/uploadProjections'
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 Meteor.publish('documentInfoCache', function (args) {
   check(args, {
@@ -38,3 +39,15 @@ Meteor.publish('documentAttachments', function (args) {
     'meta.parent.elementId': args.documentId
   }, UPLOADS_DEFAULT)
 })
+
+DDPRateLimiter.addRule({
+  name: 'documentInfoCache',
+  type: 'subscription',
+  connectionId () { return true }
+}, 5, 1000)
+
+DDPRateLimiter.addRule({
+  name: 'documentAttachments',
+  type: 'subscription',
+  connectionId () { return true }
+}, 5, 1000)

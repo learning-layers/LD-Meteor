@@ -5,6 +5,7 @@ import { Groups } from '../../groups/lib/collections'
 import { ServerArgs } from '../../serverargs/lib/collections'
 import { USERS_DEFAULT } from '../../user/server/userProjections'
 import { DOCUMENTS_PREVIEW } from './documentProjections'
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 let getDocumentPublishersForUser = function (args) {
   // find all groups the user is a member in
@@ -126,3 +127,9 @@ Meteor.publish('reactiveDocumentList', function (initialArgs) {
     throw new Meteor.Error(401)
   }
 })
+
+DDPRateLimiter.addRule({
+  name: 'reactiveDocumentList',
+  type: 'subscription',
+  connectionId () { return true }
+}, 5, 1000)

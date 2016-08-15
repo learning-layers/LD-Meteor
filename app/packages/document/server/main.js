@@ -8,6 +8,7 @@ import _sortBy from 'lodash/sortBy'
 import { check, Match } from 'meteor/check'
 import { USERS_DEFAULT } from '../../user/server/userProjections'
 import { DOCUMENTS_PREVIEW, DOCUMENTS_EDIT, DOCUMENTS_READ } from './documentProjections'
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 let listSessionsOfAuthorSync = Meteor.wrapAsync(EtherpadControllerInstance.listSessionsOfAuthor.bind(EtherpadControllerInstance))
 let removeSessionSync = Meteor.wrapAsync(EtherpadControllerInstance.removeSession.bind(EtherpadControllerInstance))
@@ -283,4 +284,23 @@ Meteor.publish('commentRepliesCount', function (args) {
   } else {
     throw new Meteor.Error(401)
   }
+})
+
+const subscriptionNames = [
+  'documentList',
+  'document',
+  'documentTags',
+  'documentComments',
+  'documentCommentsCount',
+  'documentAccess',
+  'commentReplies',
+  'commentRepliesCount'
+]
+
+subscriptionNames.forEach(function (subscriptionName) {
+  DDPRateLimiter.addRule({
+    name: subscriptionName,
+    type: 'subscription',
+    connectionId () { return true }
+  }, 5, 1000)
 })

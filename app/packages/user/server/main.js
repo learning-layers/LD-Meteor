@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { Tags } from '../../tags/lib/collections'
 import { check } from 'meteor/check'
 import { USERS_DEFAULT } from './userProjections'
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 Meteor.publish('userTags', function (args) {
   check(args, {
@@ -15,8 +16,6 @@ Meteor.publish('userTags', function (args) {
 })
 
 Meteor.publish('userprofile', function (args) {
-  // TODO add projections here:
-  // { name: 1, createdBy: 1, createdAt: 1, modifiedAt: 1 }
   check(args, {
     userId: String
   })
@@ -28,8 +27,6 @@ Meteor.publish('userprofile', function (args) {
 })
 
 Meteor.publish('userprofiles', function (args) {
-  // TODO add projections here:
-  // { name: 1, createdBy: 1, createdAt: 1, modifiedAt: 1 }
   check(args, {
     userIds: [String]
   })
@@ -39,3 +36,21 @@ Meteor.publish('userprofiles', function (args) {
     throw new Meteor.Error(401)
   }
 })
+
+DDPRateLimiter.addRule({
+  name: 'userTags',
+  type: 'subscription',
+  connectionId () { return true }
+}, 7, 1000)
+
+DDPRateLimiter.addRule({
+  name: 'userprofile',
+  type: 'subscription',
+  connectionId () { return true }
+}, 7, 1000)
+
+DDPRateLimiter.addRule({
+  name: 'userprofiles',
+  type: 'subscription',
+  connectionId () { return true }
+}, 7, 1000)

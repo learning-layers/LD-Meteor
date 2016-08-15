@@ -3,6 +3,7 @@ import { Roles } from 'meteor/alanning:roles'
 import { check } from 'meteor/check'
 import { InfiniteScrollItems } from '../lib/collections'
 import { ServerArgs } from '../../serverargs/lib/collections'
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 Meteor.publish('infiniteItems', function (args) {
   check(args, {
@@ -101,3 +102,21 @@ Meteor.publish('reactiveInfiniteItems2', function (initialArgs) {
     throw new Meteor.Error(401)
   }
 })
+
+DDPRateLimiter.addRule({
+  name: 'infiniteItems',
+  type: 'subscription',
+  connectionId () { return true }
+}, 5, 1000)
+
+DDPRateLimiter.addRule({
+  name: 'reactiveInfiniteItems',
+  type: 'subscription',
+  connectionId () { return true }
+}, 5, 1000)
+
+DDPRateLimiter.addRule({
+  name: 'reactiveInfiniteItems2',
+  type: 'subscription',
+  connectionId () { return true }
+}, 5, 1000)

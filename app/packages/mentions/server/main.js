@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { ServerArgs } from '../../serverargs/lib/collections'
 import { check } from 'meteor/check'
 import { USERS_DEFAULT } from '../../user/server/userProjections'
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 Meteor.publish('mentions', function (initialArgs) {
   check(initialArgs, {
@@ -32,3 +33,9 @@ Meteor.publish('mentions', function (initialArgs) {
     throw new Meteor.Error(401)
   }
 })
+
+DDPRateLimiter.addRule({
+  name: 'mentions',
+  type: 'subscription',
+  connectionId () { return true }
+}, 7, 1000)

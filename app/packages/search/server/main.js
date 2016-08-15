@@ -3,6 +3,7 @@ import { MongoInternals } from 'meteor/mongo'
 import { check, Match } from 'meteor/check'
 import { Roles } from 'meteor/alanning:roles'
 import { SearchItems } from '../lib/collections'
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 let db = null
 Meteor.startup(function () {
@@ -137,3 +138,15 @@ Meteor.publish('searchAutocomplete', function () {
     throw new Meteor.Error(401)
   }
 })
+
+DDPRateLimiter.addRule({
+  name: 'search',
+  type: 'subscription',
+  connectionId () { return true }
+}, 7, 1000)
+
+DDPRateLimiter.addRule({
+  name: 'searchAutocomplete',
+  type: 'subscription',
+  connectionId () { return true }
+}, 7, 1000)

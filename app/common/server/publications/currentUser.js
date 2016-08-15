@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { Uploads } from '../../../packages/fileUpload/lib/collections'
 import { USERS_DEFAULT } from '../../../packages/user/server/userProjections'
 import { UPLOADS_DEFAULT } from '../../../packages/fileUpload/server/uploadProjections'
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 Meteor.publish('currentUserDetails', function () {
   if (this.userId) {
@@ -16,3 +17,9 @@ Meteor.publish('currentUserDetails', function () {
   }
   return []
 })
+
+DDPRateLimiter.addRule({
+  name: 'currentUserDetails',
+  type: 'subscription',
+  connectionId () { return true }
+}, 7, 1000)
