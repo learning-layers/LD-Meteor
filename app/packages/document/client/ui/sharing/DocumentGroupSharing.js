@@ -25,16 +25,29 @@ function onPropsChange (props, onData) {
     }))
   }
   let handle = Meteor.subscribe('groupList', {groupIds: haveAccessGroupIds})
-  if (handle.ready()) {
-    onData(null, {})
+  let handle2 = Meteor.subscribe('groupList')
+  let handle3 = Meteor.subscribe('ownGroupsList')
+  if (handle.ready() && handle2.ready() && handle3.ready()) {
+    const groupSuggestions = Groups.find({'_id': {$nin: haveAccessGroupIds}}).fetch()
+    console.log(groupSuggestions)
+    onData(null, {groupSuggestions})
   }
 }
 
 class DocumentGroupSharing extends Component {
   constructor (props) {
     super(props)
+    let groupOptions
+    if (props.groupSuggestions) {
+      groupOptions = props.groupSuggestions.map(function (group) {
+        return {
+          label: group.name,
+          value: group._id
+        }
+      })
+    }
     this.state = {
-      options: [],
+      options: groupOptions,
       sharingOptions: [
         {label: 'Can Edit', value: 'CanEdit'},
         {label: 'Can Comment', value: 'CanComment'},
@@ -181,7 +194,8 @@ class DocumentGroupSharing extends Component {
 
 DocumentGroupSharing.propTypes = {
   documentId: React.PropTypes.string,
-  documentAccess: React.PropTypes.object
+  documentAccess: React.PropTypes.object,
+  groupSuggestions: React.PropTypes.array
 }
 
 export default composeWithTracker(onPropsChange)(DocumentGroupSharing)

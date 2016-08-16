@@ -74,10 +74,8 @@ jparker:crypto-padding@0.1.0
 jquery@1.11.9
 juliancwirko:s-alert@3.2.0
 kadira:blaze-layout@2.3.0
-kadira:debug@3.2.2
 kadira:flow-router@2.12.1
 kadira:flow-router-ssr@3.13.0
-kadira:runtime-dev@0.0.1
 launch-screen@1.0.12
 less@2.7.4
 livedata@1.0.18
@@ -89,7 +87,6 @@ meteor@1.2.16
 meteor-base@1.0.4
 meteorhacks:fast-render@2.14.0
 meteorhacks:inject-data@2.0.0
-meteorhacks:kadira@2.30.0
 meteorhacks:meteorx@1.4.1
 meteorhacks:picker@1.0.3
 meteorhacks:subs-manager@1.6.4
@@ -108,7 +105,6 @@ modules-runtime@0.7.5
 momentjs:moment@2.14.4
 mongo@1.1.10
 mongo-id@1.0.5
-mongo-livedata@1.0.12
 npm-bcrypt@0.8.7_1
 npm-mongo@1.5.45
 oauth@1.1.11

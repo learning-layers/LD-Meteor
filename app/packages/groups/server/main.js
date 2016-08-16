@@ -5,8 +5,6 @@ import { USERS_DEFAULT } from '../../user/server/userProjections'
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 Meteor.publish('ownGroupsList', function () {
-  // TODO add projections here:
-  // { name: 1, createdBy: 1, createdAt: 1, modifiedAt: 1 }
   if (this.userId) {
     return Groups.find({'createdBy': this.userId})
   } else {
@@ -15,13 +13,11 @@ Meteor.publish('ownGroupsList', function () {
 })
 
 Meteor.publish('groupList', function (args) {
-  // TODO add projections here:
-  // { name: 1, createdBy: 1, createdAt: 1, modifiedAt: 1 }
   check(args, Match.OneOf({ groupIds: [String] }, undefined))
   if (this.userId) {
     this.autorun(function () {
       if (args && args.groupIds) {
-        const groups = Groups.find({'_id': {$in: args.groupIds}})
+        const groups = Groups.find({'_id': {$in: args.groupIds}}, { name: 1, createdBy: 1 })
         let userIds = []
         groups.forEach(function (group) {
           userIds.push(group.createdBy)
