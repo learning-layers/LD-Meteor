@@ -107,7 +107,7 @@ class GroupList extends Component {
                   const isOwnUser = group.createdBy === ownUserId
                   return <tr key={'dli-' + group._id} className='group-list-item'>
                     <td>{group.name}</td>
-                    <td>{group.members.length}</td>
+                    <td>{group.members.length + 1}</td>
                     <td>{user.profile.name}</td>
                     <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
                     <td>
@@ -164,7 +164,7 @@ class GroupList extends Component {
                   const isOwnUser = group.createdBy === ownUserId
                   return <tr key={'dli-' + group._id} className='group-list-item'>
                     <td>{group.name}</td>
-                    <td>{group.members.length}</td>
+                    <td>{group.members.length + 1}</td>
                     <td>{user && user.profile ? user.profile.name : group.createdBy}</td>
                     <td>{group.modifiedAt ? moment.max(moment(group.modifiedAt)).fromNow() : null}</td>
                     <td>

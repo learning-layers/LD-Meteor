@@ -8,7 +8,7 @@ import { getAccessLevel } from './util'
 import { rateLimit } from '../../../common/lib/rate-limit'
 import { DocumentSchema, DocumentCommentSchema } from './schema'
 import { Documents } from './collections'
-import { RequestAccessItems } from 'sharing/collections'
+import { RequestAccessItems } from './sharing/collections'
 
 let CommentMentioningEmailTemplates
 if (Meteor.isServer) {
