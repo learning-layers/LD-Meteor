@@ -91,7 +91,7 @@ class ReactiveInfiniteList extends Component {
     </div>
   }
   render () {
-    const { ListItemComponent, items, headerLabels, expandedItems, normalHeight, expandedHeight } = this.props
+    const { ListItemComponent, items, headerLabels, expandedItems, normalHeight, expandedHeight, displayBottomUpwards } = this.props
     let headerLabelsLength = headerLabels.length
     let offsetWidth = this.state.offsetWidth
     let colWidth = 200
@@ -100,6 +100,7 @@ class ReactiveInfiniteList extends Component {
       let offsetWidth = this.state.offsetWidth - 25
       colWidth = offsetWidth / numberOfCols
     }
+    const displayBottomUpwardsSetting = !!displayBottomUpwards
     return (
       <div>
         <div className='infinite-example-header div-table-header'>
@@ -121,7 +122,8 @@ class ReactiveInfiniteList extends Component {
             isInfiniteLoading={this.state.isInfiniteLoading}
             scrollContainer={this}
             infiniteLoadingBeginBottomOffset={200}
-            infiniteLoadBeginEdgeOffset={20}>
+            infiniteLoadBeginEdgeOffset={20}
+            displayBottomUpwards={displayBottomUpwardsSetting}>
             {buildElements(ListItemComponent, items, expandedItems, colWidth)}
           </Infinite> : this.elementInfiniteLoad()}
         </div>
@@ -138,7 +140,8 @@ ReactiveInfiniteList.propTypes = {
   items: React.PropTypes.array.isRequired,
   ListItemComponent: React.PropTypes.func.isRequired,
   subsName: React.PropTypes.string.isRequired,
-  headerLabels: React.PropTypes.array.isRequired
+  headerLabels: React.PropTypes.array.isRequired,
+  displayBottomUpwards: React.PropTypes.bool
 }
 
 export default ReactiveInfiniteList

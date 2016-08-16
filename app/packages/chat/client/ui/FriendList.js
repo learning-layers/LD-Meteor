@@ -4,8 +4,9 @@ import ReactDOM from 'react-dom'
 import { composeWithTracker } from 'react-komposer'
 import CollapsibleFilterContainer from './CollapsibleFilterContainer'
 import AddFriendModal from './AddFriendModal'
-import { FriendRequests } from '../../lib/collections'
+import { FriendRequests, FriendLists } from '../../lib/collections'
 import OpenFriendRequests from './OpenFriendRequests'
+import InnerFriendList from './InnerFriendList'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 
 class ActiveFilterTestComp extends Component {
@@ -22,7 +23,8 @@ function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('friendList')
   let openFriendRequests = FriendRequests.find({status: 'pending'}).fetch()
   if (handle.ready()) {
-    onData(null, {openFriendRequests})
+    let friendList = FriendLists.findOne({ userId: Meteor.userId() })
+    onData(null, {openFriendRequests, friendList})
   } else {
     const friendRequestsLoading = true
     onData(null, {openFriendRequests, friendRequestsLoading})
@@ -45,6 +47,7 @@ class FriendList extends Component {
     }
   }
   render () {
+    const { friendList } = this.props
     return <div className='ld-friendlist'>
       <div className='top-bar'>
         <Button bsSize='small' onClick={() => this.openAddFriendModal()}>
@@ -56,10 +59,14 @@ class FriendList extends Component {
       </div>
       <hr className='no-margin' />
       <div className='friend-container'>
-        {this.props.openFriendRequests && this.props.openFriendRequests.length > 0 ? <OpenFriendRequests openFriendRequests={this.props.openFriendRequests} friendRequestsLoading={this.props.friendRequestsLoading} /> : null}
+        {this.props.openFriendRequests && this.props.openFriendRequests.length > 0 ? (
+          <OpenFriendRequests
+            openFriendRequests={this.props.openFriendRequests}
+            friendRequestsLoading={this.props.friendRequestsLoading} />
+        ) : null}
+        {friendList ? <span>{ JSON.stringify(friendList) }</span> : null}
         <CollapsibleFilterContainer alwaysOpen filters={['All', 'Online', 'History']} activeFilter={'Online'}>
-          Test
-          <ActiveFilterTestComp />
+          <InnerFriendList friendList={friendList} />
         </CollapsibleFilterContainer>
       </div>
     </div>
@@ -68,7 +75,8 @@ class FriendList extends Component {
 
 FriendList.propTypes = {
   friendRequestsLoading: React.PropTypes.bool,
-  openFriendRequests: React.PropTypes.array
+  openFriendRequests: React.PropTypes.array,
+  friendList: React.PropTypes.object
 }
 
 export default composeWithTracker(onPropsChange)(FriendList)
