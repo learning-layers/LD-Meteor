@@ -36,6 +36,7 @@ Meteor.methods({
     }
   },
   acceptFriendRequest: function (friendRequestId) {
+    check(friendRequestId, String)
     if (this.userId) {
       const friendRequest = FriendRequests.findOne({ _id: friendRequestId })
       if (friendRequest) {
@@ -61,6 +62,7 @@ Meteor.methods({
     }
   },
   denyFriendRequest: function (friendRequestId) {
+    check(friendRequestId, String)
     if (this.userId) {
       createFriendListIfNotExistsSync(this.userId)
     } else {
@@ -68,6 +70,7 @@ Meteor.methods({
     }
   },
   ignoreFriendRequest: function (friendRequestId) {
+    check(friendRequestId, String)
     if (this.userId) {
       createFriendListIfNotExistsSync(this.userId)
     } else {

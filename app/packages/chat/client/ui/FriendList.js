@@ -47,7 +47,8 @@ class FriendList extends Component {
     }
   }
   render () {
-    const { friendList } = this.props
+    const { friendList, openFriendRequests } = this.props
+    console.log(openFriendRequests)
     return <div className='ld-friendlist'>
       <div className='top-bar'>
         <Button bsSize='small' onClick={() => this.openAddFriendModal()}>
@@ -59,12 +60,11 @@ class FriendList extends Component {
       </div>
       <hr className='no-margin' />
       <div className='friend-container'>
-        {this.props.openFriendRequests && this.props.openFriendRequests.length > 0 ? (
+        {openFriendRequests && openFriendRequests.length > 0 ? (
           <OpenFriendRequests
-            openFriendRequests={this.props.openFriendRequests}
+            openFriendRequests={openFriendRequests}
             friendRequestsLoading={this.props.friendRequestsLoading} />
         ) : null}
-        {friendList ? <span>{JSON.stringify(friendList)}</span> : null}
         <CollapsibleFilterContainer alwaysOpen filters={['All', 'Online', 'History']} activeFilter={'Online'}>
           <InnerFriendList friendList={friendList} />
         </CollapsibleFilterContainer>

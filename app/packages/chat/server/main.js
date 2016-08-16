@@ -8,13 +8,13 @@ Meteor.publish('friendList', function () {
     this.autorun(function () {
       let friendList = FriendLists.findOne({ userId: this.userId })
       let friendIds = []
-      if (friendList.friendIds) {
+      if (friendList && friendList.friendIds) {
         friendIds = friendList.friendIds
       }
       return [
+        Meteor.users.find({'_id': {$in: friendIds}}, USERS_DEFAULT),
         FriendRequests.find({ user: this.userId, status: 'pending' }),
-        FriendLists.find({ userId: this.userId }),
-        Meteor.users.find({'_id': {$in: friendIds}}, USERS_DEFAULT)
+        FriendLists.find({ userId: this.userId })
       ]
     })
   } else {

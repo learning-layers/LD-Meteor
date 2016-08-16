@@ -33,7 +33,7 @@ class OpenFriendRequests extends Component {
     })
   }
   render () {
-    return <span>
+    return <span id='open-fr'>
       {this.state.friendRequestsShown ? <div>
         <div className='collapse-btn' onClick={() => this.toggleOpenFriendRequests()}>
           <span className='glyphicon glyphicon-chevron-down' />

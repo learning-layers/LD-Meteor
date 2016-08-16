@@ -112,7 +112,7 @@ class SidebarContent extends Component {
       <div className='clearfix'></div>
       <Tabs defaultActiveKey={1} id='communication-category-tabs'>
         <Tab eventKey={1} title='Friendlist'><FriendList /></Tab>
-        <Tab eventKey={2} title='Groups'>
+        <Tab eventKey={2} title='Groups' disabled>
           <div className='chat-message-wrapper'>
           {false ? <span>Tab 2 content</span> : null}
           {false ? messageObject.lines.map(function (line) {
