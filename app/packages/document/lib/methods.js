@@ -8,6 +8,7 @@ import { getAccessLevel } from './util'
 import { rateLimit } from '../../../common/lib/rate-limit'
 import { DocumentSchema, DocumentCommentSchema } from './schema'
 import { Documents } from './collections'
+import { RequestAccessItems } from 'sharing/collections'
 
 let CommentMentioningEmailTemplates
 if (Meteor.isServer) {
@@ -232,6 +233,7 @@ Meteor.methods({
         if (docAccess) {
           DocumentAccess.update({documentId: documentId}, {$pull: {userCanComment: {userId: userId}, userCanEdit: {userId: userId}, userCanView: {userId: userId}}})
         }
+        RequestAccessItems.remove({createdBy: userId, documentId: documentId})
         return true
       } else {
         throw new Meteor.Error(403, 'Not enough access rights to change the document access')
