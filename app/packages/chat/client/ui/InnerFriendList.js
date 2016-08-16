@@ -5,7 +5,7 @@ class FriendListGroup extends Component {
   render () {
     const { groupId, name } = this.props
     return <li>
-      { groupId } - { name }
+      {groupId} - {name}
     </li>
   }
 }

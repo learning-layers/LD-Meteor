@@ -64,7 +64,7 @@ class FriendList extends Component {
             openFriendRequests={this.props.openFriendRequests}
             friendRequestsLoading={this.props.friendRequestsLoading} />
         ) : null}
-        {friendList ? <span>{ JSON.stringify(friendList) }</span> : null}
+        {friendList ? <span>{JSON.stringify(friendList)}</span> : null}
         <CollapsibleFilterContainer alwaysOpen filters={['All', 'Online', 'History']} activeFilter={'Online'}>
           <InnerFriendList friendList={friendList} />
         </CollapsibleFilterContainer>
