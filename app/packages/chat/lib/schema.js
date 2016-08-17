@@ -80,7 +80,7 @@ export const DirectMessageSchema = new SimpleSchema({
     type: String,
     label: 'To',
     max: 3000,
-    min: 6,
+    min: 1,
     placeholder: 'To'
   },
   'emotes.$.key': {
