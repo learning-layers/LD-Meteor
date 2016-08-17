@@ -17,7 +17,7 @@ import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
 import CreateDocumentModal from '../../../../packages/document/client/ui/CreateDocumentModal'
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
-import FriendList from './FriendList'
+import FriendList from './friendlist/FriendList'
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()

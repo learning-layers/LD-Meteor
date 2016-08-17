@@ -206,10 +206,12 @@ class ChatLineCalculator {
       let emoteSLength = emote.sLength
       let posStart = message.indexOf(emoteText)
       while (posStart >= 0) {
-        console.debug('messageString=', message)
-        console.debug('Found string=', emoteText)
-        console.debug('at posStart=', posStart)
-        let positonString = posStart + '-' + (posStart + (emoteSLength - 1))
+        // console.debug('messageString=', message)
+        // console.debug('Found string=', emoteText)
+        // console.debug('at posStart=', posStart)
+        let end = (posStart + (emoteSLength - 1))
+        let start = posStart
+        let positonString = start + '-' + end
         if (!emotePositions[emoteCode]) {
           emotePositions[emoteCode] = []
         }
