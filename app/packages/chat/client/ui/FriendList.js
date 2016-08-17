@@ -20,17 +20,37 @@ ActiveFilterTestComp.propTypes = {
   activeFilter: React.PropTypes.bool
 }
 
+function onPropsChange2 (props, onData) {
+  let handle = Meteor.subscribe('friendChat', {friendId: props.friendId})
+  if (handle.ready()) {
+    let friend = Meteor.users.findOne({_id: props.friendId})
+    onData(null, {friend})
+  }
+}
+
 class FriendChat extends Component {
   close () {
     EventEmitterInstance.emit('close-friend-small-chat')
   }
   render () {
-    const { friendId } = this.props
+    const { friendId, friend } = this.props
+    console.log(friendId)
     return <div id='small-friend-chat' style={{position: 'relative'}}>
-      {friendId}
+      <div style={{
+        display: 'block',
+        textAlign: 'center',
+        padding: '7px 5px',
+        backgroundColor: 'lightgrey',
+        height: '35px',
+        fontWeight: 'bold'
+      }}>
+        <span className='glyphicon glyphicon-comment' style={{marginRight: '5px'}} />
+        {friend.profile.name}
+      </div>
       <div style={{
         position: 'absolute',
-        top: '5px',
+        top: 0,
+        marginTop: '-3px',
         right: '5px',
         fontWeight: 'bold',
         fontSize: '30px',
@@ -38,13 +58,21 @@ class FriendChat extends Component {
       }} onClick={() => this.close()}>
         &times;
       </div>
+      <div className='chat-body' style={{
+        height: 'calc(100vh - 197px)',
+        backgroundColor: '#FEF9E7'
+      }}>
+      </div>
     </div>
   }
 }
 
 FriendChat.propTypes = {
-  friendId: React.PropTypes.string
+  friendId: React.PropTypes.string,
+  friend: React.PropTypes.object
 }
+
+const FriendChatWithData = composeWithTracker(onPropsChange2)(FriendChat)
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('friendList')
@@ -125,7 +153,7 @@ class FriendList extends Component {
         <div ref='addFriendModal'></div>
       </div>
       <hr className='no-margin' />
-      {this.state.friendChat === null ? <FriendContainerWithData /> : <FriendChat friendId={this.state.friendChat} />}
+      {this.state.friendChat === null ? <FriendContainerWithData /> : <FriendChatWithData friendId={this.state.friendChat} />}
     </div>
   }
 }
