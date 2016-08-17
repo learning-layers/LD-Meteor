@@ -1,9 +1,13 @@
 import { Meteor } from 'meteor/meteor'
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import { composeWithTracker } from 'react-komposer'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
 import { DirectMessages } from '../../lib/collections'
 import ChatLineCalculator from '../lib/chatLineCalculator'
+import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
+import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
+import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('friendChat', {friendId: props.friendId})
@@ -18,11 +22,40 @@ function onPropsChange (props, onData) {
 }
 
 class FriendChat extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      newMessage: ''
+    }
+  }
   close () {
     EventEmitterInstance.emit('close-friend-small-chat')
   }
   sendMessage () {
-    Meteor.call('sendDirectMessage', this.props.friendId, 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', {356: ['0-5', '40-45'], 25: ['12-16']})
+    const message = 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
+    let emotePositions = new ChatLineCalculator().parseStringToEmotes(
+      message,
+      [
+        {
+          code: 356,
+          sLength: 6,
+          text: 'OpieOP'
+        },
+        {
+          code: 25,
+          sLength: 5,
+          text: 'Kappa'
+        }
+      ]
+    )
+    console.log(emotePositions)
+    Meteor.call('sendDirectMessage', this.props.friendId, this.state.newMessage, emotePositions)
+  }
+  handleMsgChange (event) {
+    let newMessage = ReactDOM.findDOMNode(event.target).value
+    this.setState({
+      newMessage: newMessage
+    })
   }
   render () {
     const { friendId, friend, directMessages } = this.props
@@ -78,7 +111,18 @@ class FriendChat extends Component {
             </li>
           })}
         </ul>
-        <button className='btn btn-success' onClick={() => this.sendMessage()}>Send</button>
+        <div className='' style={{backgroundColor: 'white', position: 'absolute', bottom: 0}}>
+          <FormGroup controlId='formControlsTextarea'>
+            <FormControl
+              componentClass='textarea'
+              placeholder='textarea'
+              onChange={(event) => this.handleMsgChange(event)}
+              value={this.state.newMessage}
+              style={{fontFamily: '\'Droid Sans Mono\', sans-serif', fontSize: '12px', width: '250px'}}
+            />
+          </FormGroup>
+          <Button bsStyle='success' onClick={() => this.sendMessage()}>Send</Button>
+        </div>
       </div>
     </div>
   }

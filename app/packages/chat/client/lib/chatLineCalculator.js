@@ -180,6 +180,21 @@ class ChatLineCalculator {
       lines: lines
     }
   }
+  parseStringToEmotes (string, emotes) {
+    let emotePositions = {}
+    emotes.forEach(function (emote) {
+      let posStart = string.indexOf(emote.text)
+      while (posStart >= 0) {
+        let positonString = posStart + '-' + (posStart + (emote.sLength - 1))
+        if (!emotePositions[emote.code]) {
+          emotePositions[emote.code] = []
+        }
+        emotePositions[emote.code].push(positonString)
+        posStart = string.indexOf(emote.text, posStart + 1)
+      }
+    })
+    return emotePositions
+  }
   getChatMessageObject (string) {
     console.time('Function #1')
     let currentLineLength = 0
