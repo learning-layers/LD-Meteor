@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor'
 import React, {Component} from 'react'
-import Collapse from '../../../../../node_modules/react-bootstrap/lib/Collapse'
-import { TimeFromNow } from '../../../../common/client/ui/util/TimeFromNow'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
-import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
+import Collapse from '../../../../../../node_modules/react-bootstrap/lib/Collapse'
+import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
+import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
+import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 
 class OpenFriendRequests extends Component {
   constructor (props) {

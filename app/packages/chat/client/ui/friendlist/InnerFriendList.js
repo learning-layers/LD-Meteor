@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import EventEmitterInstance from '../../../../common/client/EventEmitter'
+import EventEmitterInstance from '../../../../../common/client/EventEmitter'
 
 class FriendListGroup extends Component {
   render () {

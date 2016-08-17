@@ -2,12 +2,12 @@ import { Meteor } from 'meteor/meteor'
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import { composeWithTracker } from 'react-komposer'
-import EventEmitterInstance from '../../../../common/client/EventEmitter'
-import { DirectMessages } from '../../lib/collections'
-import ChatLineCalculator from '../lib/chatLineCalculator'
-import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
-import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
+import EventEmitterInstance from '../../../../../common/client/EventEmitter'
+import { DirectMessages } from '../../../lib/collections'
+import ChatLineCalculator from '../../lib/chatLineCalculator'
+import FormGroup from '../../../../../../node_modules/react-bootstrap/lib/FormGroup'
+import FormControl from '../../../../../../node_modules/react-bootstrap/lib/FormControl'
+import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('friendChat', {friendId: props.friendId})
@@ -96,9 +96,7 @@ class FriendChat extends Component {
             emotes.forEach(function (emoteObj) {
               formattedEmotes[emoteObj.key] = emoteObj.range
             })
-            console.log(formattedEmotes)
             let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(directMessage.message, formattedEmotes)
-            console.log(messageWithEmotesObject)
             return <li style={{listStyle: 'none'}}>
               {messageWithEmotesObject.lines.map(function (line, i) {
                 let lineHeight = 17

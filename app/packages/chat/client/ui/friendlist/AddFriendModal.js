@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor'
 import React, {Component} from 'react'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
-import Modal from '../../../../../node_modules/react-bootstrap/lib/Modal'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
+import Modal from '../../../../../../node_modules/react-bootstrap/lib/Modal'
+import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 const SimpleSelect = ReactSelectize.SimpleSelect
 
 class AddFriendModal extends Component {
