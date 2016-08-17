@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
-import { FriendRequests, FriendLists } from './collections'
+import { FriendRequests, FriendLists, DirectMessages } from './collections'
 import { rateLimit } from '../../../common/lib/rate-limit'
 
 const createFriendListIfNotExists = function (userId, callback) {
@@ -73,6 +73,15 @@ Meteor.methods({
     check(friendRequestId, String)
     if (this.userId) {
       createFriendListIfNotExistsSync(this.userId)
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
+  sendDirectMessage: function (friendId, message) {
+    check(friendId, String)
+    check(message, String)
+    if (this.userId) {
+      DirectMessages.insert({from: this.userId, to: friendId, message: message, createdAt: new Date()})
     } else {
       throw new Meteor.Error(401)
     }

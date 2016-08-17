@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
-import { FriendRequests, FriendLists } from '../lib/collections'
+import { FriendRequests, FriendLists, DirectMessages } from '../lib/collections'
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 import { USERS_DEFAULT } from '../../user/server/userProjections'
 
@@ -27,7 +27,11 @@ Meteor.publish('friendChat', function (args) {
   check(args, {friendId: String})
   if (this.userId) {
     return [
-      Meteor.users.find({'_id': args.friendId}, USERS_DEFAULT)
+      Meteor.users.find({'_id': args.friendId}, USERS_DEFAULT),
+      DirectMessages.find({ $or: [
+        {from: args.friendId, to: this.userId},
+        {from: this.userId, to: args.friendId}
+      ]})
     ]
   } else {
     return Meteor.Error(401)

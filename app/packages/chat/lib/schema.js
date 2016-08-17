@@ -56,3 +56,36 @@ export const FriendListSchema = new SimpleSchema({
     placeholder: 'FriendIds'
   }
 })
+
+export const DirectMessageSchema = new SimpleSchema({
+  from: {
+    type: String,
+    label: 'From',
+    max: 40,
+    min: 6,
+    placeholder: 'From'
+  },
+  to: {
+    type: String,
+    label: 'To',
+    max: 40,
+    min: 6,
+    placeholder: 'To'
+  },
+  createdAt: {
+    type: Date,
+    label: 'Created at'
+  },
+  message: {
+    type: String,
+    label: 'To',
+    max: 3000,
+    min: 6,
+    placeholder: 'To'
+  },
+  seenAt: {
+    type: Date,
+    label: 'Seen at',
+    optional: true
+  }
+})
