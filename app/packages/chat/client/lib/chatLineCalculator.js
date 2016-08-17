@@ -23,7 +23,21 @@ class ChatLineCalculator {
           // replace the emote string with empty array values to preserve the original indexes
           splitText = splitText.slice(0, mote[0]).concat(empty).concat(splitText.slice(mote[1] + 1, splitText.length))
           // replace the first emote string position with the image that needs to be inserted at this position
-          splitText.splice(mote[0], 1, <div style={{display: 'inline-block', textAlign: 'center', width: '28px'}}><img className='emoticon' style={{height: '28px'}} src={'http://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'} /></div>)
+          splitText.splice(
+            mote[0],
+            1,
+            <div style={{
+              display: 'inline-block',
+              textAlign: 'center',
+              width: '28px'
+            }}>
+              <img
+                className='emoticon'
+                style={{height: '28px'}}
+                src={'http://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'}
+              />
+            </div>
+          )
         }
       }
     }
@@ -173,6 +187,10 @@ class ChatLineCalculator {
       } else {
         messageHeight += lineHeight
       }
+    } else {
+      if (currentLineContents.length > 0) {
+        lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+      }
     }
     console.timeEnd('Function #2')
     return {
@@ -180,17 +198,23 @@ class ChatLineCalculator {
       lines: lines
     }
   }
-  parseStringToEmotes (string, emotes) {
+  parseStringToEmotes (message, emotes) {
     let emotePositions = {}
     emotes.forEach(function (emote) {
-      let posStart = string.indexOf(emote.text)
+      let emoteText = emote.text
+      let emoteCode = emote.code
+      let emoteSLength = emote.sLength
+      let posStart = message.indexOf(emoteText)
       while (posStart >= 0) {
-        let positonString = posStart + '-' + (posStart + (emote.sLength - 1))
-        if (!emotePositions[emote.code]) {
-          emotePositions[emote.code] = []
+        console.debug('messageString=', message)
+        console.debug('Found string=', emoteText)
+        console.debug('at posStart=', posStart)
+        let positonString = posStart + '-' + (posStart + (emoteSLength - 1))
+        if (!emotePositions[emoteCode]) {
+          emotePositions[emoteCode] = []
         }
-        emotePositions[emote.code].push(positonString)
-        posStart = string.indexOf(emote.text, posStart + 1)
+        emotePositions[emoteCode].push(positonString)
+        posStart = message.indexOf(emoteText, posStart + 1)
       }
     })
     return emotePositions

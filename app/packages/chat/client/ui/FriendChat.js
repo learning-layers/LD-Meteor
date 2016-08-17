@@ -16,7 +16,7 @@ function onPropsChange (props, onData) {
     let directMessages = DirectMessages.find({ $or: [
       {from: props.friendId, to: Meteor.userId()},
       {from: Meteor.userId(), to: props.friendId}
-    ]})
+    ]}).fetch()
     onData(null, {friend, directMessages})
   }
 }
@@ -32,7 +32,8 @@ class FriendChat extends Component {
     EventEmitterInstance.emit('close-friend-small-chat')
   }
   sendMessage () {
-    const message = 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
+    // const message = 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
+    const message = this.state.newMessage
     let emotePositions = new ChatLineCalculator().parseStringToEmotes(
       message,
       [
@@ -48,8 +49,7 @@ class FriendChat extends Component {
         }
       ]
     )
-    console.log(emotePositions)
-    Meteor.call('sendDirectMessage', this.props.friendId, this.state.newMessage, emotePositions)
+    Meteor.call('sendDirectMessage', this.props.friendId, message, emotePositions)
   }
   handleMsgChange (event) {
     let newMessage = ReactDOM.findDOMNode(event.target).value
@@ -58,8 +58,7 @@ class FriendChat extends Component {
     })
   }
   render () {
-    const { friendId, friend, directMessages } = this.props
-    console.log(friendId)
+    const { friend, directMessages } = this.props
     return <div id='small-friend-chat' style={{position: 'relative'}}>
       <div style={{
         display: 'block',
@@ -97,7 +96,9 @@ class FriendChat extends Component {
             emotes.forEach(function (emoteObj) {
               formattedEmotes[emoteObj.key] = emoteObj.range
             })
+            console.log(formattedEmotes)
             let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(directMessage.message, formattedEmotes)
+            console.log(messageWithEmotesObject)
             return <li style={{listStyle: 'none'}}>
               {messageWithEmotesObject.lines.map(function (line, i) {
                 let lineHeight = 17
