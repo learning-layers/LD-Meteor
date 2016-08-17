@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import { composeWithTracker } from 'react-komposer'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
 import { DirectMessages } from '../../lib/collections'
+import ChatLineCalculator from '../lib/chatLineCalculator'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('friendChat', {friendId: props.friendId})
@@ -53,9 +54,28 @@ class FriendChat extends Component {
         height: 'calc(100vh - 197px)',
         backgroundColor: '#FEF9E7'
       }}>
-        <ul style={{margin: 0}}>
+        <ul style={{margin: 0, paddingLeft: 0, fontFamily: '\'Droid Sans Mono\', sans-serif', fontSize: '12px'}}>
           {directMessages.map(function (directMessage) {
-            return <li>{directMessage.message}</li>
+            let emotes = directMessage.emotes
+            if (!emotes) {
+              emotes = []
+            }
+            let formattedEmotes = {}
+            emotes.forEach(function (emoteObj) {
+              formattedEmotes[emoteObj.key] = emoteObj.range
+            })
+            let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(directMessage.message, formattedEmotes)
+            return <li style={{listStyle: 'none'}}>
+              {messageWithEmotesObject.lines.map(function (line, i) {
+                let lineHeight = 17
+                if (line.containsEmoticons) {
+                  lineHeight = 26
+                }
+                return <div style={{display: 'block', height: lineHeight + 'px', overflow: 'visible'}} key={'line-' + i}>{line.lineContents.map(function (lineContent, j) {
+                  return <div style={{display: 'inline'}} key={'line-' + i + '-content-' + j}>{lineContent}</div>
+                })}</div>
+              })}
+            </li>
           })}
         </ul>
         <button className='btn btn-success' onClick={() => this.sendMessage()}>Send</button>
