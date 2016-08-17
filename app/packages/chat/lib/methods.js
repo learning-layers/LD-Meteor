@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { check } from 'meteor/check'
+import { check, Match } from 'meteor/check'
 import { FriendRequests, FriendLists, DirectMessages } from './collections'
 import { rateLimit } from '../../../common/lib/rate-limit'
 
@@ -77,11 +77,41 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  sendDirectMessage: function (friendId, message) {
+  sendDirectMessage: function (friendId, message, emotes) {
     check(friendId, String)
     check(message, String)
+    check(emotes, Match.OneOf(Object, undefined))
+    console.log(emotes)
     if (this.userId) {
-      DirectMessages.insert({from: this.userId, to: friendId, message: message, createdAt: new Date()})
+      if (emotes) {
+        let convertedEmotes = []
+        const emotesKeys = Object.keys(emotes)
+        emotesKeys.forEach(function (emoteKey) {
+          const emoteValue = emotes[emoteKey]
+          check(emoteValue, [String])
+          emoteValue.forEach(function (emoteValueItem) {
+            check(emoteValueItem, String)
+          })
+          convertedEmotes.push({
+            key: emoteKey,
+            range: emoteValue
+          })
+        })
+        DirectMessages.insert({
+          from: this.userId,
+          to: friendId,
+          message: message,
+          emotes: convertedEmotes,
+          createdAt: new Date()
+        })
+      } else {
+        DirectMessages.insert({
+          from: this.userId,
+          to: friendId,
+          message: message,
+          createdAt: new Date()
+        })
+      }
     } else {
       throw new Meteor.Error(401)
     }

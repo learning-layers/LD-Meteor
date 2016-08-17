@@ -83,6 +83,16 @@ export const DirectMessageSchema = new SimpleSchema({
     min: 6,
     placeholder: 'To'
   },
+  'emotes.$.key': {
+    type: String,
+    label: 'EmotesKey',
+    placeholder: 'EmotesKey'
+  },
+  'emotes.$.range': {
+    type: [String],
+    label: 'EmotesRange',
+    placeholder: 'EmotesRange'
+  },
   seenAt: {
     type: Date,
     label: 'Seen at',
