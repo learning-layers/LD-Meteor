@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import { SubsManager } from 'meteor/meteorhacks:subs-manager'
 import { composeWithTracker } from 'react-komposer'
 import { DirectMessages } from '../../../lib/collections'
@@ -33,6 +34,13 @@ function onPropsChange (props, onData) {
 }
 
 class ChatMsgList extends Component {
+  handleScroll (event) {
+    event.preventDefault()
+    console.log(event)
+    console.log(event.nativeEvent)
+    let scrollContainer = ReactDOM.findDOMNode(this.refs.scrollCont)
+    scrollContainer.scrollTop = scrollContainer.scrollTop - event.nativeEvent.deltaY
+  }
   render () {
     const { directMessages } = this.props
     let messageWithEmotesObjects = []
@@ -67,7 +75,7 @@ class ChatMsgList extends Component {
       zoom: 1,
       '*display': 'inline',
       width: '100%'
-    }}>
+    }} onWheel={(event) => this.handleScroll(event)}>
       {directMessages.map(function (directMessage) {
         let emotes = directMessage.emotes
         if (!emotes) {
