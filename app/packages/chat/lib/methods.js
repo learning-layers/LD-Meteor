@@ -127,3 +127,11 @@ rateLimit({
   limit: 20,
   timeRange: 10000
 })
+
+rateLimit({
+  methods: [
+    'sendDirectMessage'
+  ],
+  limit: 3,
+  timeRange: 1000
+})
