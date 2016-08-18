@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import EventEmitterInstance from '../../../../../common/client/EventEmitter'
 import NewChatMsgInput from './NewChatMsgInput'
 import ChatMsgList from './ChatMsgList'
+import FriendChatHeader from './FriendChatHeader'
 
 class FriendChat extends Component {
   close () {
@@ -10,17 +11,7 @@ class FriendChat extends Component {
   render () {
     const { friend, friendId } = this.props
     return <div id='small-friend-chat' style={{position: 'relative'}}>
-      <div style={{
-        display: 'block',
-        textAlign: 'center',
-        padding: '7px 5px',
-        backgroundColor: 'lightgrey',
-        height: '35px',
-        fontWeight: 'bold'
-      }}>
-        <span className='glyphicon glyphicon-comment' style={{marginRight: '5px'}} />
-        {friend && friend.profile ? friend.profile.name : friendId}
-      </div>
+      <FriendChatHeader friend={friend} friendId={friendId} />
       <div style={{
         position: 'absolute',
         top: 0,
