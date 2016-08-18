@@ -48,6 +48,24 @@ Meteor.methods({
       return true
     }
     return false
+  },
+  setArgsReactiveChatMsgList: function (args) {
+    check(args, {
+      limit: Number,
+      friendId: String,
+      // searchTerm: Match.Maybe(String),
+      additionalMethodArgs: Match.Maybe([String])
+    })
+    if (args.additionalMethodArgs) {
+      delete args.additionalMethodArgs
+    }
+    if (this.userId && Meteor.isServer) {
+      let itemId = 'reactiveChatMsgList'
+      // console.log('Changing limit to=', args.limit)
+      ServerArgs.upsert({itemId: itemId, createdBy: this.userId}, {itemId: itemId, createdBy: this.userId, args: args})
+      return true
+    }
+    return false
   }
 })
 
@@ -55,7 +73,8 @@ rateLimit({
   methods: [
     'setArgs',
     'setArgsReactiveInfiniteItems2',
-    'setArgsReactiveDocumentList'
+    'setArgsReactiveDocumentList',
+    'setArgsReactiveChatMsgList'
   ],
   limit: 20,
   timeRange: 10000

@@ -15,7 +15,7 @@ const initialLimit = 40
 const subsName = 'reactiveChatMsgList'
 
 function onPropsChange (props, onData) {
-  const handle = ChatMsgListSubs.subscribe(subsName, {friendId: props.friendId, limit: initialLimit})
+  const handle = Meteor.subscribe(subsName, {friendId: props.friendId, limit: initialLimit})
   let loading = true
   if (handle.ready()) {
     loading = false
@@ -33,13 +33,59 @@ function onPropsChange (props, onData) {
   }
 }
 
+const subsNameAdjusted = subsName.substring(0, 1).toUpperCase() + subsName.substring(1, subsName.length)
 class ChatMsgList extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      isInfiniteLoading: false
+    }
+  }
   handleScroll (event) {
     event.preventDefault()
-    console.log(event)
-    console.log(event.nativeEvent)
     let scrollContainer = ReactDOM.findDOMNode(this.refs.scrollCont)
-    scrollContainer.scrollTop = scrollContainer.scrollTop - event.nativeEvent.deltaY
+    const newPos = scrollContainer.scrollTop - event.nativeEvent.deltaY
+    const clientHeight = scrollContainer.clientHeight
+    // const offsetHeight = scrollContainer.offsetHeight
+    const scrollHeight = scrollContainer.scrollHeight
+    scrollContainer.scrollTop = newPos
+    /* console.log('newPos=', newPos)
+    console.log('clientHeight=', clientHeight)
+    console.log('offsetHeight=', offsetHeight)
+    console.log('scrollHeight=', scrollHeight)
+    console.log(`(${newPos} + ${clientHeight}) >= ${scrollHeight}`)
+    console.log(newPos + clientHeight)
+    console.log((newPos + clientHeight) >= scrollHeight) */
+    if (!this.state.isInfiniteLoading && (newPos + 10 + clientHeight) >= scrollHeight) {
+      // window.alert('Loading...')
+      this.setState({
+        isInfiniteLoading: true
+      })
+      Meteor.setTimeout(function () {
+        scrollContainer.scrollTop = newPos + 20
+      }, 130)
+      Meteor.setTimeout(() => {
+        if (this.props.directMessages) {
+          let itemsLength = this.props.directMessages.length
+          let subsName = subsNameAdjusted
+          let argsObj = {limit: itemsLength + 100}
+          argsObj.friendId = this.props.friendId
+          argsObj.additionalMethodArgs = []
+          Meteor.call('setArgs' + subsName, argsObj, (err, res) => {
+            if (err) {
+              this.setState({
+                isInfiniteLoading: false
+              })
+            }
+            if (res) {
+              this.setState({
+                isInfiniteLoading: false
+              })
+            }
+          })
+        }
+      }, 0)
+    }
   }
   render () {
     const { directMessages } = this.props
@@ -105,12 +151,21 @@ class ChatMsgList extends Component {
           })}
         </li>
       })}
+      {this.state.isInfiniteLoading ? <li style={{
+        listStyle: 'none',
+        '-webkit-transform': 'scaleY(-1)',
+        '-moz-transform': 'scaleY(-1)',
+        '-ms-transform': 'scaleY(-1)',
+        '-o-transform': 'scaleY(-1)',
+        transform: 'scaleY(-1)'
+      }}>Loading...</li> : null}
     </ul>
   }
 }
 
 ChatMsgList.propTypes = {
-  directMessages: React.PropTypes.array
+  directMessages: React.PropTypes.array,
+  friendId: React.PropTypes.string
 }
 
 export default composeWithTracker(onPropsChange)(ChatMsgList)

@@ -6,12 +6,20 @@ import { USERS_DEFAULT } from '../../user/server/userProjections'
 import { ServerArgs } from '../../serverargs/lib/collections'
 
 let getChatMsgPublishers = function (args) {
+  const argsLimit = args.limit
+  const friendId = args.friendId
+  let currentUserId
+  if (args.currentUserId) {
+    currentUserId = args.currentUserId
+  } else {
+    currentUserId = this.userId
+  }
   return [
-    Meteor.users.find({'_id': args.friendId}, USERS_DEFAULT),
+    Meteor.users.find({'_id': friendId}, USERS_DEFAULT),
     DirectMessages.find({ $or: [
-      {from: args.friendId, to: this.userId},
-      {from: this.userId, to: args.friendId}
-    ]}, {sort: {createdAt: -1}, limit: args.limit})
+      {from: friendId, to: currentUserId},
+      {from: currentUserId, to: friendId}
+    ]}, {sort: {createdAt: -1}, limit: argsLimit})
   ]
 }
 
@@ -22,22 +30,18 @@ Meteor.publish('reactiveChatMsgList', function (initialArgs) {
   })
   const itemId = 'reactiveChatMsgList'
   if (this.userId) {
-    ServerArgs.upsert({'itemId': itemId, createdBy: this.userId}, {'itemId': itemId, createdBy: this.userId, args: initialArgs})
+    ServerArgs.upsert({itemId: itemId, createdBy: this.userId}, {itemId: itemId, createdBy: this.userId, args: initialArgs})
     this.autorun(function () {
-      const serverArgs = ServerArgs.findOne({'itemId': itemId, createdBy: this.userId})
+      const serverArgs = ServerArgs.findOne({itemId: itemId, createdBy: this.userId})
+      // console.log('serverArgs=', serverArgs)
       if (serverArgs) {
-        if (!serverArgs.args.language) {
-          serverArgs.args.language = 'en'
-        }
         // use server args
         return getChatMsgPublishers.call(this, {
           friendId: serverArgs.args.friendId,
-          limit: initialArgs.limit
+          limit: serverArgs.args.limit,
+          currentUserId: serverArgs.createdBy
         })
       } else {
-        if (!initialArgs.language) {
-          initialArgs.language = 'en'
-        }
         // use initial args, server args not yet accessible
         return getChatMsgPublishers.call(this, {
           friendId: initialArgs.friendId,
