@@ -24,8 +24,7 @@ class FriendChat extends Component {
         &times;
       </div>
       <div className='chat-body' style={{
-        height: 'calc(100vh - 197px)',
-        backgroundColor: '#FEF9E7'
+        height: 'calc(100vh - 197px)'
       }}>
         <ChatMsgList friendId={this.props.friendId} />
         <NewChatMsgInput friendId={this.props.friendId} />

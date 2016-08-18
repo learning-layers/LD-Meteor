@@ -1,7 +1,7 @@
 import React from 'react'
 
 const characterWidth = 7.313
-const maxLineLength = 280
+const maxLineLength = 290
 const maxCharactersPerLine = Math.floor(maxLineLength / 7.313)
 const emoteWidth = 28
 
