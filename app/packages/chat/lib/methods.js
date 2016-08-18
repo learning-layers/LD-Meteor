@@ -81,7 +81,6 @@ Meteor.methods({
     check(friendId, String)
     check(message, String)
     check(emotes, Match.OneOf(Object, undefined))
-    console.log(emotes)
     if (this.userId) {
       if (emotes) {
         let convertedEmotes = []

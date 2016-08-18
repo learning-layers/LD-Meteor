@@ -1,8 +1,8 @@
 import React from 'react'
 
 const characterWidth = 7.313
-const maxLineLength = 300
-const maxCharactersPerLine = Math.floor(300 / 7.313)
+const maxLineLength = 280
+const maxCharactersPerLine = Math.floor(maxLineLength / 7.313)
 const emoteWidth = 28
 
 class ChatLineCalculator {
@@ -190,6 +190,11 @@ class ChatLineCalculator {
     } else {
       if (currentLineContents.length > 0) {
         lines.push({lineContents: currentLineContents, containsEmoticons: lineContainsEmoticons})
+        if (lineContainsEmoticons) {
+          messageHeight += lineHeightWithEmoticons
+        } else {
+          messageHeight += lineHeight
+        }
       }
     }
     console.timeEnd('Function #2')

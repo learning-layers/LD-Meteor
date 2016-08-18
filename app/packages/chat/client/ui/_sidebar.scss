@@ -176,3 +176,10 @@ li.sidebar-nav-item {
     font-size: 12px;
   }
 }
+
+#chat-msg-list {
+  .infinite-example {
+    width: 100%;
+    height: calc(100vh - 300px);
+  }
+}

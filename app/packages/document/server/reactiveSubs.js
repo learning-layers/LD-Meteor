@@ -93,11 +93,11 @@ Meteor.publish('reactiveDocumentList', function (initialArgs) {
     searchTerm: Match.Maybe(String),
     language: Match.Maybe(String)
   })
-  let itemId = 'reactiveDocumentList'
+  const itemId = 'reactiveDocumentList'
   if (this.userId) {
     ServerArgs.upsert({'itemId': itemId, createdBy: this.userId}, {'itemId': itemId, createdBy: this.userId, args: initialArgs})
     this.autorun(function () {
-      let serverArgs = ServerArgs.findOne({'itemId': itemId, createdBy: this.userId})
+      const serverArgs = ServerArgs.findOne({'itemId': itemId, createdBy: this.userId})
       if (serverArgs) {
         if (!serverArgs.args.language) {
           serverArgs.args.language = 'en'

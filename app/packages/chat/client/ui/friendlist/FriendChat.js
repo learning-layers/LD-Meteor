@@ -1,29 +1,14 @@
-import { Meteor } from 'meteor/meteor'
 import React, {Component} from 'react'
-import { composeWithTracker } from 'react-komposer'
 import EventEmitterInstance from '../../../../../common/client/EventEmitter'
-import { DirectMessages } from '../../../lib/collections'
-import ChatLineCalculator from '../../lib/chatLineCalculator'
 import NewChatMsgInput from './NewChatMsgInput'
-
-function onPropsChange (props, onData) {
-  let handle = Meteor.subscribe('friendChat', {friendId: props.friendId})
-  if (handle.ready()) {
-    let friend = Meteor.users.findOne({_id: props.friendId})
-    let directMessages = DirectMessages.find({ $or: [
-      {from: props.friendId, to: Meteor.userId()},
-      {from: Meteor.userId(), to: props.friendId}
-    ]}).fetch()
-    onData(null, {friend, directMessages})
-  }
-}
+import ChatMsgList from './ChatMsgList'
 
 class FriendChat extends Component {
   close () {
     EventEmitterInstance.emit('close-friend-small-chat')
   }
   render () {
-    const { friend, directMessages } = this.props
+    const { friend, friendId } = this.props
     return <div id='small-friend-chat' style={{position: 'relative'}}>
       <div style={{
         display: 'block',
@@ -34,7 +19,7 @@ class FriendChat extends Component {
         fontWeight: 'bold'
       }}>
         <span className='glyphicon glyphicon-comment' style={{marginRight: '5px'}} />
-        {friend.profile.name}
+        {friend && friend.profile ? friend.profile.name : friendId}
       </div>
       <div style={{
         position: 'absolute',
@@ -51,30 +36,7 @@ class FriendChat extends Component {
         height: 'calc(100vh - 197px)',
         backgroundColor: '#FEF9E7'
       }}>
-        <ul style={{margin: 0, paddingLeft: 0, fontFamily: '\'Droid Sans Mono\', sans-serif', fontSize: '12px'}}>
-          {directMessages.map(function (directMessage) {
-            let emotes = directMessage.emotes
-            if (!emotes) {
-              emotes = []
-            }
-            let formattedEmotes = {}
-            emotes.forEach(function (emoteObj) {
-              formattedEmotes[emoteObj.key] = emoteObj.range
-            })
-            let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(directMessage.message, formattedEmotes)
-            return <li style={{listStyle: 'none'}}>
-              {messageWithEmotesObject.lines.map(function (line, i) {
-                let lineHeight = 17
-                if (line.containsEmoticons) {
-                  lineHeight = 26
-                }
-                return <div style={{display: 'block', height: lineHeight + 'px', overflow: 'visible'}} key={'line-' + i}>{line.lineContents.map(function (lineContent, j) {
-                  return <div style={{display: 'inline'}} key={'line-' + i + '-content-' + j}>{lineContent}</div>
-                })}</div>
-              })}
-            </li>
-          })}
-        </ul>
+        <ChatMsgList friendId={this.props.friendId} />
         <NewChatMsgInput friendId={this.props.friendId} />
       </div>
     </div>
@@ -87,4 +49,4 @@ FriendChat.propTypes = {
   directMessages: React.PropTypes.array
 }
 
-export default composeWithTracker(onPropsChange)(FriendChat)
+export default FriendChat

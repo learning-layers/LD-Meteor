@@ -12,23 +12,23 @@ import { Documents } from '../../lib/collections'
 import ReactiveInfiniteList from '../../../infiniteList/client/ui/GeneralReactiveInfiniteList'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
 
-let DocumentListSubs = new SubsManager({
+const DocumentListSubs = new SubsManager({
   cacheLimit: 2,
   expireIn: 1
 })
 
-let initialLimit = 20
+const initialLimit = 20
 const subsName = 'reactiveDocumentList'
 let documentListSearchTermObj = {
   searchTerm: ''
 }
 
 function onPropsChange (props, onData) {
-  let handle = DocumentListSubs.subscribe(subsName, {searchTerm: documentListSearchTermObj.searchTerm, limit: initialLimit})
+  const handle = DocumentListSubs.subscribe(subsName, {searchTerm: documentListSearchTermObj.searchTerm, limit: initialLimit})
   let loading = true
   if (handle.ready()) {
     loading = false
-    let documents = Documents.find({}, { sort: {name: 1} }).fetch()
+    const documents = Documents.find({}, { sort: {name: 1} }).fetch()
     onData(null, {documents, loading})
   } else if (Meteor.isClient) {
     onData(null, {documents: [], loading})
@@ -83,7 +83,7 @@ class ListItem extends Component {
     const document = item
     const user = Meteor.users.findOne(document.createdBy)
     const isOwnUser = document.createdBy === Meteor.userId()
-    let documentItemClasses = classNames({'div-table-row document-list-item': true, expanded: expanded})
+    const documentItemClasses = classNames({'div-table-row document-list-item': true, expanded: expanded})
     return <div key={'dli-' + document._id} className={documentItemClasses}>
       <div className='div-table-col' style={{width: colWidth + 'px'}} onClick={() => this.openDocument(document._id)}>
         {highlightText(documentListSearchTermObj.searchTerm, document.title)}

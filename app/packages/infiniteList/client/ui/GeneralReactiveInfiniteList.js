@@ -74,7 +74,9 @@ class ReactiveInfiniteList extends Component {
         Meteor.call('setArgs' + subsName, argsObj, (err, res) => {
           // TODO check error cases here
           if (err) {
-            //
+            /* this.setState({
+              isInfiniteLoading: false
+            })*/
           }
           if (res) {
             this.setState({
@@ -101,6 +103,10 @@ class ReactiveInfiniteList extends Component {
       colWidth = offsetWidth / numberOfCols
     }
     const displayBottomUpwardsSetting = !!displayBottomUpwards
+    let elementHeight = this.props.elementHeights
+    if (!elementHeight) {
+      elementHeight = buildElementHeights(items, expandedItems, normalHeight, expandedHeight)
+    }
     return (
       <div>
         <div className='infinite-example-header div-table-header'>
@@ -115,7 +121,7 @@ class ReactiveInfiniteList extends Component {
         </div>
         <div className='div-table infinite-example' ref='wrapper'>
           {this.state.gotDimenstions ? <Infinite
-            elementHeight={buildElementHeights(items, expandedItems, normalHeight, expandedHeight)}
+            elementHeight={elementHeight}
             containerHeight={this.state.offsetHeight}
             onInfiniteLoad={() => this.handleInfiniteLoad()}
             loadingSpinnerDelegate={this.elementInfiniteLoad()}
@@ -141,7 +147,8 @@ ReactiveInfiniteList.propTypes = {
   ListItemComponent: React.PropTypes.func.isRequired,
   subsName: React.PropTypes.string.isRequired,
   headerLabels: React.PropTypes.array.isRequired,
-  displayBottomUpwards: React.PropTypes.bool
+  displayBottomUpwards: React.PropTypes.bool,
+  elementHeights: React.PropTypes.array
 }
 
 export default ReactiveInfiniteList

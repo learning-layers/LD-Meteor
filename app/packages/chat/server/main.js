@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
-import { FriendRequests, FriendLists, DirectMessages } from '../lib/collections'
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
+import { FriendRequests, FriendLists, DirectMessages } from '../lib/collections'
 import { USERS_DEFAULT } from '../../user/server/userProjections'
 
 Meteor.publish('friendList', function () {
@@ -40,6 +40,12 @@ Meteor.publish('friendChat', function (args) {
 
 DDPRateLimiter.addRule({
   name: 'friendList',
+  type: 'subscription',
+  connectionId () { return true }
+}, 5, 1000)
+
+DDPRateLimiter.addRule({
+  name: 'friendChat',
   type: 'subscription',
   connectionId () { return true }
 }, 5, 1000)
