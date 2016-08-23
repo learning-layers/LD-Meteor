@@ -52,7 +52,7 @@
     position: relative;
     height: 400px;
     padding: 0;
-    .content {
+    > .content {
       position: absolute;
       width: 100%;
       height: 400px;
@@ -302,4 +302,5 @@
 }
 
 @import './sharing/_sharing';
-@import './mainContent/fileAttachments/_fileAttachments.scss'
+@import './mainContent/fileAttachments/_fileAttachments.scss';
+@import './mainContent/history/_history.scss';
