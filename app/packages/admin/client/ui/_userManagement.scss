@@ -13,7 +13,7 @@
   margin: auto;
   margin-bottom: 20px;
   width: 90%;
-  width: calc(100% - 28px);
+  width: 100%;
   height: calc(100vh - 180px);
 }
 .infinite-example-header {
@@ -21,8 +21,7 @@
   margin: auto;
   margin-bottom: 0;
   margin-top: 0;
-  width: 90%;
-  width: calc(100% - 28px);
+  width: 100%;
 }
 .infinite-list-item {
   text-align: center;

@@ -147,7 +147,7 @@ class DocumentListSearchBar extends Component {
   }
   render () {
     return <input type='text'
-      style={{margin: '0 auto 14px auto', width: 'calc(100% - 28px)'}}
+      style={{margin: '0 auto 14px auto', width: '100%'}}
       onChange={(event) => this.handleSearchInputChange(event, subsName)}
       placeholder='Find...' value={this.state.documentListSearchTerm} />
   }
