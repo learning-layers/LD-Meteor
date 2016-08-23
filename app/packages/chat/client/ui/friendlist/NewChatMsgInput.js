@@ -61,6 +61,20 @@ class NewChatMsgInput extends Component {
     this.state.cursorPosition = event.target.selectionEnd
   }
   render () {
+    /*
+    <img
+      className='emoticon'
+      src='http://static-cdn.jtvnw.net/emoticons/v1/25/3.0'
+      style={{
+        position: 'absolute',
+        top: '5px',
+        right: '10px',
+        width: '23px',
+        cursor: 'pointer'
+      }}
+      onClick={() => this.showEmoticons()}
+    />
+    */
     return <div className='new-chat-msg-input' style={{
       backgroundColor: 'white',
       position: 'absolute',
@@ -68,18 +82,6 @@ class NewChatMsgInput extends Component {
       width: '100%',
       borderTop: '1px solid lightgrey'
     }}>
-      <img
-        className='emoticon'
-        src='http://static-cdn.jtvnw.net/emoticons/v1/25/3.0'
-        style={{
-          position: 'absolute',
-          top: '5px',
-          right: '10px',
-          width: '23px',
-          cursor: 'pointer'
-        }}
-        onClick={() => this.showEmoticons()}
-      />
       <FormGroup controlId='formControlsTextarea' style={{
         padding: '5px',
         marginBottom: '10px'
