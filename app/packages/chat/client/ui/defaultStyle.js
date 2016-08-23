@@ -46,7 +46,7 @@ export default (props = {}) => ({
   },
   dragHandle: {
     backgroundColor: 'transparent',
-    pointerEvents: 'auto',
+    pointerEvents: 'none',
     zIndex: 1,
     position: 'fixed',
     top: 0,

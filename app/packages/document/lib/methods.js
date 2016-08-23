@@ -48,6 +48,7 @@ Meteor.methods({
       const userAccessLevel = getAccessLevel(documentId, this.userId)
       if (userAccessLevel && userAccessLevel === 'edit') {
         Documents.update({'_id': documentId}, {$set: {title: documentTitle}})
+        return true
       } else {
         throw new Meteor.Error(403, 'Not enough access rights to change the document title')
       }

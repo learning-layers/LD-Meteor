@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import { Meteor } from 'meteor/meteor'
+import Alert from 'react-s-alert'
 import DocumentTags from './DocumentTags'
 import CommentingArea from './comment/CommentingArea'
 import ContentEditor from './ContentEditor'
@@ -29,12 +30,15 @@ class EditableDocumentTitleInput extends Component {
         this.setState({
           inputDisabled: false
         })
+        Alert.error('Changing document title failed.')
       }
       if (res) {
         this.setEditMode(false)
         this.setState({
-          inputDisabled: false
+          inputDisabled: true,
+          editMode: false
         })
+        Alert.success('Successfully change document title.')
       }
     })
   }
