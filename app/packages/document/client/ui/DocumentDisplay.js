@@ -11,6 +11,7 @@ import DocumentSharingModal from './sharing/DocumentSharingModal'
 import AttachmentsBar from './mainContent/AttachmentsBar'
 import ContentViewer from './ContentViewer'
 import FileAttachmentArea from './mainContent/fileAttachments/FileAttachmentArea'
+import HistoryArea from './mainContent/history/HistoryArea'
 
 class EditableDocumentTitleInput extends Component {
   constructor (props) {
@@ -102,6 +103,7 @@ class DocumentDisplay extends Component {
     switch (tabName) {
       case 'Editor':
       case 'Files':
+      case 'History':
       case 'Media':
         this.setState({
           activeTabName: tabName
@@ -140,6 +142,8 @@ class DocumentDisplay extends Component {
         return <FileAttachmentArea documentId={this.props.document._id} />
       case 'Media':
         return 'Media'
+      case 'History':
+        return <HistoryArea documentId={this.props.document._id} />
       default:
         return <div>No section found</div>
     }

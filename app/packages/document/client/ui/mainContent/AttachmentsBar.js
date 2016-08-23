@@ -21,6 +21,7 @@ class AttachmentsBar extends Component {
     }
     let editorTabClassNames = classNames({'active': this.props.activeTabName === 'Editor', 'editor-tab-btn': true})
     let filesTabClassNames = classNames({'active': this.props.activeTabName === 'Files', 'files-tab-btn': true})
+    let historyTabClassNames = classNames({'active': this.props.activeTabName === 'History', 'history-tab-btn': true})
     // let mediaTabClassNames = classNames({'active': this.props.activeTabName === 'Media'})
     return <div className='attachments-bar'>
       <ul className='attachment-icons'>
@@ -36,6 +37,16 @@ class AttachmentsBar extends Component {
           <div style={{display: 'flex', margin: 'auto'}}>
             <div style={{display: 'flex', margin: 'auto'}}>
               {documentInfoCache ? <span className='badge'>{fileAttachmentCounter}</span> : null}
+            </div>
+          </div>
+        </li>
+        <li className={historyTabClassNames} onClick={() => this.props.onChangeTabSelection('History')}>
+          <div className='icon-wrapper'>
+            <span className='glyphicon glyphicon-time' />
+          </div>
+          <div style={{display: 'flex', margin: 'auto'}}>
+            <div style={{display: 'flex', margin: 'auto'}}>
+              {' '}
             </div>
           </div>
         </li>
