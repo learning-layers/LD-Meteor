@@ -12,8 +12,14 @@ Meteor.publish('friendList', function () {
       if (friendList && friendList.friendIds) {
         friendIds = friendList.friendIds
       }
+      let friendRequests = FriendRequests.find({ user: this.userId, status: 'pending' }).fetch()
+      let requesters = []
+      friendRequests.forEach(function (friendRequest) {
+        requesters.push(friendRequest.requester)
+      })
+      let userIdsToBeLoaded = friendIds.concat(requesters)
       return [
-        Meteor.users.find({'_id': {$in: friendIds}}, USERS_DEFAULT),
+        Meteor.users.find({'_id': {$in: userIdsToBeLoaded}}, USERS_DEFAULT),
         FriendRequests.find({ user: this.userId, status: 'pending' }),
         FriendLists.find({ userId: this.userId })
       ]

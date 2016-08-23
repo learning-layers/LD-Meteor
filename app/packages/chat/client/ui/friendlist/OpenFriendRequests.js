@@ -53,9 +53,10 @@ class OpenFriendRequests extends Component {
         <div className='inner-container'>
           <ul>
             {this.props.openFriendRequests.map((openFriendRequest) => {
+              let requesterUser = Meteor.users.findOne({_id: openFriendRequest.requester})
               return <li>
                 <div className='fr-requester'>
-                  Requester: {openFriendRequest.requester}
+                  Requester: {requesterUser ? requesterUser.profile.name : openFriendRequest.requester}
                 </div>
                 <div className='fr-requested-at'>
                   Requested at: <TimeFromNow date={openFriendRequest.createdAt} />
