@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { Documents } from '../../../document/lib/collections'
+import { Documents } from '../../../../lib/collections'
 
 class ContentViewer extends Component {
   constructor (props) {
