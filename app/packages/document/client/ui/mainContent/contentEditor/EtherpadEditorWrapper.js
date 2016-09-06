@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import IFrameWithOnLoad from './IframeWithOnLoad'
 import { Meteor } from 'meteor/meteor'
 import Cookies from 'cookies-js'
+import ContextMenu from './ContextMenu'
+import EventEmitterInstance from '../../../../../../common/client/EventEmitter'
 
 const etherpadEndpoint = Meteor.settings.public.etherpad.endpoint
 
@@ -12,7 +14,8 @@ class EtherpadEditorWrapper extends Component {
       cookieSet: false,
       cookieDomain: null,
       iframeLoadingStatus: 'red',
-      iframeNotYetLoaded: 0
+      iframeNotYetLoaded: 0,
+      showContextMenu: false
     }
     this.closingCode = function closingCode () {
       let result = this.removeEtherpadCookie()
@@ -42,17 +45,21 @@ class EtherpadEditorWrapper extends Component {
         })
       }
     })
+    this.contextMenuSubscription = EventEmitterInstance.addListener('close-content-editor-context-menu', () => { this.setState({ showContextMenu: false }) })
+  }
+  componentWillUnmount () {
+    this.removeEtherpadCookie()
+    window.removeEventListener('beforeunload', this.closingCode, false)
+    window.removeEventListener('unload', this.closingCode, false)
+    if (this.contextMenuSubscription) {
+      this.contextMenuSubscription.remove()
+    }
   }
   removeEtherpadCookie () {
     if (this.state.cookieDomain) {
       Cookies.expire('sessionID', { domain: this.state.cookieDomain })
     }
     return true
-  }
-  componentWillUnmount () {
-    this.removeEtherpadCookie()
-    window.removeEventListener('beforeunload', this.closingCode, false)
-    window.removeEventListener('unload', this.closingCode, false)
   }
   getOffset (el) {
     var _x = 0
@@ -64,6 +71,9 @@ class EtherpadEditorWrapper extends Component {
     }
     console.log('top=' + _y + ', left=' + _x)
     return { top: _y, left: _x }
+  }
+  openContextMenu (clientX, clientY, selection) {
+    this.setState({ showContextMenu: true, clientX: clientX, clientY: clientY, selection: selection })
   }
   onIframeLoaded () {
     if (this.props.etherpadGroupPad) {
@@ -77,15 +87,12 @@ class EtherpadEditorWrapper extends Component {
       })
       try {
         let iframe = document.getElementById('etherpadEditorIframe')
-        console.log(iframe)
         let idoc = iframe.contentDocument || iframe.contentWindow.document
-        console.log(idoc)
         this.setState({
           iframeLoadingStatus: 'lightred'
         })
         let aceOuter = idoc.getElementsByName('ace_outer')[0]
         let idocAceOuter = aceOuter.contentDocument || aceOuter.contentWindow.document
-        console.log(idocAceOuter)
         this.setState({
           iframeLoadingStatus: 'orange'
         })
@@ -122,6 +129,11 @@ class EtherpadEditorWrapper extends Component {
               isSelectionAvailable: isSelectionAvailable,
               document: this.props.document
           }, this.props.document.title); */
+          this.openContextMenu(
+            e.clientX,
+            e.clientY + this.getOffset(iframe).top,
+            currentSelection
+          )
           e.preventDefault()
         })
         this.setState({
@@ -139,6 +151,7 @@ class EtherpadEditorWrapper extends Component {
   }
   render () {
     const { etherpadGroupPad, etherpadReadOnlyId } = this.props
+    const { clientX, clientY, selection } = this.state
     let etherpadPadUrl
     if (etherpadGroupPad) {
       etherpadPadUrl = etherpadEndpoint + '/p/' + etherpadGroupPad
@@ -147,6 +160,7 @@ class EtherpadEditorWrapper extends Component {
     }
     let iframeLoadingStatusIndicator = <div style={{backgroundColor: this.state.iframeLoadingStatus, width: '7px', height: '7px', position: 'absolute'}} />
     return <div className='etherpad-editor-wrapper'>
+      {this.state.showContextMenu ? <ContextMenu eventTypes={['click']} clientX={clientX} clientY={clientY} selection={selection} /> : null}
       <div className='iframe-loading-inidicator'>
           {iframeLoadingStatusIndicator}
       </div>

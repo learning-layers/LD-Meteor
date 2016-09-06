@@ -62,6 +62,7 @@
     "react-markdown": "^2.4.2",
     "react-mentions": "^0.5.1",
     "react-mounter": "^1.2.0",
+    "react-onclickoutside": "^5.5.0",
     "react-rating": "^0.4.0",
     "react-s-alert": "^1.1.4",
     "react-selectize": "^2.0.3",
