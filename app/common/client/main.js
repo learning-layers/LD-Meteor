@@ -3,6 +3,10 @@ import { Session } from 'meteor/session'
 import Fireball from 'fireball-js'
 import { Tracker } from 'meteor/tracker'
 
+if (!global.isProdEnv()) {
+  global.document.domain = 'localhost'
+}
+
 global.Users = Meteor.users
 
 if (window.applicationCache) {
