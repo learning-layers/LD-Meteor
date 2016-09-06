@@ -88,6 +88,11 @@ class FileUpload extends Component {
       this.state.progress = 0
     }
     let interceptor = fileUpload.interceptorMap[this.props.collection + '#' + this.props.uploadType]
+    if (!interceptor) {
+      return <div className='fileUpload'>
+        No intercetor defined!
+      </div>
+    }
     return <div className='fileUpload'>
       {currentFileUpload ? <div className='uploadIndicator'>
         Uploading <b>{currentFileUpload.file.name}</b>:
