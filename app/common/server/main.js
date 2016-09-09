@@ -78,7 +78,8 @@ Meteor.startup(function () {
     'randomuser.me',
     'static-cdn.jtvnw.net',
     'api.learnenv.com',
-    'learnenv.de:9001'
+    'learnenv.de:9001',
+    'rawgit.com'
   ]
 
   if (!isProdEnv()) {

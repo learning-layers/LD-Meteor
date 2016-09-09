@@ -234,7 +234,7 @@ class DocumentDisplay extends Component {
       </div>
       {isViewMode ? null : <CommentingArea documentId={document._id} />}
       <textarea id='tinymceTextarea' name='tinymceTextarea' />
-      <iframe id='printf' name='printf'>Test</iframe>
+      <iframe id='printf' name='printf'></iframe>
     </div>
   }
 }

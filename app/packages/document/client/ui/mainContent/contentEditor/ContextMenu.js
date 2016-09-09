@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import onClickOutside from 'react-onclickoutside'
-import { printDocument } from '../../../lib/utils'
+import { Documents } from '../../../../lib/collections'
+import { printDocument, exportToWord } from '../../../lib/utils'
 import EventEmitterInstance from '../../../../../../common/client/EventEmitter'
 
 class ContextMenu extends Component {
@@ -10,7 +11,8 @@ class ContextMenu extends Component {
       posX: 0,
       posY: 0,
       selection: props.selection,
-      closeOnMouseOut: false
+      closeOnMouseOut: false,
+      documentId: props.documentId
     }
   }
   handleClickOutside (evt) {
@@ -25,6 +27,10 @@ class ContextMenu extends Component {
   }
   printDocument () {
     printDocument()
+  }
+  exportToWord () {
+    let document = Documents.findOne({_id: this.state.documentId})
+    exportToWord(document.title)
   }
   render () {
     let style = {
@@ -50,7 +56,7 @@ class ContextMenu extends Component {
             Print this document
           </li>
           <li className='cctx-separator'></li>
-          <li className='cctx-item' onClick={this.exportToWord}>
+          <li className='cctx-item' onClick={() => this.exportToWord()}>
             <div className='cctx-item-icon'>
             </div>
             Export this document to a word file

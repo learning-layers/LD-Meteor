@@ -115,7 +115,8 @@ class EtherpadEditorWrapper extends Component {
           let currentSelection = {
             startOffset: selectionObj.startOffset,
             endOffset: selectionObj.endOffset,
-            htmlContent: htmlContent
+            htmlContent: htmlContent,
+            documentId: this.props.documentId
           }
           console.info(currentSelection)
           // let isSelectionAvailable = true
@@ -160,7 +161,7 @@ class EtherpadEditorWrapper extends Component {
     }
     let iframeLoadingStatusIndicator = <div style={{backgroundColor: this.state.iframeLoadingStatus, width: '7px', height: '7px', position: 'absolute'}} />
     return <div className='etherpad-editor-wrapper'>
-      {this.state.showContextMenu ? <ContextMenu eventTypes={['click']} clientX={clientX} clientY={clientY} selection={selection} /> : null}
+      {this.state.showContextMenu ? <ContextMenu eventTypes={['click']} clientX={clientX} clientY={clientY} selection={selection} documentId={this.props.documentId} /> : null}
       <div className='iframe-loading-inidicator'>
           {iframeLoadingStatusIndicator}
       </div>
