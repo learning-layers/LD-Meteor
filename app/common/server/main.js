@@ -42,7 +42,7 @@ Meteor.startup(function () {
   BrowserPolicy.content.disallowInlineScripts()
   BrowserPolicy.content.disallowEval()
   BrowserPolicy.content.allowInlineStyles()
-  BrowserPolicy.framing.allowAll()
+  // BrowserPolicy.framing.allowAll()
   BrowserPolicy.content.allowFontDataUrl()
 
   // Enable cross origin requests for all endpoints

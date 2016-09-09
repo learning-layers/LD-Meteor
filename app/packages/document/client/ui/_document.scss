@@ -301,7 +301,19 @@
   display: inline-block;
 }
 
+#tinymceTextarea, .mce-tinymce.mce-container.mce-panel {
+  visibility: hidden!important;
+  height: 0;
+  width: 0;
+}
+
+#printf {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
 @import './sharing/_sharing';
 @import './mainContent/fileAttachments/_fileAttachments.scss';
 @import './mainContent/history/_history.scss';
-@import './mainContent/contentEditor/_context_menu.scss'
+@import './mainContent/contentEditor/_context_menu.scss';

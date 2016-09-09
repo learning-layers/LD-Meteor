@@ -93,11 +93,20 @@ class DocumentDisplay extends Component {
       manageSharingModal: null
     }
   }
+  componentDidMount () {
+    global.tinymce.init({
+      selector: '#tinymceTextarea',
+      skin_url: '/packages/teamon_tinymce/skins/lightgray',
+      plugins: 'print',
+      content_security_policy: 'default-src \'self\''
+    })
+  }
   componentWillUnmount () {
     let renderToElement = this.refs.manageSharingModal
     if (this.state.manageSharingModal !== null) {
       ReactDOM.unmountComponentAtNode(renderToElement)
     }
+    global.tinymce.execCommand('mceRemoveControl', true, 'tinymceTextarea')
   }
   changeTab (tabName) {
     switch (tabName) {
@@ -185,6 +194,9 @@ class DocumentDisplay extends Component {
       return 'view'
     }
   }
+  handleEditorChange (event) {
+    console.log(event)
+  }
   render () {
     let { document } = this.props
     const isViewMode = this.isViewMode()
@@ -221,6 +233,8 @@ class DocumentDisplay extends Component {
         </div>
       </div>
       {isViewMode ? null : <CommentingArea documentId={document._id} />}
+      <textarea id='tinymceTextarea' name='tinymceTextarea' />
+      <iframe id='printf' name='printf'>Test</iframe>
     </div>
   }
 }
