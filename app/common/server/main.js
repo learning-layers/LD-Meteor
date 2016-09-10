@@ -104,7 +104,23 @@ Meteor.startup(function () {
   BrowserPolicy.content.allowOriginForAll('blob:')
   BrowserPolicy.content.allowScriptOrigin('blob:')
 
-  BrowserPolicy.content.allowFrameOrigin('https://*.youtube.com')
+  var trustedFrameOrigins = [
+    '*.youtube.com'
+  ]
+
+  if (!isProdEnv()) {
+    trustedFrameOrigins.push('localhost:9001')
+  }
+
+  trustedFrameOrigins.forEach(function (origin) {
+    origin = 'https://' + origin
+    BrowserPolicy.content.allowFrameOrigin(origin)
+  })
+
+  trustedFrameOrigins.forEach(function (origin) {
+    origin = 'http://' + origin
+    BrowserPolicy.content.allowFrameOrigin(origin)
+  })
   console.log('BrowserPolicy configured')
 
   // Mail configuration
