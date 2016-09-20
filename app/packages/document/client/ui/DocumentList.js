@@ -28,7 +28,7 @@ function onPropsChange (props, onData) {
   let loading = true
   if (handle.ready()) {
     loading = false
-    const documents = Documents.find({}, { sort: {name: 1} }).fetch()
+    const documents = Documents.find({parentDocumentId: { '$exists': false }}, { sort: {name: 1} }).fetch()
     onData(null, {documents, loading})
   } else if (Meteor.isClient) {
     onData(null, {documents: [], loading})

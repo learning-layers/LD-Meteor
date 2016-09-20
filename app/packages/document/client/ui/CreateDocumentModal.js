@@ -15,17 +15,20 @@ class CreateDocumentModal extends Component {
     super(props)
     this.state = {
       showModal: true,
-      title: ''
+      title: '',
+      parentDocumentId: props.parentId
     }
   }
   close () {
     this.setState({
-      showModal: false
+      showModal: false,
+      parentDocumentId: undefined
     })
   }
-  open () {
+  open (selection, parentId) {
     this.setState({
-      showModal: true
+      showModal: true,
+      parentDocumentId: parentId
     })
   }
   handleChangeTitle (e) {
@@ -45,7 +48,11 @@ class CreateDocumentModal extends Component {
   }
   handleSubmit (e) {
     e.preventDefault()
-    Meteor.call('createDocument', {title: this.state.title}, (err, res) => {
+    let args = {title: this.state.title}
+    if (this.state.parentDocumentId) {
+      args.parentDocumentId = this.state.parentDocumentId
+    }
+    Meteor.call('createDocument', args, (err, res) => {
       if (err) {
         Alert.error('Error: Creating document \'' + this.state.title + '\'')
       }
@@ -57,10 +64,13 @@ class CreateDocumentModal extends Component {
     })
   }
   render () {
-    var valid = this.validate(this.state)
+    const valid = this.validate(this.state)
+    const { selection } = this.state
     return <Modal className='create-document-modal' show={this.state.showModal} onHide={() => this.close()}>
       <Modal.Header closeButton>
-        <Modal.Title>Create a new document</Modal.Title>
+        <Modal.Title>
+          {selection ? <span>Create new sub-document</span> : <span>Create a new document</span>}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={(e) => this.handleSubmit(e)}>
@@ -77,12 +87,25 @@ class CreateDocumentModal extends Component {
           </FormGroup>
           <button className='btn btn-success' disabled={!valid.all}>Submit</button>
         </form>
+        {this.props.selection ? <div>
+          <br />
+          <label className='from-control' htmlFor='selected-paragraph'>
+            {'Selected paragraph for this sub-document:'}
+          </label>
+          <div id='selected-paragraph' className='selection-to-discuss'
+            dangerouslySetInnerHTML={{__html: this.props.selection.htmlContent}} />
+        </div> : null}
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={() => this.close()}>Close</Button>
       </Modal.Footer>
     </Modal>
   }
+}
+
+CreateDocumentModal.propTypes = {
+  selection: React.PropTypes.object,
+  parentId: React.PropTypes.string
 }
 
 export default CreateDocumentModal

@@ -22,8 +22,8 @@ class ContextMenu extends Component {
     EventEmitterInstance.emit('close-content-editor-context-menu')
   }
   discussParagraph () {
+    EventEmitterInstance.emit('create-new-subdocument', this.props.selection, this.state.documentId)
     EventEmitterInstance.emit('close-content-editor-context-menu')
-    // DocumentActions.createDocument(this.state.selection)
   }
   printDocument () {
     printDocument()
@@ -33,14 +33,20 @@ class ContextMenu extends Component {
     exportToWord(document.title)
   }
   render () {
+    const { selection } = this.props
     let style = {
       left: this.props.clientX,
-      top: this.props.clientY - 155
+      top: this.props.clientY - 145
     }
+    /* <li className='cctx-item' onClick={this.exportToPDF}>
+      <div className='cctx-item-icon'>
+      </div>
+      Export this document to a pdf file
+    </li> */
     return (
       <div className='cctx' style={style} onMouseLeave={() => this.handleMouseLeave()}>
         <ul>
-        {this.state.selection.isSelectionAvailable ? <li className='cctx-item' onClick={() => this.discussParagraph()}>
+        {selection && selection.htmlContent !== '' ? <li className='cctx-item' onClick={() => this.discussParagraph()}>
           <div className='cctx-item-icon'>
             <div className='discuss-section'>
               <div className='glyph-minus'><span className='glyphicon glyphicon-minus'></span></div>
@@ -49,7 +55,7 @@ class ContextMenu extends Component {
           </div>
           Start a conversation for this paragraph
         </li> : null}
-          {this.state.selection ? <li className='cctx-separator'></li> : null}
+          {selection && selection.htmlContent !== '' ? <li className='cctx-separator'></li> : null}
           <li className='cctx-item' onClick={() => this.printDocument()}>
             <div className='cctx-item-icon'>
             </div>
@@ -61,11 +67,6 @@ class ContextMenu extends Component {
             </div>
             Export this document to a word file
           </li>
-          <li className='cctx-item' onClick={this.exportToPDF}>
-            <div className='cctx-item-icon'>
-            </div>
-            Export this document to a pdf file
-          </li>
         </ul>
       </div>
     )
@@ -75,7 +76,8 @@ class ContextMenu extends Component {
 ContextMenu.propTypes = {
   selection: React.PropTypes.object,
   clientX: React.PropTypes.number,
-  clientY: React.PropTypes.number
+  clientY: React.PropTypes.number,
+  documentId: React.PropTypes.string
 }
 
 // eventTypes={["click", "mouseleave"]}

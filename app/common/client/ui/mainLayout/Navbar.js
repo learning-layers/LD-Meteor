@@ -42,6 +42,10 @@ class LDNavbar extends Component {
     // Use Meteor Blaze to render login buttons
     this.view = Blaze.render(Template._loginButtons,
       ReactDOM.findDOMNode(this.refs.accountsLoginContainer))
+
+    this.createSubDocumentSubscription = EventEmitterInstance.addListener('create-new-subdocument', (selection, parentId) => {
+      this.openCreateDocumentModal(selection, parentId)
+    })
   }
   componentWillUnmount () {
     // cleanup blaze view and react roots
@@ -50,16 +54,19 @@ class LDNavbar extends Component {
     if (this.state.openChangeUserRolesModal !== null) {
       ReactDOM.unmountComponentAtNode(renderToElement)
     }
+    if (this.createSubDocumentSubscription) {
+      this.createSubDocumentSubscription.remove()
+    }
   }
   openSidebar () {
     EventEmitterInstance.emit('sidebar-toggle', true)
   }
-  openCreateDocumentModal () {
+  openCreateDocumentModal (selection, parentId) {
     let renderToElement = this.refs.createDocumentModal
     if (!this.state.openChangeUserRolesModal) {
-      this.state.openChangeUserRolesModal = ReactDOM.render(<CreateDocumentModal />, renderToElement)
+      this.state.openChangeUserRolesModal = ReactDOM.render(<CreateDocumentModal selection={selection} parentId={parentId} />, renderToElement)
     } else {
-      this.state.openChangeUserRolesModal.open()
+      this.state.openChangeUserRolesModal.open(selection)
     }
   }
   render () {
