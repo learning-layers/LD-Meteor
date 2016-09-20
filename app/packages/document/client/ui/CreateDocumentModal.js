@@ -15,20 +15,17 @@ class CreateDocumentModal extends Component {
     super(props)
     this.state = {
       showModal: true,
-      title: '',
-      parentDocumentId: props.parentId
+      title: ''
     }
   }
   close () {
     this.setState({
-      showModal: false,
-      parentDocumentId: undefined
+      showModal: false
     })
   }
   open (selection, parentId) {
     this.setState({
-      showModal: true,
-      parentDocumentId: parentId
+      showModal: true
     })
   }
   handleChangeTitle (e) {
@@ -49,8 +46,9 @@ class CreateDocumentModal extends Component {
   handleSubmit (e) {
     e.preventDefault()
     let args = {title: this.state.title}
-    if (this.state.parentDocumentId) {
-      args.parentDocumentId = this.state.parentDocumentId
+    if (this.props.parentId) {
+      args.parentDocumentId = this.props.parentId
+      args.initialContent = this.props.selection.htmlContent
     }
     Meteor.call('createDocument', args, (err, res) => {
       if (err) {
@@ -65,7 +63,7 @@ class CreateDocumentModal extends Component {
   }
   render () {
     const valid = this.validate(this.state)
-    const { selection } = this.state
+    const { selection } = this.props
     return <Modal className='create-document-modal' show={this.state.showModal} onHide={() => this.close()}>
       <Modal.Header closeButton>
         <Modal.Title>
@@ -87,7 +85,7 @@ class CreateDocumentModal extends Component {
           </FormGroup>
           <button className='btn btn-success' disabled={!valid.all}>Submit</button>
         </form>
-        {this.props.selection ? <div>
+        {selection ? <div>
           <br />
           <label className='from-control' htmlFor='selected-paragraph'>
             {'Selected paragraph for this sub-document:'}

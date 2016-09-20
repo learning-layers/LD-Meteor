@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { check } from 'meteor/check'
+import { check, Match } from 'meteor/check'
 import { Documents, DocumentAccess } from '../../document/lib/collections'
 import { rateLimit } from '../../../common/lib/rate-limit'
 
@@ -29,8 +29,9 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  createEtherpadGroupAndPad: function (documentId) {
+  createEtherpadGroupAndPad: function (documentId, initialContent) {
     check(documentId, String)
+    check(initialContent, Match.Maybe(String))
     if (this.userId && Meteor.isServer) {
       const document = Documents.findOne({ '_id': documentId }, { etherpadGroup: 1 })
       if (!document) {
@@ -40,7 +41,7 @@ Meteor.methods({
       } else {
         const newGroupId = createGroupSync()
         Documents.update({ '_id': documentId }, { $set: { etherpadGroup: newGroupId } })
-        const newGroupPadId = createGroupPadSync(newGroupId, 'doc' + documentId)
+        const newGroupPadId = createGroupPadSync(newGroupId, 'doc' + documentId, initialContent)
         Documents.update({ '_id': documentId }, { $set: { etherpadGroupPad: newGroupPadId } })
       }
     } else if (Meteor.isServer) {

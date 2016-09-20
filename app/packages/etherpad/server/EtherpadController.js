@@ -27,14 +27,18 @@ class EtherpadController {
       }
     })
   }
-  createGroupPad (groupId, title, callback) {
+  createGroupPad (groupId, title, initialContent, callback) {
     // TODO const document = Documents.findOne({'_id': documentId}, {fields: {etherpad_group: 1}})
+    let data = {
+      apikey: this.apiKey,
+      groupID: groupId,
+      padName: title
+    }
+    if (initialContent && initialContent != null) {
+      data.text = initialContent
+    }
     HTTP.post(this.endpoint + '/createGroupPad', {
-      data: {
-        'apikey': this.apiKey,
-        'groupID': groupId,
-        'padName': title
-      }
+      data: data
     }, function (error, response) {
       if (error) {
         console.log(error)

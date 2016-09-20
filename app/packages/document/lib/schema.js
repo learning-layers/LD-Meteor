@@ -20,6 +20,13 @@ export const DocumentSchema = new SimpleSchema({
     min: 6,
     optional: true
   },
+  initialContent: {
+    type: String,
+    label: 'InitialContent',
+    optional: true,
+    max: 10000,
+    min: 1
+  },
   createdBy: {
     type: String,
     label: 'Created by',
