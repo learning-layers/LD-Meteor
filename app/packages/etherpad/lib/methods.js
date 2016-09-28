@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor'
 import { check, Match } from 'meteor/check'
-import { Documents, DocumentAccess } from '../../document/lib/collections'
+import { Documents, DocumentAccess, DocumentSelections } from '../../document/lib/collections'
 import { rateLimit } from '../../../common/lib/rate-limit'
 
-let createGroupSync, createGroupPadSync, createAuthorSync, createPadSessionSync, getReadOnlyPadIdSync, getHTMLContentSync
+let createGroupSync, createGroupPadSync, createAuthorSync, createPadSessionSync, getReadOnlyPadIdSync, getHTMLContentSync, setHTMLSync
 if (Meteor.isServer) {
   let { EtherpadControllerInstance } = require('../server/EtherpadController')
   createGroupSync = Meteor.wrapAsync(EtherpadControllerInstance.createGroup.bind(EtherpadControllerInstance))
@@ -12,6 +12,7 @@ if (Meteor.isServer) {
   createPadSessionSync = Meteor.wrapAsync(EtherpadControllerInstance.createPadSession.bind(EtherpadControllerInstance))
   getHTMLContentSync = Meteor.wrapAsync(EtherpadControllerInstance.getHTMLContent.bind(EtherpadControllerInstance))
   getReadOnlyPadIdSync = Meteor.wrapAsync(EtherpadControllerInstance.getReadOnlyPadId.bind(EtherpadControllerInstance))
+  setHTMLSync = Meteor.wrapAsync(EtherpadControllerInstance.setHTML.bind(EtherpadControllerInstance))
 }
 
 Meteor.methods({
@@ -41,7 +42,12 @@ Meteor.methods({
       } else {
         const newGroupId = createGroupSync()
         Documents.update({ '_id': documentId }, { $set: { etherpadGroup: newGroupId } })
-        const newGroupPadId = createGroupPadSync(newGroupId, 'doc' + documentId, initialContent)
+        const documentSelection = DocumentSelections.findOne({documentId: documentId})
+        const newGroupPadId = createGroupPadSync(newGroupId, 'doc' + documentId)
+        if (documentSelection) {
+          console.log('documentSelection.htmlContent=', documentSelection.htmlContent)
+          setHTMLSync(newGroupPadId, documentSelection.htmlContent)
+        }
         Documents.update({ '_id': documentId }, { $set: { etherpadGroupPad: newGroupPadId } })
       }
     } else if (Meteor.isServer) {

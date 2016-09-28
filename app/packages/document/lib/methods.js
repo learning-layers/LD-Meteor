@@ -338,21 +338,17 @@ Meteor.methods({
   getSubDocumentBreadcrumbs (documentId) {
     check(documentId, String)
     let breadcrumbs = []
-    console.log('getSubDocumentBreadcrumbs documentId=', documentId)
     let documentSelection = DocumentSelections.findOne({documentId: documentId})
-    console.log('getSubDocumentBreadcrumbs documentSelection=', documentSelection)
     while (documentSelection) {
       const document = Documents.findOne({_id: documentSelection.parentId}, {fields: {
         title: 1,
         createdAt: 1,
         createdBy: 1
       }})
-      console.log('getSubDocumentBreadcrumbs document=', document)
       breadcrumbs.push({
         documentId: documentSelection.parentId,
         document: document
       })
-      console.log('getSubDocumentBreadcrumbs breadcrumbs=', breadcrumbs)
       documentSelection = DocumentSelections.findOne({documentId: documentSelection.parentId})
     }
     // TODO add document selection deletion when the document is deleted
@@ -466,7 +462,8 @@ rateLimit({
     'addDocumentUserAccess',
     'removeDocumentUserAccess',
     'addDocumentGroupAccess',
-    'removeDocumentGroupAccess'
+    'removeDocumentGroupAccess',
+    'getSubDocumentBreadcrumbs'
   ],
   limit: 20,
   timeRange: 10000
