@@ -66,8 +66,9 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  createSubDocument: function (document, selection, parentId) {
+  createSubDocument: function (document, selection, parentId, sharedWithSameUsers) {
     check(parentId, String)
+    check(sharedWithSameUsers, Boolean)
     selection.parentId = selection.documentId
     delete selection.documentId
     check(selection, DocumentSelectionSchema)
@@ -78,11 +79,23 @@ Meteor.methods({
     if (this.userId) {
       let newDocumentId = Documents.insert(document)
       selection.documentId = newDocumentId
+      let documentSelectionId
       try {
-        DocumentSelections.insert(selection)
+        documentSelectionId = DocumentSelections.insert(selection)
+        if (sharedWithSameUsers) {
+          let documentAccess = DocumentAccess.findOne({ documentId: parentId })
+          if (documentAccess) {
+            delete documentAccess._id
+            documentAccess.documentId = newDocumentId
+            DocumentAccess.insert(documentAccess)
+          }
+        }
         return newDocumentId
       } catch (e) {
         Documents.remove(newDocumentId)
+        if (documentSelectionId) {
+          DocumentSelections.remove(documentSelectionId)
+        }
         throw e
       }
     } else {

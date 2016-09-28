@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
 import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/ControlLabel'
+import Checkbox from '../../../../../node_modules/react-bootstrap/lib/Checkbox'
 import Modal from '../../../../../node_modules/react-bootstrap/lib/Modal'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import ValidatedFormControl from '../../../../common/client/ui/forms/ValidatedFormControl'
@@ -15,7 +16,8 @@ class CreateDocumentModal extends Component {
     super(props)
     this.state = {
       showModal: true,
-      title: ''
+      title: '',
+      sharedWithSameUsers: true
     }
     // this is relevant if a sub document should be created
     props.selection ? this.state.selection = props.selection : null
@@ -52,6 +54,7 @@ class CreateDocumentModal extends Component {
     delete cleanState.showModal
     delete cleanState.selection
     delete cleanState.parentId
+    delete cleanState.sharedWithSameUsers
     cleanState.createdAt = new Date()
     cleanState.createdBy = Meteor.userId()
     return {
@@ -63,7 +66,7 @@ class CreateDocumentModal extends Component {
     e.preventDefault()
     if (this.state.selection && this.state.parentId) {
       // create a sub document
-      Meteor.call('createSubDocument', {title: this.state.title}, this.state.selection, this.state.parentId, (err, res) => {
+      Meteor.call('createSubDocument', {title: this.state.title}, this.state.selection, this.state.parentId, this.state.sharedWithSameUsers, (err, res) => {
         if (err) {
           Alert.error('Error: Creating document \'' + this.state.title + '\'')
         }
@@ -86,6 +89,11 @@ class CreateDocumentModal extends Component {
       })
     }
   }
+  toggleSharingWithSameUsers () {
+    this.setState({
+      sharedWithSameUsers: !this.state.sharedWithSameUsers
+    })
+  }
   render () {
     var valid = this.validate(this.state)
     return <Modal className='create-document-modal' show={this.state.showModal} onHide={() => this.close()}>
@@ -104,12 +112,17 @@ class CreateDocumentModal extends Component {
               onChange={(e) => this.handleChangeTitle(e)}
               placeholder={DocumentSchema._schema.title.placeholder}
               autoComplete='off' />
+            {this.state.selection ? <span>
+              <Checkbox ref='sharingWithSameUsersCheckbox' checked={this.state.sharedWithSameUsers} onClick={() => this.toggleSharingWithSameUsers()}>
+                Share this document with the same users
+              </Checkbox>
+            </span> : null}
           </FormGroup>
           <button className='btn btn-success' disabled={!valid.all}>Submit</button>
         </form>
         {this.state.selection ? <div className='selection-wrapper'>
           <br />
-          <label forHtml='selected-paragraph'>Selected paragraph for this conversation:</label>
+          <label forHtml='selected-paragraph'><b>Selected paragraph for this conversation:</b></label>
           <div className='selected-paragraph-wrapper'>
             <div id='selected-paragraph' dangerouslySetInnerHTML={{__html: this.state.selection.htmlContent}} />
           </div>
