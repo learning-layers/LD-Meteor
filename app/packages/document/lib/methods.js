@@ -6,8 +6,8 @@ import { DocumentComments, DocumentAccess } from '../lib/collections'
 import { Groups } from '../../groups/lib/collections'
 import { getAccessLevel } from './util'
 import { rateLimit } from '../../../common/lib/rate-limit'
-import { DocumentSchema, DocumentCommentSchema } from './schema'
-import { Documents } from './collections'
+import { DocumentSchema, DocumentCommentSchema, DocumentSelectionSchema } from './schema'
+import { Documents, DocumentSelections } from './collections'
 import { RequestAccessItems } from './sharing/collections'
 
 let CommentMentioningEmailTemplates
@@ -62,6 +62,29 @@ Meteor.methods({
     check(document, DocumentSchema)
     if (this.userId) {
       return Documents.insert(document)
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
+  createSubDocument: function (document, selection, parentId) {
+    check(parentId, String)
+    selection.parentId = selection.documentId
+    delete selection.documentId
+    check(selection, DocumentSelectionSchema)
+    document.createdAt = new Date()
+    document.createdBy = this.userId
+    document.isSubDocument = true
+    check(document, DocumentSchema)
+    if (this.userId) {
+      let newDocumentId = Documents.insert(document)
+      selection.documentId = newDocumentId
+      try {
+        DocumentSelections.insert(selection)
+        return newDocumentId
+      } catch (e) {
+        Documents.remove(newDocumentId)
+        throw e
+      }
     } else {
       throw new Meteor.Error(401)
     }

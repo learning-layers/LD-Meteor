@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { Meteor } from 'meteor/meteor'
 import onClickOutside from 'react-onclickoutside'
 import { Documents } from '../../../../lib/collections'
 import { printDocument, exportToWord } from '../../../lib/utils'
@@ -21,9 +22,10 @@ class ContextMenu extends Component {
   handleMouseLeave () {
     EventEmitterInstance.emit('close-content-editor-context-menu')
   }
-  discussParagraph () {
+  discussParagraph (selection, documentId) {
     EventEmitterInstance.emit('close-content-editor-context-menu')
-    // DocumentActions.createDocument(this.state.selection)
+    EventEmitterInstance.emit('open-create-sub-document-modal', selection, documentId)
+    // TODO move elsewhere Meteor.call('createSubDocument', selection, documentId)
   }
   printDocument () {
     printDocument()
@@ -37,10 +39,11 @@ class ContextMenu extends Component {
       left: this.props.clientX,
       top: this.props.clientY - 155
     }
+    let showSelectionPossibility = this.props.selection && this.props.selection.htmlContent && this.props.selection.htmlContent !== ''
     return (
       <div className='cctx' style={style} onMouseLeave={() => this.handleMouseLeave()}>
         <ul>
-        {this.state.selection.isSelectionAvailable ? <li className='cctx-item' onClick={() => this.discussParagraph()}>
+        {showSelectionPossibility ? <li className='cctx-item' onClick={() => this.discussParagraph(this.props.selection, this.state.documentId)}>
           <div className='cctx-item-icon'>
             <div className='discuss-section'>
               <div className='glyph-minus'><span className='glyphicon glyphicon-minus'></span></div>
@@ -49,7 +52,7 @@ class ContextMenu extends Component {
           </div>
           Start a conversation for this paragraph
         </li> : null}
-          {this.state.selection ? <li className='cctx-separator'></li> : null}
+          {showSelectionPossibility ? <li className='cctx-separator'></li> : null}
           <li className='cctx-item' onClick={() => this.printDocument()}>
             <div className='cctx-item-icon'>
             </div>

@@ -17,13 +17,27 @@ class CreateDocumentModal extends Component {
       showModal: true,
       title: ''
     }
+    // this is relevant if a sub document should be created
+    props.selection ? this.state.selection = props.selection : null
+    props.parentId ? this.state.parentId = props.parentId : null
   }
   close () {
     this.setState({
       showModal: false
     })
+    delete this.state.selection
+    delete this.state.parentId
   }
-  open () {
+  open (selection, parentId) {
+    if (selection && parentId) {
+      // create sub document
+      this.state.selection = selection
+      this.state.parentId = parentId
+    } else {
+      // create normal document
+      this.state.selection = undefined
+      this.state.parentId = undefined
+    }
     this.setState({
       showModal: true
     })
@@ -36,6 +50,8 @@ class CreateDocumentModal extends Component {
   validate (state) {
     let cleanState = JSON.parse(JSON.stringify(this.state))
     delete cleanState.showModal
+    delete cleanState.selection
+    delete cleanState.parentId
     cleanState.createdAt = new Date()
     cleanState.createdBy = Meteor.userId()
     return {
@@ -45,22 +61,36 @@ class CreateDocumentModal extends Component {
   }
   handleSubmit (e) {
     e.preventDefault()
-    Meteor.call('createDocument', {title: this.state.title}, (err, res) => {
-      if (err) {
-        Alert.error('Error: Creating document \'' + this.state.title + '\'')
-      }
-      if (res) {
-        Alert.success('Success: Created document \'' + this.state.title + '\'')
-        this.close()
-        FlowRouter.go('/document/' + res)
-      }
-    })
+    if (this.state.selection && this.state.parentId) {
+      // create a sub document
+      Meteor.call('createSubDocument', {title: this.state.title}, this.state.selection, this.state.parentId, (err, res) => {
+        if (err) {
+          Alert.error('Error: Creating document \'' + this.state.title + '\'')
+        }
+        if (res) {
+          Alert.success('Success: Created document \'' + this.state.title + '\'')
+          this.close()
+          FlowRouter.go('/document/' + res)
+        }
+      })
+    } else {
+      Meteor.call('createDocument', {title: this.state.title}, (err, res) => {
+        if (err) {
+          Alert.error('Error: Creating document \'' + this.state.title + '\'')
+        }
+        if (res) {
+          Alert.success('Success: Created document \'' + this.state.title + '\'')
+          this.close()
+          FlowRouter.go('/document/' + res)
+        }
+      })
+    }
   }
   render () {
     var valid = this.validate(this.state)
     return <Modal className='create-document-modal' show={this.state.showModal} onHide={() => this.close()}>
       <Modal.Header closeButton>
-        <Modal.Title>Create a new document</Modal.Title>
+        <Modal.Title>{this.state.selection ? <span>Create a new sub document</span> : <span>Create a new document</span>}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={(e) => this.handleSubmit(e)}>
@@ -77,6 +107,13 @@ class CreateDocumentModal extends Component {
           </FormGroup>
           <button className='btn btn-success' disabled={!valid.all}>Submit</button>
         </form>
+        {this.state.selection ? <div className='selection-wrapper'>
+          <br />
+          <label forHtml='selected-paragraph'>Selected paragraph for this conversation:</label>
+          <div className='selected-paragraph-wrapper'>
+            <div id='selected-paragraph' dangerouslySetInnerHTML={{__html: this.state.selection.htmlContent}} />
+          </div>
+        </div> : null}
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={() => this.close()}>Close</Button>

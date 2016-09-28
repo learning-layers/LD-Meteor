@@ -313,6 +313,14 @@
   width: 0;
 }
 
+.selected-paragraph-wrapper {
+  border: 1px solid black;
+  padding: 7px 7px 0 7px;
+  background: lightgoldenrodyellow;
+  max-height: 170px;
+  overflow: auto;
+}
+
 @import './sharing/_sharing';
 @import './mainContent/fileAttachments/_fileAttachments.scss';
 @import './mainContent/history/_history.scss';

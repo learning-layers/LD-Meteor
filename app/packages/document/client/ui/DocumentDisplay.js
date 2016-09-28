@@ -7,11 +7,13 @@ import CommentingArea from './comment/CommentingArea'
 import ContentEditor from './mainContent/contentEditor/ContentEditor'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
+import EventEmitterInstance from '../../../../common/client/EventEmitter'
 import DocumentSharingModal from './sharing/DocumentSharingModal'
 import AttachmentsBar from './mainContent/AttachmentsBar'
 import ContentViewer from './mainContent/contentEditor/ContentViewer'
 import FileAttachmentArea from './mainContent/fileAttachments/FileAttachmentArea'
 import HistoryArea from './mainContent/history/HistoryArea'
+import CreateDocumentModal from './CreateDocumentModal'
 
 class EditableDocumentTitleInput extends Component {
   constructor (props) {
@@ -90,7 +92,8 @@ class DocumentDisplay extends Component {
     this.state = {
       activeTabName: 'Editor',
       tagBarFocused: false,
-      manageSharingModal: null
+      manageSharingModal: null,
+      openCreateDocumentModal: null
     }
   }
   componentDidMount () {
@@ -100,6 +103,9 @@ class DocumentDisplay extends Component {
       plugins: 'print',
       content_security_policy: 'default-src \'self\''
     })
+    this.createSubDocumentSubscription = EventEmitterInstance.addListener('open-create-sub-document-modal', (selection, parentId) => {
+      this.openCreateSubDocumentModal(selection, parentId)
+    })
   }
   componentWillUnmount () {
     let renderToElement = this.refs.manageSharingModal
@@ -107,6 +113,17 @@ class DocumentDisplay extends Component {
       ReactDOM.unmountComponentAtNode(renderToElement)
     }
     global.tinymce.execCommand('mceRemoveControl', true, 'tinymceTextarea')
+    if (this.createSubDocumentSubscription) {
+      this.createSubDocumentSubscription.remove()
+    }
+  }
+  openCreateSubDocumentModal (selection, parentId) {
+    let renderToElement = this.refs.createDocumentModal
+    if (!this.state.openCreateDocumentModal) {
+      this.state.openCreateDocumentModal = ReactDOM.render(<CreateDocumentModal selection={selection} parentId={parentId} />, renderToElement)
+    } else {
+      this.state.openCreateDocumentModal.open(selection, parentId)
+    }
   }
   changeTab (tabName) {
     switch (tabName) {
@@ -232,6 +249,7 @@ class DocumentDisplay extends Component {
           </div>
         </div>
       </div>
+      <div ref='createDocumentModal'></div>
       {isViewMode ? null : <CommentingArea documentId={document._id} />}
       <textarea id='tinymceTextarea' name='tinymceTextarea' />
       <iframe id='printf' name='printf'></iframe>

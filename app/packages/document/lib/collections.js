@@ -1,6 +1,6 @@
 import { Mongo } from 'meteor/mongo'
 import { Meteor } from 'meteor/meteor'
-import { DocumentSchema, DocumentCommentSchema, DocumentAccessSchema } from './schema'
+import { DocumentSchema, DocumentCommentSchema, DocumentAccessSchema, DocumentSelectionSchema } from './schema'
 
 export const Documents = new Mongo.Collection('Documents')
 Documents.attachSchema(DocumentSchema)
@@ -38,3 +38,6 @@ if (Meteor.isServer) {
   DocumentAccess._ensureIndex({ 'groupCanComment.groupId': 1 })
   DocumentAccess._ensureIndex({ 'groupCanEdit.groupId': 1 })
 }
+
+export const DocumentSelections = new Mongo.Collection('DocumentSelections')
+DocumentSelections.attachSchema(DocumentSelectionSchema)

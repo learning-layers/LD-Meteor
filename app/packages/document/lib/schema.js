@@ -48,6 +48,11 @@ export const DocumentSchema = new SimpleSchema({
     max: 100,
     min: 1,
     optional: true
+  },
+  isSubDocument: {
+    type: Boolean,
+    label: 'IsSubDocument',
+    optional: true
   }
 })
 
@@ -105,7 +110,7 @@ export const DocumentCommentSchema = new SimpleSchema({
 export const DocumentAccessSchema = new SimpleSchema({
   documentId: {
     type: String,
-    label: 'Created by',
+    label: 'DocumentId',
     max: 40,
     min: 6
   },
@@ -189,5 +194,33 @@ export const DocumentAccessSchema = new SimpleSchema({
   },
   'groupCanEdit.$.addedOn': {
     type: Date
+  }
+})
+
+export const DocumentSelectionSchema = new SimpleSchema({
+  parentId: {
+    type: String,
+    label: 'ParentId',
+    max: 40,
+    min: 6
+  },
+  documentId: {
+    type: String,
+    label: 'ParentId',
+    max: 40,
+    min: 6,
+    optional: true // TODO change this to be mandatory
+  },
+  startOffset: {
+    type: Number,
+    label: 'StartOffset'
+  },
+  endOffset: {
+    type: Number,
+    label: 'EndOffset'
+  },
+  htmlContent: {
+    type: String,
+    label: 'content'
   }
 })

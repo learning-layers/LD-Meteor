@@ -35,7 +35,7 @@ class LDNavbar extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      openChangeUserRolesModal: null
+      openCreateDocumentModal: null
     }
   }
   componentDidMount () {
@@ -47,7 +47,7 @@ class LDNavbar extends Component {
     // cleanup blaze view and react roots
     Blaze.remove(this.view)
     let renderToElement = this.refs.createDocumentModal
-    if (this.state.openChangeUserRolesModal !== null) {
+    if (this.state.openCreateDocumentModal !== null) {
       ReactDOM.unmountComponentAtNode(renderToElement)
     }
   }
@@ -56,10 +56,10 @@ class LDNavbar extends Component {
   }
   openCreateDocumentModal () {
     let renderToElement = this.refs.createDocumentModal
-    if (!this.state.openChangeUserRolesModal) {
-      this.state.openChangeUserRolesModal = ReactDOM.render(<CreateDocumentModal />, renderToElement)
+    if (!this.state.openCreateDocumentModal) {
+      this.state.openCreateDocumentModal = ReactDOM.render(<CreateDocumentModal />, renderToElement)
     } else {
-      this.state.openChangeUserRolesModal.open()
+      this.state.openCreateDocumentModal.open()
     }
   }
   render () {
