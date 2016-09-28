@@ -14,7 +14,8 @@ export const DOCUMENTS_EDIT = {
     etherpadGroup: 1,
     etherpadGroupPad: 1,
     initialContent: 1,
-    parentDocumentId: 1
+    parentDocumentId: 1,
+    isSubDocument: 1
   }
 }
 
@@ -24,6 +25,7 @@ export const DOCUMENTS_READ = {
     createdAt: 1,
     createdBy: 1,
     etherpadReadOnlyId: 1,
-    parentDocumentId: 1
+    parentDocumentId: 1,
+    isSubDocument: 1
   }
 }

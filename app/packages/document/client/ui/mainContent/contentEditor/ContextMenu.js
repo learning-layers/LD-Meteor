@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import { Meteor } from 'meteor/meteor'
 import onClickOutside from 'react-onclickoutside'
 import { Documents } from '../../../../lib/collections'
 import { printDocument, exportToWord } from '../../../lib/utils'
@@ -25,7 +24,6 @@ class ContextMenu extends Component {
   discussParagraph (selection, documentId) {
     EventEmitterInstance.emit('close-content-editor-context-menu')
     EventEmitterInstance.emit('open-create-sub-document-modal', selection, documentId)
-    // TODO move elsewhere Meteor.call('createSubDocument', selection, documentId)
   }
   printDocument () {
     printDocument()

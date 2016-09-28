@@ -93,7 +93,8 @@ class DocumentDisplay extends Component {
       activeTabName: 'Editor',
       tagBarFocused: false,
       manageSharingModal: null,
-      openCreateDocumentModal: null
+      openCreateDocumentModal: null,
+      breadcrumbs: []
     }
   }
   componentDidMount () {
@@ -108,6 +109,20 @@ class DocumentDisplay extends Component {
     this.createSubDocumentSubscription = EventEmitterInstance.addListener('open-create-sub-document-modal', (selection, parentId) => {
       this.openCreateSubDocumentModal(selection, parentId)
     })
+    if (this.props.document.isSubDocument) {
+      Meteor.setTimeout(() => {
+        Meteor.call('getSubDocumentBreadcrumbs', this.props.document._id, (err, res) => {
+          if (err) {
+            //
+          }
+          if (res) {
+            this.setState({
+              breadcrumbs: res
+            })
+          }
+        })
+      })
+    }
   }
   componentWillUnmount () {
     let renderToElement = this.refs.manageSharingModal
@@ -215,9 +230,6 @@ class DocumentDisplay extends Component {
       return 'view'
     }
   }
-  handleEditorChange (event) {
-    console.log(event)
-  }
   render () {
     let { document } = this.props
     const isViewMode = this.isViewMode()
@@ -226,8 +238,29 @@ class DocumentDisplay extends Component {
     // console.log('permissions=', permissionLevel)
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
-        <div style={{display: 'none'}} className='hierarchy-bar'>Hierarchy:</div>
-        <hr style={{display: 'none'}} />
+        {this.state.breadcrumbs.length > 0 ? <span>
+          <div className='breadcrumbs-bar'>
+            <div className='lbl'>
+              <a>Parent documents:&nbsp;</a>
+            </div>
+            <ol className='breadcrumb'>
+              {this.state.breadcrumbs.map((breadcrumb) => {
+                return <li>
+                  <a href={'/document/' + breadcrumb.documentId}>
+                    {breadcrumb.document ? breadcrumb.document.title : 'unknown title'}
+                  </a>
+                </li>
+              })}
+              <li>
+                <a className='active'>
+                  {this.props.document.title}
+                </a>
+              </li>
+            </ol>
+            <div className='clearfix'></div>
+          </div>
+          <hr />
+        </span> : null}
         <div className='tag-bar'>
           <label htmlFor='document-tags' className={this.state.tagBarFocused ? 'active' : ''}>Tags</label>
           <DocumentTags disabled={isViewMode} onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={document._id} />

@@ -41,7 +41,7 @@ function sendMentioningEmail (documentId, documentTitle, commentText, senderId, 
 }
 
 Meteor.methods({
-  changeDocumentTitle: function (documentId, documentTitle) {
+  changeDocumentTitle (documentId, documentTitle) {
     check(documentId, String)
     check(documentTitle, String)
     if (this.userId) {
@@ -56,7 +56,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  createDocument: function (document) {
+  createDocument (document) {
     document.createdAt = new Date()
     document.createdBy = this.userId
     check(document, DocumentSchema)
@@ -66,7 +66,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  createSubDocument: function (document, selection, parentId, sharedWithSameUsers) {
+  createSubDocument (document, selection, parentId, sharedWithSameUsers) {
     check(parentId, String)
     check(sharedWithSameUsers, Boolean)
     selection.parentId = selection.documentId
@@ -102,7 +102,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  addTagToDocument: function (tagLabel, tagValue, documentId) {
+  addTagToDocument (tagLabel, tagValue, documentId) {
     check(tagLabel, String)
     check(tagValue, String)
     check(documentId, String)
@@ -117,7 +117,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  removeTagFromDocument: function (tagId) {
+  removeTagFromDocument (tagId) {
     check(tagId, String)
     if (this.userId) {
       const tag = Tags.findOne({'_id': tagId}, { parentId: 1 })
@@ -135,7 +135,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  createComment: function (comment) {
+  createComment (comment) {
     comment.createdAt = new Date()
     comment.createdBy = this.userId
     delete comment.movedToRevisionsAt
@@ -168,7 +168,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  deleteDocument: function (documentId) {
+  deleteDocument (documentId) {
     check(documentId, String)
     if (this.userId) {
       // TODO move the document rather than deleting it directly to a trash folder instead
@@ -186,7 +186,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  updateComment: function (commentId, comment) {
+  updateComment (commentId, comment) {
     check(commentId, String)
     comment.modifiedAt = new Date()
     delete comment.movedToRevisionsAt
@@ -216,7 +216,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  addDocumentUserAccess: function (documentId, userId, permission) {
+  addDocumentUserAccess (documentId, userId, permission) {
     check(documentId, String)
     check(userId, String)
     check(permission, String)
@@ -279,7 +279,7 @@ Meteor.methods({
       throw new Meteor.Error(401)
     }
   },
-  addDocumentGroupAccess: function (documentId, groupId, permission) {
+  addDocumentGroupAccess (documentId, groupId, permission) {
     check(documentId, String)
     check(groupId, String)
     check(permission, String)
@@ -334,6 +334,29 @@ Meteor.methods({
     } else {
       throw new Meteor.Error(401)
     }
+  },
+  getSubDocumentBreadcrumbs (documentId) {
+    check(documentId, String)
+    let breadcrumbs = []
+    console.log('getSubDocumentBreadcrumbs documentId=', documentId)
+    let documentSelection = DocumentSelections.findOne({documentId: documentId})
+    console.log('getSubDocumentBreadcrumbs documentSelection=', documentSelection)
+    while (documentSelection) {
+      const document = Documents.findOne({_id: documentSelection.parentId}, {fields: {
+        title: 1,
+        createdAt: 1,
+        createdBy: 1
+      }})
+      console.log('getSubDocumentBreadcrumbs document=', document)
+      breadcrumbs.push({
+        documentId: documentSelection.parentId,
+        document: document
+      })
+      console.log('getSubDocumentBreadcrumbs breadcrumbs=', breadcrumbs)
+      documentSelection = DocumentSelections.findOne({documentId: documentSelection.parentId})
+    }
+    // TODO add document selection deletion when the document is deleted
+    return breadcrumbs.reverse()
   }
 })
 
@@ -436,6 +459,7 @@ rateLimit({
   methods: [
     'changeDocumentTitle',
     'createDocument',
+    'createSubDocument',
     'createComment',
     'deleteDocument',
     'updateComment',
