@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor'
 import { Groups } from './collections'
 
 const checkIfUserIsAMember = function (members, userId) {
@@ -15,6 +14,6 @@ export const isMemberInGroup = function (groupId, userId) {
   if (group) {
     return group.createdBy === userId || checkIfUserIsAMember(group.members, userId)
   } else {
-    throw new Meteor.Error(404)
+    return false
   }
 }

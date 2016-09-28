@@ -98,7 +98,7 @@ class AddGroupMember extends Component {
           values.forEach(function (value) {
             if (!value._id) {
               // insert the value into the database
-              Meteor.call('addUserToGroup', value.label, value.value, Meteor.userId(), function (err, res) {
+              Meteor.call('addUserToGroup', value.value, Meteor.userId(), function (err, res) {
                 if (err) {
                   //
                 }
@@ -140,7 +140,7 @@ class AddGroupMember extends Component {
           return <div>
             {item.value !== item.label ? <div className='simple-option' onClick={() => this.addUserFromOption(item)}>
               <span>{item.label}</span>
-              <span>- {item.value}</span>
+              <span style={{display: 'none'}}>- {item.value}</span>
             </div> : null}
           </div>
         }}
