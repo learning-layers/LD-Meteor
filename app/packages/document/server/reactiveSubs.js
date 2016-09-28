@@ -56,7 +56,10 @@ let getDocumentPublishersForUser = function (args) {
             { 'createdBy': this.userId },
             { '_id': { $in: documentAccessDocumentIds } }
           ]},
-          {parentDocumentId: { '$exists': false }}
+          {$or: [
+            {isSubDocument: false},
+            {isSubDocument: { '$exists': false }}
+          ]}
         ]
       }, DOCUMENTS_PREVIEW)
     ]
@@ -68,7 +71,10 @@ let getDocumentPublishersForUser = function (args) {
             {'_id': {$in: documentAccessDocumentIds}}
         ]},
         {$text: { $search: args.searchTerm, $language: args.language }},
-        {parentDocumentId: { '$exists': false }}
+        {$or: [
+          {isSubDocument: false},
+          {isSubDocument: { '$exists': false }}
+        ]}
       ]
     }, { sort: {createdBy: -1}, limit: args.limit, createdBy: 1 }).fetch()
     let userList = []
@@ -85,7 +91,10 @@ let getDocumentPublishersForUser = function (args) {
             {'_id': {$in: documentAccessDocumentIds}}
           ]},
           {$text: { $search: args.searchTerm, $language: args.language }},
-          {parentDocumentId: { '$exists': false }}
+          {$or: [
+            {isSubDocument: false},
+            {isSubDocument: { '$exists': false }}
+          ]}
         ]
       }, DOCUMENTS_PREVIEW)
     ]
