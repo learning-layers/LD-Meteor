@@ -122,4 +122,9 @@ class CreateDocumentModal extends Component {
   }
 }
 
+CreateDocumentModal.propTypes = {
+  selection: React.PropTypes.object,
+  parentId: React.PropTypes.string
+}
+
 export default CreateDocumentModal

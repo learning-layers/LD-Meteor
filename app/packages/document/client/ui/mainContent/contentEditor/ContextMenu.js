@@ -37,7 +37,7 @@ class ContextMenu extends Component {
   render () {
     let style = {
       left: this.props.clientX,
-      top: this.props.clientY - 155
+      top: this.props.clientY - 145
     }
     let showSelectionPossibility = this.props.selection && this.props.selection.htmlContent && this.props.selection.htmlContent !== ''
     return (

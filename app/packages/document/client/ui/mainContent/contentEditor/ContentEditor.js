@@ -9,7 +9,7 @@ class ContentEditor extends Component {
     const etherpadReadOnlyId = document.etherpadReadOnlyId
     if (permissionLevel === 'edit' && !etherpadGroup) {
       // send a request to the server that the server should create a group and a pad in etherpad
-      Meteor.call('createEtherpadGroupAndPad', document._id)
+      Meteor.call('createEtherpadGroupAndPad', document._id, document.initialContent)
     } else if (permissionLevel === 'comment' || permissionLevel === 'view' && !etherpadReadOnlyId) {
       // send a request to the server that the server should create a group and a pad in etherpad
       // and create a read only id for the document as well

@@ -57,6 +57,7 @@ Meteor.methods({
               }
             }
           })
+          return true
         } else {
           throw new Meteor.Error(403, 'You are not a member of this group and hence don\'t have access rights')
         }

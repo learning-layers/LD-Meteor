@@ -35,7 +35,7 @@ function onPropsChange (props, onData) {
   if (handle.ready()) {
     let document = Documents.findOne({ '_id': props.id })
     let documentAccess = DocumentAccess.findOne({documentId: props.id})
-    if (!document && Meteor.isServer) {
+    if (!document) { //  && Meteor.isServer
       // check what the reason is
       if (args.accessKey) {
         try {

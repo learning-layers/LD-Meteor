@@ -51,9 +51,12 @@ let getDocumentPublishersForUser = function (args) {
       Meteor.users.find({ '_id': { $in: userList } }, USERS_DEFAULT), // fetches all users that are owners of the documents
       // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
       Documents.find({
-        $or: [
-          { 'createdBy': this.userId },
-          { '_id': { $in: documentAccessDocumentIds } }
+        $and: [
+          {$or: [
+            { 'createdBy': this.userId },
+            { '_id': { $in: documentAccessDocumentIds } }
+          ]},
+          {parentDocumentId: { '$exists': false }}
         ]
       }, DOCUMENTS_PREVIEW)
     ]
@@ -64,7 +67,8 @@ let getDocumentPublishersForUser = function (args) {
             {createdBy: this.userId},
             {'_id': {$in: documentAccessDocumentIds}}
         ]},
-        {$text: { $search: args.searchTerm, $language: args.language }}
+        {$text: { $search: args.searchTerm, $language: args.language }},
+        {parentDocumentId: { '$exists': false }}
       ]
     }, { sort: {createdBy: -1}, limit: args.limit, createdBy: 1 }).fetch()
     let userList = []
@@ -80,7 +84,8 @@ let getDocumentPublishersForUser = function (args) {
             {'createdBy': this.userId},
             {'_id': {$in: documentAccessDocumentIds}}
           ]},
-          {$text: { $search: args.searchTerm, $language: args.language }}
+          {$text: { $search: args.searchTerm, $language: args.language }},
+          {parentDocumentId: { '$exists': false }}
         ]
       }, DOCUMENTS_PREVIEW)
     ]

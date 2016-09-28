@@ -97,12 +97,14 @@ class DocumentDisplay extends Component {
     }
   }
   componentDidMount () {
-    global.tinymce.init({
-      selector: '#tinymceTextarea',
-      skin_url: '/packages/teamon_tinymce/skins/lightgray',
-      plugins: 'print',
-      content_security_policy: 'default-src \'self\''
-    })
+    Meteor.setTimeout(function () {
+      global.tinymce.init({
+        selector: '#tinymceTextarea',
+        skin_url: '/packages/teamon_tinymce/skins/lightgray',
+        plugins: 'print',
+        content_security_policy: 'default-src \'self\''
+      })
+    }, 1000)
     this.createSubDocumentSubscription = EventEmitterInstance.addListener('open-create-sub-document-modal', (selection, parentId) => {
       this.openCreateSubDocumentModal(selection, parentId)
     })
@@ -112,7 +114,9 @@ class DocumentDisplay extends Component {
     if (this.state.manageSharingModal !== null) {
       ReactDOM.unmountComponentAtNode(renderToElement)
     }
-    global.tinymce.execCommand('mceRemoveControl', true, 'tinymceTextarea')
+    Meteor.setTimeout(function () {
+      global.tinymce.execCommand('mceRemoveControl', true, 'tinymceTextarea')
+    }, 0)
     if (this.createSubDocumentSubscription) {
       this.createSubDocumentSubscription.remove()
     }
