@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import { UserPositions } from '../../lib/collections'
+import { Documents } from '../../../document/lib/collections'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('activeUserPositions')
@@ -20,16 +21,16 @@ class ActiveUserPositions extends Component {
           <thead>
             <tr>
               <th key='user-pos-userinfo'>User</th>
-              <th key='user-pos-type'>Type</th>
-              <th key='user-pos-options'>Options</th>
+              <th key='user-pos-type'>Type: Title</th>
             </tr>
           </thead>
           <tbody>
           {userPositions.map(function (userPosition) {
+            const user = Meteor.users.findOne({_id: userPosition.userId})
+            const document = Documents.findOne({_id: userPosition.elementId})
             return <tr key={'user-pos-' + userPosition._id}>
-              <td>{userPosition.userId}</td>
-              <td>{userPosition.type}</td>
-              <td>{userPosition.elementId}</td>
+              <td>{user.profile ? user.profile.name : userPosition.userId}</td>
+              <td><a href={'/document/' + userPosition.elementId}><span className='glyphicon glyphicon-file' /> {document ? document.title : userPosition.elementId}</a></td>
             </tr>
           })}
           </tbody>
