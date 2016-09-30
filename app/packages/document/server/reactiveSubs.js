@@ -9,7 +9,7 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 let getDocumentPublishersForUser = function (args) {
   // find all groups the user is a member in
-  let groups = Groups.find({'members.userId': this.userId}, {name: 0, members: 0}).fetch()
+  let groups = Groups.find({$or: [{createdBy: this.userId}, {'members.userId': this.userId}]}, {name: 0, members: 0}).fetch()
 
   // collect all groupIds
   let groupIds = []

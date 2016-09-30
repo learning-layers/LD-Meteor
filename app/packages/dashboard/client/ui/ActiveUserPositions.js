@@ -14,14 +14,27 @@ function onPropsChange (props, onData) {
 class ActiveUserPositions extends Component {
   render () {
     const { userPositions } = this.props
-    return <div id='activeUserPositions'>
-      <ul>
-        {userPositions.map(function (userPosition) {
-          return <li>
-            {userPosition.userId}
-          </li>
-        })}
-      </ul>
+    return <div id='active-user-positions'>
+      <div className='table-responsive'>
+        <table className='table table-striped table-bordered table-condensed'>
+          <thead>
+            <tr>
+              <th key='user-pos-userinfo'>User</th>
+              <th key='user-pos-type'>Type</th>
+              <th key='user-pos-options'>Options</th>
+            </tr>
+          </thead>
+          <tbody>
+          {userPositions.map(function (userPosition) {
+            return <tr key={'user-pos-' + userPosition._id}>
+              <td>{userPosition.userId}</td>
+              <td>{userPosition.type}</td>
+              <td>{userPosition.elementId}</td>
+            </tr>
+          })}
+          </tbody>
+        </table>
+      </div>
     </div>
   }
 }
