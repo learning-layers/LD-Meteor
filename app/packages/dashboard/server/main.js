@@ -97,7 +97,7 @@ Meteor.publish('activeUserPositions', function () {
     }))
     return [
       Meteor.users.find({_id: { $in: userIds }}, USERS_DEFAULT),
-      UserPositions.find({ $and: [{elementId: {$in: hasAccessToDocumentIds}}, {userId: {$in: userIds}}] }),
+      UserPositions.find({ $and: [{type: 'document'}, {elementId: {$in: hasAccessToDocumentIds}}, {userId: {$in: userIds}}] }),
       Documents.find({_id: {$in: hasAccessToDocumentIds}}, {fields: {title: 1}})
     ]
   })
