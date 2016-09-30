@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Documents, DocumentComments, DocumentAccess } from '../lib/collections'
+import { UserPositions } from '../../dashboard/lib/collections'
 import { Tags } from '../../tags/lib/collections'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import { Groups } from '../../groups/lib/collections'
@@ -70,8 +71,22 @@ Meteor.publish('documentList', function () {
   }
 })
 
-function stopDocumentPublisher (self, document) {
+/**
+ * Actions that are performed after stopping a document subscription.
+ * Currently:
+ *  - deletes old etherpad sessions
+ *
+ * @param self - the publisher
+ * @param document - the document that is published
+ */
+function stopDocumentPublisher (self, document, userPositionId) {
   // console.log('BEGIN document onStop')
+  UserPositions.remove({_id: userPositionId})
+  deleteOldEtherpadSessions(self, document)
+  // console.log('END document onStop')
+}
+
+function deleteOldEtherpadSessions (self, document) {
   // (1) Get groupPadID of the document
   if (document) {
     let documentEtherpadGroup = document.etherpadGroup
@@ -121,7 +136,6 @@ function stopDocumentPublisher (self, document) {
       }
     }
   }
-  // console.log('END document onStop')
 }
 
 Meteor.publish('document', function (args) {
@@ -145,9 +159,10 @@ Meteor.publish('document', function (args) {
       throw new Meteor.Error(403)
     }
   } else if (this.userId) {
+    const userPositionId = UserPositions.insert({ userId: this.userId, type: 'document', elementId: args.id })
     let document
     this.onStop(() => {
-      stopDocumentPublisher(this, document)
+      stopDocumentPublisher(this, document, userPositionId)
     })
     if (args.action === 'shared' && (args.permission === 'CanEdit' || args.permission === 'CanComment') && args.accessKey) {
       let filterObj = {documentId: args.id}

@@ -167,7 +167,7 @@ class DocumentList extends Component {
   render () {
     const { documents, loading } = this.props
     const expandedItems = this.state.expandedItems
-    return <div className='document-list container-fluid'>
+    return <div className='document-list'>
       <div style={{textAlign: 'center'}}>
         <DocumentListSearchBar />
       </div>

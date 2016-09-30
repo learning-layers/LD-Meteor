@@ -3,6 +3,7 @@ import { BrowserPolicy } from 'meteor/browser-policy-common'
 import { JsonRoutes } from 'meteor/simple:json-routes'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import { Accounts } from 'meteor/accounts-base'
+import { UserPositions } from '../../packages/dashboard/lib/collections'
 
 let isProdEnv = global.isProdEnv
 
@@ -127,6 +128,9 @@ Meteor.startup(function () {
   if (Meteor.settings.private.email.url && isProdEnv()) {
     process.env.MAIL_URL = Meteor.settings.private.email.url
   }
+
+  // delete userPosition data
+  UserPositions.remove({})
 })
 
 global.Users = Meteor.users

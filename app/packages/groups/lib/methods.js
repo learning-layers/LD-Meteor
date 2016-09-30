@@ -37,7 +37,7 @@ Meteor.methods({
     check(userId, String)
     if (this.userId) {
       const group = Groups.find({'_id': groupId}, { fields: { members: 1, createdBy: 1 } })
-      if (isMemberInGroup(group)) {
+      if (true) { // !isMemberInGroup(group)
         let found = false
         if (group.members) {
           group.members.forEach(function (member) {
