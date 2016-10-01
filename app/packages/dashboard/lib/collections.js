@@ -12,5 +12,6 @@ if (Meteor.isServer) {
 export const UserActivityHistory = new Mongo.Collection('UserActivityHistory')
 UserActivityHistory.attachSchema(UserActivityHistorySchema)
 if (Meteor.isServer) {
-  UserActivityHistory._ensureIndex({userId: 1, type: 1})
+  UserActivityHistory._ensureIndex({userId: 1, type: 1, action: 1})
+  UserActivityHistory._ensureIndex({type: 1, elementId: 1, action: 1})
 }

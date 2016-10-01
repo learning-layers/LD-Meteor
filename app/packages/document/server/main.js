@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Documents, DocumentComments, DocumentAccess } from '../lib/collections'
-import { UserPositions } from '../../dashboard/lib/collections'
+import { UserPositions, UserActivityHistory } from '../../dashboard/lib/collections'
 import { Tags } from '../../tags/lib/collections'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import { Groups } from '../../groups/lib/collections'
@@ -78,9 +78,17 @@ Meteor.publish('documentList', function () {
  *
  * @param self - the publisher
  * @param document - the document that is published
+ * @param userPositionId - the id of the user position dataset that allows to see
+ *  which document your contacts are currently working on allowing faster navigation to these documents
+ * @param userOpenedDocumentAt - needed to calculate the dwell-time when saving the close action of a document
+ *  to the history entries
  */
-function stopDocumentPublisher (self, document, userPositionId) {
+function stopDocumentPublisher (self, document, userPositionId, userOpenedDocumentAt) {
   // console.log('BEGIN document onStop')
+  const createdAt = new Date()
+  const timeDiff = Math.abs(createdAt.getTime() - userOpenedDocumentAt.getTime())
+  const diffSeconds = Math.ceil(timeDiff / 1000)
+  UserActivityHistory.insert({userId: self.userId, type: 'document', action: 'closed', elementId: document._id, createdAt: new Date(), values: ['{"dwellTime":' + diffSeconds + '}']})
   UserPositions.remove({_id: userPositionId})
   deleteOldEtherpadSessions(self, document)
   // console.log('END document onStop')
@@ -159,10 +167,12 @@ Meteor.publish('document', function (args) {
       throw new Meteor.Error(403)
     }
   } else if (this.userId) {
-    const userPositionId = UserPositions.insert({ userId: this.userId, type: 'document', elementId: args.id })
+    const userPositionId = UserPositions.insert({userId: this.userId, type: 'document', elementId: args.id})
+    const userOpenedDocumentAt = new Date()
+    UserActivityHistory.insert({userId: this.userId, type: 'document', action: 'opened', elementId: args.id, createdAt: userOpenedDocumentAt})
     let document
     this.onStop(() => {
-      stopDocumentPublisher(this, document, userPositionId)
+      stopDocumentPublisher(this, document, userPositionId, userOpenedDocumentAt)
     })
     if (args.action === 'shared' && (args.permission === 'CanEdit' || args.permission === 'CanComment') && args.accessKey) {
       let filterObj = {documentId: args.id}

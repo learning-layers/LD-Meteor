@@ -52,6 +52,7 @@ export const UserActivityHistorySchema = new SimpleSchema({
   },
   values: {
     type: [String],
-    label: 'Values'
+    label: 'Values',
+    optional: true
   }
 })
