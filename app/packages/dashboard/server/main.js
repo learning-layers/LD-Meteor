@@ -1,9 +1,11 @@
 import { Meteor } from 'meteor/meteor'
 import { Groups } from '../../groups/lib/collections'
-import { UserPositions } from '../../dashboard/lib/collections'
+import { UserPositions, UserActivityHistory } from '../../dashboard/lib/collections'
 import { Documents, DocumentAccess } from '../../document/lib/collections'
 import { USERS_DEFAULT } from '../../user/server/userProjections'
 import { FriendLists } from '../../chat/lib/collections'
+import _uniqBy from 'lodash/uniqBy'
+import { _ } from 'meteor/underscore'
 
 function arrayUnique (array) {
   var a = array.concat()
@@ -101,4 +103,32 @@ Meteor.publish('activeUserPositions', function () {
       Documents.find({_id: {$in: hasAccessToDocumentIds}}, {fields: {title: 1}})
     ]
   })
+})
+
+Meteor.publish('activeUserRecentlyVisited', function () {
+  const userActivityHistory = UserActivityHistory.find({userId: this.userId}, {sort: {createdAt: -1}, limit: 50}).fetch()
+  // get distinct values only
+  let distinctDataCollector = []
+  let distinctData = _uniqBy(userActivityHistory, 'elementId')
+  distinctDataCollector = distinctDataCollector.concat(distinctData)
+  let uniqueIds = _.pluck(distinctData, '_id')
+  let skip = 50
+  let finished = false
+  while (uniqueIds.length < 20 && !finished) {
+    const userActivityHistory = UserActivityHistory.find({}, {skip: skip, sort: {createdAt: -1}, limit: 50}).fetch()
+    distinctData = _uniqBy(userActivityHistory, 'elementId')
+    const newValues = _.pluck(distinctData, '_id')
+    if (newValues.length === 0) {
+      finished = true
+    } else {
+      distinctDataCollector = distinctDataCollector.concat(distinctData)
+      uniqueIds.push(newValues)
+      skip += 50
+    }
+  }
+  let documentIds = _.pluck(distinctDataCollector, 'elementId')
+  return [
+    UserActivityHistory.find({_id: {$in: uniqueIds}}, {sort: {createdAt: -1}, limit: 20}),
+    Documents.find({_id: {$in: documentIds}}, {fields: {title: 1}})
+  ]
 })

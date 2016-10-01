@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { MentionsInput, Mention } from 'react-mentions'
 import throttle from 'lodash/throttle'
-import uniqBy from 'lodash/uniqBy'
-import sortBy from 'lodash/sortBy'
+import _uniqBy from 'lodash/uniqBy'
+import _sortBy from 'lodash/sortBy'
 import merge from 'lodash/merge'
 import defaultStyle from '../defaultStyle'
 import defaultMentionStyle from '../defaultMentionStyle'
@@ -43,8 +43,8 @@ let data = function (possibleSuggestions, search, callback) {
       let filteredPossibleSuggestions = possibleSuggestions.filter(function (suggestion) {
         return startsWith(suggestion.display, search, 0)
       })
-      suggestions = uniqBy(filteredPossibleSuggestions.concat(suggestions), 'id')
-      suggestions = sortBy(suggestions, 'display')
+      suggestions = _uniqBy(filteredPossibleSuggestions.concat(suggestions), 'id')
+      suggestions = _sortBy(suggestions, 'display')
       callback(suggestions)
     }
   })

@@ -3,6 +3,7 @@ import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import DocumentList from '../../../document/client/ui/DocumentList'
 import ActiveUserPositions from './ActiveUserPositions'
+import RecentlyVisited from './RecentlyVisited'
 
 class Dashboard extends Component {
   constructor (props) {
@@ -23,10 +24,12 @@ class Dashboard extends Component {
             {key === 2 ? <DocumentList /> : null}
           </div>
         </Tab>
-        <Tab eventKey={4} title={<span><i className='fa fa-users' />{' Active contacts'}</span>}>
-          <ActiveUserPositions />
+        <Tab eventKey={3} title={<span><i className='fa fa-users' />{' Active contacts'}</span>}>
+          {key === 3 ? <ActiveUserPositions /> : null}
         </Tab>
-        <Tab eventKey={3} title={<span className='glyphicon glyphicon-time'>{' History'}</span>}>History</Tab>
+        <Tab eventKey={4} title={<span className='glyphicon glyphicon-time'>{' History'}</span>}>
+          {key === 4 ? <RecentlyVisited /> : null}
+        </Tab>
       </Tabs>
     </div>
   }
