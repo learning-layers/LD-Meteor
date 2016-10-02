@@ -43,6 +43,13 @@ Meteor.publish('groupList', function (args) {
   }
 })
 
+Meteor.publish('groups', function () {
+  return Groups.find({$or: [
+    {'createdBy': this.userId},
+    {'members.userId': this.userId}
+  ]})
+})
+
 Meteor.publish('groupMemberList', function (args) {
   check(args, {
     groupId: String

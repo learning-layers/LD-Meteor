@@ -7,7 +7,7 @@ import { Documents } from '../../../document/lib/collections'
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('activeUserPositions')
   if (handle.ready()) {
-    const userPositions = UserPositions.find({})
+    const userPositions = UserPositions.find({}).fetch()
     onData(null, { userPositions })
   }
 }

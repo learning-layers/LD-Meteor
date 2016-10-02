@@ -129,6 +129,6 @@ Meteor.publish('activeUserRecentlyVisited', function () {
   let documentIds = _.pluck(distinctDataCollector, 'elementId')
   return [
     Documents.find({_id: {$in: documentIds}}, {fields: {title: 1}}),
-    UserActivityHistory.find({_id: {$in: uniqueIds}}, {sort: {createdAt: -1}, limit: 20}),
+    UserActivityHistory.find({_id: {$in: uniqueIds}}, {sort: {createdAt: -1}, limit: 20})
   ]
 })
