@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import { GroupChatMessages } from '../../lib/collections'
+import { TimeFromNow } from '../../../../common/client/ui/util/TimeFromNow'
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupChannelMessages', {groupId: props.groupId, channelId: props.topicId})
@@ -9,6 +10,11 @@ function onPropsChange (props, onData) {
     const groupChatMessages = GroupChatMessages.find({}).fetch()
     onData(null, { groupChatMessages })
   }
+}
+
+var rgb = []
+for (var i = 0; i < 3; i++) {
+  rgb.push(Math.floor(Math.random() * 255))
 }
 
 class GroupChatMessageWindow extends Component {
@@ -21,9 +27,25 @@ class GroupChatMessageWindow extends Component {
       </span>
       <ul className='g-chat-msgs'>
         {reverseGroupChatMessages.map(function (groupsChatMessage) {
-          return <li key={'g-chat-msg-' + groupsChatMessage._id}>{groupsChatMessage.message}</li>
+          const user = Meteor.users.findOne({_id: groupsChatMessage.from})
+          let userName = groupsChatMessage.from
+          let chatMsgColor = null
+          if (user.profile) {
+            userName = user.profile.name
+            chatMsgColor = user.profile.chatMsgColor
+          } else {
+            chatMsgColor = 'rgb(' + rgb.join(',') + ')'
+          }
+          const userNameStyle = {fontSize: '13.3333px', color: chatMsgColor, fontWeight: 'bold'}
+          return <li key={'g-chat-msg-' + groupsChatMessage._id}>
+            <span style={{fontSize: '11.1111px', color: 'lightgrey'}}><TimeFromNow date={groupsChatMessage.createdAt} /></span> -
+            <span style={userNameStyle}>{userName}</span>:
+            &nbsp;
+            {groupsChatMessage.message}
+          </li>
         })}
       </ul>
+      {reverseGroupChatMessages.length === 0 ? <p>Be the first one to write a message for this topic</p> : null}
     </div>
   }
 }

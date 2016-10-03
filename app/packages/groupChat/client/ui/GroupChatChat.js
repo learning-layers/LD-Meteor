@@ -31,8 +31,10 @@ class GroupChatChat extends Component {
   render () {
     const { groupId, groupName, topicId, topicName } = this.state
     return <div className='g-main'>
-      <GroupChatMessageWindow groupId={groupId} groupName={groupName} topicId={topicId} topicName={topicName} />
-      <GroupChatMessageInput groupId={groupId} groupName={groupName} topicId={topicId} topicName={topicName} />
+      {topicId ? <span>
+        <GroupChatMessageWindow groupId={groupId} groupName={groupName} topicId={topicId} topicName={topicName} />
+        <GroupChatMessageInput groupId={groupId} groupName={groupName} topicId={topicId} topicName={topicName} />
+      </span> : null}
     </div>
   }
 }

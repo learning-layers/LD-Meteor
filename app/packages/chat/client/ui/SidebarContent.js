@@ -114,17 +114,17 @@ class SidebarContent extends Component {
         <Tab eventKey={1} title='Friendlist'><FriendList /></Tab>
         <Tab eventKey={2} title='Groups'>
           <div className='sm-group-chat-wrapper'>
-            <a href='/groupchat/groupId'>
+            <a href='/groupchat'>
               The small variant of the group chats is currently not ready to be rolled out.
             </a>
             <br />
             <br />
-            <a href='/groupchat/groupId'>
+            <a href='/groupchat'>
               For now you will be redirected upon clicking this link to the full screen version.
             </a>
             <br />
             <br />
-            <a href='/groupchat/groupId'>
+            <a href='/groupchat'>
               In case you want in parallel to work on a document please open living documents twice to do so until the small group chat is available.
             </a>
           </div>

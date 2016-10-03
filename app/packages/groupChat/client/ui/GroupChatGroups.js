@@ -55,6 +55,10 @@ class GroupChatGroups extends Component {
               </li>
             })}
           </ul>
+          {groups.length === 0 ? <span style={{fontSize: '12px'}}>
+            <p>You are currently not a member in any group. Either create a group or let someone invite you to a group.</p>
+            <p>You can manage your groups here: <a href='/groupList'>Manage Groups</a></p>
+          </span> : null}
         </div>
         <div className='g-channel-area'>
           {this.state.activeGroupId ? <GroupChatChannel groupName={activeGroup.name} activeGroupId={activeGroup._id} /> : null}

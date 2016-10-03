@@ -7,7 +7,7 @@ import { rateLimit } from '../../../common/lib/rate-limit'
 
 const checkIfUserIsAMember = function (members, userId) {
   for (var i = 0, len = members.length; i < len; i++) {
-    if (members[i].id === userId) {
+    if (members[i].userId === userId) {
       return true
     }
   }

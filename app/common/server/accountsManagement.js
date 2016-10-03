@@ -80,6 +80,19 @@ Accounts.onCreateUser(function (options, user) {
   if (!user.profile.name) {
     user.profile.name = email
   }
+  // create a random chat message color
+  var rgb = []
+  for (let i = 0; i < 3; i++) {
+    rgb.push(Math.floor(Math.random() * 255))
+  }
+  while (rgb[0] > 230 && rgb[1] > 230 && rgb[2] > 230) {
+    // reroll
+    rgb = []
+    for (let i = 0; i < 3; i++) {
+      rgb.push(Math.floor(Math.random() * 255))
+    }
+  }
+  user.profile.chatMsgColor = 'rgb(' + rgb.join(',') + ')'
   return user
 })
 
