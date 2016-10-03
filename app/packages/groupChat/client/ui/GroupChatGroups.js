@@ -15,35 +15,59 @@ function onPropsChange (props, onData) {
 class GroupChatGroups extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      collapsed: false
+    }
     if (props.groups.length > 0) {
-      this.state = {
-        activeGroupId: props.groups[0]._id
-      }
+      this.state.activeGroupId = props.groups[0]._id
     } else {
-      this.state = {
-        activeGroupId: null
-      }
+      this.state.activeGroupId = null
     }
   }
-  changeActiveGroups (groupId) {
+  changeActiveGroup (groupId) {
     this.setState({activeGroupId: groupId})
+  }
+  toggleChatGroupsSidebar () {
+    this.setState({
+      collapsed: !this.state.collapsed
+    })
   }
   render () {
     const { groups } = this.props
-    return <div id='g-group-chat-groups' className='g-aside g-aside-1'>
-      <div className='g-groups-area'>
-        <ul className='g-group-list'>
-          {groups.map((group) => {
-            return <li key={'g-chat-g-' + group._id} onClick={() => this.changeActiveGroups(group._id)}>
-              <a className='g-group-name' href='' data-tooltip={group.name}>
-                {group.name}
-              </a>
-            </li>
-          })}
-        </ul>
-      </div>
-      <div className='g-channel-area'>
-        {this.state.activeGroupId ? <GroupChatChannel activeGroupId={this.state.activeGroupId} /> : null}
+    const activeGroup = Groups.findOne({_id: this.state.activeGroupId})
+    let groupChatGroupsClasses = 'g-aside g-aside-1'
+    if (this.state.collapsed) {
+      groupChatGroupsClasses += ' collapsed'
+    }
+    return <div id='g-group-chat-groups' className={groupChatGroupsClasses}>
+      {!this.state.collapsed ? <div className='g-scroll'>
+        <div className='g-groups-area'>
+          <ul className='g-group-list'>
+            {groups.map((group) => {
+              let liClass = ''
+              if (group._id === this.state.activeGroupId) {
+                liClass = 'active'
+              }
+              return <li className={liClass} key={'g-chat-g-' + group._id} onClick={() => this.changeActiveGroup(group._id)}>
+                <a className='g-group-name' href='' data-tooltip={group.name}>
+                  {group.name}
+                </a>
+              </li>
+            })}
+          </ul>
+        </div>
+        <div className='g-channel-area'>
+          {this.state.activeGroupId ? <GroupChatChannel groupName={activeGroup.name} activeGroupId={activeGroup._id} /> : null}
+        </div>
+      </div> : <div className='channels'>
+        <div style={{display: 'block', marginLeft: '-3px'}}>
+          <span className='glyphicon glyphicon-comment' style={{marginRight: '5px'}} />
+        </div>
+        &nbsp;
+        Chat&nbsp;channels
+      </div>}
+      <div className='g-close-handle' onClick={() => this.toggleChatGroupsSidebar()}>
+        {!this.state.collapsed ? <span className='glyphicon glyphicon-chevron-left' /> : <span className='glyphicon glyphicon-chevron-right' />}
       </div>
     </div>
   }

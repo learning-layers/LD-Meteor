@@ -120,12 +120,12 @@ class SidebarContent extends Component {
             <br />
             <br />
             <a href='/groupchat/groupId'>
-              For now you will be redirect upon clicking this link to the full screen version.
+              For now you will be redirected upon clicking this link to the full screen version.
             </a>
             <br />
             <br />
             <a href='/groupchat/groupId'>
-              In case you want in parallel to work on a document please open living documents twice to do so unitl the small group chat is available.
+              In case you want in parallel to work on a document please open living documents twice to do so until the small group chat is available.
             </a>
           </div>
         </Tab>

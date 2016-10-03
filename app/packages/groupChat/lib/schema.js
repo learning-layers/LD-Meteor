@@ -26,3 +26,45 @@ export const GroupChatTopicSchema = new SimpleSchema({
     type: Date
   }
 })
+
+export const GroupChatMessageSchema = new SimpleSchema({
+  channelId: {
+    type: String,
+    label: 'ChannelId',
+    max: 40,
+    min: 6
+  },
+  from: {
+    type: String,
+    label: 'From',
+    max: 40,
+    min: 6,
+    placeholder: 'From'
+  },
+  createdAt: {
+    type: Date,
+    label: 'Created at'
+  },
+  message: {
+    type: String,
+    label: 'Message',
+    max: 3000,
+    min: 1,
+    placeholder: 'Message...'
+  },
+  'emotes.$.key': {
+    type: String,
+    label: 'EmotesKey',
+    placeholder: 'EmotesKey'
+  },
+  'emotes.$.range': {
+    type: [String],
+    label: 'EmotesRange',
+    placeholder: 'EmotesRange'
+  },
+  seenAt: {
+    type: Date,
+    label: 'Seen at',
+    optional: true
+  }
+})

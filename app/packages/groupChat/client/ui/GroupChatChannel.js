@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor'
 import { composeWithTracker } from 'react-komposer'
 import { GroupChatTopics } from '../../lib/collections'
 import AddChatTopicModal from './AddChatTopicModal'
+import EventEmitterInstance from '../../../../common/client/EventEmitter'
 
 /*
  {groups.map(function (group) {
@@ -29,6 +30,14 @@ class GroupChatChannel extends Component {
     this.state = {
       openAddChatTopicModal: null
     }
+    if (props.topics.length > 0) {
+      this.state.activeTopicId = props.topics[0]._id
+      Meteor.setTimeout(() => {
+        EventEmitterInstance.emit('open-group-chat', props.activeGroupId, props.groupName, this.state.activeTopicId, props.topics[0].name)
+      }, 150)
+    } else {
+      this.state.activeTopicId = null
+    }
   }
   openCreateNewChatTopic (activeGroupId) {
     let renderToElement = this.refs.addChatTopicModal
@@ -37,6 +46,13 @@ class GroupChatChannel extends Component {
     } else {
       this.state.openAddChatTopicModal.open(activeGroupId)
     }
+  }
+  changeActiveTopic (topicId) {
+    const nextActiveTopic = GroupChatTopics.findOne({_id: topicId})
+    Meteor.setTimeout(() => {
+      EventEmitterInstance.emit('open-group-chat', this.props.activeGroupId, this.props.groupName, topicId, nextActiveTopic.name)
+    }, 150)
+    this.setState({activeTopicId: topicId})
   }
   render () {
     const { topics } = this.props
@@ -48,8 +64,16 @@ class GroupChatChannel extends Component {
             {' Add new chat topic'}
           </a>
         </li>
-        {topics.map(function (topic) {
-          return <li>#{topic.name}</li>
+        {topics.map((topic) => {
+          let liClass = ''
+          if (topic._id === this.state.activeTopicId) {
+            liClass = 'active'
+          }
+          return <li className={liClass} key={'g-chat-c-' + topic._id} onClick={() => this.changeActiveTopic(topic._id)}>
+            <a className='g-group-name' href='' data-tooltip={'#' + topic.name}>
+              #{topic.name}
+            </a>
+          </li>
         })}
       </ul>
       <div ref='addChatTopicModal'></div>

@@ -1,3 +1,7 @@
+.ld-sidebar-wrapper {
+  z-index: 2;
+  position: relative;
+}
 .ld-sidebar {
   overflow: visible!important;
   .close-handle {
