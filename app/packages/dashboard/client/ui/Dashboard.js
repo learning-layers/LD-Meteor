@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Meteor } from 'meteor/meteor'
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import DocumentList from '../../../document/client/ui/DocumentList'
@@ -17,8 +18,9 @@ class Dashboard extends Component {
   }
   render () {
     const { key } = this.state // <Tab eventKey={1} title={<span className='glyphicon glyphicon-th-large'>{' Overview'}</span>}>Overview</Tab>
+    const userId = Meteor.userId()
     return <div id='dashboard' className='container-fluid'>
-      <Tabs activeKey={this.state.key} onSelect={(key) => this.handleSelect(key)} id='dashboard-controlled-tab'>
+      {userId ? <Tabs activeKey={this.state.key} onSelect={(key) => this.handleSelect(key)} id='dashboard-controlled-tab'>
         <Tab eventKey={2} title={<span className='glyphicon glyphicon-search'>{' Search'}</span>}>
           <div>
             {key === 2 ? <DocumentList /> : null}
@@ -30,7 +32,9 @@ class Dashboard extends Component {
         <Tab eventKey={4} title={<span className='glyphicon glyphicon-time'>{' History'}</span>}>
           {key === 4 ? <RecentlyVisited /> : null}
         </Tab>
-      </Tabs>
+      </Tabs> : <div className='ld-home container-fluid'>
+        <h2 className='letterpress-effect'>Living Documents</h2>
+      </div>}
     </div>
   }
 }

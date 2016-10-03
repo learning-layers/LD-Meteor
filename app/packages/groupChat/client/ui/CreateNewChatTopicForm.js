@@ -49,6 +49,7 @@ class CreateNewChatTopicForm extends Component {
     delete cleanState.validationStarted
     cleanState.groupId = this.props.groupId
     cleanState.participants = []
+    cleanState.wantToBeNotified = []
     return cleanState
   }
   submit (e) {

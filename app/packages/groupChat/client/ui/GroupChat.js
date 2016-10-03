@@ -3,6 +3,8 @@ import GroupChatGroups from './GroupChatGroups'
 import GroupChatChat from './GroupChatChat'
 import GroupChatParticipants from './GroupChatParticipants'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
+import { GroupChatTopics } from '../../lib/collections'
+import GroupChatTopicNotificationStatus from './GroupChatTopicNotificationStatus'
 
 class GroupChatHeader extends Component {
   constructor (props) {
@@ -30,12 +32,16 @@ class GroupChatHeader extends Component {
     }
   }
   render () {
-    const { groupName, topicName } = this.state
+    const { groupId, groupName, topicName, topicId } = this.state
+    const topic = GroupChatTopics.findOne({_id: topicId})
     return <div className='g-top-bar'>
       <i className='fa fa-users' />
       &nbsp;
       <span className='glyphicon glyphicon-comment' style={{marginRight: '5px'}} />
       {groupName !== null && topicName !== null ? ' ' + this.state.groupName + ' - #' + this.state.topicName : null}
+      {groupName !== null && topicName !== null && topic ? <div className='pull-right'>
+        <GroupChatTopicNotificationStatus groupId={groupId} topicId={topicId} />
+      </div> : null}
     </div>
   }
 }

@@ -30,7 +30,7 @@ Meteor.methods({
       if (isMemberInGroup(newGroupChatTopic.groupId, this.userId)) {
         return GroupChatTopics.insert(newGroupChatTopic)
       } else {
-        throw new Meteor.Error(401)
+        throw new Meteor.Error(401, 'You are not a member of this group!')
       }
     } else {
       throw new Meteor.Error(401)
@@ -43,12 +43,39 @@ Meteor.methods({
     if (this.userId) {
       const newGroupChatMessage = {
         channelId: topicId,
+        groupId: groupId,
         message: messageText,
         createdAt: new Date(),
         from: this.userId,
         emotes: []
       }
       return GroupChatMessages.insert(newGroupChatMessage)
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
+  disableGroupChatNotifications: function (groupId, topicId) {
+    check(groupId, String)
+    check(topicId, String)
+    if (this.userId) {
+      if (isMemberInGroup(groupId, this.userId)) {
+        GroupChatTopics.update({_id: topicId, groupId: groupId}, {$pull: {wantToBeNotified: {userId: this.userId}}})
+      } else {
+        throw new Meteor.Error(401, 'You are not a member of this group!')
+      }
+    } else {
+      throw new Meteor.Error(401)
+    }
+  },
+  enableGroupChatNotifications: function (groupId, topicId) {
+    check(groupId, String)
+    check(topicId, String)
+    if (this.userId) {
+      if (isMemberInGroup(groupId, this.userId)) {
+        GroupChatTopics.update({_id: topicId, groupId: groupId}, {$push: {wantToBeNotified: {userId: this.userId}}})
+      } else {
+        throw new Meteor.Error(401, 'You are not a member of this group!')
+      }
     } else {
       throw new Meteor.Error(401)
     }

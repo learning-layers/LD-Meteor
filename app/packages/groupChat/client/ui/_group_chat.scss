@@ -16,6 +16,9 @@
   font-weight: bold;
   position: relative;
   z-index: 1;
+  .checkbox {
+    margin: 0;
+  }
 }
 
 .g-chat-wrapper {
@@ -156,6 +159,7 @@ a.g-group-name[data-tooltip]:hover:after, a.g-group-name[data-tooltip]:hover:bef
   color: grey;
   cursor: pointer;
   z-index: 1;
+  margin-top: 1px;
 }
 
 .g-scroll {
@@ -192,4 +196,8 @@ a.g-group-name[data-tooltip]:hover:after, a.g-group-name[data-tooltip]:hover:bef
     list-style: none;
     transform: scaleY(-1);
   }
+}
+
+.g-chat-msg {
+  padding: 1px;
 }

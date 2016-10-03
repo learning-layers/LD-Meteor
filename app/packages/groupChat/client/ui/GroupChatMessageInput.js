@@ -22,6 +22,9 @@ class GroupChatMessageInput extends Component {
     const { groupId, topicId } = this.props
     const message = this.state.newMessage
     Meteor.call('sendGroupMessage', groupId, topicId, message)
+    this.setState({
+      newMessage: ''
+    })
   }
   render () {
     const { groupId, groupName, topicId, topicName } = this.props

@@ -61,7 +61,7 @@ class GroupChatChannel extends Component {
         <li>
           <a href='' onClick={() => this.openCreateNewChatTopic(this.props.activeGroupId)}>
             <span className='glyphicon glyphicon-plus' />
-            {' Add new chat topic'}
+            {' New chat topic'}
           </a>
         </li>
         {topics.map((topic) => {

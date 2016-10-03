@@ -19,6 +19,9 @@ export const GroupChatTopicSchema = new SimpleSchema({
     min: 4,
     placeholder: 'Group chat topic...'
   },
+  'wantToBeNotified.$.userId': {
+    type: String
+  },
   'participants.$.userId': {
     type: String
   },
@@ -31,6 +34,12 @@ export const GroupChatMessageSchema = new SimpleSchema({
   channelId: {
     type: String,
     label: 'ChannelId',
+    max: 40,
+    min: 6
+  },
+  groupId: {
+    type: String,
+    label: 'GroupId',
     max: 40,
     min: 6
   },
@@ -61,10 +70,5 @@ export const GroupChatMessageSchema = new SimpleSchema({
     type: [String],
     label: 'EmotesRange',
     placeholder: 'EmotesRange'
-  },
-  seenAt: {
-    type: Date,
-    label: 'Seen at',
-    optional: true
   }
 })

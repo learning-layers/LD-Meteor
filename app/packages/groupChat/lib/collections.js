@@ -4,7 +4,7 @@ import { GroupChatTopicSchema, GroupChatMessageSchema } from './schema'
 
 export const GroupChatTopics = new Mongo.Collection('GroupChatTopics')
 if (Meteor.isServer) {
-
+  GroupChatTopics._ensureIndex({_id: 1, groupId: 1, 'wantToBeNotified.userId': 1})
 }
 GroupChatTopics.attachSchema(GroupChatTopicSchema)
 

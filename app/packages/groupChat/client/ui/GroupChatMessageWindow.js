@@ -37,15 +37,15 @@ class GroupChatMessageWindow extends Component {
             chatMsgColor = 'rgb(' + rgb.join(',') + ')'
           }
           const userNameStyle = {fontSize: '13.3333px', color: chatMsgColor, fontWeight: 'bold'}
-          return <li key={'g-chat-msg-' + groupsChatMessage._id}>
+          return <li className='g-chat-msg' key={'g-chat-msg-' + groupsChatMessage._id}>
             <span style={{fontSize: '11.1111px', color: 'lightgrey'}}><TimeFromNow date={groupsChatMessage.createdAt} /></span> -
             <span style={userNameStyle}>{userName}</span>:
             &nbsp;
             {groupsChatMessage.message}
           </li>
         })}
+        {reverseGroupChatMessages.length === 0 ? <li className='g-chat-msg' key='g-chat-msg-no-msg'>Be the first one to write a message for this topic</li> : null}
       </ul>
-      {reverseGroupChatMessages.length === 0 ? <p>Be the first one to write a message for this topic</p> : null}
     </div>
   }
 }
