@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Image from '../../../../../node_modules/react-bootstrap/lib/Image'
-import NotificationStatusIndicator from './NotificationStatusIndicator'
+// import NotificationStatusIndicator from './NotificationStatusIndicator'
 
 class Avatar extends Component {
   render () {

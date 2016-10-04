@@ -80,16 +80,31 @@ class User extends Component {
   render () {
     const { user } = this.props
     let email = user.profile.email
-    if (!email) {
-      email = 'No email defined!'
-    }
-
     let isVerified = false
+    let foundVerifiedEmail = false
     this.state.registeredEmails.forEach(function (registeredEmail) {
       if (registeredEmail.verified) {
         isVerified = true
+        if (!email) {
+          email = registeredEmail.address
+          foundVerifiedEmail = true
+        }
+      } else if (!foundVerifiedEmail) {
+        email = registeredEmail.address
       }
     })
+    if (!email && user.emails) {
+      user.emails.forEach(function (profileEmail) {
+        if (profileEmail.verified) {
+          email = profileEmail.address
+          foundVerifiedEmail = true
+        } else {
+          if (!foundVerifiedEmail) {
+            email = profileEmail.address
+          }
+        }
+      })
+    }
     let verificationClasses = classNames({ 'status-indicator-base': true, verified: isVerified, 'not-verified': !isVerified })
 
     let isOnline = user && user.status ? user.status.online : false

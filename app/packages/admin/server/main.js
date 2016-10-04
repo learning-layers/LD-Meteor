@@ -9,6 +9,7 @@ Meteor.publish('userList', function () {
     let defaultProjections = USERS_DEFAULT
     defaultProjections.fields.status = 1
     defaultProjections.fields.tos = 1
+    defaultProjections.fields.emails = 1
     return Meteor.users.find({}, defaultProjections)
   } else {
     throw new Meteor.Error(401)
