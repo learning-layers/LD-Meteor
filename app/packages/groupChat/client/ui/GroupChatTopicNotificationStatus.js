@@ -21,7 +21,7 @@ class GroupChatTopicNotificationStatus extends Component {
     }
   }
   render () {
-    const { groupId, topic } = this.props
+    const { groupId, topic, topicId } = this.props
     let userWantsToBeNotified = false
     if (topic && topic.wantToBeNotified) {
       topic.wantToBeNotified.forEach(function (wantsToBeNotified) {
@@ -29,7 +29,7 @@ class GroupChatTopicNotificationStatus extends Component {
       })
     }
     return <div>
-      <Checkbox checked={userWantsToBeNotified} onClick={() => this.toggleChangeNotification(groupId, topic._id, userWantsToBeNotified)}>
+      <Checkbox checked={userWantsToBeNotified} onChange={() => this.toggleChangeNotification(groupId, topicId, userWantsToBeNotified)}>
         Notify me about changes
       </Checkbox>
     </div>

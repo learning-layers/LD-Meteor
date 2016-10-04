@@ -46,9 +46,9 @@ Meteor.publish('groupChannel', function (args) {
   const group = Groups.findOne({_id: args.groupId})
   if (group) {
     if (isMemberInGroup(group._id, this.userId)) {
-      return GroupChatTopics.find({channelId: args.channelId})
+      return GroupChatTopics.find({_id: args.channelId})
     } else {
-      throw new Meteor.Error(401)
+      throw new Meteor.Error(401, 'You are not a member of this group!')
     }
   } else {
     throw new Meteor.Error(404)
@@ -65,6 +65,10 @@ Meteor.publish('groupChannelMessages', function (args) {
     if (isMemberInGroup(group._id, this.userId)) {
       const channel = GroupChatTopics.find({_id: args.channelId, groupId: args.groupId}).fetch()
       if (channel) {
+        this.onStop(() => {
+          GroupChatTopics.update({_id: args.channelId, groupId: args.groupId}, {$pull: {participants: {userId: this.userId}}})
+          GroupChatTopics.update({_id: args.channelId, groupId: args.groupId}, {$push: {participants: {userId: this.userId, lastVisit: new Date()}}})
+        })
         let userIds = []
         userIds.push(group.createdBy)
         if (group.members) {

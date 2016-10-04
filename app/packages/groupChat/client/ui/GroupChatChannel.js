@@ -6,20 +6,10 @@ import { GroupChatTopics } from '../../lib/collections'
 import AddChatTopicModal from './AddChatTopicModal'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
 
-/*
- {groups.map(function (group) {
- return <li key={'g-chat-c-' + group._id}>
- <a className='g-group-name' href='' data-tooltip={group.name}>
- {group.name}
- </a>
- </li>
- })}
- */
-
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupChannels', {groupId: props.activeGroupId})
   if (handle.ready()) {
-    const topics = GroupChatTopics.find({}).fetch()
+    const topics = GroupChatTopics.find({groupId: props.activeGroupId}).fetch()
     onData(null, { topics })
   }
 }
