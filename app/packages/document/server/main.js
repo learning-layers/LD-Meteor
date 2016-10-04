@@ -88,9 +88,11 @@ function stopDocumentPublisher (self, document, userPositionId, userOpenedDocume
   const createdAt = new Date()
   const timeDiff = Math.abs(createdAt.getTime() - userOpenedDocumentAt.getTime())
   const diffSeconds = Math.ceil(timeDiff / 1000)
-  UserActivityHistory.insert({userId: self.userId, type: 'document', action: 'closed', elementId: document._id, createdAt: new Date(), values: ['{"dwellTime":' + diffSeconds + '}']})
+  if (document) {
+    UserActivityHistory.insert({userId: self.userId, type: 'document', action: 'closed', elementId: document._id, createdAt: new Date(), values: ['{"dwellTime":' + diffSeconds + '}']})
+    deleteOldEtherpadSessions(self, document)
+  }
   UserPositions.remove({_id: userPositionId})
-  deleteOldEtherpadSessions(self, document)
   // console.log('END document onStop')
 }
 
