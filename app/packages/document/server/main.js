@@ -419,11 +419,11 @@ const subscriptionNames = [
   'documentList',
   'document',
   'documentTags',
-  'documentComments',
-  'documentCommentsCount',
-  'documentAccess',
-  'commentReplies',
-  'commentRepliesCount'
+  // 'documentComments',
+  // 'documentCommentsCount',
+  'documentAccess' // ,
+  // 'commentReplies',
+  // 'commentRepliesCount'
 ]
 
 subscriptionNames.forEach(function (subscriptionName) {
