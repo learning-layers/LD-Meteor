@@ -27,4 +27,8 @@ class SubDocumentCounter extends Component {
   }
 }
 
+SubDocumentCounter.propTypes = {
+  subdocumentsCount: React.PropTypes.number
+}
+
 export default composeWithTracker(onPropsChange)(SubDocumentCounter)

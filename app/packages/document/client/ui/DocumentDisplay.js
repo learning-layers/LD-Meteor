@@ -16,6 +16,7 @@ import HistoryArea from './mainContent/history/HistoryArea'
 import CreateDocumentModal from './CreateDocumentModal'
 import SubDocumentCounter from './SubDocumentCounter'
 import SubDocumentList from './SubDocumentList'
+import DocumentStatusIndicator from './DocumentStatusIndicator'
 
 class EditableDocumentTitleInput extends Component {
   constructor (props) {
@@ -300,6 +301,7 @@ class DocumentDisplay extends Component {
       </div>
       <div className={mainContentClasses}>
         <div className='panel-heading'>
+          <DocumentStatusIndicator documentId={document._id} documentStatus={document.maturityLevel} />
           <EditableDocumentTitleInput documentId={document._id} documentTitle={document.title} />
           {isViewMode ? null : <ButtonToolbar className='options-buttons'>
             <Button className='delete-group-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>

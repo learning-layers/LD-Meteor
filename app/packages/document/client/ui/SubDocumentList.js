@@ -28,7 +28,7 @@ class SubDocumentDocumentList extends Component {
   render () {
     const { subdocuments } = this.props
     return <div id='subdocument-list' className='panel panel-primary'>
-      <div className='panel-heading' style={{height: '53px'}}>
+      <div className='panel-heading'>
         Subdocuments
       </div>
       <div className='panel-body'>
@@ -43,6 +43,10 @@ class SubDocumentDocumentList extends Component {
       </div>
     </div>
   }
+}
+
+SubDocumentDocumentList.propTypes = {
+  subdocuments: React.PropTypes.array
 }
 
 export default composeWithTracker(onPropsChange)(SubDocumentDocumentList)

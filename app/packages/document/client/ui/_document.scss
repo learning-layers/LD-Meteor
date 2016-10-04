@@ -236,9 +236,12 @@
 }
 
 .document {
-  .panel-heading {
-    .options-buttons {
-      float: right;
+  .main-content {
+    > .panel-heading {
+      height: 70px;
+      .options-buttons {
+        float: right;
+      }
     }
   }
 }
@@ -388,6 +391,9 @@
   height: 453px;
   float: left;
   overflow: hidden;
+  .panel-heading {
+    height: 70px;
+  }
   .panel-body {
     padding: 5px;
     overflow: auto;
@@ -403,6 +409,7 @@
   }
 }
 
+@import './_doc_status.scss';
 @import './sharing/_sharing';
 @import './mainContent/fileAttachments/_fileAttachments.scss';
 @import './mainContent/history/_history.scss';
