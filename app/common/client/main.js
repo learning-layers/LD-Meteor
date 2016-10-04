@@ -3,9 +3,9 @@ import { Session } from 'meteor/session'
 import Fireball from 'fireball-js'
 import { Tracker } from 'meteor/tracker'
 
-if (!global.isProdEnv()) {
-  global.document.domain = 'localhost'
-}
+// set the same domain name as etherpad so that it is possible to access the
+// etherpad iframe via the context menu
+global.window.document.domain = global.window.document.domain
 
 global.Users = Meteor.users
 

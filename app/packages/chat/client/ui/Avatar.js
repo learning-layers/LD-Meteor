@@ -24,11 +24,10 @@ class Avatar extends Component {
         onlineStatus = 'On'
         break
     }
-    let onlineStatusStyle = {backgroundColor: onlineStatusColor}
+    let onlineStatusStyle = {backgroundColor: onlineStatusColor} // <NotificationStatusIndicator style={{display: 'none'}} />
     return <div className='avatar'>
       <Image className='sidebar-avatar' src={userAvatarPath} circle />
       <div className='avatar-online-status' style={onlineStatusStyle}>{onlineStatus}</div>
-      <NotificationStatusIndicator style={{display: 'none'}} />
     </div>
   }
 }

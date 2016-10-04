@@ -20,7 +20,6 @@ class UserTags extends Component {
     console.log(props)
     this.state = {
       tagOptions: [
-        {label: 'test', name: 'test'}
       ]
     }
   }

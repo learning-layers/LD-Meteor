@@ -51,18 +51,18 @@ class ContextMenu extends Component {
           Start a conversation for this paragraph
         </li> : null}
           {showSelectionPossibility ? <li className='cctx-separator'></li> : null}
-          <li className='cctx-item' onClick={() => this.printDocument()}>
+          <li style={{display: 'none'}} className='cctx-item' onClick={() => this.printDocument()}>
             <div className='cctx-item-icon'>
             </div>
             Print this document
           </li>
           <li className='cctx-separator'></li>
-          <li className='cctx-item' onClick={() => this.exportToWord()}>
+          <li style={{display: 'none'}} className='cctx-item' onClick={() => this.exportToWord()}>
             <div className='cctx-item-icon'>
             </div>
             Export this document to a word file
           </li>
-          <li className='cctx-item' onClick={this.exportToPDF}>
+          <li style={{display: 'none'}} className='cctx-item' onClick={this.exportToPDF}>
             <div className='cctx-item-icon'>
             </div>
             Export this document to a pdf file
