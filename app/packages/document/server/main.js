@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { Documents, DocumentComments, DocumentAccess } from '../lib/collections'
+import { Documents, DocumentComments, DocumentAccess, DocumentSelections } from '../lib/collections'
 import { UserPositions, UserActivityHistory } from '../../dashboard/lib/collections'
 import { Tags } from '../../tags/lib/collections'
 import { Counts } from 'meteor/tmeasday:publish-counts'
@@ -306,6 +306,110 @@ Meteor.publish('commentRepliesCount', function (args) {
       documentId: args.documentId,
       parents: { $all: [ args.parent ] }
     }))
+  } else {
+    throw new Meteor.Error(401)
+  }
+})
+
+Meteor.publish('subdocumentCount', function (args) {
+  check(args, {
+    parentId: String
+  })
+  if (this.userId) {
+    let documentSelections = DocumentSelections.find({parentId: args.parentId})
+    let documentIds = []
+    documentSelections.forEach(function (documentSelection) {
+      documentIds.push(documentSelection.documentId)
+    })
+    let groups = Groups.find({ 'members.userId': this.userId }, { name: 0, members: 0 }).fetch()
+
+    // collect all groupIds
+    let groupIds = []
+    groups.forEach(function (group) {
+      groupIds.push(group._id)
+    })
+    const documentAccessObjects = DocumentAccess.find(
+      {
+        $and: [
+          { documentId: {$in: documentIds} },
+          {
+            $or: [
+              { createdBy: this.userId },
+              { 'userCanView.userId': this.userId },
+              { 'userCanComment.userId': this.userId },
+              { 'userCanEdit.userId': this.userId },
+              { 'groupCanView.groupId': { $in: groupIds } },
+              { 'groupCanComment.groupId': { $in: groupIds } },
+              { 'groupCanEdit.groupId': { $in: groupIds } }
+            ]
+          }
+        ]
+      },
+      { userCanView: 0, userCanEdit: 0, userCanComment: 0, groupCanView: 0, groupCanEdit: 0, groupCanComment: 0 }
+    ).fetch()
+
+    let documentAccessDocumentIds = []
+    documentAccessObjects.forEach(function (documentAccessDocumentObject) {
+      documentAccessDocumentIds.push(documentAccessDocumentObject.documentId)
+    })
+    Counts.publish(this, 'subdocumentCount', DocumentSelections.find({parentId: args.parentId, documentId: {$in: documentAccessDocumentIds}}))
+  } else {
+    throw new Meteor.Error(401)
+  }
+})
+
+Meteor.publish('subdocuments', function (args) {
+  check(args, {
+    parentId: String
+  })
+  if (this.userId) {
+    let documentSelections = DocumentSelections.find({parentId: args.parentId}).fetch()
+    let documentIds = []
+    documentSelections.forEach(function (documentSelection) {
+      documentIds.push(documentSelection.documentId)
+    })
+    let groups = Groups.find({ 'members.userId': this.userId }, { name: 0, members: 0 }).fetch()
+
+    // collect all groupIds
+    let groupIds = []
+    groups.forEach(function (group) {
+      groupIds.push(group._id)
+    })
+    const documentAccessObjects = DocumentAccess.find(
+      {
+        $and: [
+          { documentId: {$in: documentIds} },
+          {
+            $or: [
+              { createdBy: this.userId },
+              { 'userCanView.userId': this.userId },
+              { 'userCanComment.userId': this.userId },
+              { 'userCanEdit.userId': this.userId },
+              { 'groupCanView.groupId': { $in: groupIds } },
+              { 'groupCanComment.groupId': { $in: groupIds } },
+              { 'groupCanEdit.groupId': { $in: groupIds } }
+            ]
+          }
+        ]
+      },
+      { userCanView: 0, userCanEdit: 0, userCanComment: 0, groupCanView: 0, groupCanEdit: 0, groupCanComment: 0 }
+    ).fetch()
+
+    let documentAccessDocumentIds = []
+    documentAccessObjects.forEach(function (documentAccessDocumentObject) {
+      documentAccessDocumentIds.push(documentAccessDocumentObject.documentId)
+    })
+    const documents = Documents.find({_id: {$in: documentAccessDocumentIds}}, {title: 1, createdBy: 1, createdAt: 1}).fetch()
+    let userList = []
+    documents.forEach(function (document) {
+      userList.push(document.createdBy)
+    })
+    return [
+      Meteor.users.find({_id: {$in: userList}}, USERS_DEFAULT), // fetches all users that are owners of the documents
+      // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
+      Documents.find({_id: {$in: documentAccessDocumentIds}}, DOCUMENTS_PREVIEW),
+      DocumentSelections.find({parentId: args.parentId, documentId: {$in: documentAccessDocumentIds}})
+    ]
   } else {
     throw new Meteor.Error(401)
   }

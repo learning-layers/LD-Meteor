@@ -43,5 +43,5 @@ export const DocumentSelections = new Mongo.Collection('DocumentSelections')
 DocumentSelections.attachSchema(DocumentSelectionSchema)
 if (Meteor.isServer) {
   DocumentSelections._ensureIndex({documentId: 1})
-  DocumentSelections._ensureIndex({parentId: 1})
+  DocumentSelections._ensureIndex({parentId: 1, documentId: 1})
 }

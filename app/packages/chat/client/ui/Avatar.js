@@ -28,7 +28,7 @@ class Avatar extends Component {
     return <div className='avatar'>
       <Image className='sidebar-avatar' src={userAvatarPath} circle />
       <div className='avatar-online-status' style={onlineStatusStyle}>{onlineStatus}</div>
-      <NotificationStatusIndicator />
+      <NotificationStatusIndicator style={{display: 'none'}} />
     </div>
   }
 }

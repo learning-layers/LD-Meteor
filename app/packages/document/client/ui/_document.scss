@@ -371,6 +371,38 @@
   overflow: auto;
 }
 
+.subdocument-toggle {
+  span.badge {
+    padding: 0;
+    margin-left: 5px;
+  }
+}
+
+.main-content.panel.panel-primary.show-sub-docs {
+  width: calc(100% - 207px);
+  float: left;
+}
+
+#subdocument-list {
+  width: 206px;
+  height: 453px;
+  float: left;
+  overflow: hidden;
+  .panel-body {
+    padding: 5px;
+    overflow: auto;
+    height: 100%;
+  }
+  ul.s-document-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    > li {
+      border-bottom: 1px solid lightgrey;
+    }
+  }
+}
+
 @import './sharing/_sharing';
 @import './mainContent/fileAttachments/_fileAttachments.scss';
 @import './mainContent/history/_history.scss';

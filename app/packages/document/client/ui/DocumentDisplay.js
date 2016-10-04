@@ -14,6 +14,8 @@ import ContentViewer from './mainContent/contentEditor/ContentViewer'
 import FileAttachmentArea from './mainContent/fileAttachments/FileAttachmentArea'
 import HistoryArea from './mainContent/history/HistoryArea'
 import CreateDocumentModal from './CreateDocumentModal'
+import SubDocumentCounter from './SubDocumentCounter'
+import SubDocumentList from './SubDocumentList'
 
 class EditableDocumentTitleInput extends Component {
   constructor (props) {
@@ -68,7 +70,7 @@ class EditableDocumentTitleInput extends Component {
           disabled={this.state.inputDisabled} />
         <ButtonToolbar className='change-document-title-btns' style={{marginLeft: '7px'}}>
           <Button className='delete-group-button' bsStyle='success' bsSize='small' onClick={() => this.setNewDocumentTitle()}>
-            <span className='glyphicon glyphicon-ok'></span>
+            <span className='glyphicon glyphicon-ok' />
           </Button>
           <Button className='delete-group-button' bsSize='small' onClick={() => this.setEditMode(false)}>
             Cancel
@@ -94,7 +96,8 @@ class DocumentDisplay extends Component {
       tagBarFocused: false,
       manageSharingModal: null,
       openCreateDocumentModal: null,
-      breadcrumbs: []
+      breadcrumbs: [],
+      showSubDocuments: false
     }
   }
   componentDidMount () {
@@ -109,6 +112,7 @@ class DocumentDisplay extends Component {
     this.createSubDocumentSubscription = EventEmitterInstance.addListener('open-create-sub-document-modal', (selection, parentId) => {
       this.openCreateSubDocumentModal(selection, parentId)
     })
+    this.toggleShowSubdocumentsSubscription = EventEmitterInstance.addListener('doc-toggle-subdocs', () => { this.toggleShowSubdocuments() })
     if (this.props.document.isSubDocument) {
       Meteor.setTimeout(() => {
         Meteor.call('getSubDocumentBreadcrumbs', this.props.document._id, (err, res) => {
@@ -121,7 +125,7 @@ class DocumentDisplay extends Component {
             })
           }
         })
-      })
+      }, 100)
     }
   }
   componentWillUnmount () {
@@ -134,6 +138,25 @@ class DocumentDisplay extends Component {
     }, 0)
     if (this.createSubDocumentSubscription) {
       this.createSubDocumentSubscription.remove()
+    }
+    if (this.toggleShowSubdocumentsSubscription) {
+      this.toggleShowSubdocumentsSubscription.remove()
+    }
+  }
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.document.isSubDocument) {
+      Meteor.setTimeout(() => {
+        Meteor.call('getSubDocumentBreadcrumbs', nextProps.document._id, (err, res) => {
+          if (err) {
+            //
+          }
+          if (res) {
+            this.setState({
+              breadcrumbs: res
+            })
+          }
+        })
+      }, 100)
     }
   }
   openCreateSubDocumentModal (selection, parentId) {
@@ -230,12 +253,21 @@ class DocumentDisplay extends Component {
       return 'view'
     }
   }
+  toggleShowSubdocuments () {
+    this.setState({
+      showSubDocuments: !this.state.showSubDocuments
+    })
+  }
   render () {
     let { document } = this.props
     const isViewMode = this.isViewMode()
     // const permissionLevel = this.getPermissionLevel()
     // console.log('isViewMode=', isViewMode)
     // console.log('permissions=', permissionLevel)
+    let mainContentClasses = 'main-content panel panel-primary'
+    if (this.state.showSubDocuments) {
+      mainContentClasses += ' show-sub-docs'
+    }
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
         {this.state.breadcrumbs.length > 0 ? <span>
@@ -266,19 +298,20 @@ class DocumentDisplay extends Component {
           <DocumentTags disabled={isViewMode} onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={document._id} />
         </div>
       </div>
-      <div className='main-content panel panel-primary'>
+      <div className={mainContentClasses}>
         <div className='panel-heading'>
-          <EditableDocumentTitleInput documentId={this.props.document._id} documentTitle={document.title} />
+          <EditableDocumentTitleInput documentId={document._id} documentTitle={document.title} />
           {isViewMode ? null : <ButtonToolbar className='options-buttons'>
             <Button className='delete-group-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
               <span className='glyphicon glyphicon glyphicon-share-alt' />
             </Button>
+            <SubDocumentCounter documentId={document._id} />
           </ButtonToolbar>}
           {isViewMode ? null : <div ref='manageSharingModal'></div>}
         </div>
         <div className='panel-body'>
           {this.props.document ? <AttachmentsBar
-            documentId={this.props.document._id}
+            documentId={document._id}
             onChangeTabSelection={(tabName) => this.changeTab(tabName)}
             activeTabName={this.state.activeTabName} /> : null}
           <div className='content'>
@@ -286,6 +319,7 @@ class DocumentDisplay extends Component {
           </div>
         </div>
       </div>
+      {this.state.showSubDocuments ? <span><SubDocumentList documentId={document._id} /><div className='clearfix' /></span> : null}
       <div ref='createDocumentModal'></div>
       {isViewMode ? null : <CommentingArea documentId={document._id} />}
       <textarea id='tinymceTextarea' name='tinymceTextarea' />
