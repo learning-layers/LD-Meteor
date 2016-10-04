@@ -5,8 +5,11 @@ import { USERS_DEFAULT } from '../../user/server/userProjections'
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 Meteor.publish('userList', function () {
-  if (this.userId && Roles.userIsInRole(this.userId, ['admin'])) {
-    return Meteor.users.find({}, USERS_DEFAULT)
+  if (this.userId && Roles.userIsInRole(this.userId, ['super-admin'])) {
+    let defaultProjections = USERS_DEFAULT
+    defaultProjections.fields.status = 1
+    defaultProjections.fields.tos = 1
+    return Meteor.users.find({}, defaultProjections)
   } else {
     throw new Meteor.Error(401)
   }
