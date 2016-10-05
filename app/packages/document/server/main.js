@@ -355,7 +355,17 @@ Meteor.publish('subdocumentCount', function (args) {
     documentAccessObjects.forEach(function (documentAccessDocumentObject) {
       documentAccessDocumentIds.push(documentAccessDocumentObject.documentId)
     })
-    Counts.publish(this, 'subdocumentCount', DocumentSelections.find({parentId: args.parentId, documentId: {$in: documentAccessDocumentIds}}))
+    Counts.publish(
+      this,
+      'subdocumentCount',
+      DocumentSelections.find({
+        parentId: args.parentId,
+        $or: [
+          {documentId: {$in: documentAccessDocumentIds}},
+          {createdBy: this.userId}
+        ]
+      })
+    )
   } else {
     throw new Meteor.Error(401)
   }
@@ -407,11 +417,23 @@ Meteor.publish('subdocuments', function (args) {
     documents.forEach(function (document) {
       userList.push(document.createdBy)
     })
+    let ownSubDocumentSelections = DocumentSelections.find({
+      parentId: args.parentId, createdBy: this.userId
+    })
+    ownSubDocumentSelections.forEach(function (ownSubDocumentSelection) {
+      documentAccessDocumentIds.push(ownSubDocumentSelection.documentId)
+    })
     return [
       Meteor.users.find({_id: {$in: userList}}, USERS_DEFAULT), // fetches all users that are owners of the documents
       // retrieve all documents where the user is either the owner or he has access via the documentAccessObject
       Documents.find({_id: {$in: documentAccessDocumentIds}}, DOCUMENTS_PREVIEW),
-      DocumentSelections.find({parentId: args.parentId, documentId: {$in: documentAccessDocumentIds}})
+      DocumentSelections.find({
+        parentId: args.parentId,
+        $or: [
+          {documentId: {$in: documentAccessDocumentIds}},
+          {createdBy: this.userId}
+        ]
+      })
     ]
   } else {
     throw new Meteor.Error(401)

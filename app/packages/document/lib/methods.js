@@ -71,6 +71,7 @@ Meteor.methods({
     check(sharedWithSameUsers, Boolean)
     selection.parentId = selection.documentId
     delete selection.documentId
+    selection.createdBy = this.userId
     check(selection, DocumentSelectionSchema)
     document.createdAt = new Date()
     document.createdBy = this.userId
@@ -92,6 +93,7 @@ Meteor.methods({
         }
         return newDocumentId
       } catch (e) {
+        // cleanup if previous actions failed
         Documents.remove(newDocumentId)
         if (documentSelectionId) {
           DocumentSelections.remove(documentSelectionId)

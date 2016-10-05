@@ -44,4 +44,5 @@ DocumentSelections.attachSchema(DocumentSelectionSchema)
 if (Meteor.isServer) {
   DocumentSelections._ensureIndex({documentId: 1})
   DocumentSelections._ensureIndex({parentId: 1, documentId: 1})
+  DocumentSelections._ensureIndex({parentId: 1, createdBy: 1})
 }

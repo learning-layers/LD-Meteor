@@ -241,5 +241,11 @@ export const DocumentSelectionSchema = new SimpleSchema({
   htmlContent: {
     type: String,
     label: 'content'
+  },
+  createdBy: {
+    type: String,
+    label: 'Created by',
+    max: 40,
+    min: 6
   }
 })
