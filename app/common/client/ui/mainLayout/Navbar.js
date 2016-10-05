@@ -78,9 +78,11 @@ class LDNavbar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavItem eventKey={1} href='/'>
+              {loggedIn ? <NavItem eventKey={1} href='/home'>
                 Home
-              </NavItem>
+              </NavItem> : <NavItem eventKey={1} href='/'>
+                Home
+              </NavItem>}
               {loggedIn ? <NavDropdown eventKey={3} title='Document' id='basic-nav-dropdown'>
                 <MenuItem eventKey={3.1} onClick={() => this.openCreateDocumentModal()}> New Document
                 </MenuItem>

@@ -69,11 +69,12 @@ import Home from '../ui/Home'
 
 // <HelpCenter helpTours={helpTours} />
 
-FlowRouter.route('/home', {
+FlowRouter.route('/', {
   action: function (params, queryParams) {
     console.log('Params:', params)
     console.log('Query Params:', queryParams)
     mount(MainLayout, {
+      isPublic: true,
       header: <Navbar />,
       content: <Home />,
       helpCenter: null

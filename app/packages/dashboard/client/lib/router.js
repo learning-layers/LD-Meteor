@@ -17,12 +17,11 @@ FlowRouter.route('/dashboard', {
   }
 })
 
-FlowRouter.route('/', {
+FlowRouter.route('/home', {
   action: function (params, queryParams) {
     console.log('Params:', params)
     console.log('Query Params:', queryParams)
     mount(MainLayout, {
-      isPublic: true,
       header: <Navbar />,
       content: <Dashboard />,
       helpCenter: null
