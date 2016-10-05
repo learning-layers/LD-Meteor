@@ -4,10 +4,17 @@ import Alert from 'react-s-alert'
 
 class VerifyEmailAddressPanel extends Component {
   resendVerificationEmail (address) {
-    var result = global.confirm('Do you want to send a verification email to ' + address + '?')
-    if (result) {
+    global.window.swal({
+      title: 'Are you sure?',
+      text: 'Do you want to send a verification email to ' + address + '?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: 'Yes, send the verification email!',
+      closeOnConfirm: true
+    }, () => {
       Meteor.call('resendUserVerificationMail', Meteor.userId(), address)
-    }
+    })
   }
   render () {
     const { registeredEmails } = this.props
@@ -46,8 +53,15 @@ VerifyEmailAddressPanel.propTypes = {
 
 class TermsOfService extends Component {
   agreeToTOS () {
-    var result = global.confirm('Do you want to agree to the Terms of Service?')
-    if (result) {
+    global.window.swal({
+      title: 'Terms of Service',
+      text: 'Do you want to agree to the Terms of Service?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: 'Yes, I agree!',
+      closeOnConfirm: true
+    }, () => {
       Meteor.call('agreeToTOS', function (err, res) {
         if (err) {
           Alert.error('Error: Agreeing to our Terms of Service failed!')
@@ -55,7 +69,7 @@ class TermsOfService extends Component {
           Alert.success('Success: Agreeing to our Terms of Service')
         }
       })
-    }
+    })
   }
   render () {
     const { acceptedTermsOfService } = this.props

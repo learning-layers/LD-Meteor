@@ -80,8 +80,15 @@ class DocumentGroupSharing extends Component {
     })
   }
   removeGroupAccess (groupId) {
-    let result = global.confirm('Do you want to unshare this document with the group ' + groupId + '?')
-    if (result) {
+    global.window.swal({
+      title: 'Unshare document',
+      text: 'Do you want to unshare this document with the group ' + groupId + '?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: 'Yes, unshare it!',
+      closeOnConfirm: true
+    }, () => {
       Meteor.call('removeDocumentGroupAccess', this.props.documentId, groupId, function (err, res) {
         if (err) {
           Alert.error('Error: Unsharing the document with group \'' + groupId + '.')
@@ -90,7 +97,7 @@ class DocumentGroupSharing extends Component {
           Alert.success('Success: Unsharing the document.')
         }
       })
-    }
+    })
   }
   render () {
     const { documentAccess } = this.props

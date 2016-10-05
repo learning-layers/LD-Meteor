@@ -41,19 +41,33 @@ class GroupList extends Component {
   deleteGroup (groupId) {
     const group = Groups.findOne({'_id': groupId})
     if (group) {
-      const result = global.confirm('Do you really want to delete the group \'' + group.name + '\'')
-      if (result) {
+      global.window.swal({
+        title: 'Delete group',
+        text: 'Do you really want to delete the group \'' + group.name + '\'',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, delete the group!',
+        closeOnConfirm: true
+      }, () => {
         Meteor.call('deleteGroup', groupId)
-      }
+      })
     }
   }
   leaveGroup (groupId) {
     const group = Groups.findOne({'_id': groupId})
     if (group) {
-      const result = global.confirm('Do you really want to leave the group \'' + group.name + '\'')
-      if (result) {
+      global.window.swal({
+        title: 'Leave group',
+        text: 'Do you really want to leave the group \'' + group.name + '\'',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, leave the group!',
+        closeOnConfirm: true
+      }, () => {
         Meteor.call('leaveGroup', groupId)
-      }
+      })
     }
   }
   openManageMembersModal (groupId) {

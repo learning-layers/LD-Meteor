@@ -66,8 +66,15 @@ class DocumentUserSharing extends Component {
     })
   }
   removeUserAccess (userId) {
-    let result = global.confirm('Do you want to unshare this document with the user ' + userId + '?')
-    if (result) {
+    global.window.swal({
+      title: 'Unshare document',
+      text: 'Do you want to unshare this document with the user ' + userId + '?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: 'Yes, unshare it!',
+      closeOnConfirm: true
+    }, () => {
       Meteor.call('removeDocumentUserAccess', this.props.documentId, userId, function (err, res) {
         if (err) {
           Alert.error('Error: Unsharing the document with user \'' + userId + '.')
@@ -76,7 +83,7 @@ class DocumentUserSharing extends Component {
           Alert.success('Success: Unsharing the document.')
         }
       })
-    }
+    })
   }
   render () {
     const { documentAccess } = this.props

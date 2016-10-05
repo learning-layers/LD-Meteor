@@ -72,10 +72,17 @@ class ListItem extends Component {
   deleteDocument (documentId) {
     const document = Documents.findOne({'_id': documentId})
     if (document) {
-      const result = global.confirm('Do you really want to delete the document \'' + document.title + '\'')
-      if (result) {
+      global.window.swal({
+        title: 'Delete Document',
+        text: 'Do you really want to delete the document \'' + document.title + '\'',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, delete it!',
+        closeOnConfirm: true
+      }, () => {
         Meteor.call('deleteDocument', documentId)
-      }
+      })
     }
   }
   render () {

@@ -64,10 +64,17 @@ class User extends Component {
     }
   }
   resendVerificationEmail (userId) {
-    var result = global.confirm('Do you want to send this user a verification email?')
-    if (result) {
+    global.window.swal({
+      title: 'Send verification email',
+      text: 'Do you want to send this user a verification email?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: 'Yes, send the verification email!',
+      closeOnConfirm: true
+    }, () => {
       Meteor.call('resendUserVerificationMail', userId)
-    }
+    })
   }
   openChangeUserRolesModal (userId) {
     let renderToElement = this.refs.changeRolesModal

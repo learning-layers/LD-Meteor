@@ -67,6 +67,11 @@ export const DocumentSchema = new SimpleSchema({
     type: Boolean,
     label: 'IsSubDocument',
     optional: true
+  },
+  maturityLevel: {
+    type: String,
+    label: 'MaturityLevel',
+    optional: true
   }
 })
 

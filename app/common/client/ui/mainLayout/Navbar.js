@@ -4,6 +4,7 @@ import { Template } from 'meteor/templating'
 import { Blaze } from 'meteor/blaze'
 import { composeWithTracker } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
+import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import EventEmitterInstance from '../../EventEmitter'
 import Navbar from '../../../../../node_modules/react-bootstrap/lib/Navbar'
 import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
@@ -28,7 +29,9 @@ function onPropsChange (props, onData) {
   if (!userAvatarPath) {
     userAvatarPath = '/img/Portrait_placeholder.png'
   }
-  onData(null, {user, userAvatarPath})
+  FlowRouter.watchPathChange()
+  let routeName = FlowRouter.current()
+  onData(null, {user, userAvatarPath, routeName})
 }
 
 class LDNavbar extends Component {
@@ -63,9 +66,23 @@ class LDNavbar extends Component {
     }
   }
   render () {
-    const { userAvatarPath } = this.props
+    const { userAvatarPath, routeName } = this.props
     let loggedIn = Meteor.userId()
     let navbarClassNames = classNames({'ld-navbar': true, 'logged-in': !!loggedIn})
+    let homeNavClasses = ''
+    if (routeName) {
+      switch (routeName.pathname) {
+        case '/home':
+          homeNavClasses += ' active'
+          break
+        case '/':
+          homeNavClasses += ' active'
+          break
+        case '':
+          homeNavClasses += ' active'
+          break
+      }
+    }
     return (
       <div className={navbarClassNames}>
         <Navbar fluid>
@@ -78,9 +95,9 @@ class LDNavbar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              {loggedIn ? <NavItem eventKey={1} href='/home'>
+              {loggedIn ? <NavItem eventKey={1} href='/home' className={homeNavClasses}>
                 Home
-              </NavItem> : <NavItem eventKey={1} href='/'>
+              </NavItem> : <NavItem eventKey={1} href='/' className={homeNavClasses}>
                 Home
               </NavItem>}
               {loggedIn ? <NavDropdown eventKey={3} title='Document' id='basic-nav-dropdown'>
@@ -116,7 +133,8 @@ class LDNavbar extends Component {
 }
 
 LDNavbar.propTypes = {
-  userAvatarPath: React.PropTypes.string
+  userAvatarPath: React.PropTypes.string,
+  routeName: React.PropTypes.object
 }
 
 export default composeWithTracker(onPropsChange)(LDNavbar)
