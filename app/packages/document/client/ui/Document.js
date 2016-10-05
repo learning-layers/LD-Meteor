@@ -24,7 +24,9 @@ function camelCase (input) {
   }
 }
 
+let propsLastChangedAt = new Date()
 function onPropsChange (props, onData) {
+  propsLastChangedAt = new Date()
   let args
   if (props.action && props.action === 'shared' && props.permission && props.accessKey) {
     args = { id: props.id, action: props.action, permission: camelCase('can_' + props.permission), accessKey: props.accessKey }
@@ -116,6 +118,7 @@ class Document extends Component {
   render () {
     const { err, action, permission, accessKey, loading } = this.props
     let { document, documentAccess } = this.props
+    this.state.isScheduledForReload = false
     console.log('err=', err)
     console.log('document=', document)
     if (err && err.error === 403) {
@@ -135,10 +138,25 @@ class Document extends Component {
         </div>
       } else if (loading) {
         return <div className='container'>
-          Loading ... Loading ...
+          Loading ....
         </div>
       } else if (!document) {
-        return <div>{JSON.stringify(err)}{JSON.stringify(document)}<NotFound /></div>
+        const timeDiff = Math.abs(new Date().getTime() - propsLastChangedAt.getTime())
+        const diffSeconds = Math.ceil(timeDiff / 1000)
+        if (diffSeconds < 5) {
+          this.state.isScheduledForReload = true
+          Meteor.setTimeout(() => {
+            if (this.state.isScheduledForReload) {
+              this.state.isScheduledForReload = false
+              this.setState({})
+            }
+          }, 250)
+          return <div className='container'>
+            Loading...
+          </div>
+        } else {
+          return <div>{JSON.stringify(err)}{JSON.stringify(document)}<NotFound /></div>
+        }
       }
       return <DocumentDisplay document={document} documentAccess={documentAccess} action={action} permission={permission} accessKey={accessKey} />
     }
