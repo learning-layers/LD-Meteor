@@ -17,6 +17,7 @@ import CreateDocumentModal from './CreateDocumentModal'
 import SubDocumentCounter from './SubDocumentCounter'
 import SubDocumentList from './SubDocumentList'
 import DocumentStatusIndicator from './DocumentStatusIndicator'
+import { Groups } from '../../../groups/lib/collections'
 
 class EditableDocumentTitleInput extends Component {
   constructor (props) {
@@ -203,7 +204,7 @@ class DocumentDisplay extends Component {
           return <ContentViewer documentId={this.props.document._id} accessKey={this.props.accessKey} />
         } else if (this.props.document) {
           // user is logged in
-          return <ContentEditor document={this.props.document} permissionLevel={() => this.getPermissionLevel(this.props.documentAccess)} />
+          return <ContentEditor document={this.props.document} permissionLevel={this.getPermissionLevel(this.props.documentAccess)} />
         } else {
           return null
         }
@@ -241,7 +242,32 @@ class DocumentDisplay extends Component {
             }
           })
           if (permission !== 'comment') {
-            return 'view'
+            const userId = Meteor.userId()
+            documentAccess.groupCanEdit.forEach(function (groupPermissionItem) {
+              const group = Groups.find({_id: groupPermissionItem.groupId, 'members.userId': userId})
+              if (group) {
+                permission = 'edit'
+              }
+            })
+            if (permission !== 'edit') {
+              documentAccess.groupCanComment.forEach(function (groupPermissionItem) {
+                const group = Groups.find({_id: groupPermissionItem.groupId, 'members.userId': userId})
+                if (group) {
+                  permission = 'comment'
+                }
+              })
+            }
+            if (permission !== 'edit' && permission !== 'comment') {
+              documentAccess.groupCanView.forEach(function (groupPermissionItem) {
+                const group = Groups.find({_id: groupPermissionItem.groupId, 'members.userId': userId})
+                if (group) {
+                  permission = 'view'
+                }
+              })
+            }
+            if (!permission) {
+              return 'view'
+            }
           }
         }
         return permission

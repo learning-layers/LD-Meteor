@@ -231,7 +231,8 @@ Meteor.publish('document', function (args) {
           return [
             // TODO filter write url when read only permissions
             Documents.find({ '_id': args.id }, DOCUMENTS_EDIT),
-            DocumentAccess.find({documentId: args.id})
+            DocumentAccess.find({documentId: args.id}),
+            Groups.find({_id: {$in: groupIds}})
           ]
         } else {
           // the user doesn't have access
