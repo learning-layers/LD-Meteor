@@ -143,7 +143,7 @@ class Document extends Component {
       } else if (!document) {
         const timeDiff = Math.abs(new Date().getTime() - propsLastChangedAt.getTime())
         const diffSeconds = Math.ceil(timeDiff / 1000)
-        if (diffSeconds < 5) {
+        if (diffSeconds < 3) {
           this.state.isScheduledForReload = true
           Meteor.setTimeout(() => {
             if (this.state.isScheduledForReload) {

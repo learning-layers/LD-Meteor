@@ -6,18 +6,18 @@
 
 meteor-base@1.0.4             # Packages every Meteor app needs to have
 mobile-experience@1.0.4       # Packages for a great mobile UX
-mongo@1.1.12                   # The database Meteor supports right now
+mongo@1.1.12_1                   # The database Meteor supports right now
 blaze-html-templates@1.0.4    # Compile .html files into Meteor Blaze views
 session@1.1.6                 # Client-side reactive dictionary for your app
 jquery@1.11.9                  # Helpful client-side library
 tracker@1.1.0                 # Meteor's client-side reactive programming library
 
-es5-shim@4.6.14                # ECMAScript 5 compatibility for older browsers.
-ecmascript@0.5.8              # Enable ECMAScript2015+ syntax in app code
+es5-shim@4.6.14_1                # ECMAScript 5 compatibility for older browsers.
+ecmascript@0.5.8_1              # Enable ECMAScript2015+ syntax in app code
 
 fourseven:scss@=3.8.0_1          # Sass and SCSS support for Meteor.js (with autoprefixer and sourcemaps).
 seba:minifiers-autoprefixer # Standard minifiers used with Meteor apps by default + css autoprefixer.
-standard-minifier-js@1.2.0    # Standard javascript minifiers used with Meteor apps by default.
+standard-minifier-js@1.2.0_1    # Standard javascript minifiers used with Meteor apps by default.
 
 practicalmeteor:mocha@2.4.5_5   # Write package tests with mocha and run them in the browser or from the command line with spacejam.
 kadira:flow-router-ssr  # Same as kadira:flow-router, but with SSR support
@@ -36,14 +36,14 @@ simple:rest
 alanning:roles
 aur0r:accounts-trashmailfilter
 splendido:accounts-meld
-email@1.1.17
+email@1.1.17_1
 juliancwirko:s-alert
 accounts-password@1.3.0
 selaias:cookie-consent
 ostrio:logger
 ostrio:loggermongo
 ostrio:i18n
-coffeescript@1.2.4_1
+coffeescript@1.2.4_2
 jparker:crypto-aes
 matb33:collection-hooks
 aldeed:simple-schema
