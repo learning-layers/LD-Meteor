@@ -25,9 +25,18 @@ if (window.applicationCache) {
         //
       }
 
-      if (global.confirm('A new version of this site is available. Do you want to refresh?')) {
+      global.window.swal({
+        title: 'New Living Documents version available',
+        text: 'A new version of this site is available. Do you want to refresh?',
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, refresh!',
+        closeOnConfirm: true,
+        html: false
+      }, () => {
         window.location.reload()
-      }
+      })
     }
   }, false)
 

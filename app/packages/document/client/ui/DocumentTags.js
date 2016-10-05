@@ -70,8 +70,15 @@ class DocumentTags extends Component {
           return <div className='removable-emoji'>
             {item.label}
             <div style={{display: 'inline', marginLeft: '5px'}} onClick={function () {
-              let result = window.confirm('Do you want to remove the tag \'' + item.label + '?')
-              if (result) {
+              global.window.swal({
+                title: 'Remove tag',
+                text: 'Do you want to remove the tag \'' + item.label + '?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Yes, remove it!',
+                closeOnConfirm: true
+              }, () => {
                 Meteor.call('removeTagFromDocument', item._id, function (err, res) {
                   if (err) {
                     Alert.error('Error: Removing tag \'' + item.label + '.')
@@ -81,7 +88,7 @@ class DocumentTags extends Component {
                     console.log(res)
                   }
                 })
-              }
+              })
             }}> &times;</div>
           </div>
         }}

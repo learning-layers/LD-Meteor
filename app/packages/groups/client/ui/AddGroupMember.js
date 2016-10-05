@@ -78,8 +78,15 @@ class AddGroupMember extends Component {
           return <div className='removable-emoji'>
             {item.label}
             <div style={{display: 'inline', marginLeft: '5px'}} onClick={() => {
-              let result = window.confirm('Do you want to remove the tag \'' + item.label + '?')
-              if (result) {
+              global.window.swal({
+                title: 'Remove tag',
+                text: 'Do you want to remove the tag \'' + item.label + '?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Yes, remove it!',
+                closeOnConfirm: true
+              }, () => {
                 console.log(item)
                 Meteor.call('removeUserFromGroup', this.props.groupId, item.value, function (err, res) {
                   if (err) {
@@ -90,7 +97,7 @@ class AddGroupMember extends Component {
                     console.log(res)
                   }
                 })
-              }
+              })
             }}> &times;</div>
           </div>
         }}
