@@ -203,7 +203,7 @@ class DocumentDisplay extends Component {
           return <ContentViewer documentId={this.props.document._id} accessKey={this.props.accessKey} />
         } else if (this.props.document) {
           // user is logged in
-          return <ContentEditor document={this.props.document} permissionLevel={this.getPermissionLevel()} />
+          return <ContentEditor document={this.props.document} permissionLevel={() => this.getPermissionLevel(this.props.documentAccess)} />
         } else {
           return null
         }
@@ -220,13 +220,12 @@ class DocumentDisplay extends Component {
   isViewMode () {
     return this.props.action && this.props.action === 'shared' && this.props.permission && this.props.permission === 'view' && this.props.accessKey
   }
-  getPermissionLevel () {
+  getPermissionLevel (documentAccess) {
     if (this.props.document.createdBy === Meteor.userId()) {
       return 'edit'
     } else if (this.isViewMode()) {
       return 'view'
-    } else if (this.props.documentAccess) {
-      const documentAccess = this.props.documentAccess
+    } else if (documentAccess) {
       // TODO add groups access check
       if (documentAccess) {
         let permission
