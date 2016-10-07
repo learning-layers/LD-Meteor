@@ -17,6 +17,16 @@ let emailIntervalOptions = [
   {label: 'weekly wednesday', key: 'weeklywed'}
 ]
 
+let emailIntervalOptionsMap = []
+emailIntervalOptionsMap['instantly'] = {label: 'instantly', key: 'instantly'}
+emailIntervalOptionsMap['hourly'] = {label: 'hourly', key: 'hourly'}
+emailIntervalOptionsMap['twohourly'] = {label: 'every two hours', key: 'twohourly'}
+emailIntervalOptionsMap['fourhourly'] = {label: 'every four hours', key: 'fourhourly'}
+emailIntervalOptionsMap['daily'] = {label: 'daily', key: 'daily'}
+emailIntervalOptionsMap['weeklymon'] = {label: 'weekly monday', key: 'weeklymon'}
+emailIntervalOptionsMap['weeklyfri'] = {label: 'weekly friday', key: 'weeklyfri'}
+emailIntervalOptionsMap['weeklywed'] = {label: 'weekly wednesday', key: 'weeklywed'}
+
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('notificationSettings')
   if (handle.ready()) {
@@ -48,13 +58,10 @@ class NotificationSettingsUI extends Component {
     if (notificationSettingsMap['groupChatAutoSubscribe']) {
       try {
         let parsedAdditionalValues = JSON.parse(notificationSettingsMap['groupChatAutoSubscribe'].additionalValues)
-        console.log('parsedAdditionalValues=', parsedAdditionalValues)
         groupAutoSubscribeToChannels = parsedAdditionalValues.autosubscribeToChannels
       } catch (e) {
         console.error(e)
       }
-    } else {
-      console.log('notificationSettingsMap=', notificationSettingsMap)
     }
     return <div className='notification-settings container'>
       <h2>Notification settings</h2>
@@ -72,19 +79,19 @@ class NotificationSettingsUI extends Component {
           </tr>
         </thead>
         <tbody>
-          <tr>
+          {notificationSettingsMap['docCommentMentions'] ? <tr>
             <td>
               Comments where your name is mentioned via @&lt;your-username&gt;.
             </td>
             <td style={{width: '200px'}}>
-              <Checkbox checked readOnly style={{display: 'inline-block'}} />
-              <DropdownButton bsStyle='default' bsSize='small' title={this.state.currentEmailOption.label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
+              <Checkbox checked={notificationSettingsMap['docCommentMentions'].on} style={{display: 'inline-block'}} />
+              <DropdownButton bsStyle='default' bsSize='small' title={emailIntervalOptionsMap[notificationSettingsMap['docCommentMentions'].intervalKey].label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
                 {emailIntervalOptions.map((emailOption, i) => {
-                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === this.state.currentEmailOption.key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
+                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === emailIntervalOptionsMap[notificationSettingsMap['docCommentMentions'].intervalKey].key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
                 })}
               </DropdownButton>
             </td>
-          </tr>
+          </tr> : null}
         </tbody>
       </table>
       <h3>Document subscriptions</h3>
@@ -97,58 +104,58 @@ class NotificationSettingsUI extends Component {
           </tr>
         </thead>
         <tbody>
-          <tr>
+          {notificationSettingsMap['docContentChange'] ? <tr>
             <td>
               Document content change notifications
             </td>
             <td style={{width: '200px'}}>
-              <Checkbox checked readOnly style={{display: 'inline-block'}} />
-              <DropdownButton bsStyle='default' bsSize='small' title={this.state.currentEmailOption.label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
+              <Checkbox checked={notificationSettingsMap['docContentChange'].on} style={{display: 'inline-block'}} />
+              <DropdownButton bsStyle='default' bsSize='small' title={emailIntervalOptionsMap[notificationSettingsMap['docContentChange'].intervalKey].label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
                 {emailIntervalOptions.map((emailOption, i) => {
-                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === this.state.currentEmailOption.key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
+                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === emailIntervalOptionsMap[notificationSettingsMap['docContentChange'].intervalKey].key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
                 })}
               </DropdownButton>
             </td>
-          </tr>
-          <tr>
+          </tr> : null}
+          {notificationSettingsMap['docNewComment'] ? <tr>
             <td>
               New comments for a document
             </td>
             <td style={{width: '200px'}}>
-              <Checkbox checked readOnly style={{display: 'inline-block'}} />
-              <DropdownButton bsStyle='default' bsSize='small' title={this.state.currentEmailOption.label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
+              <Checkbox checked={notificationSettingsMap['docNewComment'].on} style={{display: 'inline-block'}} />
+              <DropdownButton bsStyle='default' bsSize='small' title={emailIntervalOptionsMap[notificationSettingsMap['docNewComment'].intervalKey].label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
                 {emailIntervalOptions.map((emailOption, i) => {
-                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === this.state.currentEmailOption.key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
+                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === emailIntervalOptionsMap[notificationSettingsMap['docNewComment'].intervalKey].key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
                 })}
               </DropdownButton>
             </td>
-          </tr>
-          <tr>
+          </tr> : null}
+          {notificationSettingsMap['docNewSubdocument'] ? <tr>
             <td>
               New subdocuments that have been created
             </td>
             <td style={{width: '200px'}}>
-              <Checkbox checked readOnly style={{display: 'inline-block'}} />
-              <DropdownButton bsStyle='default' bsSize='small' title={this.state.currentEmailOption.label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
+              <Checkbox checked={notificationSettingsMap['docNewSubdocument'].on} style={{display: 'inline-block'}} />
+              <DropdownButton bsStyle='default' bsSize='small' title={emailIntervalOptionsMap[notificationSettingsMap['docNewSubdocument'].intervalKey].label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
                 {emailIntervalOptions.map((emailOption, i) => {
-                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === this.state.currentEmailOption.key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
+                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === emailIntervalOptionsMap[notificationSettingsMap['docNewSubdocument'].intervalKey].key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
                 })}
               </DropdownButton>
             </td>
-          </tr>
-          <tr>
+          </tr> : null}
+          {notificationSettingsMap['docNewAttachment'] ? <tr>
             <td>
               New attachments that have been uploaded
             </td>
             <td style={{width: '200px'}}>
-              <Checkbox checked readOnly style={{display: 'inline-block'}} />
-              <DropdownButton bsStyle='default' bsSize='small' title={this.state.currentEmailOption.label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
+              <Checkbox checked={notificationSettingsMap['docNewAttachment'].on} style={{display: 'inline-block'}} />
+              <DropdownButton bsStyle='default' bsSize='small' title={emailIntervalOptionsMap[notificationSettingsMap['docNewAttachment'].intervalKey].label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
                 {emailIntervalOptions.map((emailOption, i) => {
-                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === this.state.currentEmailOption.key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
+                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === emailIntervalOptionsMap[notificationSettingsMap['docNewAttachment'].intervalKey].key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
                 })}
               </DropdownButton>
             </td>
-          </tr>
+          </tr> : null}
         </tbody>
       </table>
       <h3>Chat</h3>
@@ -162,19 +169,19 @@ class NotificationSettingsUI extends Component {
           </tr>
         </thead>
         <tbody>
-          <tr>
+          {notificationSettingsMap['directChatNewMsg'] ? <tr>
             <td>
               New chat message from someone in your contact list
             </td>
             <td style={{width: '200px'}}>
-              <Checkbox checked readOnly style={{display: 'inline-block'}} />
-              <DropdownButton bsStyle='default' bsSize='small' title={this.state.currentEmailOption.label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
+              <Checkbox checked={notificationSettingsMap['directChatNewMsg'].on} style={{display: 'inline-block'}} />
+              <DropdownButton bsStyle='default' bsSize='small' title={emailIntervalOptionsMap[notificationSettingsMap['directChatNewMsg'].intervalKey].label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
                 {emailIntervalOptions.map((emailOption, i) => {
-                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === this.state.currentEmailOption.key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
+                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === emailIntervalOptionsMap[notificationSettingsMap['directChatNewMsg'].intervalKey].key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
                 })}
               </DropdownButton>
             </td>
-          </tr>
+          </tr> : null}
         </tbody>
       </table>
       <h4>Group chat</h4>
@@ -195,10 +202,10 @@ class NotificationSettingsUI extends Component {
               <Checkbox checked={groupAutoSubscribeToChannels} style={{display: 'inline-block'}} />
             </td>
             <td style={{width: '200px'}}>
-              <Checkbox checked readOnly style={{display: 'inline-block'}} />
-              <DropdownButton bsStyle='default' bsSize='small' title={this.state.currentEmailOption.label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
+              <Checkbox checked={notificationSettingsMap['groupChatAutoSubscribe'].on} style={{display: 'inline-block'}} />
+              <DropdownButton bsStyle='default' bsSize='small' title={emailIntervalOptionsMap[notificationSettingsMap['groupChatAutoSubscribe'].intervalKey].label} key='dropdown-basic-filter' className='dropdown-basic-filter' style={{display: 'inline-block'}} dropup>
                 {emailIntervalOptions.map((emailOption, i) => {
-                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === this.state.currentEmailOption.key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
+                  return <MenuItem eventKey={i} key={'emailOption-' + emailOption.key} active={emailOption.key === emailIntervalOptionsMap[notificationSettingsMap['groupChatAutoSubscribe'].intervalKey].key} onClick={() => this.setEmailOptionTo(emailOption)}>{emailOption.label}</MenuItem>
                 })}
               </DropdownButton>
             </td>
