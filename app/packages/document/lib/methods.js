@@ -17,27 +17,75 @@ if (Meteor.isServer) {
 }
 
 function sendMentioningEmail (documentId, documentTitle, commentText, senderId, receiverId) {
-  var sender = Meteor.users.findOne(senderId)
-  var receiver = Meteor.users.findOne(receiverId)
-  let options = {
-    to: Meteor.settings.private.initialUser.email,
-    from: CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.from
-      ? CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.from(sender)
-      : CommentMentioningEmailTemplates.emailTemplates.from,
-    subject: CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.subject(sender, documentTitle)
-  }
+  var sender = null
+  var receiver = null
+  try {
+    sender = Meteor.users.findOne(senderId)
+    receiver = Meteor.users.findOne(receiverId)
+    let email = receiver.profile.email
+    let foundVerifiedEmail = false
+    if (receiver) {
+      receiver.registered_emails.forEach(function (registeredEmail) {
+        if (registeredEmail.verified) {
+          if (!email) {
+            email = registeredEmail.address
+            foundVerifiedEmail = true
+          }
+        } else if (!foundVerifiedEmail) {
+          email = registeredEmail.address
+        }
+      })
+      if (!email && receiver.emails) {
+        receiver.emails.forEach(function (profileEmail) {
+          if (profileEmail.verified) {
+            email = profileEmail.address
+            foundVerifiedEmail = true
+          } else {
+            if (!foundVerifiedEmail) {
+              email = profileEmail.address
+            }
+          }
+        })
+      }
+    }
+    let options = {
+      to: email,
+      from: CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.from
+        ? CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.from(sender)
+        : CommentMentioningEmailTemplates.emailTemplates.from,
+      subject: CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.subject(sender, documentTitle)
+    }
 
-  if (typeof CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.text === 'function') {
-    options.text = CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.text(
-      sender,
-      receiver,
-      CommentMentioningEmailTemplates.urls.commentMentioning(documentId),
-      commentText,
-      documentTitle
-    )
-  }
+    if (typeof CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.text === 'function') {
+      options.text = CommentMentioningEmailTemplates.emailTemplates.requestDocumentAccess.text(
+        sender,
+        receiver,
+        CommentMentioningEmailTemplates.urls.commentMentioning(documentId),
+        commentText,
+        documentTitle
+      )
+    }
 
-  Email.send(options)
+    Email.send(options)
+  } catch (e) {
+    try {
+      global.log.error('couldn\'t send comment mentioning to recipient', {
+        sender: JSON.stringify(sender),
+        receiver: JSON.stringify(receiver),
+        commentText: commentText,
+        senderId: senderId,
+        receiverId: receiverId,
+        documentId: documentId
+      })
+    } catch (e2) {
+      global.log.error('couldn\'t send comment mentioning to recipient', {
+        commentText: commentText,
+        senderId: senderId,
+        receiverId: receiverId,
+        documentId: documentId
+      })
+    }
+  }
 }
 
 Meteor.methods({
