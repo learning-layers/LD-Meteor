@@ -4,14 +4,17 @@ import { Meteor } from 'meteor/meteor'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 
 function onPropsChange (props, onData) {
-  const user = Meteor.user()
-  onData(null, {user})
+  const userId = Meteor.userId()
+  onData(null, {userId})
 }
 
 class Home extends Component {
   componentDidMount () {
-    this.checkIfLoggedIn = setInterval(function () {
-      if (this.props.user) {
+    if (this.props.userId) {
+      FlowRouter.go('/home')
+    }
+    this.checkIfLoggedIn = setInterval(() => {
+      if (this.props.userId) {
         FlowRouter.go('/home')
       }
     }, 1000)
@@ -20,10 +23,6 @@ class Home extends Component {
     clearInterval(this.checkIfLoggedIn)
   }
   render () {
-    const { user } = this.props
-    if (user) {
-      FlowRouter.go('/home')
-    }
     return (
       <div className='ld-home container-fluid'>
         <h2 className='letterpress-effect'>Living Documents</h2>
