@@ -4,6 +4,7 @@ import { composeWithTracker } from 'react-komposer'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
 import { RequestAccessItems } from '../../../lib/sharing/collections'
+import { Documents } from '../../../lib/collections'
 const SimpleSelect = ReactSelectize.SimpleSelect
 
 function onPropsChange (props, onData) {
@@ -57,6 +58,22 @@ class ShareDocumentAfterRequest extends Component {
   }
   render () {
     const { requestAccessItem } = this.props
+    let username = ''
+    let documentName = ''
+    if (requestAccessItem) {
+      const user = Meteor.users.findOne({_id: requestAccessItem.createdBy})
+      if (user && user.profile) {
+        username = user.profile.name
+      } else {
+        username = requestAccessItem.createdBy
+      }
+      let document = Documents.findOne({_id: requestAccessItem.documentId})
+      if (document) {
+        documentName = document.title
+      } else {
+        documentName = requestAccessItem.documentId
+      }
+    }
     return <div id='share-document-after-request' className='container'>
       {requestAccessItem ? <div className='approval-dialog'>
         <div className='row'>
@@ -66,10 +83,11 @@ class ShareDocumentAfterRequest extends Component {
                 <h4>Answer the document access request</h4>
               </div>
               <div className='panel-body'>
-                Would you like to give {requestAccessItem.createdBy} access to the document {requestAccessItem.documentId}?
+                Would you like to give {username} access to the document {documentName}?
                 <br />
                 {requestAccessItem.message ? <div>
                   There is also a message from the user:
+                  <br /><br />
                   "{requestAccessItem.message}"
                   <br />
                 </div> : null}
@@ -89,9 +107,9 @@ class ShareDocumentAfterRequest extends Component {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='well'>
-              {requestAccessItem.result ? <div className='alert alert-success'>You have approved the access to the document for user &lt;username&gt;</div> : <div className='access-request-result-neg'>
+              {requestAccessItem.result ? <div className='alert alert-success'>You have approved the access to the document for user {username}</div> : <div className='access-request-result-neg'>
                 {requestAccessItem.result === null ? null : <div className='alert alert-danger'>
-                  You have denied the access to the document for user &lt;username&gt;
+                  You have denied the access to the document for user {username}
                 </div>}
               </div>}
               <br />

@@ -84,6 +84,7 @@ class RequestAccess extends Component {
           </div>
           <div className='panel-body'>
             {'You currently don\'t have access to this document. You can request access from the owner.'}
+            <br /><br />
             <form onSubmit={(event) => this.requestAccess(event)}>
               <FormGroup controlId='requestAccessTextarea'>
                 <FormControl componentClass='textarea' placeholder='Add an additional message to the owner of the document.' />

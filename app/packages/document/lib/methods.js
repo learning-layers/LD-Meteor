@@ -405,11 +405,7 @@ export const getDocument = function (id, action, permission, accessKey, callback
           document,
           DocumentAccess.findOne({documentId: id})
         ]
-      } else if (!document) {
-        // no document found for this id
-        console.error('Did not find the document with id=', id)
-        throw new Meteor.Error(404, 'Did not find the document with id=' + id)
-      } else {
+      } else if (document) {
         // the user is not the creator of this document hence there has to be a more extensive
         // search if the user has access or not
         // find all groups the user is a member in
@@ -446,6 +442,10 @@ export const getDocument = function (id, action, permission, accessKey, callback
           // the user doesn't have access
           throw new Meteor.Error(403, 'Access denied')
         }
+      } else {
+        // no document found for this id
+        console.error('Did not find the document with id=', id)
+        throw new Meteor.Error(404, 'Did not find the document with id=' + id)
       }
     }
   } else {

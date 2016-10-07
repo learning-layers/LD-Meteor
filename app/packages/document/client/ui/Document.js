@@ -33,7 +33,11 @@ function onPropsChange (props, onData) {
   } else {
     args = { id: props.id }
   }
-  let handle = Meteor.subscribe('document', args)
+  let handle = Meteor.subscribe('document', args, {
+    onError: function (err) {
+      onData(null, { err: err })
+    }
+  })
   if (handle.ready()) {
     let document = Documents.findOne({ '_id': props.id })
     let documentAccess = DocumentAccess.findOne({documentId: props.id})

@@ -1,7 +1,10 @@
 import { Meteor } from 'meteor/meteor'
 import { RequestAccessItems } from '../../lib/sharing/collections'
+import { Documents } from '../../lib/collections'
 import { check, Match } from 'meteor/check'
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
+import { USERS_DEFAULT } from '../../../user/server/userProjections'
+import { DOCUMENTS_PREVIEW } from '../../server/documentProjections'
 
 Meteor.publish('requestAccessToDocumentItems', function (args) {
   check(args, {
@@ -10,7 +13,18 @@ Meteor.publish('requestAccessToDocumentItems', function (args) {
   })
   if (this.userId) {
     if (args.token) {
-      return RequestAccessItems.find({ token: args.token, owner: this.userId })
+      let userIds = []
+      let documentIds = []
+      const requestAccessItem = RequestAccessItems.findOne({ token: args.token, owner: this.userId })
+      if (requestAccessItem) {
+        userIds.push(requestAccessItem.createdBy)
+        documentIds.push(requestAccessItem.documentId)
+      }
+      return [
+        RequestAccessItems.find({ token: args.token, owner: this.userId }),
+        Meteor.users.find({_id: {$in: userIds}}, USERS_DEFAULT),
+        Documents.find({_id: {$in: documentIds}}, DOCUMENTS_PREVIEW)
+      ]
     } else if (args.documentId) {
       return RequestAccessItems.find({ documentId: args.documentId, createdBy: this.userId })
     }
