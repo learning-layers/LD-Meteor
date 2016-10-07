@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
+import { Meteor } from 'meteor/meteor'
+import { composeWithTracker } from 'react-komposer'
 import Checkbox from '../../../../../node_modules/react-bootstrap/lib/Checkbox'
 import DropdownButton from '../../../../../node_modules/react-bootstrap/lib/DropdownButton'
 import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
+import { NotificationSettings } from '../../lib/collections'
 
 let emailIntervalOptions = [
   {label: 'instantly', key: 'instantly'},
@@ -14,7 +17,15 @@ let emailIntervalOptions = [
   {label: 'weekly wednesday', key: 'weeklywed'}
 ]
 
-class NotificationSettings extends Component {
+function onPropsChange (props, onData) {
+  let handle = Meteor.subscribe('notificationSettings')
+  if (handle.ready()) {
+    let notificationSettings = NotificationSettings.find({userId: Meteor.userId()}).fetch()
+    onData(null, { notificationSettings })
+  }
+}
+
+class NotificationSettingsUI extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -28,6 +39,23 @@ class NotificationSettings extends Component {
     })
   }
   render () {
+    const { notificationSettings } = this.props
+    let notificationSettingsMap = []
+    notificationSettings.forEach(function (notificationSettings) {
+      notificationSettingsMap[notificationSettings.messageId] = notificationSettings
+    })
+    let groupAutoSubscribeToChannels = false
+    if (notificationSettingsMap['groupChatAutoSubscribe']) {
+      try {
+        let parsedAdditionalValues = JSON.parse(notificationSettingsMap['groupChatAutoSubscribe'].additionalValues)
+        console.log('parsedAdditionalValues=', parsedAdditionalValues)
+        groupAutoSubscribeToChannels = parsedAdditionalValues.autosubscribeToChannels
+      } catch (e) {
+        console.error(e)
+      }
+    } else {
+      console.log('notificationSettingsMap=', notificationSettingsMap)
+    }
     return <div className='notification-settings container'>
       <h2>Notification settings</h2>
       <i>Here you can determine for which actions in the system you want to only receive in-app or additional email notifications.</i>
@@ -154,13 +182,17 @@ class NotificationSettings extends Component {
         <thead>
           <tr>
             <th></th>
+            <th>yes</th>
             <th>email</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
+          {notificationSettingsMap['groupChatAutoSubscribe'] ? <tr>
             <td>
               Automatically subscribe to all new group chat channels of your groups
+            </td>
+            <td>
+              <Checkbox checked={groupAutoSubscribeToChannels} style={{display: 'inline-block'}} />
             </td>
             <td style={{width: '200px'}}>
               <Checkbox checked readOnly style={{display: 'inline-block'}} />
@@ -170,11 +202,11 @@ class NotificationSettings extends Component {
                 })}
               </DropdownButton>
             </td>
-          </tr>
+          </tr> : null}
         </tbody>
       </table>
     </div>
   }
 }
 
-export default NotificationSettings
+export default composeWithTracker(onPropsChange)(NotificationSettingsUI)
