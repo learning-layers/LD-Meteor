@@ -63,7 +63,10 @@ Meteor.publish('groupMemberList', function (args) {
         userIds.push(member.userId)
       })
     })
-    return Groups.find({'_id': args.groupId})
+    return [
+      Groups.find({'_id': args.groupId}),
+      Meteor.users.find({_id: {$in: userIds}})
+    ]
   } else {
     throw new Meteor.Error(401)
   }

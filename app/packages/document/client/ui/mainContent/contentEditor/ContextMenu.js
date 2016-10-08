@@ -32,6 +32,9 @@ class ContextMenu extends Component {
     let document = Documents.findOne({_id: this.state.documentId})
     exportToWord(document.title)
   }
+  exportToPDF () {
+    //
+  }
   render () {
     let style = {
       left: this.props.clientX,
@@ -44,25 +47,25 @@ class ContextMenu extends Component {
         {showSelectionPossibility ? <li className='cctx-item' onClick={() => this.discussParagraph(this.props.selection, this.state.documentId)}>
           <div className='cctx-item-icon'>
             <div className='discuss-section'>
-              <div className='glyph-minus'><span className='glyphicon glyphicon-minus'></span></div>
-              <div className='glyph-pencil'><span className='glyphicon glyphicon-pencil'></span></div>
+              <div className='glyph-minus'><span className='glyphicon glyphicon-minus' /></div>
+              <div className='glyph-pencil'><span className='glyphicon glyphicon-pencil' /></div>
             </div>
           </div>
           Start a conversation for this paragraph
         </li> : null}
-          {showSelectionPossibility ? <li className='cctx-separator'></li> : null}
-          <li style={{display: 'none'}} className='cctx-item' onClick={() => this.printDocument()}>
+          {showSelectionPossibility ? <li className='cctx-separator' /> : null}
+          <li className='cctx-item' onClick={() => this.printDocument()}>
             <div className='cctx-item-icon'>
             </div>
             Print this document
           </li>
-          <li className='cctx-separator'></li>
-          <li style={{display: 'none'}} className='cctx-item' onClick={() => this.exportToWord()}>
+          <li className='cctx-separator' />
+          <li className='cctx-item' onClick={() => this.exportToWord()}>
             <div className='cctx-item-icon'>
             </div>
             Export this document to a word file
           </li>
-          <li style={{display: 'none'}} className='cctx-item' onClick={this.exportToPDF}>
+          <li style={{display: 'none'}} className='cctx-item' onClick={() => this.exportToPDF()}>
             <div className='cctx-item-icon'>
             </div>
             Export this document to a pdf file

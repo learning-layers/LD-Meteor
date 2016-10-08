@@ -20,18 +20,24 @@ class ManageGroupMembers extends Component {
       groupId: this.props.groupId
     }
   }
+  removeMemberFromGroup (userId) {
+    Meteor.call('removeUserFromGroup', this.state.groupId, userId)
+  }
   render () {
     const { group } = this.props
     return <div className='manage-group-members'>
-      <AddGroupMember groupId={this.state.groupId} groupMembers={group.members.map(function (member) {
-        const user = Meteor.users.findOne({'_id': member.userId})
-        if (!user) {
-          // retrieve user info via sync method
-          console.log(member.userId)
-        }
-        const label = user ? user.profile.name : member.userId
-        return {label: label, value: member.userId}
-      })} />
+      <AddGroupMember groupId={this.state.groupId} groupMembers={[]} />
+      <ul>
+        {group.members.map((member) => {
+          const user = Meteor.users.findOne({'_id': member.userId})
+          if (!user) {
+            // retrieve user info via sync method
+            console.log(member.userId)
+          }
+          const label = user ? user.profile.name : member.userId
+          return <li>{label} - <button className='btn btn-danger' onClick={() => this.removeMemberFromGroup(member.userId)}>Remove</button></li>
+        })}
+      </ul>
     </div>
   }
 }

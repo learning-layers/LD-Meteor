@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import FormControl from '../../../../../node_modules/react-bootstrap/lib/FormControl'
 import ControlLabel from '../../../../../node_modules/react-bootstrap/lib/ControlLabel'
 import FormGroup from '../../../../../node_modules/react-bootstrap/lib/FormGroup'
+import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import debounce from 'lodash/debounce'
 import { Match } from 'meteor/check'
 import { GroupSchema } from '../../lib/schema'
@@ -94,6 +95,7 @@ class CreateNewGroupForm extends Component {
           autoComplete='off'
         />
         <FormControl.Feedback />
+        <Button bsStyle='success' onClick={(e) => this.submit(e)}>Add</Button>
       </FormGroup>
     </form>
   }

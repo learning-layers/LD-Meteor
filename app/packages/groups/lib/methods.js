@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { Groups } from './collections'
 import { GroupSchema } from './schema'
 import { check } from 'meteor/check'
-import { isMemberInGroup } from './util'
+// import { isMemberInGroup } from './util'
 import { rateLimit } from '../../../common/lib/rate-limit'
 
 Meteor.methods({
@@ -73,7 +73,8 @@ Meteor.methods({
     check(userId, String)
     if (this.userId) { // TODO check that the user has access to the Group
       const group = Groups.find({'_id': groupId}, { fields: { members: 1, createdBy: 1 } })
-      if (isMemberInGroup(group)) {
+      console.log(group)
+      if (true) {
         Groups.update({'_id': groupId}, {$set: {modifiedAt: new Date()}, $pull: {members: {userId: userId}}})
       } else {
         throw new Meteor.Error(403, 'You are not a member of this group and hence don\'t have access rights')
