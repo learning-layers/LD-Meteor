@@ -62,7 +62,7 @@ class HelpCenter extends Component {
             })}
             <li role='separator' className='divider'></li>
           </ul> : null}
-          <ul className='ld-help-center-menu' role='menu'>
+          <ul className='ld-help-center-menu' role='menu' style={{display: 'none'}}>
             <li role='presentation'><a>FAQ</a></li>
           </ul>
         </div> : null}
