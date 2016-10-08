@@ -47,7 +47,7 @@ class ContextMenu extends Component {
         {showSelectionPossibility ? <li className='cctx-item' onClick={() => this.discussParagraph(this.props.selection, this.state.documentId)}>
           <div className='cctx-item-icon'>
             <div className='discuss-section'>
-              <div className='glyph-minus'><span className='glyphicon glyphicon-minus' /></div>
+              <div style={{display: 'none'}} className='glyph-minus'><span className='glyphicon glyphicon-minus' /></div>
               <div className='glyph-pencil'><span className='glyphicon glyphicon-pencil' /></div>
             </div>
           </div>
