@@ -110,7 +110,7 @@ class SidebarContent extends Component {
         </Panel>
       </Accordion> : null}
       <div className='clearfix'></div>
-      <Tabs defaultActiveKey={1} id='communication-category-tabs'>
+      <Tabs style={{display: 'none'}} defaultActiveKey={1} id='communication-category-tabs'>
         <Tab eventKey={1} title='Friendlist'><FriendList /></Tab>
         {false ? <Tab eventKey={2} title='Groups'>
           <div className='sm-group-chat-wrapper'>
