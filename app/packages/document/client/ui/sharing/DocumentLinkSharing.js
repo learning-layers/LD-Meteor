@@ -24,7 +24,7 @@ export class DocumentLinkSharing extends Component {
     return <div className='document-link-sharing'>
       DocumentLinkSharing
       <ul>
-        <li>
+        <li style={{display: 'none'}}>
           Can edit (users have to login or register)&nbsp;
           {documentAccess && documentAccess.linkCanEdit ? <div>
             <input ref='editLink' type='text' value={Meteor.absoluteUrl() + 'document/' + this.props.documentId + '?action=shared&permission=edit&accessKey=' + documentAccess.linkCanEdit.linkId} />
@@ -34,7 +34,7 @@ export class DocumentLinkSharing extends Component {
             Generate Edit Link
           </button>}
         </li>
-        <li>
+        <li style={{display: 'none'}}>
           Can comment (users have to login or register)&nbsp;
           {documentAccess && documentAccess.linkCanComment ? <div>
             <input ref='commentLink' type='text' value={Meteor.absoluteUrl() + 'document/' + this.props.documentId + '?action=shared&permission=comment&accessKey=' + documentAccess.linkCanComment.linkId} />
