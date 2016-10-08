@@ -25,6 +25,9 @@ class HelpCenter extends Component {
   }
 
   startTour (tour) {
+    this.setState({
+      isOpened: false
+    })
     hopscotch.startTour(tour.hopscotchConfig)
   }
 
@@ -35,7 +38,12 @@ class HelpCenter extends Component {
   }
 
   filterTours (helpTour, tourFilter) {
-    return tourFilter === '' || helpTour.label.toLowerCase().indexOf(tourFilter.toLowerCase()) !== -1
+    try {
+      return tourFilter === '' || helpTour.label.toLowerCase().indexOf(tourFilter.toLowerCase()) !== -1
+    } catch (e) {
+      console.error(e)
+      return false
+    }
   }
 
   render () {

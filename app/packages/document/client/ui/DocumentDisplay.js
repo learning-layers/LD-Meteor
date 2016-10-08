@@ -71,10 +71,10 @@ class EditableDocumentTitleInput extends Component {
           onChange={(event) => this.handleChange(event)}
           disabled={this.state.inputDisabled} />
         <ButtonToolbar className='change-document-title-btns' style={{marginLeft: '7px'}}>
-          <Button className='delete-group-button' bsStyle='success' bsSize='small' onClick={() => this.setNewDocumentTitle()}>
+          <Button className='new-document-title-submit-button' bsStyle='success' bsSize='small' onClick={() => this.setNewDocumentTitle()}>
             <span className='glyphicon glyphicon-ok' />
           </Button>
-          <Button className='delete-group-button' bsSize='small' onClick={() => this.setEditMode(false)}>
+          <Button className='new-document-title-cancel-button' bsSize='small' onClick={() => this.setEditMode(false)}>
             Cancel
           </Button>
         </ButtonToolbar>
@@ -329,7 +329,7 @@ class DocumentDisplay extends Component {
           <DocumentStatusIndicator documentId={document._id} documentStatus={document.maturityLevel} />
           <EditableDocumentTitleInput documentId={document._id} documentTitle={document.title} />
           {isViewMode ? null : <ButtonToolbar className='options-buttons'>
-            <Button className='delete-group-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
+            <Button className='open-sharing-modal-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
               Share&nbsp;<span className='glyphicon glyphicon glyphicon-share-alt' />
             </Button>
             <SubDocumentCounter documentId={document._id} />

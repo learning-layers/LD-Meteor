@@ -68,11 +68,21 @@ class CreateNewComment extends Component {
       parents: null,
       mentions: this.state.mentions
     })
+    this.setState({
+      value: '',
+      mentions: []
+    })
   }
   handleChange (ev, value, plainTextVal, mentions) {
     this.setState({
       value: value,
       mentions: mentions
+    })
+  }
+  closeReply () {
+    this.setState({
+      value: '',
+      mentions: []
     })
   }
   render () {
@@ -90,7 +100,7 @@ class CreateNewComment extends Component {
       </MentionsInput>
       <ButtonToolbar className='options-bar'>
         <Button bsStyle='success' bsSize='small' onClick={() => this.createNewComment()}>Submit Comment</Button>
-        <Button bsSize='small' onClick={() => this.closeReply()}>Close</Button>
+        <Button bsSize='small' onClick={() => this.closeReply()}>Cancel</Button>
       </ButtonToolbar>
       <div className='clearfix'></div>
     </div>
