@@ -112,7 +112,7 @@ class SidebarContent extends Component {
       <div className='clearfix'></div>
       <Tabs defaultActiveKey={1} id='communication-category-tabs'>
         <Tab eventKey={1} title='Friendlist'><FriendList /></Tab>
-        <Tab eventKey={2} title='Groups'>
+        {false ? <Tab eventKey={2} title='Groups'>
           <div className='sm-group-chat-wrapper'>
             <a href='/groupchat'>
               The small variant of the group chats is currently not ready to be rolled out.
@@ -128,7 +128,7 @@ class SidebarContent extends Component {
               In case you want in parallel to work on a document please open living documents twice to do so until the small group chat is available.
             </a>
           </div>
-        </Tab>
+        </Tab> : null}
         <Tab eventKey={3} title='Notifications' disabled>
           <div className='chat-message-wrapper'>
             {false ? <span>Tab 2 content</span> : null}

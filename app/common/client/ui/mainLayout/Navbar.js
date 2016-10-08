@@ -100,7 +100,7 @@ class LDNavbar extends Component {
               </NavItem> : <NavItem eventKey={1} href='/' className={homeNavClasses}>
                 Home
               </NavItem>}
-              {loggedIn ? <NavDropdown eventKey={3} title='Document' id='basic-nav-dropdown'>
+              {loggedIn ? <NavDropdown eventKey={3} title='Document' id='create-document-dropdown'>
                 <MenuItem eventKey={3.1} onClick={() => this.openCreateDocumentModal()}> New Document
                 </MenuItem>
               </NavDropdown> : null}

@@ -330,7 +330,7 @@ class DocumentDisplay extends Component {
           <EditableDocumentTitleInput documentId={document._id} documentTitle={document.title} />
           {isViewMode ? null : <ButtonToolbar className='options-buttons'>
             <Button className='delete-group-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
-              <span className='glyphicon glyphicon glyphicon-share-alt' />
+              Share&nbsp;<span className='glyphicon glyphicon glyphicon-share-alt' />
             </Button>
             <SubDocumentCounter documentId={document._id} />
           </ButtonToolbar>}

@@ -22,7 +22,7 @@ let helpTours = [
   {
     label: 'Find your documents',
     hopscotchConfig: {
-      id: 'hello-hopscotch',
+      id: 'find-your-documents',
       steps: [
         {
           title: 'Finding your documents',
@@ -38,7 +38,7 @@ let helpTours = [
         },
         {
           title: 'Find by active contacts currently working on a document',
-          content: 'Activate this tab please. This tab shows the documents that your contacts currently work on. Contacts are users that are either in your friendlist or in a group were you are also a member.',
+          content: 'Activate this tab please. This tab shows the documents that your contacts currently work on. Contacts are users that are either in your friendlist or in a group were you are also a member of.',
           target: '#dashboard-controlled-tab .fa.fa-users',
           placement: 'bottom'
         },
@@ -47,6 +47,20 @@ let helpTours = [
           content: 'Another way to find your documents is to search in the list of documents you have recently visited. By clicking this tab you can get a list of your recently visited documents.',
           target: '#dashboard-controlled-tab .glyphicon.glyphicon-time',
           placement: 'bottom'
+        }
+      ]
+    }
+  },
+  {
+    label: 'Creating a document',
+    hopscotchConfig: {
+      id: 'create-document',
+      steps: [
+        {
+          title: 'Create a document',
+          content: 'To create a document click the dropdown menu here in the top navigation bar. After that choose the option \'New Document\' and the modal guides you to create a new document.',
+          target: '#create-document-dropdown',
+          placement: 'right'
         }
       ]
     }

@@ -35,13 +35,13 @@ class CommentingArea extends Component {
           <h4>Comments ({documentCommentsCount})</h4>
           <div className='options-top-bar'>
             <ButtonToolbar className='options-bar'>
-              <Button bsSize='small'>Search</Button>
-              <DropdownButton bsSize='small' title='Sort' id='sort-dropdown'>
+              <Button bsSize='small' style={{display: 'none'}}>Search</Button>
+              <DropdownButton bsSize='small' title='Sort' id='sort-dropdown' style={{display: 'none'}}>
                 <MenuItem eventKey='1'>Most recent</MenuItem>
                 <MenuItem eventKey='2'>Oldest</MenuItem>
                 <MenuItem eventKey='2'>Most agreed upon</MenuItem>
               </DropdownButton>
-              <Button bsSize='small'>Subscribe</Button>
+              <Button bsSize='small' style={{display: 'none'}}>Subscribe</Button>
             </ButtonToolbar>
           </div>
           <hr />

@@ -60,7 +60,7 @@ class HelpCenter extends Component {
               return <li role='presentation' key={'helpTour-' + tour.label}><a
                 onClick={() => this.startTour(tour)}>{tour.label}</a></li>
             })}
-            <li role='separator' className='divider'></li>
+            <li role='separator' className='divider' style={{display: 'none'}} />
           </ul> : null}
           <ul className='ld-help-center-menu' role='menu' style={{display: 'none'}}>
             <li role='presentation'><a>FAQ</a></li>
