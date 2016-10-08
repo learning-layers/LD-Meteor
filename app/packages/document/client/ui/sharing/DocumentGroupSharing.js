@@ -88,15 +88,17 @@ class DocumentGroupSharing extends Component {
       confirmButtonColor: '#DD6B55',
       confirmButtonText: 'Yes, unshare it!',
       closeOnConfirm: true
-    }, () => {
-      Meteor.call('removeDocumentGroupAccess', this.props.documentId, groupId, function (err, res) {
-        if (err) {
-          Alert.error('Error: Unsharing the document with group \'' + groupId + '.')
-        }
-        if (res) {
-          Alert.success('Success: Unsharing the document.')
-        }
-      })
+    }, (isConfirm) => {
+      if (isConfirm) {
+        Meteor.call('removeDocumentGroupAccess', this.props.documentId, groupId, function (err, res) {
+          if (err) {
+            Alert.error('Error: Unsharing the document with group \'' + groupId + '.')
+          }
+          if (res) {
+            Alert.success('Success: Unsharing the document.')
+          }
+        })
+      }
     })
   }
   render () {

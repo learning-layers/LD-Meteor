@@ -34,8 +34,10 @@ if (window.applicationCache) {
         confirmButtonText: 'Yes, refresh!',
         closeOnConfirm: true,
         html: false
-      }, () => {
-        window.location.reload()
+      }, (isConfirm) => {
+        if (isConfirm) {
+          window.location.reload()
+        }
       })
     }
   }, false)

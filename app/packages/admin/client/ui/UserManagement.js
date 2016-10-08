@@ -72,8 +72,10 @@ class User extends Component {
       confirmButtonColor: '#DD6B55',
       confirmButtonText: 'Yes, send the verification email!',
       closeOnConfirm: true
-    }, () => {
-      Meteor.call('resendUserVerificationMail', userId)
+    }, (isConfirm) => {
+      if (isConfirm) {
+        Meteor.call('resendUserVerificationMail', userId)
+      }
     })
   }
   openChangeUserRolesModal (userId) {

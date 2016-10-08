@@ -49,8 +49,10 @@ class GroupList extends Component {
         confirmButtonColor: '#DD6B55',
         confirmButtonText: 'Yes, delete the group!',
         closeOnConfirm: true
-      }, () => {
-        Meteor.call('deleteGroup', groupId)
+      }, (isConfirm) => {
+        if (isConfirm) {
+          Meteor.call('deleteGroup', groupId)
+        }
       })
     }
   }
@@ -65,8 +67,10 @@ class GroupList extends Component {
         confirmButtonColor: '#DD6B55',
         confirmButtonText: 'Yes, leave the group!',
         closeOnConfirm: true
-      }, () => {
-        Meteor.call('leaveGroup', groupId)
+      }, (isConfirm) => {
+        if (isConfirm) {
+          Meteor.call('leaveGroup', groupId)
+        }
       })
     }
   }

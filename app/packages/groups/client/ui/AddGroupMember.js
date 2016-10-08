@@ -86,17 +86,19 @@ class AddGroupMember extends Component {
                 confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Yes, remove it!',
                 closeOnConfirm: true
-              }, () => {
-                console.log(item)
-                Meteor.call('removeUserFromGroup', this.props.groupId, item.value, function (err, res) {
-                  if (err) {
-                    Alert.error('Error: Removing tag \'' + item.label + '.')
-                  }
-                  if (res) {
-                    Alert.success('Success: Removed tag \'' + item.label + '.')
-                    console.log(res)
-                  }
-                })
+              }, (isConfirm) => {
+                if (isConfirm) {
+                  console.log(item)
+                  Meteor.call('removeUserFromGroup', this.props.groupId, item.value, function (err, res) {
+                    if (err) {
+                      Alert.error('Error: Removing tag \'' + item.label + '.')
+                    }
+                    if (res) {
+                      Alert.success('Success: Removed tag \'' + item.label + '.')
+                      console.log(res)
+                    }
+                  })
+                }
               })
             }}> &times;</div>
           </div>

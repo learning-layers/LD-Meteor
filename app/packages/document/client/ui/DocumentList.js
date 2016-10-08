@@ -80,8 +80,10 @@ class ListItem extends Component {
         confirmButtonColor: '#DD6B55',
         confirmButtonText: 'Yes, delete it!',
         closeOnConfirm: true
-      }, () => {
-        Meteor.call('deleteDocument', documentId)
+      }, (isConfirm) => {
+        if (isConfirm) {
+          Meteor.call('deleteDocument', documentId)
+        }
       })
     }
   }

@@ -12,8 +12,10 @@ class VerifyEmailAddressPanel extends Component {
       confirmButtonColor: '#DD6B55',
       confirmButtonText: 'Yes, send the verification email!',
       closeOnConfirm: true
-    }, () => {
-      Meteor.call('resendUserVerificationMail', Meteor.userId(), address)
+    }, (isConfirm) => {
+      if (isConfirm) {
+        Meteor.call('resendUserVerificationMail', Meteor.userId(), address)
+      }
     })
   }
   render () {
@@ -61,14 +63,16 @@ class TermsOfService extends Component {
       confirmButtonColor: '#DD6B55',
       confirmButtonText: 'Yes, I agree!',
       closeOnConfirm: true
-    }, () => {
-      Meteor.call('agreeToTOS', function (err, res) {
-        if (err) {
-          Alert.error('Error: Agreeing to our Terms of Service failed!')
-        } else {
-          Alert.success('Success: Agreeing to our Terms of Service')
-        }
-      })
+    }, (isConfirm) => {
+      if (isConfirm) {
+        Meteor.call('agreeToTOS', function (err, res) {
+          if (err) {
+            Alert.error('Error: Agreeing to our Terms of Service failed!')
+          } else {
+            Alert.success('Success: Agreeing to our Terms of Service')
+          }
+        })
+      }
     })
   }
   render () {

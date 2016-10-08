@@ -78,16 +78,18 @@ class DocumentTags extends Component {
                 confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Yes, remove it!',
                 closeOnConfirm: true
-              }, () => {
-                Meteor.call('removeTagFromDocument', item._id, function (err, res) {
-                  if (err) {
-                    Alert.error('Error: Removing tag \'' + item.label + '.')
-                  }
-                  if (res) {
-                    Alert.success('Success: Removed tag \'' + item.label + '.')
-                    console.log(res)
-                  }
-                })
+              }, (isConfirm) => {
+                if (isConfirm) {
+                  Meteor.call('removeTagFromDocument', item._id, function (err, res) {
+                    if (err) {
+                      Alert.error('Error: Removing tag \'' + item.label + '.')
+                    }
+                    if (res) {
+                      Alert.success('Success: Removed tag \'' + item.label + '.')
+                      console.log(res)
+                    }
+                  })
+                }
               })
             }}> &times;</div>
           </div>

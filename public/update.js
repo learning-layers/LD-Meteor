@@ -17,8 +17,10 @@ window.applicationCache.addEventListener('updateready', function (e) {
       confirmButtonText: 'Yes, refresh!',
       closeOnConfirm: true,
       html: false
-    }, () => {
-      window.location.reload()
+    }, (isConfirm) => {
+      if (isConfirm) {
+        window.location.reload()
+      }
     })
   }
 }, false)

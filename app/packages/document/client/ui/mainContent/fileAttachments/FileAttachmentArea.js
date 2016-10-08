@@ -42,8 +42,20 @@ class FileAttachmentArea extends Component {
       open: !this.state.open
     })
   }
-  deleteAttachment (attachmentId) {
-    Meteor.call('deleteDocumentAttachment', attachmentId, this.props.documentId)
+  deleteAttachment (fileAttachment) {
+    global.window.swal({
+      title: 'Remove attachment',
+      text: 'Do you want to remove the attachment \'' + fileAttachment.name + '?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: 'Yes, remove it!',
+      closeOnConfirm: true
+    }, (isConfirm) => {
+      if (isConfirm) {
+        Meteor.call('deleteDocumentAttachment', fileAttachment._id, this.props.documentId)
+      }
+    })
   }
   render () {
     const { documentId, fileAttachments } = this.props
@@ -86,7 +98,7 @@ class FileAttachmentArea extends Component {
                   {fileAttachment.meta && fileAttachment.meta.downloads ? <span>{fileAttachment.meta.downloads}</span> : <span>0</span>}
                 </td>
                 <td>
-                  <button className='btn btn-sm btn-danger' onClick={() => this.deleteAttachment(fileAttachment._id)}>Delete</button>
+                  <button className='btn btn-sm btn-danger' onClick={() => this.deleteAttachment(fileAttachment)}>Delete</button>
                 </td>
               </tr>
             })}
