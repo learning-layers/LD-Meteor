@@ -18,6 +18,7 @@ import SubDocumentCounter from './SubDocumentCounter'
 import SubDocumentList from './SubDocumentList'
 import DocumentStatusIndicator from './DocumentStatusIndicator'
 import { Groups } from '../../../groups/lib/collections'
+import FullScreenEditorModal from './mainContent/contentEditor/FullScreenEditorModal'
 
 class EditableDocumentTitleInput extends Component {
   constructor (props) {
@@ -167,6 +168,14 @@ class DocumentDisplay extends Component {
       this.state.openCreateDocumentModal = ReactDOM.render(<CreateDocumentModal selection={selection} parentId={parentId} />, renderToElement)
     } else {
       this.state.openCreateDocumentModal.open(selection, parentId)
+    }
+  }
+  openFullscreenEditorModal () {
+    let renderToElement = this.refs.fullScreenEditorModal
+    if (!this.state.openFullScreenEditorModal) {
+      this.state.openFullScreenEditorModal = ReactDOM.render(<FullScreenEditorModal document={this.props.document} permissionLevel={this.getPermissionLevel(this.props.documentAccess)} />, renderToElement)
+    } else {
+      this.state.openFullScreenEditorModal.open(this.props.document, this.getPermissionLevel(this.props.documentAccess))
     }
   }
   changeTab (tabName) {
@@ -329,6 +338,9 @@ class DocumentDisplay extends Component {
           <DocumentStatusIndicator documentId={document._id} documentStatus={document.maturityLevel} />
           <EditableDocumentTitleInput documentId={document._id} documentTitle={document.title} />
           {isViewMode ? null : <ButtonToolbar className='options-buttons'>
+            <Button className='open-sharing-modal-button' bsSize='small' onClick={() => this.openFullscreenEditorModal()}>
+              Fullscreen&nbsp;<span className='glyphicon glyphicon-resize-full' />
+            </Button>
             <Button className='open-sharing-modal-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
               Share&nbsp;<span className='glyphicon glyphicon glyphicon-share-alt' />
             </Button>
@@ -348,6 +360,7 @@ class DocumentDisplay extends Component {
       </div>
       {this.state.showSubDocuments ? <span><SubDocumentList documentId={document._id} /><div className='clearfix' /></span> : null}
       <div ref='createDocumentModal'></div>
+      <div ref='fullScreenEditorModal'></div>
       {isViewMode ? null : <CommentingArea documentId={document._id} />}
       <textarea id='tinymceTextarea' name='tinymceTextarea' />
       <iframe id='printf' name='printf'></iframe>

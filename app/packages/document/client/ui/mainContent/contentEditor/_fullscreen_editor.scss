@@ -1,0 +1,13 @@
+#fullscreen-editor {
+  .modal-dialog {
+    width: 98%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .modal-body {
+    height: calc(100vh - 148px);
+  }
+  #content-editor, .etherpad-editor-wrapper, #etherpadEditorIframe {
+    height: 100%;
+  }
+}
