@@ -36,7 +36,7 @@ class User extends Component {
   }
 
   componentDidMount () {
-    Meteor.call('getRegisteredEmails', this.props.user._id, (err, res) => {
+    /* Meteor.call('getRegisteredEmails', this.props.user._id, (err, res) => {
       if (err) {
         //
       }
@@ -45,7 +45,7 @@ class User extends Component {
           registeredEmails: res
         })
       }
-    })
+    })*/
     Meteor.call('getRoles', this.props.user._id, (err, res) => {
       if (err) {
         //
@@ -88,20 +88,23 @@ class User extends Component {
   }
   render () {
     const { user } = this.props
+    console.warn(user)
     let email = user.profile.email
     let isVerified = false
     let foundVerifiedEmail = false
-    this.state.registeredEmails.forEach(function (registeredEmail) {
-      if (registeredEmail.verified) {
-        isVerified = true
-        if (!email) {
+    if (user.registered_emails) {
+      user.registered_emails.forEach(function (registeredEmail) {
+        if (registeredEmail.verified) {
+          isVerified = true
+          if (!email) {
+            email = registeredEmail.address
+            foundVerifiedEmail = true
+          }
+        } else if (!foundVerifiedEmail) {
           email = registeredEmail.address
-          foundVerifiedEmail = true
         }
-      } else if (!foundVerifiedEmail) {
-        email = registeredEmail.address
-      }
-    })
+      })
+    }
     if (!email && user.emails) {
       user.emails.forEach(function (profileEmail) {
         if (profileEmail.verified) {
