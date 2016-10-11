@@ -15,6 +15,16 @@ function onPropsChange (props, onData) {
 }
 
 class SubDocumentCounter extends Component {
+  componentDidMount () {
+    if (this.props.subdocumentsCount > 0) {
+      EventEmitterInstance.emit('doc-open-subdocs', true)
+    }
+  }
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.subdocumentsCount > 0) {
+      EventEmitterInstance.emit('doc-open-subdocs', true)
+    }
+  }
   toggleSubDocumentArea () {
     EventEmitterInstance.emit('doc-toggle-subdocs', false)
   }

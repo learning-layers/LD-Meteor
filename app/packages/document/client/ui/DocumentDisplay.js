@@ -115,6 +115,7 @@ class DocumentDisplay extends Component {
     this.createSubDocumentSubscription = EventEmitterInstance.addListener('open-create-sub-document-modal', (selection, parentId) => {
       this.openCreateSubDocumentModal(selection, parentId)
     })
+    this.openShowSubdocumentsSubscription = EventEmitterInstance.addListener('doc-open-subdocs', (open) => { this.toggleShowSubdocuments(open) })
     this.toggleShowSubdocumentsSubscription = EventEmitterInstance.addListener('doc-toggle-subdocs', () => { this.toggleShowSubdocuments() })
     if (this.props.document.isSubDocument) {
       Meteor.setTimeout(() => {
@@ -144,6 +145,9 @@ class DocumentDisplay extends Component {
     }
     if (this.toggleShowSubdocumentsSubscription) {
       this.toggleShowSubdocumentsSubscription.remove()
+    }
+    if (this.openShowSubdocumentsSubscription) {
+      this.openShowSubdocumentsSubscription.remove()
     }
   }
   componentWillReceiveProps (nextProps) {
@@ -288,10 +292,16 @@ class DocumentDisplay extends Component {
       return 'view'
     }
   }
-  toggleShowSubdocuments () {
-    this.setState({
-      showSubDocuments: !this.state.showSubDocuments
-    })
+  toggleShowSubdocuments (open) {
+    if (open) {
+      this.setState({
+        showSubDocuments: true
+      })
+    } else {
+      this.setState({
+        showSubDocuments: !this.state.showSubDocuments
+      })
+    }
   }
   render () {
     let { document } = this.props
