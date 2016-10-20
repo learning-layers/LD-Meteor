@@ -109,6 +109,12 @@ class Comment extends Component {
       commentText = this.props.comment.text
     }
     this.refs.commentContent.setState({value: commentText})
+    this.setState({
+      repliesOpened: true,
+      replyActive: false,
+      editMode: false,
+      changed: false
+    })
   }
   handleSaveClick () {
     Meteor.call('updateComment', this.props.comment._id, {
