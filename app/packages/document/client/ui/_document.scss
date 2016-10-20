@@ -408,6 +408,62 @@
   }
 }
 
+#subscribe-btn {
+  padding: 5px;
+  padding-bottom: 4px;
+  i {
+    margin-right: 5px;
+  }
+}
+
+.open-fullscreen-modal-button {
+  font-size: 20px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  span {
+    float: left;
+    margin-top: -2px;
+  }
+}
+
+button[data-tooltip]{
+  position: relative;
+}
+
+button[data-tooltip]:before {
+  position: absolute;
+  left: 0;
+  top: 22px;
+  background-color: #000000;
+  color: #ffffff;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 5px;
+  padding: 0 15px;
+  content: attr(data-tooltip);
+  white-space: nowrap;
+  display: none;
+  z-index: 1;
+  font-size: 12px;
+}
+
+button[data-tooltip]:after {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  border-top: 7px solid #000000;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  content: "";
+  display: none;
+  transform: rotate(180deg);
+  z-index: 1;
+}
+
+button[data-tooltip]:hover:after, button[data-tooltip]:hover:before {
+  display: block;
+}
+
 @import './_doc_status.scss';
 @import './sharing/_sharing';
 @import './mainContent/fileAttachments/_fileAttachments.scss';

@@ -44,7 +44,19 @@ class DocumentStatusIndicator extends Component {
       documentStatusText = 'Click to choose'
     } else {
       switch (documentStatus) {
+        case 'draft':
+          documentStatusText = 'Draft'
+          break
+        case 'agreed upon':
+          documentStatusText = 'Agreed upon'
+          break
+        case 'stable':
+          documentStatusText = 'Stable'
+          break
         case 'default':
+          documentStatusText = 'Indicate maturity'
+          break
+        default:
           documentStatusText = 'Indicate maturity'
           break
       }

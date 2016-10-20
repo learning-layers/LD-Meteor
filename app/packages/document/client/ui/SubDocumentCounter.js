@@ -30,7 +30,7 @@ class SubDocumentCounter extends Component {
   }
   render () {
     const { subdocumentsCount } = this.props
-    return <Button className='subdocument-toggle' bsSize='small' onClick={() => this.toggleSubDocumentArea()}>
+    return <Button className='subdocument-toggle' bsSize='small' onClick={() => this.toggleSubDocumentArea()} data-tooltip='Subdocs'>
       <span className='glyphicon glyphicon-duplicate' />
       <Badge>{subdocumentsCount}</Badge>
     </Button>

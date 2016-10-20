@@ -7,6 +7,7 @@ import CommentingArea from './comment/CommentingArea'
 import ContentEditor from './mainContent/contentEditor/ContentEditor'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
+import SubscribeButton from './SubscribeButton'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
 import DocumentSharingModal from './sharing/DocumentSharingModal'
 import AttachmentsBar from './mainContent/AttachmentsBar'
@@ -348,10 +349,11 @@ class DocumentDisplay extends Component {
           <DocumentStatusIndicator documentId={document._id} documentStatus={document.maturityLevel} />
           <EditableDocumentTitleInput documentId={document._id} documentTitle={document.title} />
           {isViewMode ? null : <ButtonToolbar className='options-buttons'>
-            <Button className='open-sharing-modal-button' bsSize='small' onClick={() => this.openFullscreenEditorModal()}>
-              Fullscreen&nbsp;<span className='glyphicon glyphicon-resize-full' />
+            <SubscribeButton documentId={document._id} />
+            <Button className='open-fullscreen-modal-button' bsSize='small' onClick={() => this.openFullscreenEditorModal()} data-tooltip='Fullsceen'>
+              <span className='glyphicon glyphicon-resize-full' />
             </Button>
-            <Button className='open-sharing-modal-button' bsSize='small' onClick={() => this.openDocumentSharingModal()}>
+            <Button className='open-sharing-modal-button' bsSize='small' onClick={() => this.openDocumentSharingModal()} data-tooltip='Share'>
               Share&nbsp;<span className='glyphicon glyphicon glyphicon-share-alt' />
             </Button>
             <SubDocumentCounter documentId={document._id} />
