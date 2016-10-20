@@ -32,7 +32,8 @@ function onPropsChange (props, onData) {
     } else {
       commentRepliesCount = DocumentComments.find({
         documentId: props.comment.documentId,
-        parents: { $all: [ path ] }
+        parents: { $all: [ path ] },
+        movedToRevisionsAt: {$exists: false}
       }).count()
     }
     const author = Meteor.users.findOne({'_id': props.comment.createdBy})

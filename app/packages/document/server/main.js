@@ -259,7 +259,11 @@ Meteor.publish('documentComments', function (args) {
     documentId: String
   })
   if (this.userId) { // TODO check document access
-    return DocumentComments.find({ documentId: args.documentId, parents: { $type: 10 } })
+    return DocumentComments.find({
+      documentId: args.documentId,
+      parents: { $type: 10 },
+      movedToRevisionsAt: {$exists: false}
+    })
   } else {
     throw new Meteor.Error(401)
   }
@@ -270,7 +274,10 @@ Meteor.publish('documentCommentsCount', function (args) {
     documentId: String
   })
   if (this.userId) { // TODO check document access
-    Counts.publish(this, 'documentCommentsCount', DocumentComments.find({ documentId: args.documentId }))
+    Counts.publish(this, 'documentCommentsCount', DocumentComments.find({
+      documentId: args.documentId,
+      movedToRevisionsAt: {$exists: false}
+    }))
   } else {
     throw new Meteor.Error(401)
   }
@@ -293,7 +300,11 @@ Meteor.publish('commentReplies', function (args) {
     parent: [String]
   })
   if (this.userId) { // TODO check document access
-    return DocumentComments.find({ documentId: args.documentId, parents: { $all: [ args.parent ] } })
+    return DocumentComments.find({
+      documentId: args.documentId,
+      parents: { $all: [ args.parent ] },
+      movedToRevisionsAt: {$exists: false}
+    })
   } else {
     throw new Meteor.Error(401)
   }
@@ -307,7 +318,8 @@ Meteor.publish('commentRepliesCount', function (args) {
   if (this.userId) { // TODO check document access
     Counts.publish(this, 'crc-' + args.parent.join(','), DocumentComments.find({
       documentId: args.documentId,
-      parents: { $all: [ args.parent ] }
+      parents: { $all: [ args.parent ] },
+      movedToRevisionsAt: {$exists: false}
     }))
   } else {
     throw new Meteor.Error(401)

@@ -24,7 +24,10 @@ function onPropsChange (props, onData) {
     if (Meteor.isClient) {
       documentCommentsCount = Counts.get('documentCommentsCount')
     } else {
-      documentCommentsCount = DocumentComments.find({ documentId: props.documentId }).count()
+      documentCommentsCount = DocumentComments.find({
+        documentId: props.documentId,
+        movedToRevisionsAt: {$exists: false}
+      }).count()
     }
     onData(null, {documentComments, documentCommentsCount})
   }
