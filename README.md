@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/learning-layers/LD-Meteor.svg?branch=master)](https://travis-ci.org/learning-layers/LD-Meteor)
 [![bitHound Code](https://www.bithound.io/github/learning-layers/LD-Meteor/badges/code.svg)](https://www.bithound.io/github/learning-layers/LD-Meteor)
 [![bitHound Dependencies](https://www.bithound.io/github/learning-layers/LD-Meteor/badges/dependencies.svg)](https://www.bithound.io/github/learning-layers/LD-Meteor/master/dependencies/npm)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
@@ -6,6 +5,9 @@
 <a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
 *This project is just recently set up and not ready to use yet. Release plan will come soon.*
+
+[![Build Status](https://travis-ci.org/learning-layers/LD-Meteor.svg?branch=master)](https://travis-ci.org/learning-layers/LD-Meteor)
+*The current build status only covers code linting since there are problems to get the test running currently. This will be resolved by changing the project structure in one of the upcoming commits.*
 
 <a name="ld-meteor"/>
 # LD-Meteor
