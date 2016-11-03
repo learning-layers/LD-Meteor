@@ -25,14 +25,14 @@ class ActiveUserPositions extends Component {
             </tr>
           </thead>
           <tbody>
-          {userPositions.map(function (userPosition) {
-            const user = Meteor.users.findOne({_id: userPosition.userId})
-            const document = Documents.findOne({_id: userPosition.elementId})
-            return <tr key={'user-pos-' + userPosition._id}>
-              <td>{user.profile ? user.profile.name : userPosition.userId}</td>
-              <td><a href={'/document/' + userPosition.elementId}><span className='glyphicon glyphicon-file' /> {document ? document.title : userPosition.elementId}</a></td>
-            </tr>
-          })}
+            {userPositions.map(function (userPosition) {
+              const user = Meteor.users.findOne({_id: userPosition.userId})
+              const document = Documents.findOne({_id: userPosition.elementId})
+              return <tr key={'user-pos-' + userPosition._id}>
+                <td>{user.profile ? user.profile.name : userPosition.userId}</td>
+                <td><a href={'/document/' + userPosition.elementId}><span className='glyphicon glyphicon-file' /> {document ? document.title : userPosition.elementId}</a></td>
+              </tr>
+            })}
           </tbody>
         </table>
       </div>

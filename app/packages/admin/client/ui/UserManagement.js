@@ -45,7 +45,7 @@ class User extends Component {
           registeredEmails: res
         })
       }
-    })*/
+    }) */
     Meteor.call('getRoles', this.props.user._id, (err, res) => {
       if (err) {
         //
@@ -133,11 +133,11 @@ class User extends Component {
       <td className='user-id'>{user._id}</td>
       <td className='user-email'>{email}</td>
       <td className='user-is-online'>
-        <div className={onlineStatusClasses}></div>
+        <div className={onlineStatusClasses} />
       </td>
       <td className='user-verified'>
-        {isVerified ? <div className={verificationClasses}></div> : <div>
-          <div className={verificationClasses}></div>
+        {isVerified ? <div className={verificationClasses} /> : <div>
+          <div className={verificationClasses} />
           <button className='btn btn-sm btn-default' onClick={() => this.resendVerificationEmail(user._id)}>Resend verification mail</button>
         </div>
         }
@@ -158,7 +158,7 @@ class User extends Component {
             })}
           </ol> : null}
         </div>
-        <div ref='changeRolesModal'></div>
+        <div ref='changeRolesModal' />
         <button className='btn btn-success' onClick={() => this.openChangeUserRolesModal(user._id)}>Change</button>
       </td>
     </tr>
@@ -179,17 +179,17 @@ class UserManagement extends Component {
         <div className='table-responsive'>
           <table className='table table-striped table-bordered table-hover'>
             <thead>
-            {isSuperAdmin ? <tr>
-              <th>userId</th>
-              <th>email address</th>
-              <th>isOnline</th>
-              <th>isVerified</th>
-              <th>hasRoles</th>
-            </tr> : <tr>
-              <th>userId</th>
-              <th>email address</th>
-              <th>isOnline</th>
-            </tr>}
+              {isSuperAdmin ? <tr>
+                <th>userId</th>
+                <th>email address</th>
+                <th>isOnline</th>
+                <th>isVerified</th>
+                <th>hasRoles</th>
+              </tr> : <tr>
+                <th>userId</th>
+                <th>email address</th>
+                <th>isOnline</th>
+              </tr>}
             </thead>
             <tbody>
               {users.map((user) => {

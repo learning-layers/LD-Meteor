@@ -83,6 +83,7 @@ class LDNavbar extends Component {
           break
       }
     }
+    let dontShow = false
     return (
       <div className={navbarClassNames}>
         <Navbar fluid>
@@ -104,7 +105,7 @@ class LDNavbar extends Component {
                 <MenuItem eventKey={3.1} onClick={() => this.openCreateDocumentModal()}> New Document
                 </MenuItem>
               </NavDropdown> : null}
-              {false && loggedIn ? <NavItem id='nav-app-search' eventKey={4} href='#'>
+              {dontShow && loggedIn ? <NavItem id='nav-app-search' eventKey={4} href='#'>
                 <Navbar.Form pullLeft>
                   <FormGroup>
                     <FormControl type='text' placeholder='Search' />
@@ -126,7 +127,7 @@ class LDNavbar extends Component {
             </NavItem>
           </Nav>
         </Navbar>
-        <div ref='createDocumentModal'></div>
+        <div ref='createDocumentModal' />
       </div>
     )
   }

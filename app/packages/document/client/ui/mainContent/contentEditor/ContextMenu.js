@@ -44,30 +44,27 @@ class ContextMenu extends Component {
     return (
       <div className='cctx' style={style} onMouseLeave={() => this.handleMouseLeave()}>
         <ul>
-        {showSelectionPossibility ? <li className='cctx-item' onClick={() => this.discussParagraph(this.props.selection, this.state.documentId)}>
-          <div className='cctx-item-icon'>
-            <div className='discuss-section'>
-              <div style={{display: 'none'}} className='glyph-minus'><span className='glyphicon glyphicon-minus' /></div>
-              <div className='glyph-pencil'><span className='glyphicon glyphicon-pencil' /></div>
+          {showSelectionPossibility ? <li className='cctx-item' onClick={() => this.discussParagraph(this.props.selection, this.state.documentId)}>
+            <div className='cctx-item-icon'>
+              <div className='discuss-section'>
+                <div style={{display: 'none'}} className='glyph-minus'><span className='glyphicon glyphicon-minus' /></div>
+                <div className='glyph-pencil'><span className='glyphicon glyphicon-pencil' /></div>
+              </div>
             </div>
-          </div>
-          Start a conversation for this paragraph
-        </li> : null}
+            Start a conversation for this paragraph
+          </li> : null}
           {showSelectionPossibility ? <li className='cctx-separator' /> : null}
           <li className='cctx-item' onClick={() => this.printDocument()}>
-            <div className='cctx-item-icon'>
-            </div>
+            <div className='cctx-item-icon' />
             Print this document
           </li>
           <li className='cctx-separator' />
           <li className='cctx-item' onClick={() => this.exportToWord()}>
-            <div className='cctx-item-icon'>
-            </div>
+            <div className='cctx-item-icon' />
             Export this document to a word file
           </li>
           <li style={{display: 'none'}} className='cctx-item' onClick={() => this.exportToPDF()}>
-            <div className='cctx-item-icon'>
-            </div>
+            <div className='cctx-item-icon' />
             Export this document to a pdf file
           </li>
         </ul>

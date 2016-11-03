@@ -62,7 +62,7 @@ class MainLayout extends Component {
   componentDidMount () {
     // Use Meteor Blaze to render the consent form
     /* this.cookieConsentView = Blaze.render(Template.cookieConsentImply,
-      ReactDOM.findDOMNode(this.refs.cookieConsentForm))*/
+      ReactDOM.findDOMNode(this.refs.cookieConsentForm)) */
     this.statusView = Blaze.render(Template.status,
       ReactDOM.findDOMNode(this.refs.status))
     setTimeout(function () {
@@ -103,7 +103,7 @@ class MainLayout extends Component {
     }
     return (
       <div>
-        <div ref='status'></div>
+        <div ref='status' />
         <header>
           {this.props.header}
         </header>

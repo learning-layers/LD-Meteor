@@ -66,7 +66,7 @@ class GroupChatChannel extends Component {
           </li>
         })}
       </ul>
-      <div ref='addChatTopicModal'></div>
+      <div ref='addChatTopicModal' />
     </span>
   }
 }

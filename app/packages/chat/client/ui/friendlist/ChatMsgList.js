@@ -118,7 +118,7 @@ class ChatMsgList extends Component {
       // window.alert('Loading...')
       /* this.setState({
         isInfiniteLoading: true
-      })*/
+      }) */
       EventEmitterInstance.emit('chat-infinit-loading', true)
       this.state.isInfiniteLoading = true
       Meteor.setTimeout(function () {
@@ -135,14 +135,14 @@ class ChatMsgList extends Component {
             if (err) {
               /* this.setState({
                 isInfiniteLoading: false
-              })*/
+              }) */
               EventEmitterInstance.emit('chat-infinit-loading', false)
               this.state.isInfiniteLoading = false
             }
             if (res) {
               /* this.setState({
                 isInfiniteLoading: false
-              })*/
+              }) */
               EventEmitterInstance.emit('chat-infinit-loading', false)
               this.state.isInfiniteLoading = false
             }

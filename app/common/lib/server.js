@@ -5,4 +5,4 @@
   // Could be linked to: https://github.com/meteor/meteor/issues/6247
   require('events').EventEmitter.prototype._maxListeners = 100
   process.setMaxListeners(0)
-}*/
+} */

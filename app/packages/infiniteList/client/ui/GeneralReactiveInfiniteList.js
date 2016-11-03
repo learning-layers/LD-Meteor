@@ -76,7 +76,7 @@ class ReactiveInfiniteList extends Component {
           if (err) {
             /* this.setState({
               isInfiniteLoading: false
-            })*/
+            }) */
           }
           if (res) {
             this.setState({
@@ -117,7 +117,7 @@ class ReactiveInfiniteList extends Component {
               return <div className='div-table-col' style={{width: colWidth + 'px'}}>{headerLabel}</div>
             }
           })}
-          <div className='clearfix'></div>
+          <div className='clearfix' />
         </div>
         <div className='div-table infinite-example' ref='wrapper'>
           {this.state.gotDimenstions ? <Infinite

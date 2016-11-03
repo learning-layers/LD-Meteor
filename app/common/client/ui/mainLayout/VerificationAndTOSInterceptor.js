@@ -36,7 +36,7 @@ class VerifyEmailAddressPanel extends Component {
                 <td>{registeredEmail.address}</td>
                 <td>
                   {registeredEmail.verified ? 'verified' : <span>
-                    <div className='status-indicator-base not-verified'></div>
+                    <div className='status-indicator-base not-verified' />
                     <button className='btn btn-default' onClick={() => this.resendVerificationEmail(registeredEmail.address)}>Send verification email</button>
                   </span>}
                 </td>

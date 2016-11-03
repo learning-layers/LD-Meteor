@@ -35,15 +35,15 @@ class EncryptionTest extends Component {
         <input ref='newItem' className='form-control' placeholder='new encrypted test item' onChange={(event) => this.handleNewItemChange(event)} value={this.state.newItemInputValue} />
         <button className='btn btn-success' onClick={() => this.addNewTestItem()}>Add new encrypted test item</button>
         {tests.length > 0 ? <ul className='ld-testlist'>
-            {tests.map(function (test) {
-              console.log(test)
-              if (test.valid === false) {
-                return null // filter out invalid items
-              }
-              return <li key={'test-' + test._id}>
-                {test.data}
-              </li>
-            })}
+          {tests.map(function (test) {
+            console.log(test)
+            if (test.valid === false) {
+              return null // filter out invalid items
+            }
+            return <li key={'test-' + test._id}>
+              {test.data}
+            </li>
+          })}
         </ul> : <ul className='ld-testlist'>
           <li>'Nothing to display'</li>
         </ul>}

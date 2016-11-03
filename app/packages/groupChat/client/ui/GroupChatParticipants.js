@@ -38,11 +38,12 @@ class GroupChatParticipants extends Component {
     if (collapsed) {
       groupChatParticipantsClasses += ' collapsed'
     }
+    let constFalse = false
     return <div id='g-group-chat-participants' className={groupChatParticipantsClasses}>
       {!this.state.collapsed ? <div className='g-scroll'>
         {groupId} - {groupName} - {topicId} - {topicName}
       </div> : <div className='participants'>
-        {false ? <span>
+        {constFalse ? <span>
           <div style={{display: 'block', marginLeft: '-3px'}}>
             <i className='fa fa-users' />
           </div>
@@ -50,7 +51,7 @@ class GroupChatParticipants extends Component {
           Participants
         </span> : null}
       </div>}
-      {false ? <div className='g-close-handle' onClick={() => this.toggleChatParticipantsSidebar()}>
+      {constFalse ? <div className='g-close-handle' onClick={() => this.toggleChatParticipantsSidebar()}>
         {collapsed ? <span className='glyphicon glyphicon-chevron-left' /> : <span className='glyphicon glyphicon-chevron-right' />}
       </div> : null}
     </div>

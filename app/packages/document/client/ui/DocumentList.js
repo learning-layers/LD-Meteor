@@ -194,12 +194,12 @@ class DocumentList extends Component {
           <div className='div-table-col last'>
             Options
           </div>
-          <div className='clearfix'></div>
+          <div className='clearfix' />
         </div>
         <div className='div-table infinite-example'>
           <div className=''>
             <div>
-              <div style={{width: '100%', height: '0px'}}></div>
+              <div style={{width: '100%', height: '0px'}} />
               <div key='doc-list-loading' className='div-table-row document-list-item'>
                 <div className='div-table-col' style={{display: 'block', width: '100%', textAlign: 'center'}}>
                   Loading...

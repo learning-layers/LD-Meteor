@@ -71,7 +71,7 @@ Template.AdminDashboardEdit.events({
 Template.AdminDashboardEdit.helpers({
   fadmin_doc: function () {
     let editcollectionName = FlowRouter.getParam('collectionName')
-    let editId	= FlowRouter.getParam('_id')
+    let editId = FlowRouter.getParam('_id')
     console.log('editcollectionName=' + editcollectionName)
     console.log('editId=' + editId)
     if (Meteor.isClient) {
@@ -235,7 +235,7 @@ class FlowDbAdminLayout extends Component {
     if (!Roles.userIsInRole(Meteor.userId(), ['admin'])) {
       Meteor.call('adminCheckAdmin')
       // if (typeof AdminConfig.nonAdminRedirectRoute == 'string')
-      //	FlowRouter.go(AdminController.nonAdminRedirectRoute);
+      // FlowRouter.go(AdminController.nonAdminRedirectRoute);
     }
     switch (props.content) {
       case 'AdminDashboard':
@@ -271,8 +271,7 @@ class FlowDbAdminLayout extends Component {
   render () {
     return <div>
       {this.props.content}
-      <div id='fAdminLayout' ref='fAdminLayout' style={{visibility: 'hidden', height: '0px', width: '0px'}}>
-      </div>
+      <div id='fAdminLayout' ref='fAdminLayout' style={{visibility: 'hidden', height: '0px', width: '0px'}} />
     </div>
   }
 }

@@ -40,6 +40,6 @@ fileUpload.interceptors.push({
   onAfterUpload: function (file) {
     /* if (file && file.meta && file.meta.parent && file.meta.parent.collection === 'document' && file.meta.parent.elementId && file.meta.parent.uploadType === 'attachment') {
       DocumentInfoCaches.update({documentId: file.meta.parent.elementId}, {$inc: {fileAttachmentCounter: 1}})
-    }*/
+    } */
   }
 })

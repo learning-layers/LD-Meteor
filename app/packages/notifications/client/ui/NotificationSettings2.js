@@ -219,7 +219,7 @@ class NotificationSettingsUI extends Component {
       <table style={{display: 'none'}} className='table table-bordered table-striped table-hover table-condensed'>
         <thead>
           <tr>
-            <th></th>
+            <th />
             <th>yes</th>
             <th>email</th>
           </tr>

@@ -122,7 +122,7 @@ class CommentReply extends Component {
           <Button bsStyle='success' bsSize='small' onClick={() => this.submitReply()}>Submit Reply</Button>
           <Button bsSize='small' onClick={() => this.closeReply()}>Close</Button>
         </ButtonToolbar>
-        <div className='clearfix'></div>
+        <div className='clearfix' />
       </div>
       <hr className='no-margin-top' />
     </div>

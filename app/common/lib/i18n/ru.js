@@ -2,7 +2,7 @@
 /* if (!global.i18nConfig) {
   global.i18nConfig = {}
 }
-global.i18nConfig*/
+global.i18nConfig */
 
 const ru = {
   main: {

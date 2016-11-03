@@ -35,7 +35,7 @@ class CoveredRole extends Component {
   render () {
     let roleActivationClasses = classNames({ 'status-indicator-base': true, 'role-active': this.props.covered, 'not-role-active': !this.props.covered })
     return <td className='js-toggle-role'>
-      <div className={roleActivationClasses} onClick={() => this.toggleRole()}></div>
+      <div className={roleActivationClasses} onClick={() => this.toggleRole()} />
     </td>
   }
 }

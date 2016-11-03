@@ -85,6 +85,7 @@ class SidebarContent extends Component {
     let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(message, emotes)
     console.log(messageWithEmotesObject)
     let loggedIn = Meteor.userId()
+    let constFalse = false
     return <div className='ld-sidebar-content' ref='wrapper'>
       {this.props.open ? <div className='close-handle' onClick={() => this.props.onSetSidebarOpen(false)}>
         <span className='glyphicon glyphicon-chevron-right' />
@@ -97,10 +98,10 @@ class SidebarContent extends Component {
           <span className='glyphicon glyphicon-off' />
         </NavItem>
       </Nav>
-      <div className='clearfix'></div>
+      <div className='clearfix' />
       {this.state.windowWidth < 768 ? <Accordion defaultActiveKey='1'>
         <Panel header='Navigation' eventKey='1'>
-          <div ref='createDocumentModal'></div>
+          <div ref='createDocumentModal' />
           <NavItem eventKey={1} href='/'>
             Home
           </NavItem>
@@ -109,10 +110,10 @@ class SidebarContent extends Component {
           </NavDropdown> : null}
         </Panel>
       </Accordion> : null}
-      <div className='clearfix'></div>
+      <div className='clearfix' />
       <Tabs style={{display: 'none'}} defaultActiveKey={1} id='communication-category-tabs'>
         <Tab eventKey={1} title='Friendlist'><FriendList /></Tab>
-        {false ? <Tab eventKey={2} title='Groups'>
+        {constFalse ? <Tab eventKey={2} title='Groups'>
           <div className='sm-group-chat-wrapper'>
             <a href='/groupchat'>
               The small variant of the group chats is currently not ready to be rolled out.
@@ -131,8 +132,8 @@ class SidebarContent extends Component {
         </Tab> : null}
         <Tab eventKey={3} title='Notifications' disabled>
           <div className='chat-message-wrapper'>
-            {false ? <span>Tab 2 content</span> : null}
-            {false ? messageObject.lines.map(function (line) {
+            {constFalse ? <span>Tab 2 content</span> : null}
+            {constFalse ? messageObject.lines.map(function (line) {
               return <div style={{display: 'block', height: '17px'}}>{line}</div>
             }) : null}
             {messageWithEmotesObject.lines.map(function (line, i) {

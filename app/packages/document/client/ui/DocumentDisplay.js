@@ -335,7 +335,7 @@ class DocumentDisplay extends Component {
                 </a>
               </li>
             </ol>
-            <div className='clearfix'></div>
+            <div className='clearfix' />
           </div>
           <hr />
         </span> : null}
@@ -358,7 +358,7 @@ class DocumentDisplay extends Component {
             </Button>
             <SubDocumentCounter documentId={document._id} />
           </ButtonToolbar>}
-          {isViewMode ? null : <div ref='manageSharingModal'></div>}
+          {isViewMode ? null : <div ref='manageSharingModal' />}
         </div>
         <div className='panel-body'>
           {this.props.document ? <AttachmentsBar
@@ -371,11 +371,11 @@ class DocumentDisplay extends Component {
         </div>
       </div>
       {this.state.showSubDocuments ? <span><SubDocumentList documentId={document._id} /><div className='clearfix' /></span> : null}
-      <div ref='createDocumentModal'></div>
-      <div ref='fullScreenEditorModal'></div>
+      <div ref='createDocumentModal' />
+      <div ref='fullScreenEditorModal' />
       {isViewMode ? null : <CommentingArea documentId={document._id} />}
       <textarea id='tinymceTextarea' name='tinymceTextarea' />
-      <iframe id='printf' name='printf'></iframe>
+      <iframe id='printf' name='printf' />
     </div>
   }
 }

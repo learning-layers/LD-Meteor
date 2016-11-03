@@ -16,7 +16,7 @@ Meteor.startup(function () {
     }
     console.log(items)
     db.close()
-  })*/
+  }) */
   function exitHandler (options, err) {
     if (options.cleanup) {
       db.close()
@@ -24,7 +24,7 @@ Meteor.startup(function () {
     }
     /* if (err) { TODO move to logging
       console.log(err.stack)
-    }*/
+    } */
     if (options.exit) {
       db.close()
       process.exit()

@@ -16,7 +16,7 @@ class Breadcrumbs extends Component {
       <ol className='breadcrumb'>
         {breadcrumbs}
       </ol>
-      <div className='clearfix'></div>
+      <div className='clearfix' />
     </div>
   }
 }

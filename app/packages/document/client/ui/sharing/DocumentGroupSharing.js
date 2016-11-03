@@ -165,7 +165,7 @@ class DocumentGroupSharing extends Component {
             Add
           </Button>
         </ButtonToolbar>
-        <div className='clearfix'></div>
+        <div className='clearfix' />
         <hr />
       </Col>
       {documentAccess ? <Col xs={12}>
@@ -179,20 +179,20 @@ class DocumentGroupSharing extends Component {
               </tr>
             </thead>
             <tbody>
-            {haveAccess.map((groupAccessObj) => {
-              let currentGroup = Groups.findOne({'_id': groupAccessObj.groupId})
-              return <tr key={'gao-' + groupAccessObj.groupId} className='group-access-list-item'>
-                <td>{currentGroup ? currentGroup.name : groupAccessObj.groupId}</td>
-                <td>{groupAccessObj.permission}</td>
-                <td>
-                  <ButtonToolbar className='options-buttons'>
-                    <Button className='document-unshare-button' bsSize='small' bsStyle='info' onClick={() => this.removeGroupAccess(groupAccessObj.groupId)}>
-                      Unshare
-                    </Button>
-                  </ButtonToolbar>
-                </td>
-              </tr>
-            })}
+              {haveAccess.map((groupAccessObj) => {
+                let currentGroup = Groups.findOne({'_id': groupAccessObj.groupId})
+                return <tr key={'gao-' + groupAccessObj.groupId} className='group-access-list-item'>
+                  <td>{currentGroup ? currentGroup.name : groupAccessObj.groupId}</td>
+                  <td>{groupAccessObj.permission}</td>
+                  <td>
+                    <ButtonToolbar className='options-buttons'>
+                      <Button className='document-unshare-button' bsSize='small' bsStyle='info' onClick={() => this.removeGroupAccess(groupAccessObj.groupId)}>
+                        Unshare
+                      </Button>
+                    </ButtonToolbar>
+                  </td>
+                </tr>
+              })}
             </tbody>
           </table>
         </div>

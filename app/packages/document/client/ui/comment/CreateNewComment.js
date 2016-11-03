@@ -102,7 +102,7 @@ class CreateNewComment extends Component {
         <Button bsStyle='success' bsSize='small' onClick={() => this.createNewComment()}>Submit Comment</Button>
         <Button bsSize='small' onClick={() => this.closeReply()}>Cancel</Button>
       </ButtonToolbar>
-      <div className='clearfix'></div>
+      <div className='clearfix' />
     </div>
   }
 }

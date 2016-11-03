@@ -66,7 +66,7 @@ class DocumentStatusIndicator extends Component {
       onMouseLeave={() => this.onMouseLeave()}
       onClick={() => this.openChooseDocumentMaturityModal()}>
       <h4><Label bsStyle={labelColor}>{documentStatusText}</Label></h4>
-      <div ref='chooseDocumentMaturityModal'></div>
+      <div ref='chooseDocumentMaturityModal' />
     </div>
   }
 }

@@ -122,7 +122,7 @@ class EtherpadEditorWrapper extends Component {
           // let isSelectionAvailable = true
           /* if (currentSelection.startOffset !== currentSelection.endOffset) {
               isSelectionAvailable = true;
-          }*/
+          } */
           /* DocumentActions.openMainContentContexMenu({
               clientX: e.clientX,
               clientY: e.clientY + this.getOffset(iframe).top + 60,
@@ -163,7 +163,7 @@ class EtherpadEditorWrapper extends Component {
     return <div className='etherpad-editor-wrapper'>
       {this.state.showContextMenu ? <ContextMenu eventTypes={['click']} clientX={clientX} clientY={clientY} selection={selection} documentId={this.props.documentId} /> : null}
       <div className='iframe-loading-inidicator'>
-          {iframeLoadingStatusIndicator}
+        {iframeLoadingStatusIndicator}
       </div>
       {this.state.cookieSet ? <IFrameWithOnLoad id='etherpadEditorIframe' name='etherpadEditor' src={etherpadPadUrl} scrolling='no' onLoaded={() => this.onIframeLoaded()} seamless /> : null}
     </div>

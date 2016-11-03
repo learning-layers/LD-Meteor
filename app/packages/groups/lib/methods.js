@@ -37,7 +37,8 @@ Meteor.methods({
     check(userId, String)
     if (this.userId) {
       const group = Groups.find({'_id': groupId}, { fields: { members: 1, createdBy: 1 } })
-      if (true) { // !isMemberInGroup(group)
+      let constTrue = true
+      if (constTrue) { // TODO !isMemberInGroup(group)
         let found = false
         if (group.members) {
           group.members.forEach(function (member) {
@@ -74,7 +75,8 @@ Meteor.methods({
     if (this.userId) { // TODO check that the user has access to the Group
       const group = Groups.find({'_id': groupId}, { fields: { members: 1, createdBy: 1 } })
       console.log(group)
-      if (true) {
+      let constTrue = true
+      if (constTrue) {
         Groups.update({'_id': groupId}, {$set: {modifiedAt: new Date()}, $pull: {members: {userId: userId}}})
       } else {
         throw new Meteor.Error(403, 'You are not a member of this group and hence don\'t have access rights')

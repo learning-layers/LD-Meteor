@@ -97,7 +97,7 @@ class FriendList extends Component {
           &nbsp;Add a friend
         </Button>
         <input type='text' className='form-control' placeholder='Find...' />
-        <div ref='addFriendModal'></div>
+        <div ref='addFriendModal' />
       </div>
       <hr className='no-margin' />
       {this.state.friendChat === null ? <FriendContainerWithData /> : <FriendChat friendId={this.state.friendChat} />}

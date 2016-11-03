@@ -65,7 +65,7 @@ import Home from '../ui/Home'
       ]
     }
   }
-]*/
+] */
 
 // <HelpCenter helpTours={helpTours} />
 

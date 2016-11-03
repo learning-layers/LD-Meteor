@@ -85,7 +85,7 @@ class RoundTripTimeDisplay extends Component {
             width: '15px',
             display: 'inline-block',
             marginRight: '5px'
-          }}></div>
+          }} />
           <div style={{display: 'inline-block'}}>{this.state.roundTripTime} ms</div>
         </span> : <span>
           <div style={{display: 'inline-block', marginRight: '3px', fontSize: '13px'}}>
@@ -103,7 +103,7 @@ class RoundTripTimeDisplay extends Component {
             width: '15px',
             display: 'inline-block',
             marginRight: '5px'
-          }}></div>
+          }} />
           <div style={{display: 'inline-block'}}>Connecting...</div>
         </span>}
       </span> : <span>
@@ -122,7 +122,7 @@ class RoundTripTimeDisplay extends Component {
           width: '15px',
           display: 'inline-block',
           marginRight: '5px'
-        }}></div>
+        }} />
         <div style={{display: 'inline-block'}}>Offline</div>
       </span>}
     </div>

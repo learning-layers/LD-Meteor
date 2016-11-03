@@ -85,12 +85,12 @@ export const Uploads = new FilesCollection({
           } catch (e) {
             //
           }
-          // gfs.remove({ '_id': fileObjectId }, err => { if (err) throw err })*/
+          // gfs.remove({ '_id': fileObjectId }, err => { if (err) throw err }) */
           /* gfs.remove({ '_id': 'ObjectID("' + _id + '")' }, err => { if (err) throw err })
         }
       })
     })
-  },*/
+  }, */
   downloadCallback: function (fileObj) {
     var ref = this.params
     if (ref && ref.query && ref.query.download === 'true') {

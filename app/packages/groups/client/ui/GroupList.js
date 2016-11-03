@@ -88,7 +88,7 @@ class GroupList extends Component {
     return <div className='group-list container'>
       <div className='well'>
         <p>Your groups:</p>
-        <div ref='manageMembersModal'></div>
+        <div ref='manageMembersModal' />
         <div className='create-new-group-wrapper'>
           <CreateNewGroupForm />
         </div>

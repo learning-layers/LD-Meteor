@@ -71,7 +71,7 @@ export const exportToWord = function (documentTitle) {
       var contentDocument = global.tinymce.get('tinymceTextarea').getDoc()
       var content = '<!DOCTYPE html>' + contentDocument.documentElement.outerHTML
       // var orientation = document.querySelector('.page-orientation input:checked').value
-      var converted = global.htmlDocx.asBlob(content/*, {orientation: orientation}*/)
+      var converted = global.htmlDocx.asBlob(content /* , {orientation: orientation} */)
       global.saveAs(converted, documentTitle + '.docx')
     }, 100)
   })

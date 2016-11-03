@@ -5,7 +5,7 @@ import Checkbox from '../../../../../node_modules/react-bootstrap/lib/Checkbox'
 
 class SubscribeButton extends Component {
   render () {
-    const title = <i className='fa fa-rss' aria-hidden='true'></i>
+    const title = <i className='fa fa-rss' aria-hidden='true' />
     return <DropdownButton bsStyle='default' title={title} id={'subscribe-btn'} data-tooltip='Subscribe' style={{display: 'none'}}>
       <MenuItem eventKey='1'>
         <Checkbox checked>

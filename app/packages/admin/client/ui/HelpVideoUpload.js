@@ -65,36 +65,36 @@ class HelpVideoUpload extends Component {
             <tr><th>Name</th><th>Size</th><th>Type</th><th>Downloads</th><th>Options</th></tr>
           </thead>
           <tbody>
-          {helpVideoAttachments.map((fileAttachment) => {
-            let downloadPath = fileAttachment._downloadRoute + '/' + fileAttachment._collectionName + '/' + fileAttachment._id + '/original/' + fileAttachment._id + '.' + fileAttachment.extension
-            return <tr>
-              <td>
-                <a href={downloadPath + '?download=true'} download={fileAttachment.name} target='_parent'>
-                  {fileAttachment.name}
-                </a>
-                {fileAttachment.isAudio ? <audio preload='auto' controls='controls'>
-                  <source src={downloadPath + '?play=true'} type={fileAttachment.type} />
-                </audio> : null}
-                {fileAttachment.isVideo ? <video width='200px' height='auto' controls='controls' preload='auto'>
-                  <source src={downloadPath + '?play=true'} type={fileAttachment.type} />
-                </video> : null}
-              </td>
-              <td>
-                {humanFileSize(fileAttachment.size, true)}
-              </td>
-              <td>
-                {fileAttachment.type}
-              </td>
-              <td>
-                {fileAttachment.meta && fileAttachment.meta.downloads ? <span>{fileAttachment.meta.downloads}</span> : <span>0</span>}
-              </td>
-              <td>
-                <input ref={'downloadLink-' + fileAttachment._id} type='text' value={downloadPath} style={{visibility: 'hidden', width: '0px', height: '0px'}} />
-                <button className='btn btn-sm btn-danger' onClick={() => this.deleteAttachment(fileAttachment)}>Delete</button>
-                <button className='btn btn-sm btn-default' onClick={() => this.copyDownloadLink(fileAttachment)}>Copy link</button>
-              </td>
-            </tr>
-          })}
+            {helpVideoAttachments.map((fileAttachment) => {
+              let downloadPath = fileAttachment._downloadRoute + '/' + fileAttachment._collectionName + '/' + fileAttachment._id + '/original/' + fileAttachment._id + '.' + fileAttachment.extension
+              return <tr>
+                <td>
+                  <a href={downloadPath + '?download=true'} download={fileAttachment.name} target='_parent'>
+                    {fileAttachment.name}
+                  </a>
+                  {fileAttachment.isAudio ? <audio preload='auto' controls='controls'>
+                    <source src={downloadPath + '?play=true'} type={fileAttachment.type} />
+                  </audio> : null}
+                  {fileAttachment.isVideo ? <video width='200px' height='auto' controls='controls' preload='auto'>
+                    <source src={downloadPath + '?play=true'} type={fileAttachment.type} />
+                  </video> : null}
+                </td>
+                <td>
+                  {humanFileSize(fileAttachment.size, true)}
+                </td>
+                <td>
+                  {fileAttachment.type}
+                </td>
+                <td>
+                  {fileAttachment.meta && fileAttachment.meta.downloads ? <span>{fileAttachment.meta.downloads}</span> : <span>0</span>}
+                </td>
+                <td>
+                  <input ref={'downloadLink-' + fileAttachment._id} type='text' value={downloadPath} style={{visibility: 'hidden', width: '0px', height: '0px'}} />
+                  <button className='btn btn-sm btn-danger' onClick={() => this.deleteAttachment(fileAttachment)}>Delete</button>
+                  <button className='btn btn-sm btn-default' onClick={() => this.copyDownloadLink(fileAttachment)}>Copy link</button>
+                </td>
+              </tr>
+            })}
           </tbody>
         </table>
       </div>

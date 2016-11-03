@@ -57,4 +57,4 @@ export default composeWithTracker(onPropsChange)(UserProfile)
  } else {
  return root + (fileRef._downloadRoute + '/' + fileRef._collectionName + '/' + fileRef._id + '/' + version + '/' + fileRef._id + ext)
  }
- }*/
+ } */

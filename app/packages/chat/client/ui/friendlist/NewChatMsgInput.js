@@ -111,7 +111,7 @@ class NewChatMsgInput extends Component {
           }}>
           Send
         </Button>
-        <div className='clearfix'></div>
+        <div className='clearfix' />
       </FormGroup>
     </div>
   }

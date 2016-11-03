@@ -54,7 +54,7 @@ class HelpCenter extends Component {
         <div id='ld-helpcenter' onClick={(event) => this.helpCenterClickHandler(event)}>
           Help Center
         </div>
-        <div className='clearfix'></div>
+        <div className='clearfix' />
         {this.state.isOpened ? <div id='ld-helpcenter-panel' className='col-xs-12 col-sm-11 col-md-8 col-lg-6'>
           <div id='help-process-title'>
             Available Help-Tours for this page

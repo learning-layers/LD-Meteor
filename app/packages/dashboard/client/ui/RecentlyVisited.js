@@ -26,13 +26,13 @@ class RecentlyVisited extends Component {
             </tr>
           </thead>
           <tbody>
-          {userActivityHistory.map(function (userActivityHistoryItem) {
-            const document = Documents.findOne({_id: userActivityHistoryItem.elementId})
-            return <tr key={'user-pos-' + userActivityHistoryItem._id}>
-              <td><a href={'/document/' + userActivityHistoryItem.elementId}><span className='glyphicon glyphicon-file' /> {document ? document.title : userActivityHistoryItem.elementId}</a></td>
-              <td><TimeFromNow date={userActivityHistoryItem.createdAt} /></td>
-            </tr>
-          })}
+            {userActivityHistory.map(function (userActivityHistoryItem) {
+              const document = Documents.findOne({_id: userActivityHistoryItem.elementId})
+              return <tr key={'user-pos-' + userActivityHistoryItem._id}>
+                <td><a href={'/document/' + userActivityHistoryItem.elementId}><span className='glyphicon glyphicon-file' /> {document ? document.title : userActivityHistoryItem.elementId}</a></td>
+                <td><TimeFromNow date={userActivityHistoryItem.createdAt} /></td>
+              </tr>
+            })}
           </tbody>
         </table>
       </div>

@@ -151,7 +151,7 @@ class DocumentUserSharing extends Component {
             Add
           </Button>
         </ButtonToolbar>
-        <div className='clearfix'></div>
+        <div className='clearfix' />
         <hr />
       </Col>
       {documentAccess ? <Col xs={12}>

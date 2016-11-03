@@ -78,7 +78,7 @@ class ChatMsgList extends Component {
       messageWithEmotesObjects.push(messageWithEmotesObject)
     })
     return <div id='chat-msg-list' style={{margin: 0, paddingLeft: 0, fontFamily: '\'Droid Sans Mono\', sans-serif', fontSize: '12px'}}>
-      <ul></ul>
+      <ul />
       <ReactiveInfiniteList
         key='chat-msg-infinite-scoll-list'
         elementHeights={messageElementHeights}

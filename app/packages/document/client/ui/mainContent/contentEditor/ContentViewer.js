@@ -47,7 +47,7 @@ class ContentViewer extends Component {
           </div>
         } else {
           return <div id='content-viewer'>
-            <div dangerouslySetInnerHTML={{__html: serverHtml}}></div>
+            <div dangerouslySetInnerHTML={{__html: serverHtml}} />
           </div>
         }
       }
@@ -68,7 +68,7 @@ class ContentViewer extends Component {
       </div>
     } else {
       return <div id='content-viewer'>
-        <div dangerouslySetInnerHTML={{__html: this.state.html}}></div>
+        <div dangerouslySetInnerHTML={{__html: this.state.html}} />
       </div>
     }
   }

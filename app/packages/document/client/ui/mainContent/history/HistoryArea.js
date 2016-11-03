@@ -8,17 +8,17 @@ class HistoryArea extends Component {
           <div className='content'>
             <div className='lbl'>Test</div>
             <span className='date'>12 May 2013</span>
-            <span className='circle'></span>
+            <span className='circle' />
           </div>
-          <div className='placeholder'></div>
+          <div className='placeholder' />
         </li>
         <li key={'tl-item-2'} className='tl-item'>
           <div className='content'>
             <div className='lbl'>Test2</div>
             <span className='date'>12 May 2013</span>
-            <span className='circle'></span>
+            <span className='circle' />
           </div>
-          <div className='placeholder'></div>
+          <div className='placeholder' />
         </li>
       </ul>
     </div>
