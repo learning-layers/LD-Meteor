@@ -13,7 +13,7 @@ jquery@1.11.10                  # Helpful client-side library
 tracker@1.1.1                 # Meteor's client-side reactive programming library
 
 es5-shim@4.6.15                # ECMAScript 5 compatibility for older browsers.
-ecmascript@0.5.9              # Enable ECMAScript2015+ syntax in app code
+ecmascript@0.6.1              # Enable ECMAScript2015+ syntax in app code
 
 fourseven:scss@=3.8.0_1          # Sass and SCSS support for Meteor.js (with autoprefixer and sourcemaps).
 seba:minifiers-autoprefixer # Standard minifiers used with Meteor apps by default + css autoprefixer.
@@ -38,12 +38,12 @@ aur0r:accounts-trashmailfilter
 splendido:accounts-meld
 email@1.1.18
 juliancwirko:s-alert
-accounts-password@1.3.1
+accounts-password@1.3.3
 selaias:cookie-consent
 ostrio:logger
 ostrio:loggermongo
 ostrio:i18n
-coffeescript@1.11.1_2
+coffeescript@1.11.1_4
 jparker:crypto-aes
 matb33:collection-hooks
 aldeed:simple-schema
