@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { Email } from 'meteor/email'
 import { check } from 'meteor/check'
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 import { Documents, DocumentAccess } from '../../lib/collections'
 import { RequestAccessItems } from './collections'
 import { getAccessLevel } from '../util'
