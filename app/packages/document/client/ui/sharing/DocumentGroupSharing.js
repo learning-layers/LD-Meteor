@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
 import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
@@ -9,6 +9,24 @@ import Row from '../../../../../../node_modules/react-bootstrap/lib/Row'
 import Col from '../../../../../../node_modules/react-bootstrap/lib/Col'
 import { Groups } from '../../../../groups/lib/collections'
 const SimpleSelect = ReactSelectize.SimpleSelect
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   const documentAccess = props.documentAccess
@@ -207,4 +225,4 @@ DocumentGroupSharing.propTypes = {
   groupSuggestions: React.PropTypes.array
 }
 
-export default composeWithTracker(onPropsChange)(DocumentGroupSharing)
+export default compose(getTrackerLoader(onPropsChange))(DocumentGroupSharing)

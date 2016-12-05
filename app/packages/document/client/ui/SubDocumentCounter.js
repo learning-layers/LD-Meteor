@@ -1,10 +1,28 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import Badge from '../../../../../node_modules/react-bootstrap/lib/Badge'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('subdocumentCount', {parentId: props.documentId})
@@ -41,4 +59,4 @@ SubDocumentCounter.propTypes = {
   subdocumentsCount: React.PropTypes.number
 }
 
-export default composeWithTracker(onPropsChange)(SubDocumentCounter)
+export default compose(getTrackerLoader(onPropsChange))(SubDocumentCounter)

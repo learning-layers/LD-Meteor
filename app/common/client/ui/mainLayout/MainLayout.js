@@ -4,10 +4,28 @@ import { Blaze } from 'meteor/blaze'
 import { Template } from 'meteor/templating'
 import LDSidebar from '../../../../packages/chat/client/ui/Sidebar'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import VerificationAndTOSInterceptor from './VerificationAndTOSInterceptor'
 import Alert from 'react-s-alert'
 import Login from './Login'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   Meteor.subscribe('currentUserDetails')
@@ -151,4 +169,4 @@ MainLayout.propTypes = {
   helpCenter: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(MainLayout)
+export default compose(getTrackerLoader(onPropsChange))(MainLayout)

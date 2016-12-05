@@ -1,9 +1,27 @@
 import React, { Component } from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { UserActivityHistory } from '../../lib/collections'
 import { Documents } from '../../../document/lib/collections'
 import { TimeFromNow } from '../../../../common/client/ui/util/TimeFromNow'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('activeUserRecentlyVisited')
@@ -40,4 +58,4 @@ class RecentlyVisited extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(RecentlyVisited)
+export default compose(getTrackerLoader(onPropsChange))(RecentlyVisited)

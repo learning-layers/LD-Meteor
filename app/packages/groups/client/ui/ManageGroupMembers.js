@@ -1,8 +1,26 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { Groups } from '../../lib/collections'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import AddGroupMember from './AddGroupMember'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupMemberList', {groupId: props.groupId})
@@ -47,4 +65,4 @@ ManageGroupMembers.propTypes = {
   group: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(ManageGroupMembers)
+export default compose(getTrackerLoader(onPropsChange))(ManageGroupMembers)

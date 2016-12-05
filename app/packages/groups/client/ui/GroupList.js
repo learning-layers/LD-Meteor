@@ -1,13 +1,31 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Groups } from '../../lib/collections'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import CreateNewGroupForm from './CreateNewGroupForm'
 import ManageGroupMembersModal from '../../../../packages/groups/client/ui/ManageGroupMembersModal'
 import { moment } from 'meteor/momentjs:moment'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupList')
@@ -216,4 +234,4 @@ GroupList.propTypes = {
   loading: React.PropTypes.bool
 }
 
-export default composeWithTracker(onPropsChange)(GroupList)
+export default compose(getTrackerLoader(onPropsChange))(GroupList)

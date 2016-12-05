@@ -1,11 +1,29 @@
 import { Meteor } from 'meteor/meteor'
 import React, { Component } from 'react'
 import { SubsManager } from 'meteor/meteorhacks:subs-manager'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import classNames from 'classnames'
 import { DirectMessages } from '../../../lib/collections'
 import ReactiveInfiniteList from '../../../../infiniteList/client/ui/GeneralReactiveInfiniteList'
 import ChatLineCalculator from '../../lib/chatLineCalculator'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 const ChatMsgListSubs = new SubsManager({
   cacheLimit: 2,
@@ -99,4 +117,4 @@ ChatMsgList.propTypes = {
   directMessages: React.PropTypes.array
 }
 
-export default composeWithTracker(onPropsChange)(ChatMsgList)
+export default compose(getTrackerLoader(onPropsChange))(ChatMsgList)

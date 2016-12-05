@@ -1,8 +1,26 @@
 import React, { Component } from 'react'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import ReactMarkdown from 'react-markdown'
 import { AppVars } from '../../../../common/lib/collections'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('legalNotice')
@@ -24,4 +42,4 @@ class LegalNotice extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(LegalNotice)
+export default compose(getTrackerLoader(onPropsChange))(LegalNotice)

@@ -1,7 +1,25 @@
 import React, { Component } from 'react'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
+import { Tracker } from 'meteor/tracker'
 // import ReactiveInfiniteList from '../../../infiniteList/both/ui/GeneralReactiveInfiniteListTestWrapper'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -23,4 +41,4 @@ class Admin extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(Admin)
+export default compose(getTrackerLoader(onPropsChange))(Admin)

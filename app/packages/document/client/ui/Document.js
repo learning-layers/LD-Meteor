@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import NotFound from '../../../../common/client/ui/mainLayout/NotFound'
 import { Documents, DocumentAccess } from '../../lib/collections'
@@ -8,6 +8,24 @@ import RequestAccess from './sharing/RequestAccess'
 import AccessForbidden from '../../../../common/client/ui/mainLayout/AccessForbidden'
 import DocumentDisplay from './DocumentDisplay'
 import { getDocument } from '../../lib/methods'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 let getDocumentSync = Meteor.wrapAsync(getDocument)
 
@@ -178,4 +196,4 @@ Document.propTypes = {
   loading: React.PropTypes.bool
 }
 
-export default composeWithTracker(onPropsChange)(Document)
+export default compose(getTrackerLoader(onPropsChange))(Document)

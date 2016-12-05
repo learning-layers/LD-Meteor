@@ -1,10 +1,28 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import {composeWithTracker} from 'react-komposer'
+import {compose} from 'react-komposer'
 import {Meteor} from 'meteor/meteor'
 import classNames from 'classnames'
 import ChangeUserRolesModal from './ChangeUserRolesModal'
 import { getReactKomposerInstance } from '../../../../common/lib/utils'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 let getRoleObjects = function (roles, roleCategory) {
   let roleObjects = []
@@ -207,4 +225,4 @@ UserManagement.propTypes = {
   users: React.PropTypes.array
 }
 
-export default composeWithTracker(onPropsChange)(UserManagement)
+export default compose(getTrackerLoader(onPropsChange))(UserManagement)

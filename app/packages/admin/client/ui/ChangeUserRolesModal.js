@@ -1,10 +1,28 @@
 import React, {Component} from 'react'
-import {composeWithTracker} from 'react-komposer'
+import {compose} from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import Modal from '../../../../../node_modules/react-bootstrap/lib/Modal'
 import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { UserRoles } from '../../lib/roles'
 import classNames from 'classnames'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('user', {userId: props.userId})
@@ -145,4 +163,4 @@ ChangeUserRolesModal.propTypes = {
   user: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(ChangeUserRolesModal)
+export default compose(getTrackerLoader(onPropsChange))(ChangeUserRolesModal)

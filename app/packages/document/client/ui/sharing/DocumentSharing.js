@@ -1,12 +1,30 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import DocumentUserSharing from './DocumentUserSharing'
 import DocumentGroupSharing from './DocumentGroupSharing'
 import { DocumentLinkSharing } from './DocumentLinkSharing'
 import Tabs from '../../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../../node_modules/react-bootstrap/lib/Tab'
 import { DocumentAccess } from '../../../lib/collections'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('documentAccess', {documentId: props.documentId})
@@ -40,4 +58,4 @@ DocumentSharing.propTypes = {
   documentAccess: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(DocumentSharing)
+export default compose(getTrackerLoader(onPropsChange))(DocumentSharing)

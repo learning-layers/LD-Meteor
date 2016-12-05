@@ -1,11 +1,29 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
 import { RequestAccessItems } from '../../../lib/sharing/collections'
 import { Documents } from '../../../lib/collections'
 const SimpleSelect = ReactSelectize.SimpleSelect
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('requestAccessToDocumentItems', {'token': props.token})
@@ -135,4 +153,4 @@ ShareDocumentAfterRequest.propTypes = {
   requestAccessItem: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(ShareDocumentAfterRequest)
+export default compose(getTrackerLoader(onPropsChange))(ShareDocumentAfterRequest)

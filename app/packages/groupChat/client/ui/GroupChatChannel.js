@@ -1,10 +1,28 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { GroupChatTopics } from '../../lib/collections'
 import AddChatTopicModal from './AddChatTopicModal'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupChannels', {groupId: props.activeGroupId})
@@ -71,4 +89,4 @@ class GroupChatChannel extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(GroupChatChannel)
+export default compose(getTrackerLoader(onPropsChange))(GroupChatChannel)

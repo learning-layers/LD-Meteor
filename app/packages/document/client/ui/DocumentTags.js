@@ -2,9 +2,27 @@ import React, {Component} from 'react'
 import ReactSelectize from 'react-selectize'
 import { Tags } from '../../../tags/lib/collections'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import Alert from 'react-s-alert'
 const MultiSelect = ReactSelectize.MultiSelect
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('documentTags', {documentId: props.documentId})
@@ -169,4 +187,4 @@ DocumentTags.propTypes = {
   onBlur: React.PropTypes.func
 }
 
-export default composeWithTracker(onPropsChange)(DocumentTags)
+export default compose(getTrackerLoader(onPropsChange))(DocumentTags)

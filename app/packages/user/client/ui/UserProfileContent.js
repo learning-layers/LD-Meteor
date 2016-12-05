@@ -4,10 +4,28 @@ import FileUpload from '../../../fileUpload/client/ui/FileUpload'
 import Row from '../../../../../node_modules/react-bootstrap/lib/Row'
 import Col from '../../../../../node_modules/react-bootstrap/lib/Col'
 import { Uploads } from '../../../fileUpload/lib/collections'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import UserTags from './UserTags'
 import UserProfileInfoForm from './UserProfileInfoForm'
 import { UserProfileSchema } from '../../lib/schema'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let user = props.user
@@ -60,4 +78,4 @@ UserProfileContent.propTypes = {
   userAvatarPath: React.PropTypes.string
 }
 
-export default composeWithTracker(onPropsChange)(UserProfileContent)
+export default compose(getTrackerLoader(onPropsChange))(UserProfileContent)

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Template } from 'meteor/templating'
 import { Blaze } from 'meteor/blaze'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import EventEmitterInstance from '../../EventEmitter'
@@ -18,6 +18,24 @@ import Avatar from '../../../../packages/chat/client/ui/Avatar'
 import { Uploads } from '../../../../packages/fileUpload/lib/collections'
 import CreateDocumentModal from '../../../../packages/document/client/ui/CreateDocumentModal'
 import RoundTripTimeDisplay from './RoundTripTimeDisplay'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -138,4 +156,4 @@ LDNavbar.propTypes = {
   routeName: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(LDNavbar)
+export default compose(getTrackerLoader(onPropsChange))(LDNavbar)

@@ -35,7 +35,7 @@
     "node": "4.4.7"
   },
   "dependencies": {
-    "bcrypt": "^0.8.7",
+    "bcrypt": "^1.0.0",
     "bootstrap-sass": "^3.3.7",
     "classnames": "^2.2.5",
     "cookies-js": "^1.2.3",
@@ -57,10 +57,10 @@
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.1",
     "react-infinite": "^0.10.0",
-    "react-komposer": "^1.13.1",
+    "react-komposer": "^2.0.0",
     "react-loader": "^2.4.0",
     "react-markdown": "^2.4.2",
-    "react-mentions": "^0.5.3",
+    "react-mentions": "^0.6.2",
     "react-mounter": "^1.2.0",
     "react-onclickoutside": "^5.7.1",
     "react-rating": "^0.6.3",

@@ -1,9 +1,27 @@
 import React, { Component } from 'react'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import UserProfileContent from './UserProfileContent'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('userprofile', {userId: props.userId})
@@ -35,7 +53,7 @@ UserProfile.propTypes = {
   user: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(UserProfile)
+export default compose(getTrackerLoader(onPropsChange))(UserProfile)
 
 // TODO move this code to common package or fileUpload
 /* var formatFileURL = function (fileRef, version, pub) {

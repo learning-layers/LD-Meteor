@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import CollapsibleFilterContainer from '../CollapsibleFilterContainer'
 import AddFriendModal from './AddFriendModal'
 import { FriendRequests, FriendLists } from '../../../lib/collections'
@@ -10,6 +10,24 @@ import InnerFriendList from './InnerFriendList'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 import EventEmitterInstance from '../../../../../common/client/EventEmitter'
 import FriendChat from './FriendChat'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 class ActiveFilterTestComp extends Component {
   render () {
@@ -55,7 +73,7 @@ FriendContainer.propTypes = {
   friendList: React.PropTypes.object
 }
 
-const FriendContainerWithData = composeWithTracker(onPropsChange)(FriendContainer)
+const FriendContainerWithData = compose(getTrackerLoader(onPropsChange))(FriendContainer)
 
 class FriendList extends Component {
   constructor (props) {

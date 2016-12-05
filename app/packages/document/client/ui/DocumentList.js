@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import { SubsManager } from 'meteor/meteorhacks:subs-manager'
@@ -11,6 +11,24 @@ import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import { Documents } from '../../lib/collections'
 import ReactiveInfiniteList from '../../../infiniteList/client/ui/GeneralReactiveInfiniteList'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 const DocumentListSubs = new SubsManager({
   cacheLimit: 2,
@@ -230,4 +248,4 @@ DocumentList.propTypes = {
   loading: React.PropTypes.bool
 }
 
-export default composeWithTracker(onPropsChange)(DocumentList)
+export default compose(getTrackerLoader(onPropsChange))(DocumentList)

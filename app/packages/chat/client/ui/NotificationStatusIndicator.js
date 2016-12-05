@@ -1,8 +1,26 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 // import { GroupChatTopics } from '../../../groupChat/lib/collections'
 import { Mongo } from 'meteor/mongo'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 let GroupChatNewMessageCount = new Mongo.Collection('GroupChatNewMessageCount')
 
@@ -23,4 +41,4 @@ class NotificationStatusIndicator extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(NotificationStatusIndicator)
+export default compose(getTrackerLoader(onPropsChange))(NotificationStatusIndicator)

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import Comment from './Comment'
@@ -9,6 +9,24 @@ import DropdownButton from '../../../../../../node_modules/react-bootstrap/lib/D
 import MenuItem from '../../../../../../node_modules/react-bootstrap/lib/MenuItem'
 import { DocumentComments } from '../../../lib/collections'
 import CreateNewComment from './CreateNewComment'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let commentsHandle = Meteor.subscribe('documentComments', {documentId: props.documentId})
@@ -68,4 +86,4 @@ CommentingArea.propTypes = {
   documentCommentsCount: React.PropTypes.number
 }
 
-export default composeWithTracker(onPropsChange)(CommentingArea)
+export default compose(getTrackerLoader(onPropsChange))(CommentingArea)

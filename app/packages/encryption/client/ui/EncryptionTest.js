@@ -1,9 +1,27 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import {composeWithTracker} from 'react-komposer'
+import {compose} from 'react-komposer'
 import {Meteor} from 'meteor/meteor'
 import { Tests } from '../../lib/collections'
 import { insertNewTestItem } from '../../lib/methods'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('testData')
@@ -56,4 +74,4 @@ EncryptionTest.propTypes = {
   tests: React.PropTypes.array
 }
 
-export default composeWithTracker(onPropsChange)(EncryptionTest)
+export default compose(getTrackerLoader(onPropsChange))(EncryptionTest)

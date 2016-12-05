@@ -1,10 +1,28 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import Collapse from '../../../../../../../node_modules/react-bootstrap/lib/Collapse'
 import Well from '../../../../../../../node_modules/react-bootstrap/lib/Well'
 import FileUpload from '../../../../../fileUpload/client/ui/FileUpload'
 import { Uploads } from '../../../../../fileUpload/lib/collections'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('documentAttachments', {documentId: props.documentId})
@@ -114,4 +132,4 @@ FileAttachmentArea.propTypes = {
   fileAttachments: React.PropTypes.array
 }
 
-export default composeWithTracker(onPropsChange)(FileAttachmentArea)
+export default compose(getTrackerLoader(onPropsChange))(FileAttachmentArea)

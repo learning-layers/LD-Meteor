@@ -1,10 +1,28 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import Checkbox from '../../../../../node_modules/react-bootstrap/lib/Checkbox'
 import DropdownButton from '../../../../../node_modules/react-bootstrap/lib/DropdownButton'
 import MenuItem from '../../../../../node_modules/react-bootstrap/lib/MenuItem'
 import { NotificationSettings, emailIntervalOptions } from '../../lib/collections'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 let emailIntervalOptionsMap = []
 emailIntervalOptionsMap['instantly'] = {label: 'instantly', key: 'instantly'}
@@ -278,4 +296,4 @@ class NotificationSettingsUI extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(NotificationSettingsUI)
+export default compose(getTrackerLoader(onPropsChange))(NotificationSettingsUI)

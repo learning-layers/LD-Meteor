@@ -1,8 +1,26 @@
 import React, { Component } from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import Checkbox from '../../../../../node_modules/react-bootstrap/lib/Checkbox'
 import { GroupChatTopics } from '../../lib/collections'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let handle = Meteor.subscribe('groupChannel', {groupId: props.groupId, channelId: props.topicId})
@@ -36,4 +54,4 @@ class GroupChatTopicNotificationStatus extends Component {
   }
 }
 
-export default composeWithTracker(onPropsChange)(GroupChatTopicNotificationStatus)
+export default compose(getTrackerLoader(onPropsChange))(GroupChatTopicNotificationStatus)

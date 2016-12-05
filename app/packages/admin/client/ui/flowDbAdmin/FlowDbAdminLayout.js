@@ -3,7 +3,7 @@ import { Roles } from 'meteor/alanning:roles'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { BlazeLayout } from 'meteor/kadira:blaze-layout'
-import {composeWithTracker} from 'react-komposer'
+import {compose} from 'react-komposer'
 import { Mongo } from 'meteor/mongo'
 import uuid from 'node-uuid'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
@@ -11,6 +11,24 @@ import { Template } from 'meteor/templating'
 import _difference from 'lodash/difference'
 import _map from 'lodash/map'
 import { jQuery } from 'meteor/jquery'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 // The code below is originally written by Sachin 'sachinbhutani' (https://github.com/sachinbhutani)
 // for the package flow-db-admin (https://github.com/sachinbhutani/flow-db-admin).
@@ -280,4 +298,4 @@ FlowDbAdminLayout.propTypes = {
   content: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(FlowDbAdminLayout)
+export default compose(getTrackerLoader(onPropsChange))(FlowDbAdminLayout)

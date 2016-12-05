@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import ReactSelectize from 'react-selectize'
 import Alert from 'react-s-alert'
 import Row from '../../../../../../node_modules/react-bootstrap/lib/Row'
@@ -8,6 +8,24 @@ import Col from '../../../../../../node_modules/react-bootstrap/lib/Col'
 import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 const SimpleSelect = ReactSelectize.SimpleSelect
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   const documentAccess = props.documentAccess
@@ -192,4 +210,4 @@ DocumentUserSharing.propTypes = {
   documentAccess: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(DocumentUserSharing)
+export default compose(getTrackerLoader(onPropsChange))(DocumentUserSharing)

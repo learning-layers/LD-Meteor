@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import { Template } from 'meteor/templating'
 import { Blaze } from 'meteor/blaze'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { jQuery } from 'meteor/jquery'
 import Avatar from './Avatar'
@@ -18,6 +18,24 @@ import CreateDocumentModal from '../../../../packages/document/client/ui/CreateD
 import Tabs from '../../../../../node_modules/react-bootstrap/lib/Tabs'
 import Tab from '../../../../../node_modules/react-bootstrap/lib/Tab'
 import FriendList from './friendlist/FriendList'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   const user = Meteor.user()
@@ -158,4 +176,4 @@ SidebarContent.propTypes = {
   onSetSidebarOpen: React.PropTypes.func
 }
 
-export default composeWithTracker(onPropsChange)(SidebarContent)
+export default compose(getTrackerLoader(onPropsChange))(SidebarContent)

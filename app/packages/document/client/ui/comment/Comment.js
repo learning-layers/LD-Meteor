@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { moment } from 'meteor/momentjs:moment'
 import Rating from 'react-rating'
 import classNames from 'classnames'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { Counts } from 'meteor/tmeasday:publish-counts'
 import Alert from 'react-s-alert'
@@ -16,6 +16,24 @@ import CommentReply from './CommentReply'
 import RepliesArea from './RepliesArea'
 import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
 import EventEmitterInstance from '../../../../../common/client/EventEmitter'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 function onPropsChange (props, onData) {
   let path = JSON.parse(JSON.stringify(props.comment.parents))
@@ -208,4 +226,4 @@ Comment.propTypes = {
   lastRevision: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(Comment)
+export default compose(getTrackerLoader(onPropsChange))(Comment)

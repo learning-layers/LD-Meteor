@@ -1,12 +1,30 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
-import { composeWithTracker } from 'react-komposer'
+import { compose } from 'react-komposer'
 import { TimeFromNow } from '../../../../../common/client/ui/util/TimeFromNow'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import FormGroup from '../../../../../../node_modules/react-bootstrap/lib/FormGroup'
 import FormControl from '../../../../../../node_modules/react-bootstrap/lib/FormControl'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
 import Alert from 'react-s-alert'
+import { Tracker } from 'meteor/tracker'
+
+function getTrackerLoader (reactiveMapper) {
+  return (props, onData, env) => {
+    let trackerCleanup = null
+    const handler = Tracker.nonreactive(() => {
+      return Tracker.autorun(() => {
+        // assign the custom clean-up function.
+        trackerCleanup = reactiveMapper(props, onData, env)
+      })
+    })
+
+    return () => {
+      if (typeof trackerCleanup === 'function') trackerCleanup()
+      return handler.stop()
+    }
+  }
+}
 
 import { RequestAccessItems } from '../../../lib/sharing/collections'
 
@@ -105,4 +123,4 @@ RequestAccess.propTypes = {
   requestAccessItem: React.PropTypes.object
 }
 
-export default composeWithTracker(onPropsChange)(RequestAccess)
+export default compose(getTrackerLoader(onPropsChange))(RequestAccess)
