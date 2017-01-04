@@ -20,7 +20,6 @@ seba:minifiers-autoprefixer # Standard minifiers used with Meteor apps by defaul
 standard-minifier-js@1.2.1    # Standard javascript minifiers used with Meteor apps by default.
 
 practicalmeteor:mocha@2.4.5_5   # Write package tests with mocha and run them in the browser or from the command line with spacejam.
-kadira:flow-router-ssr  # Same as kadira:flow-router, but with SSR support
 
 twbs:bootstrap
 ian:accounts-ui-bootstrap-3
@@ -39,7 +38,6 @@ splendido:accounts-meld
 email@1.1.18
 juliancwirko:s-alert
 accounts-password@1.3.3
-selaias:cookie-consent
 ostrio:logger
 ostrio:loggermongo
 ostrio:i18n
@@ -55,7 +53,6 @@ ostrio:files
 aldeed:collection2
 momentjs:moment
 tmeasday:publish-counts
-sach:flow-db-admin
 fortawesome:fontawesome
 percolate:synced-cron
 appcache@1.0.12
