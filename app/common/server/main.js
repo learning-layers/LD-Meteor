@@ -4,6 +4,11 @@ import { JsonRoutes } from 'meteor/simple:json-routes'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import { Accounts } from 'meteor/accounts-base'
 import { UserPositions } from '../../packages/dashboard/lib/collections'
+import { check, Match } from 'meteor/check'
+global.check = check
+global.Match = Match
+import { Throttle } from 'meteor/zeroasterisk:throttle'
+import { ThrottleAccounts } from 'meteor/zeroasterisk:throttle-accounts'
 
 let isProdEnv = global.isProdEnv
 
@@ -32,6 +37,25 @@ FlowRouter.setDeferScriptLoading(true)
  */
 if (Meteor.settings.private.email.from) {
   Accounts.emailTemplates.from = Meteor.settings.private.email.from
+}
+
+if (Meteor.isServer) {
+  // Set the "scope" to "user specific" so every key gets appended w/ userId
+  // Throttle.setScope('user') // default = global
+
+  // Show debug messages in the server console.log()
+  Throttle.setDebugMode(false) // default = false
+
+  // Disable client-side methods (event more secure)
+  Throttle.setMethodsAllowed(false) // default = true
+
+  // Accounts.validateLoginAttempt()
+  ThrottleAccounts.login('global', 20, 1000, 'Under Heavy Load - too many login attempts')
+  ThrottleAccounts.login('ip', 3, 1000, 'Only 3 Login Attempts from the same IP every second')
+  ThrottleAccounts.login('connection', 8, 10000, 'Only 8 Login Attempts from the same DDP connection every 10 seconds')
+
+  // Accounts.validateNewUser()
+  ThrottleAccounts.create('global', 20, 1000, 'Under Heavy Load - too many accounts created')
 }
 
 /**

@@ -4,8 +4,38 @@ import { Accounts } from 'meteor/accounts-base'
 import { check } from 'meteor/check'
 // import { UserRoles } from '../../../common/lib/roles'
 import { rateLimit } from '../../../common/lib/rate-limit'
+import { SimpleRest } from 'meteor/simple:rest'
+
+let options = {
+  url: 'create-user-via-api',
+  httpMethod: 'post',
+  getArgsFromRequest: function (request) {
+    let content = request.body
+    return [
+      content.apiKey,
+      content.username,
+      content.email/* , content.profile */
+    ]
+  }
+}
+
+if (Meteor.isServer) {
+  SimpleRest.setMethodOptions('createUserViaAPI', options)
+}
 
 Meteor.methods({
+  createUserViaAPI: (apiKey, username, email, profile) => {
+    check(email, String)
+    if (Meteor.settings.private.apiKey === apiKey) {
+      const newUserId = Accounts.createUser({
+        username,
+        email,
+        password: 'initial' // ,
+        // profile: {name: 'TestName'}
+      })
+      return newUserId
+    }
+  },
   getRoles: function (userId) {
     check(userId, String)
     if (this.userId && Roles.userIsInRole(this.userId, 'super-admin', Roles.GLOBAL_GROUP)) {
@@ -110,7 +140,8 @@ rateLimit({
     'getRegisteredEmails',
     'resendUserVerificationMail',
     'activateUserRole',
-    'deactivateUserRole'
+    'deactivateUserRole',
+    'createUserViaAPI'
   ],
   limit: 10,
   timeRange: 10000

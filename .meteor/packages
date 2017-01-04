@@ -61,5 +61,7 @@ percolate:synced-cron
 appcache@1.0.12
 audit-argument-checks@1.0.7
 shell-server@0.2.1
-kadira:debug
 teamon:tinymce
+zeroasterisk:throttle
+zeroasterisk:throttle-accounts
+practicalmeteor:mocha-console-runner
