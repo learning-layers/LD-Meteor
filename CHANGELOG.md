@@ -1,5 +1,2 @@
-*Put notable changes made between each release (or version) here*
-
-
-
+* 04.01.2017 - Switchting to react-router
 
