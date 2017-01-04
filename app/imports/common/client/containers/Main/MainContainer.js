@@ -6,11 +6,9 @@ class MainContainer extends Component {
   }
   render () {
     return (
-      <div style={styles.container}>
-        <div style={styles.innerContainer}>
-          {this.props.children}
-        </div>
-      </div>
+      <span>
+        {this.props.children}
+      </span>
     )
   }
 }
@@ -24,3 +22,11 @@ MainContainer.propTypes = {
 }
 
 export default MainContainer
+
+/*
+ <div style={styles.container}>
+ <div style={styles.innerContainer}>
+ {this.props.children}
+ </div>
+ </div>
+ */
