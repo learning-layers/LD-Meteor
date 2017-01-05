@@ -19,15 +19,14 @@ cache:
 # Since sudo isn't possible anymore (for now), meteor can't add a link to itself to /usr/local/bin,
 # so you'll have to add the meteor installation directory to the PATH yourself.
 before_install:
-  - "curl https://install.meteor.com | /bin/sh"
-  - export PATH="$HOME/.meteor:$PATH"
-  - meteor --version
-  - "npm install -g spacejam@1.6.1 coffee-script"
-  - "meteor add practicalmeteor:mocha-console-runner"
+#  - "curl https://install.meteor.com | /bin/sh"
+#  - export PATH="$HOME/.meteor:$PATH"
+#  - meteor --version
+#  - "npm install -g spacejam@1.6.1 coffee-script"
+#  - "meteor add practicalmeteor:mocha-console-runner"
   - "meteor remove appcache"
   - "npm install -g eslint@3.11.1 eslint-config-standard@6.2.1 eslint-config-standard-jsx@3.2.0 eslint-plugin-standard@2.0.1 eslint-plugin-promise@3.4.0 eslint-plugin-react@6.8.0"
 
-# TODO activate test-packages again when needed
 # - "meteor reset"
 # - "npm run test-packages"
 # - "npm run test-travis"
