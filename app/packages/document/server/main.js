@@ -166,7 +166,7 @@ Meteor.publish('document', function (args) {
         DocumentAccess.find({documentId: args.id})
       ]
     } else {
-      throw new Meteor.Error(403)
+      throw new Meteor.Error(403, 'No permission for viewing this document via sharing link found')
     }
   } else if (this.userId) {
     const userPositionId = UserPositions.insert({userId: this.userId, type: 'document', elementId: args.id})
@@ -186,7 +186,7 @@ Meteor.publish('document', function (args) {
           DocumentAccess.find({documentId: args.id})
         ]
       } else {
-        throw new Meteor.Error(403)
+        throw new Meteor.Error(403, 'No permission for editing this document via sharing link found')
       }
     } else {
       document = Documents.findOne({ '_id': args.id })
@@ -236,7 +236,7 @@ Meteor.publish('document', function (args) {
           ]
         } else {
           // the user doesn't have access
-          throw new Meteor.Error(403)
+          throw new Meteor.Error(403, 'No access to this document')
         }
       }
     }

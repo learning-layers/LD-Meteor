@@ -14,17 +14,16 @@ export class DocumentLinkSharing extends Component {
     try {
       var successful = document.execCommand('copy')
       var msg = successful ? 'successful' : 'unsuccessful'
-      window.alert('Copying text command was ' + msg)
+      window.alert('Copying the link was ' + msg)
     } catch (err) {
-      window.alert('Oops, unable to copy')
+      window.alert('Oops, unable to copy the link')
     }
   }
   render () {
     const { documentAccess } = this.props
     return <div className='document-link-sharing'>
-      DocumentLinkSharing
       <ul>
-        <li style={{display: 'none'}}>
+        <li>
           Can edit (users have to login or register)&nbsp;
           {documentAccess && documentAccess.linkCanEdit ? <div>
             <input ref='editLink' type='text' value={Meteor.absoluteUrl() + 'document/' + this.props.documentId + '?action=shared&permission=edit&accessKey=' + documentAccess.linkCanEdit.linkId} />
@@ -34,7 +33,7 @@ export class DocumentLinkSharing extends Component {
             Generate Edit Link
           </button>}
         </li>
-        <li style={{display: 'none'}}>
+        <li>
           Can comment (users have to login or register)&nbsp;
           {documentAccess && documentAccess.linkCanComment ? <div>
             <input ref='commentLink' type='text' value={Meteor.absoluteUrl() + 'document/' + this.props.documentId + '?action=shared&permission=comment&accessKey=' + documentAccess.linkCanComment.linkId} />

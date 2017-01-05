@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { compose } from 'react-komposer'
-import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import NotFound from '../../../../common/client/ui/mainLayout/NotFound'
 import { Documents, DocumentAccess } from '../../lib/collections'
 import RequestAccess from './sharing/RequestAccess'
@@ -9,6 +8,9 @@ import AccessForbidden from '../../../../common/client/ui/mainLayout/AccessForbi
 import DocumentDisplay from './DocumentDisplay'
 import { getDocument } from '../../lib/methods'
 import { Tracker } from 'meteor/tracker'
+import { setUpAssignNewPermissionsInterval } from '../api/sharing'
+import OldSharingLink from './sharing/OldSharingLink'
+const getDocumentSync = Meteor.wrapAsync(getDocument)
 
 function getTrackerLoader (reactiveMapper) {
   return (props, onData, env) => {
@@ -27,12 +29,10 @@ function getTrackerLoader (reactiveMapper) {
   }
 }
 
-let getDocumentSync = Meteor.wrapAsync(getDocument)
-
 function camelCase (input) {
   if (input.length > 0) {
-    var oldInput = input.substring(1)
-    var newfirstletter = input.charAt(0)
+    const oldInput = input.substring(1)
+    const newfirstletter = input.charAt(0)
     input = newfirstletter.toUpperCase() + oldInput
     return input.replace(/_(.)/g, function (match, group1) {
       return group1.toUpperCase()
@@ -53,7 +53,10 @@ function onPropsChange (props, onData) {
   }
   let handle = Meteor.subscribe('document', args, {
     onError: function (err) {
-      onData(null, { err: err })
+      // If any errors occur rerender the site:
+      // For instance if a 403 error occurs with the message 'No access to this document'
+      // then a request for access form is displayed to the user if logged out.
+      onData(null, { documentId: props.id, err: err })
     }
   })
   if (handle.ready()) {
@@ -62,29 +65,19 @@ function onPropsChange (props, onData) {
     if (!document) { //  && Meteor.isServer
       // check what the reason is
       if (args.accessKey) {
-        try {
-          document = getDocumentSync(props.id, props.action, props.permission, props.accessKey)
-          onData(null, { document, documentAccess })
-        } catch (err) {
-          console.log(err)
-          onData(null, { err, document, documentAccess })
-        }
+        document = getDocumentSync(props.id, props.action, props.permission, props.accessKey)
+        onData(null, { documentId: props.id, document, documentAccess })
       } else {
-        try {
-          document = getDocumentSync(props.id, undefined, undefined, undefined)
-          onData(null, { document, documentAccess })
-        } catch (err) {
-          console.log(err)
-          onData(null, { err, document, documentAccess })
-        }
+        document = getDocumentSync(props.id, undefined, undefined, undefined)
+        onData(null, { documentId: props.id, document, documentAccess })
       }
     } else {
-      onData(null, { document, documentAccess })
+      onData(null, { documentId: props.id, document, documentAccess })
     }
   } else {
     let document = Documents.findOne({ '_id': props.id })
     let documentAccess = DocumentAccess.findOne({documentId: props.id})
-    onData(null, { document, documentAccess })
+    onData(null, { documentId: props.id, document, documentAccess })
   }
 }
 
@@ -96,46 +89,13 @@ class Document extends Component {
     }
   }
   propsWillChange (nextProps) {
-    const { action, permission, accessKey } = this.props
-    if (action === 'shared' && (permission === 'edit' || permission === 'comment') && accessKey) {
-      Meteor.setTimeout(() => {
-        this.assignEditOrCommentPermissions()
-      }, 0)
+    if (this.assignNewPermissionsInterval) {
+      Meteor.clearInterval(this.assignNewPermissionsInterval)
     }
+    setUpAssignNewPermissionsInterval(this)
   }
   componentDidMount () {
-    const { action, permission, accessKey } = this.props
-    if (action === 'shared' && (permission === 'edit' || permission === 'comment') && accessKey) {
-      Meteor.setTimeout(() => {
-        this.assignEditOrCommentPermissions()
-      }, 0)
-    }
-  }
-  assignEditOrCommentPermissions () {
-    let permission = this.props.permission
-    permission = 'can_' + permission
-    function camelCase (input) {
-      if (input.length > 0) {
-        var oldInput = input.substring(1)
-        var newfirstletter = input.charAt(0)
-        input = newfirstletter.toUpperCase() + oldInput
-        return input.replace(/_(.)/g, function (match, group1) {
-          return group1.toUpperCase()
-        })
-      } else {
-        return input
-      }
-    }
-    Meteor.call('assignDocumentEditOrCommentPermissions', this.props.document._id, camelCase(permission), this.props.accessKey, (err, res) => {
-      if (err) {
-        window.alert(err)
-      }
-      if (res) {
-        FlowRouter.go('/document/' + this.props.document._id)
-      } else {
-        window.alert('failed')
-      }
-    })
+    setUpAssignNewPermissionsInterval(this)
   }
   render () {
     const { err, action, permission, accessKey, loading } = this.props
@@ -144,15 +104,18 @@ class Document extends Component {
     console.log('err=', err)
     console.log('document=', document)
     if (err && err.error === 403) {
-      return <div className='container'>
-        <RequestAccess documentId={this.props.id} />
-      </div>
+      if (err.reason === 'No access to this document') {
+        return <RequestAccess documentId={this.props.documentId} />
+      } else {
+        return <OldSharingLink documentId={this.props.documentId} />
+      }
     } else if (err && err.error === 401) {
       return <AccessForbidden />
     } else if (err && err.error === 404) {
       return <NotFound />
     } else if (err) {
-      return <div>Unidentified error: {JSON.stringify(document)}<NotFound /></div>
+      console.error(err)
+      return <NotFound />
     } else {
       if (action === 'shared' && (permission === 'edit' || permission === 'comment') && accessKey) {
         return <div className='container'>
@@ -172,7 +135,7 @@ class Document extends Component {
               this.state.isScheduledForReload = false
               this.setState({})
             }
-          }, 250)
+          }, 1000)
           return <div className='container'>
             Loading...
           </div>

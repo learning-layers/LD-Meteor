@@ -95,22 +95,24 @@ class RequestAccess extends Component {
         </div>
       }
     } else {
-      return <div className='request-access container'>
-        <div className='panel panel-default'>
-          <div className='panel-heading'>
-            <h4>Issue a document access request</h4>
-          </div>
-          <div className='panel-body'>
-            {'You currently don\'t have access to this document. You can request access from the owner.'}
-            <br /><br />
-            <form onSubmit={(event) => this.requestAccess(event)}>
-              <FormGroup controlId='requestAccessTextarea'>
-                <FormControl componentClass='textarea' placeholder='Add an additional message to the owner of the document.' />
-              </FormGroup>
-              <Button type='submit' bsStyle='success'>
-                Request access
-              </Button>
-            </form>
+      return <div className='container'>
+        <div className='request-access container'>
+          <div className='panel panel-default'>
+            <div className='panel-heading'>
+              <h4>Issue a document access request</h4>
+            </div>
+            <div className='panel-body'>
+              {'You currently don\'t have access to this document. You can request access from the owner.'}
+              <br /><br />
+              <form onSubmit={(event) => this.requestAccess(event)}>
+                <FormGroup controlId='requestAccessTextarea'>
+                  <FormControl componentClass='textarea' placeholder='Add an additional message to the owner of the document.' />
+                </FormGroup>
+                <Button type='submit' bsStyle='success'>
+                  Request access
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
