@@ -74,7 +74,6 @@ jparker:crypto-padding@0.1.0
 jquery@1.11.10
 juliancwirko:s-alert@3.2.0
 kadira:blaze-layout@2.3.0
-kadira:debug@3.2.2
 kadira:flow-router@2.12.1
 kadira:flow-router-ssr@3.13.0
 launch-screen@1.1.0
