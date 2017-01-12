@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import { Meteor } from 'meteor/meteor'
-import Alert from 'react-s-alert'
-import DocumentTags from './DocumentTags'
 import CommentingArea from './comment/CommentingArea'
 import ContentEditor from './mainContent/contentEditor/ContentEditor'
 import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
@@ -20,84 +18,15 @@ import SubDocumentList from './SubDocumentList'
 import DocumentStatusIndicator from './DocumentStatusIndicator'
 import { Groups } from '../../../groups/lib/collections'
 import FullScreenEditorModal from './mainContent/contentEditor/FullScreenEditorModal'
-
-class EditableDocumentTitleInput extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      editMode: false,
-      inputDisabled: false,
-      documentTitle: this.props.documentTitle
-    }
-  }
-  setNewDocumentTitle () {
-    this.setState({
-      inputDisabled: true
-    })
-    Meteor.call('changeDocumentTitle', this.props.documentId, this.state.documentTitle, (err, res) => {
-      if (err) {
-        this.setState({
-          inputDisabled: false
-        })
-        Alert.error('Changing document title failed.')
-      }
-      if (res) {
-        this.setEditMode(false)
-        this.setState({
-          inputDisabled: true,
-          editMode: false
-        })
-        Alert.success('Successfully change document title.')
-      }
-    })
-  }
-  setEditMode (newEditMode) {
-    this.setState({
-      documentTitle: this.props.documentTitle,
-      editMode: newEditMode
-    })
-  }
-  handleChange (event) {
-    let changedDocumentTitle = ReactDOM.findDOMNode(event.target).value
-    this.setState({
-      documentTitle: changedDocumentTitle
-    })
-  }
-  render () {
-    const { documentTitle } = this.props
-    if (this.state.editMode) {
-      return <div className='document-title-area'>
-        <input type='text'
-          value={this.state.documentTitle}
-          style={{color: 'black'}}
-          onChange={(event) => this.handleChange(event)}
-          disabled={this.state.inputDisabled} />
-        <ButtonToolbar className='change-document-title-btns' style={{marginLeft: '7px'}}>
-          <Button className='new-document-title-submit-button' bsStyle='success' bsSize='small' onClick={() => this.setNewDocumentTitle()}>
-            <span className='glyphicon glyphicon-ok' />
-          </Button>
-          <Button className='new-document-title-cancel-button' bsSize='small' onClick={() => this.setEditMode(false)}>
-            Cancel
-          </Button>
-        </ButtonToolbar>
-      </div>
-    } else {
-      return <h4 className='document-title' onClick={() => this.setEditMode(true)}>{documentTitle}</h4>
-    }
-  }
-}
-
-EditableDocumentTitleInput.propTypes = {
-  documentId: React.PropTypes.string,
-  documentTitle: React.PropTypes.string
-}
+import Breadcrumbs from './document/Breadcrumbs'
+import EditableDocumentTitleInput from './document/EditableDocumentTitleInput'
+import TagBar from './document/TagBar'
 
 class DocumentDisplay extends Component {
   constructor (props) {
     super(props)
     this.state = {
       activeTabName: 'Editor',
-      tagBarFocused: false,
       manageSharingModal: null,
       openCreateDocumentModal: null,
       breadcrumbs: [],
@@ -196,11 +125,6 @@ class DocumentDisplay extends Component {
       default:
         break
     }
-  }
-  changeTagBarFocus (isFocused) {
-    this.setState({
-      tagBarFocused: isFocused
-    })
   }
   openDocumentSharingModal () {
     let renderToElement = this.refs.manageSharingModal
@@ -316,33 +240,8 @@ class DocumentDisplay extends Component {
     }
     return <div className='document container-fluid'>
       <div className='well breadcrumb-tag-wrapper'>
-        {this.state.breadcrumbs.length > 0 ? <span>
-          <div className='breadcrumbs-bar'>
-            <div className='lbl'>
-              <a>Parent documents:&nbsp;</a>
-            </div>
-            <ol className='breadcrumb'>
-              {this.state.breadcrumbs.map((breadcrumb) => {
-                return <li>
-                  <a href={'/document/' + breadcrumb.documentId}>
-                    {breadcrumb.document ? breadcrumb.document.title : 'unknown title'}
-                  </a>
-                </li>
-              })}
-              <li>
-                <a className='active'>
-                  {this.props.document.title}
-                </a>
-              </li>
-            </ol>
-            <div className='clearfix' />
-          </div>
-          <hr />
-        </span> : null}
-        <div className='tag-bar'>
-          <label htmlFor='document-tags' className={this.state.tagBarFocused ? 'active' : ''}>Tags</label>
-          <DocumentTags disabled={isViewMode} onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={document._id} />
-        </div>
+        <Breadcrumbs breadcrumbs={this.state.breadcrumbs} documentTitle={document.title} />
+        <TagBar isViewMode={isViewMode} documentId={document._id} />
       </div>
       <div className={mainContentClasses}>
         <div className='panel-heading'>

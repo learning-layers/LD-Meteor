@@ -89,19 +89,23 @@ class Document extends Component {
     }
   }
   propsWillChange (nextProps) {
-    if (this.assignNewPermissionsInterval) {
-      Meteor.clearInterval(this.assignNewPermissionsInterval)
+    if (nextProps.action) {
+      if (this.assignNewPermissionsInterval) {
+        Meteor.clearInterval(this.assignNewPermissionsInterval)
+      }
+      setUpAssignNewPermissionsInterval(this, (err) => {
+        // TODO comment this in a better way
+        console.log(err)
+      })
     }
-    setUpAssignNewPermissionsInterval(this, (err) => {
-      // TODO comment this in a better way
-      console.log(err)
-    })
   }
   componentDidMount () {
-    setUpAssignNewPermissionsInterval(this, (err) => {
-      // TODO comment this in a better way
-      console.log(err)
-    })
+    if (this.props.action) {
+      setUpAssignNewPermissionsInterval(this, (err) => {
+        // TODO comment this in a better way
+        console.log(err)
+      })
+    }
   }
   render () {
     const { err, action, permission, accessKey } = this.props
@@ -128,6 +132,7 @@ class Document extends Component {
           {'Assigning new permissions ...'}
         </div>
       } else if (!document) {
+        console.debug('document not found')
         const timeDiff = Math.abs(new Date().getTime() - propsLastChangedAt.getTime())
         const diffSeconds = Math.ceil(timeDiff / 1000)
         if (diffSeconds < 3) { // TODO check if this is currently in use
