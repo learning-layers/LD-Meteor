@@ -92,13 +92,19 @@ class Document extends Component {
     if (this.assignNewPermissionsInterval) {
       Meteor.clearInterval(this.assignNewPermissionsInterval)
     }
-    setUpAssignNewPermissionsInterval(this)
+    setUpAssignNewPermissionsInterval(this, (err) => {
+      // TODO comment this in a better way
+      console.log(err)
+    })
   }
   componentDidMount () {
-    setUpAssignNewPermissionsInterval(this)
+    setUpAssignNewPermissionsInterval(this, (err) => {
+      // TODO comment this in a better way
+      console.log(err)
+    })
   }
   render () {
-    const { err, action, permission, accessKey, loading } = this.props
+    const { err, action, permission, accessKey } = this.props
     let { document, documentAccess } = this.props
     this.state.isScheduledForReload = false
     console.log('err=', err)
@@ -121,14 +127,10 @@ class Document extends Component {
         return <div className='container'>
           {'Assigning new permissions ...'}
         </div>
-      } else if (loading) {
-        return <div className='container'>
-          Loading ....
-        </div>
       } else if (!document) {
         const timeDiff = Math.abs(new Date().getTime() - propsLastChangedAt.getTime())
         const diffSeconds = Math.ceil(timeDiff / 1000)
-        if (diffSeconds < 3) {
+        if (diffSeconds < 3) { // TODO check if this is currently in use
           this.state.isScheduledForReload = true
           Meteor.setTimeout(() => {
             if (this.state.isScheduledForReload) {

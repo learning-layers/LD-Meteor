@@ -31,7 +31,7 @@ export function assignEditOrCommentPermissions (permission, documentId, accessKe
   })
 }
 
-export function setUpAssignNewPermissionsInterval (self) {
+export function setUpAssignNewPermissionsInterval (self, callback) {
   try {
     let noDocumentAccessObjCounter = 0
     let assignNewPermissionsInterval = Meteor.setInterval(() => {
@@ -41,7 +41,7 @@ export function setUpAssignNewPermissionsInterval (self) {
         if (documentAccess) { // document access object is available
           Meteor.clearInterval(assignNewPermissionsInterval)
           delete self.assignNewPermissionsInterval
-          assignEditOrCommentPermissions(permission, documentAccess.documentId, accessKey)
+          assignEditOrCommentPermissions(permission, documentAccess.documentId, accessKey, callback)
         } else {
           noDocumentAccessObjCounter++
         }
