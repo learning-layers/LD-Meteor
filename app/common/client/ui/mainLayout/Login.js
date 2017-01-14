@@ -37,6 +37,9 @@ class Login extends Component {
     })
   }
   render () {
+    // TODO implement proper reactjs validation
+    // password onchange='this.setCustomValidity(this.validity.patternMismatch ? "Must have at least 6 characters" : ""); if(this.checkValidity()) form.password_two.pattern = this.value;'
+    // password2 onchange='this.setCustomValidity(this.validity.patternMismatch ? "Please enter the same Password as above" : "");'
     return <div className='login container'>
       <Col xs={12} md={6}>
         <div className='well'>
@@ -52,10 +55,8 @@ class Login extends Component {
           <form onSubmit={(event) => this.submitRegisterForm(event)}>
             <input className='form-control' type='email' name='registerEmail' placeholder='Your email address' required />
             <input className='form-control' id='password' name='registerPassword' type='password' pattern='^\S{6,}$'
-              onchange='this.setCustomValidity(this.validity.patternMismatch ? "Must have at least 6 characters" : ""); if(this.checkValidity()) form.password_two.pattern = this.value;'
               placeholder='Your password' required />
             <input className='form-control' id='password_two' name='password_two' type='password' pattern='^\S{6,}$'
-              onchange='this.setCustomValidity(this.validity.patternMismatch ? "Please enter the same Password as above" : "");'
               placeholder='Verify your password' required />
             <button className='btn btn-info register-btn'>Register</button>
           </form>

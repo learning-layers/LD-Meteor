@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { MentionsInput, Mention } from 'react-mentions'
 import throttle from 'lodash/throttle'
@@ -9,6 +9,8 @@ import defaultStyle from '../defaultStyle'
 import defaultMentionStyle from '../defaultMentionStyle'
 import ButtonToolbar from '../../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
 import Button from '../../../../../../node_modules/react-bootstrap/lib/Button'
+
+MentionsInput.propTypes.appendSpaceOnAdd = PropTypes.bool
 
 const style = merge({}, defaultStyle(), {
   suggestions: {

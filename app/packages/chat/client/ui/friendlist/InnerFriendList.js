@@ -37,8 +37,8 @@ Friend.propTypes = {
 
 class InnerFriendList extends Component {
   render () {
-    const { activeFilter, friendList } = this.props
-    console.log(activeFilter)
+    const { friendList } = this.props /* activeFilter, */
+    // console.log(activeFilter)
     return <div id='inner-friendlist'>
       {friendList ? <span>
         <ul>

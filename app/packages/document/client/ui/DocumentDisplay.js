@@ -1,36 +1,24 @@
-import React, {Component} from 'react'
-import ReactDOM from 'react-dom'
 import { Meteor } from 'meteor/meteor'
-import CommentingArea from './comment/CommentingArea'
-import ContentEditor from './mainContent/contentEditor/ContentEditor'
-import ButtonToolbar from '../../../../../node_modules/react-bootstrap/lib/ButtonToolbar'
-import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
-import SubscribeButton from './SubscribeButton'
-import EventEmitterInstance from '../../../../common/client/EventEmitter'
-import DocumentSharingModal from './sharing/DocumentSharingModal'
-import AttachmentsBar from './mainContent/AttachmentsBar'
-import ContentViewer from './mainContent/contentEditor/ContentViewer'
-import FileAttachmentArea from './mainContent/fileAttachments/FileAttachmentArea'
-import HistoryArea from './mainContent/history/HistoryArea'
-import CreateDocumentModal from './CreateDocumentModal'
-import SubDocumentCounter from './SubDocumentCounter'
-import SubDocumentList from './SubDocumentList'
-import DocumentStatusIndicator from './DocumentStatusIndicator'
-import { Groups } from '../../../groups/lib/collections'
-import FullScreenEditorModal from './mainContent/contentEditor/FullScreenEditorModal'
+import React, { Component, PropTypes } from 'react'
+import ReactDOM from 'react-dom'
 import Breadcrumbs from './document/Breadcrumbs'
-import EditableDocumentTitleInput from './document/EditableDocumentTitleInput'
 import TagBar from './document/TagBar'
+import CommentingArea from './comment/CommentingArea'
+import MainContentHeading from './document/MainContentHeading'
+import MainContentBody from './document/MainContentBody'
+import FullScreenEditorModal from './mainContent/contentEditor/FullScreenEditorModal'
+import SubDocumentList from './SubDocumentList'
+import { Groups } from '../../../groups/lib/collections'
+import EventEmitterInstance from '../../../../common/client/EventEmitter'
+import CreateDocumentModal from './CreateDocumentModal'
 
 class DocumentDisplay extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      activeTabName: 'Editor',
-      manageSharingModal: null,
-      openCreateDocumentModal: null,
-      breadcrumbs: [],
-      showSubDocuments: false
+      showSubDocuments: false,
+      openFullScreenEditorModal: null,
+      openCreateDocumentModal: null
     }
   }
   componentDidMount () {
@@ -45,26 +33,16 @@ class DocumentDisplay extends Component {
     this.createSubDocumentSubscription = EventEmitterInstance.addListener('open-create-sub-document-modal', (selection, parentId) => {
       this.openCreateSubDocumentModal(selection, parentId)
     })
-    this.openShowSubdocumentsSubscription = EventEmitterInstance.addListener('doc-open-subdocs', (open) => { this.toggleShowSubdocuments(open) })
-    this.toggleShowSubdocumentsSubscription = EventEmitterInstance.addListener('doc-toggle-subdocs', () => { this.toggleShowSubdocuments() })
-    if (this.props.document.isSubDocument) {
-      Meteor.setTimeout(() => {
-        Meteor.call('getSubDocumentBreadcrumbs', this.props.document._id, (err, res) => {
-          if (err) {
-            //
-          }
-          if (res) {
-            this.setState({
-              breadcrumbs: res
-            })
-          }
-        })
-      }, 100)
-    }
+    this.openShowSubdocumentsSubscription = EventEmitterInstance.addListener('doc-open-subdocs', (open) => {
+      this.toggleShowSubdocuments(open)
+    })
+    this.toggleShowSubdocumentsSubscription = EventEmitterInstance.addListener('doc-toggle-subdocs', () => {
+      this.toggleShowSubdocuments()
+    })
   }
   componentWillUnmount () {
-    let renderToElement = this.refs.manageSharingModal
-    if (this.state.manageSharingModal !== null) {
+    let renderToElement = this.refs.openFullScreenEditorModal
+    if (this.state.openFullScreenEditorModal !== null) {
       ReactDOM.unmountComponentAtNode(renderToElement)
     }
     Meteor.setTimeout(function () {
@@ -80,28 +58,26 @@ class DocumentDisplay extends Component {
       this.openShowSubdocumentsSubscription.remove()
     }
   }
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.document.isSubDocument) {
-      Meteor.setTimeout(() => {
-        Meteor.call('getSubDocumentBreadcrumbs', nextProps.document._id, (err, res) => {
-          if (err) {
-            //
-          }
-          if (res) {
-            this.setState({
-              breadcrumbs: res
-            })
-          }
-        })
-      }, 100)
-    }
-  }
   openCreateSubDocumentModal (selection, parentId) {
     let renderToElement = this.refs.createDocumentModal
     if (!this.state.openCreateDocumentModal) {
       this.state.openCreateDocumentModal = ReactDOM.render(<CreateDocumentModal selection={selection} parentId={parentId} />, renderToElement)
     } else {
       this.state.openCreateDocumentModal.open(selection, parentId)
+    }
+  }
+  isViewMode () {
+    return this.props.action && this.props.action === 'shared' && this.props.permission && this.props.permission === 'view' && this.props.accessKey
+  }
+  toggleShowSubdocuments (open) {
+    if (open && !this.state.showSubDocuments) {
+      this.setState({
+        showSubDocuments: true
+      })
+    } else if (open === undefined) {
+      this.setState({
+        showSubDocuments: !this.state.showSubDocuments
+      })
     }
   }
   openFullscreenEditorModal () {
@@ -111,53 +87,6 @@ class DocumentDisplay extends Component {
     } else {
       this.state.openFullScreenEditorModal.open(this.props.document, this.getPermissionLevel(this.props.documentAccess))
     }
-  }
-  changeTab (tabName) {
-    switch (tabName) {
-      case 'Editor':
-      case 'Files':
-      case 'History':
-      case 'Media':
-        this.setState({
-          activeTabName: tabName
-        })
-        break
-      default:
-        break
-    }
-  }
-  openDocumentSharingModal () {
-    let renderToElement = this.refs.manageSharingModal
-    if (!this.state.manageSharingModal) {
-      this.state.manageSharingModal = ReactDOM.render(<DocumentSharingModal documentId={this.props.document._id} />, renderToElement)
-    } else {
-      this.state.manageSharingModal.open()
-    }
-  }
-  contentSection (activeTabName) {
-    switch (activeTabName) {
-      case 'Editor':
-        if (this.props.document && this.isViewMode()) {
-          // if a sharing link has been used, no user logged in
-          return <ContentViewer documentId={this.props.document._id} accessKey={this.props.accessKey} />
-        } else if (this.props.document) {
-          // user is logged in
-          return <ContentEditor document={this.props.document} permissionLevel={this.getPermissionLevel(this.props.documentAccess)} />
-        } else {
-          return null
-        }
-      case 'Files':
-        return <FileAttachmentArea documentId={this.props.document._id} />
-      case 'Media':
-        return 'Media'
-      case 'History':
-        return <HistoryArea documentId={this.props.document._id} />
-      default:
-        return <div>No section found</div>
-    }
-  }
-  isViewMode () {
-    return this.props.action && this.props.action === 'shared' && this.props.permission && this.props.permission === 'view' && this.props.accessKey
   }
   getPermissionLevel (documentAccess) {
     if (this.props.document.createdBy === Meteor.userId()) {
@@ -217,74 +146,40 @@ class DocumentDisplay extends Component {
       return 'view'
     }
   }
-  toggleShowSubdocuments (open) {
-    if (open) {
-      this.setState({
-        showSubDocuments: true
-      })
-    } else {
-      this.setState({
-        showSubDocuments: !this.state.showSubDocuments
-      })
-    }
-  }
   render () {
-    let { document } = this.props
+    const { document, documentAccess } = this.props
     const isViewMode = this.isViewMode()
-    // const permissionLevel = this.getPermissionLevel()
-    // console.log('isViewMode=', isViewMode)
-    // console.log('permissions=', permissionLevel)
     let mainContentClasses = 'main-content panel panel-primary'
     if (this.state.showSubDocuments) {
       mainContentClasses += ' show-sub-docs'
     }
-    return <div className='document container-fluid'>
-      <div className='well breadcrumb-tag-wrapper'>
-        <Breadcrumbs breadcrumbs={this.state.breadcrumbs} documentTitle={document.title} />
-        <TagBar isViewMode={isViewMode} documentId={document._id} />
-      </div>
-      <div className={mainContentClasses}>
-        <div className='panel-heading'>
-          <DocumentStatusIndicator documentId={document._id} documentStatus={document.maturityLevel} />
-          <EditableDocumentTitleInput documentId={document._id} documentTitle={document.title} />
-          {isViewMode ? null : <ButtonToolbar className='options-buttons'>
-            <SubscribeButton documentId={document._id} />
-            <Button className='open-fullscreen-modal-button' bsSize='small' onClick={() => this.openFullscreenEditorModal()} data-tooltip='Fullsceen'>
-              <span className='glyphicon glyphicon-resize-full' />
-            </Button>
-            <Button className='open-sharing-modal-button' bsSize='small' onClick={() => this.openDocumentSharingModal()} data-tooltip='Share'>
-              Share&nbsp;<span className='glyphicon glyphicon glyphicon-share-alt' />
-            </Button>
-            <SubDocumentCounter documentId={document._id} />
-          </ButtonToolbar>}
-          {isViewMode ? null : <div ref='manageSharingModal' />}
+    return (
+      <div className='document container-fluid'>
+        <div className='well breadcrumb-tag-wrapper'>
+          <Breadcrumbs isSubdocument={document.isSubDocument} documentId={document._id} documentTitle={document.title} />
+          <TagBar isViewMode={isViewMode} documentId={document._id} />
         </div>
-        <div className='panel-body'>
-          {this.props.document ? <AttachmentsBar
-            documentId={document._id}
-            onChangeTabSelection={(tabName) => this.changeTab(tabName)}
-            activeTabName={this.state.activeTabName} /> : null}
-          <div className='content'>
-            {this.contentSection(this.state.activeTabName)}
-          </div>
+        <div className={mainContentClasses}>
+          <MainContentHeading documentId={document._id} documentTitle={document.title} isViewMode={isViewMode} openFullscreenEditorModal={() => this.openFullscreenEditorModal()} maturityLevel={document.maturityLevel} />
+          <MainContentBody isViewMode={isViewMode} document={document} documentId={document._id} documentAccess={documentAccess} getPermissionLevel={(documentAccess) => this.getPermissionLevel(documentAccess)} />
         </div>
+        {this.state.showSubDocuments ? <span><SubDocumentList documentId={document._id} /><div className='clearfix' /></span> : null}
+        <div id='create-document-modal-root' ref='createDocumentModal' />
+        <div id='fullscreen-editor-modal-root' ref='fullScreenEditorModal' />
+        {isViewMode ? null : <CommentingArea documentId={document._id} />}
+        <textarea id='tinymceTextarea' name='tinymceTextarea' />
+        <iframe id='printf' name='printf' />
       </div>
-      {this.state.showSubDocuments ? <span><SubDocumentList documentId={document._id} /><div className='clearfix' /></span> : null}
-      <div ref='createDocumentModal' />
-      <div ref='fullScreenEditorModal' />
-      {isViewMode ? null : <CommentingArea documentId={document._id} />}
-      <textarea id='tinymceTextarea' name='tinymceTextarea' />
-      <iframe id='printf' name='printf' />
-    </div>
+    )
   }
 }
 
 DocumentDisplay.propTypes = {
-  document: React.PropTypes.object,
-  action: React.PropTypes.string,
-  permission: React.PropTypes.string,
-  accessKey: React.PropTypes.string,
-  documentAccess: React.PropTypes.object
+  document: PropTypes.object.isRequired,
+  documentAccess: PropTypes.object.isRequired,
+  action: PropTypes.string,
+  permission: PropTypes.string,
+  accessKey: PropTypes.string
 }
 
 export default DocumentDisplay

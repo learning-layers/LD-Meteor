@@ -113,7 +113,7 @@ class CreateDocumentModal extends Component {
               placeholder={DocumentSchema._schema.title.placeholder}
               autoComplete='off' />
             {this.state.selection ? <span>
-              <Checkbox ref='sharingWithSameUsersCheckbox' checked={this.state.sharedWithSameUsers} onClick={() => this.toggleSharingWithSameUsers()}>
+              <Checkbox ref='sharingWithSameUsersCheckbox' checked={this.state.sharedWithSameUsers} onChange={() => this.toggleSharingWithSameUsers()}>
                 Share this document with the same users
               </Checkbox>
             </span> : null}

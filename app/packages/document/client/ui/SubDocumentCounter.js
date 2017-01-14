@@ -6,6 +6,7 @@ import Button from '../../../../../node_modules/react-bootstrap/lib/Button'
 import Badge from '../../../../../node_modules/react-bootstrap/lib/Badge'
 import EventEmitterInstance from '../../../../common/client/EventEmitter'
 import { Tracker } from 'meteor/tracker'
+import _throttle from 'lodash/throttle'
 
 function getTrackerLoader (reactiveMapper) {
   return (props, onData, env) => {
@@ -32,15 +33,21 @@ function onPropsChange (props, onData) {
   }
 }
 
+function openSubDocs (open) {
+  EventEmitterInstance.emit('doc-open-subdocs', open)
+}
+
+const throttledOpenSubDocs = _throttle(openSubDocs, 500)
+
 class SubDocumentCounter extends Component {
   componentDidMount () {
     if (this.props.subdocumentsCount > 0) {
-      EventEmitterInstance.emit('doc-open-subdocs', true)
+      throttledOpenSubDocs(true)
     }
   }
   componentWillReceiveProps (nextProps) {
     if (nextProps.subdocumentsCount > 0) {
-      EventEmitterInstance.emit('doc-open-subdocs', true)
+      throttledOpenSubDocs(true)
     }
   }
   toggleSubDocumentArea () {

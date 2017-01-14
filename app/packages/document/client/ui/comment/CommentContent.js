@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import { MentionsInput, Mention } from 'react-mentions'
-import throttle from 'lodash/throttle'
+import _throttle from 'lodash/throttle'
 import merge from 'lodash/merge'
 import uniqBy from 'lodash/uniqBy'
 import sortBy from 'lodash/sortBy'
@@ -8,16 +8,18 @@ import { Meteor } from 'meteor/meteor'
 import defaultStyle from '../defaultStyle'
 import defaultMentionStyle from '../defaultMentionStyle'
 
-let startsWith = function (string, searchString, position) {
+MentionsInput.propTypes.appendSpaceOnAdd = PropTypes.bool
+
+const startsWith = function (string, searchString, position) {
   position = position || 0
   return string.indexOf(searchString, position) === position
 }
 
-let renderUserSuggestion = function (entry, search, highlightedDisplay, index) {
+const renderUserSuggestion = function (entry, search, highlightedDisplay, index) {
   return <div>{entry.display}</div>
 }
 
-let data = function (possibleSuggestions, search, callback) {
+const fetchMentions = function (possibleSuggestions, search, callback) {
   Meteor.call('getMentions', {mentionSearch: search}, function (err, res) {
     if (err) {
       //
@@ -67,7 +69,7 @@ class CommentContent extends Component {
       style={style} onChange={(ev, value, plainTextVal, mentions) => this.handleChange(ev, value, plainTextVal, mentions)}
       placeholder={'Mention people using \'@\''}
       disabled={!this.props.editMode}>
-      <Mention trigger='@' data={(search, callback) => throttle(data([], search, callback), 230)} style={defaultMentionStyle}
+      <Mention trigger='@' data={(search, callback) => _throttle(fetchMentions([], search, callback), 230)()} style={defaultMentionStyle}
         renderSuggestion={(entry, search, highlightedDisplay, index) => renderUserSuggestion(entry, search, highlightedDisplay, index)} />
     </MentionsInput>
   }

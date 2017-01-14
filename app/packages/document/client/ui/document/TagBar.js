@@ -14,17 +14,18 @@ class TagBar extends Component {
     })
   }
   render () {
+    const { isViewMode, documentId } = this.props
     return (
       <div className='tag-bar'>
         <label htmlFor='document-tags' className={this.state.tagBarFocused ? 'active' : ''}>Tags</label>
-        <DocumentTags disabled={this.props.isViewMode} onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={this.props.documentId} />
+        <DocumentTags disabled={isViewMode} onFocus={() => this.changeTagBarFocus(true)} onBlur={() => this.changeTagBarFocus(false)} documentId={documentId} />
       </div>
     )
   }
 }
 
 TagBar.propTypes = {
-  isViewMode: PropTypes.bool.isRequired,
+  isViewMode: PropTypes.bool,
   documentId: PropTypes.string.isRequired
 }
 

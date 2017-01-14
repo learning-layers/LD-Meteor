@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
-import { Session } from 'meteor/session'
-import Fireball from 'fireball-js'
+// import { Session } from 'meteor/session'
+// import Fireball from 'fireball-js'
 import { Tracker } from 'meteor/tracker'
 
 // set the same domain name as etherpad so that it is possible to access the
@@ -109,7 +109,8 @@ Meteor.startup(function () {
     document.addEventListener(visibilityChange, handleVisibilityChange, false)
   }
 
-  Meteor.setTimeout(function () {
+  // calculate device score
+  /* Meteor.setTimeout(function () {
     let scoreObj = Session.get('deviceScore')
     console.debug('scoreObj=' + JSON.stringify(scoreObj))
     let timeDiff
@@ -117,7 +118,7 @@ Meteor.startup(function () {
       timeDiff = new Date().getTime() - scoreObj.capturedOn.getTime()
       console.debug('scoreObj time diff=', timeDiff)
     }
-    if (!scoreObj || timeDiff > 43200000 /* 30 * 24 * 60 * 1000 */) {
+    if (!scoreObj || timeDiff > 43200000 /* 30 * 24 * 60 * 1000 */ /* ) {
       console.time('Fireball scoring')
       Fireball.run({
         runs: 2,
@@ -148,5 +149,5 @@ Meteor.startup(function () {
         document.getElementsByTagName('body')[0].className += ' speed-of-sloth'
       }
     }
-  }, 1000)
+  }, 1000) */
 })

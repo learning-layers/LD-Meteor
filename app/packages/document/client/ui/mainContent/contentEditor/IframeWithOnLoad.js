@@ -26,7 +26,9 @@ class IFrameWithOnLoad extends Component {
     ReactDOM.findDOMNode(this.refs.iframe).removeEventListener('load', this.state.onLoad)
   }
   render () {
-    return <iframe ref='iframe' {...this.props} />
+    const {id, name, src, scrolling, seamless} = this.props
+    const iFrameProps = {id, name, src, scrolling, seamless}
+    return <iframe ref='iframe' {...iFrameProps} />
   }
 }
 

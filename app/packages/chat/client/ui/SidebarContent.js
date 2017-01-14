@@ -6,7 +6,7 @@ import { compose } from 'react-komposer'
 import { Meteor } from 'meteor/meteor'
 import { jQuery } from 'meteor/jquery'
 import Avatar from './Avatar'
-import ChatLineCalculator from '../lib/chatLineCalculator'
+// import ChatLineCalculator from '../lib/chatLineCalculator'
 import { Uploads } from '../../../fileUpload/lib/collections'
 import Nav from '../../../../../node_modules/react-bootstrap/lib/Nav'
 import NavItem from '../../../../../node_modules/react-bootstrap/lib/NavItem'
@@ -96,12 +96,12 @@ class SidebarContent extends Component {
   }
   render () {
     const {userAvatarPath} = this.props
-    let messageObject = new ChatLineCalculator().getChatMessageObject('LabelLabelLabelLabelLabelLabelLabelLabel!HelloWorld')
+    // let messageObject = new ChatLineCalculator().getChatMessageObject('LabelLabelLabelLabelLabelLabelLabelLabel!HelloWorld')
     // let message = 'LabelLabelLabelLabel LabelLabelLabelLabel!HelloWorld' // 'OpieOP haha Kappa lel'
-    let message = 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
-    let emotes = {356: ['0-5', '40-45'], 25: ['12-16']}
-    let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(message, emotes)
-    console.log(messageWithEmotesObject)
+    // let message = 'OpieOP haha Kappa lel Lorem ipsum dolor OpieOP amet, consetetur \r\nsadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
+    // let emotes = {356: ['0-5', '40-45'], 25: ['12-16']}
+    // let messageWithEmotesObject = new ChatLineCalculator().formatEmotes(message, emotes)
+    // console.log(messageWithEmotesObject)
     let loggedIn = Meteor.userId()
     let constFalse = false
     return <div className='ld-sidebar-content' ref='wrapper'>
@@ -148,27 +148,30 @@ class SidebarContent extends Component {
             </a>
           </div>
         </Tab> : null}
-        <Tab eventKey={3} title='Notifications' disabled>
-          <div className='chat-message-wrapper'>
-            {constFalse ? <span>Tab 2 content</span> : null}
-            {constFalse ? messageObject.lines.map(function (line) {
-              return <div style={{display: 'block', height: '17px'}}>{line}</div>
-            }) : null}
-            {messageWithEmotesObject.lines.map(function (line, i) {
-              let lineHeight = 17
-              if (line.containsEmoticons) {
-                lineHeight = 26
-              }
-              return <div style={{display: 'block', height: lineHeight + 'px', overflow: 'visible'}} key={'line-' + i}>{line.lineContents.map(function (lineContent, j) {
-                return <div style={{display: 'inline'}} key={'line-' + i + '-content-' + j}>{lineContent}</div>
-              })}</div>
-            })}
-          </div>
-        </Tab>
       </Tabs>
     </div>
   }
 }
+
+/*
+ <Tab eventKey={3} title='Notifications' disabled>
+ <div className='chat-message-wrapper'>
+ {constFalse ? <span>Tab 2 content</span> : null}
+ {constFalse ? messageObject.lines.map(function (line) {
+ return <div style={{display: 'block', height: '17px'}}>{line}</div>
+ }) : null}
+ {messageWithEmotesObject.lines.map(function (line, i) {
+ let lineHeight = 17
+ if (line.containsEmoticons) {
+ lineHeight = 26
+ }
+ return <div style={{display: 'block', height: lineHeight + 'px', overflow: 'visible'}} key={'line-' + i}>{line.lineContents.map(function (lineContent, j) {
+ return <div style={{display: 'inline'}} key={'line-' + i + '-content-' + j}>{lineContent}</div>
+ })}</div>
+ })}
+ </div>
+ </Tab>
+ */
 
 SidebarContent.propTypes = {
   userAvatarPath: React.PropTypes.string,

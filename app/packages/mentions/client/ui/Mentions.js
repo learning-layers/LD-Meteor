@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import {Meteor} from 'meteor/meteor'
 import { MentionsInput, Mention } from 'react-mentions'
 import defaultStyle from './defaultStyle'
@@ -7,6 +7,8 @@ import merge from 'lodash/merge'
 import uniqBy from 'lodash/uniqBy'
 import sortBy from 'lodash/sortBy'
 import throttle from 'lodash/throttle'
+
+MentionsInput.propTypes.appendSpaceOnAdd = PropTypes.bool
 
 const style = merge({}, defaultStyle(), {
   suggestions: {

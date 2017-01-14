@@ -37,9 +37,6 @@ function onPropsChange (props, onData) {
 }
 
 class SubDocumentDocumentList extends Component {
-  toggleSubDocumentArea () {
-    EventEmitterInstance.emit('doc-toggle-subdocs', false)
-  }
   openSubDocument (documentId) {
     FlowRouter.go('/document/' + documentId)
   }
