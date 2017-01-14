@@ -31,7 +31,7 @@ class MainContentHeading extends Component {
     }
   }
   render () {
-    const { isViewMode, documentId, maturityLevel, documentTitle, openFullscreenEditorModal } = this.props
+    const { isViewMode, documentId, maturityLevel, documentTitle, openFullscreenEditorModal, updateSubDocumentsCount } = this.props
     return (
       <div className='panel-heading'>
         <DocumentStatusIndicator documentId={documentId} documentStatus={maturityLevel} />
@@ -44,7 +44,7 @@ class MainContentHeading extends Component {
           <Button className='open-sharing-modal-button' bsSize='small' onClick={() => this.openDocumentSharingModal()} data-tooltip='Share'>
             Share&nbsp;<span className='glyphicon glyphicon glyphicon-share-alt' />
           </Button>
-          <SubDocumentCounter documentId={documentId} />
+          <SubDocumentCounter documentId={documentId} updateSubDocumentsCount={updateSubDocumentsCount} />
         </ButtonToolbar>}
         {isViewMode ? null : <div ref='manageSharingModal' />}
       </div>
@@ -57,7 +57,8 @@ MainContentHeading.propTypes = {
   documentTitle: PropTypes.string.isRequired,
   isViewMode: PropTypes.bool,
   openFullscreenEditorModal: PropTypes.func.isRequired,
-  maturityLevel: PropTypes.string
+  maturityLevel: PropTypes.string,
+  updateSubDocumentsCount: PropTypes.func.isRequired
 }
 
 export default MainContentHeading

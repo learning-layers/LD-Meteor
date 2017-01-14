@@ -58,6 +58,17 @@ class DocumentDisplay extends Component {
       this.openShowSubdocumentsSubscription.remove()
     }
   }
+  updateSubDocumentsCount (subdocumentsCount) {
+    if (subdocumentsCount > 0) {
+      this.setState({
+        showSubDocuments: true
+      })
+    } else {
+      this.setState({
+        showSubDocuments: false
+      })
+    }
+  }
   openCreateSubDocumentModal (selection, parentId) {
     let renderToElement = this.refs.createDocumentModal
     if (!this.state.openCreateDocumentModal) {
@@ -164,7 +175,7 @@ class DocumentDisplay extends Component {
           <TagBar isViewMode={isViewMode} documentId={document._id} />
         </div>
         <div className={mainContentClasses}>
-          <MainContentHeading documentId={document._id} documentTitle={document.title} isViewMode={isViewMode} openFullscreenEditorModal={() => this.openFullscreenEditorModal()} maturityLevel={document.maturityLevel} />
+          <MainContentHeading documentId={document._id} documentTitle={document.title} isViewMode={isViewMode} openFullscreenEditorModal={() => this.openFullscreenEditorModal()} maturityLevel={document.maturityLevel} updateSubDocumentsCount={(count) => this.updateSubDocumentsCount(count)} />
           <MainContentBody isViewMode={isViewMode} document={document} documentId={document._id} documentAccess={documentAccess} getPermissionLevel={(documentAccess) => this.getPermissionLevel(documentAccess)} />
         </div>
         {this.state.showSubDocuments ? <span><SubDocumentList documentId={document._id} /><div className='clearfix' /></span> : null}

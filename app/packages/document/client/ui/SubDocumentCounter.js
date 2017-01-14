@@ -48,18 +48,13 @@ class SubDocumentCounter extends Component {
     }
   }
   componentWillReceiveProps (nextProps) {
-    if (nextProps.subdocumentsCount > 0) {
-      throttledOpenSubDocs(true)
-    }
     if (this.props.documentId !== nextProps.documentId) {
       lastDocumentIdChange = new Date()
-      if (nextProps.subdocumentsCount === 0) {
-        throttledOpenSubDocs(false)
-      }
-    } else if (nextProps.subdocumentsCount === 0) {
+      this.props.updateSubDocumentsCount(nextProps.subdocumentsCount)
+    } else if (this.props.subdocumentsCount !== nextProps.subdocumentsCount) {
       const timeDiff = Math.abs(new Date().getTime() - lastDocumentIdChange.getTime())
-      if (timeDiff < 1000) {
-        throttledOpenSubDocs(false)
+      if (timeDiff < 1500) {
+        this.props.updateSubDocumentsCount(nextProps.subdocumentsCount)
       }
     }
   }
@@ -77,7 +72,8 @@ class SubDocumentCounter extends Component {
 
 SubDocumentCounter.propTypes = {
   documentId: PropTypes.string.isRequired,
-  subdocumentsCount: PropTypes.number
+  subdocumentsCount: PropTypes.number,
+  updateSubDocumentsCount: PropTypes.func.isRequired
 }
 
 export default compose(getTrackerLoader(onPropsChange))(SubDocumentCounter)
