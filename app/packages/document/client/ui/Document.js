@@ -131,15 +131,16 @@ class Document extends Component {
         return <div className='container'>
           {'Assigning new permissions ...'}
         </div>
-      } else if (!document) {
+      } else if (document) {
+        return <DocumentDisplay document={document} documentAccess={documentAccess} action={action} permission={permission} accessKey={accessKey} />
+      } else {
         console.debug('document not found')
         const timeDiff = Math.abs(new Date().getTime() - propsLastChangedAt.getTime())
         const diffSeconds = Math.ceil(timeDiff / 1000)
-        if (diffSeconds < 3) { // TODO check if this is currently in use
+        if (diffSeconds < 3) {
           this.state.isScheduledForReload = true
           Meteor.setTimeout(() => {
             if (this.state.isScheduledForReload) {
-              this.state.isScheduledForReload = false
               this.setState({})
             }
           }, 1000)
@@ -147,10 +148,9 @@ class Document extends Component {
             Loading...
           </div>
         } else {
-          return <div>{JSON.stringify(err)}{JSON.stringify(document)}<NotFound /></div>
+          return <div>Error while loading document {JSON.stringify(err)}{JSON.stringify(document)}<NotFound /></div>
         }
       }
-      return <DocumentDisplay document={document} documentAccess={documentAccess} action={action} permission={permission} accessKey={accessKey} />
     }
   }
 }

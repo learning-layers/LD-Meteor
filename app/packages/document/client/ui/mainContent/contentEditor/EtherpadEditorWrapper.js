@@ -26,6 +26,26 @@ class EtherpadEditorWrapper extends Component {
   componentDidMount () {
     window.addEventListener('beforeunload', this.closingCode, false)
     window.addEventListener('unload', this.closingCode, false)
+    this.getEtherpadSession()
+    this.contextMenuSubscription = EventEmitterInstance.addListener('close-content-editor-context-menu', () => { this.setState({ showContextMenu: false }) })
+  }
+  componentWillReceiveProps (nextProps) {
+    if (this.props.documentId !== nextProps.documentId) {
+      this.removeEtherpadCookie()
+      Meteor.setTimeout(() => {
+        this.getEtherpadSession()
+      }, 0)
+    }
+  }
+  componentWillUnmount () {
+    this.removeEtherpadCookie()
+    window.removeEventListener('beforeunload', this.closingCode, false)
+    window.removeEventListener('unload', this.closingCode, false)
+    if (this.contextMenuSubscription) {
+      this.contextMenuSubscription.remove()
+    }
+  }
+  getEtherpadSession () {
     Meteor.call('getEtherpadSession', this.props.documentId, (err, res) => {
       if (err) {
         console.error('err=' + JSON.stringify(err))
@@ -45,19 +65,13 @@ class EtherpadEditorWrapper extends Component {
         })
       }
     })
-    this.contextMenuSubscription = EventEmitterInstance.addListener('close-content-editor-context-menu', () => { this.setState({ showContextMenu: false }) })
-  }
-  componentWillUnmount () {
-    this.removeEtherpadCookie()
-    window.removeEventListener('beforeunload', this.closingCode, false)
-    window.removeEventListener('unload', this.closingCode, false)
-    if (this.contextMenuSubscription) {
-      this.contextMenuSubscription.remove()
-    }
   }
   removeEtherpadCookie () {
     if (this.state.cookieDomain) {
       Cookies.expire('sessionID', { domain: this.state.cookieDomain })
+      this.setState({
+        cookieSet: false
+      })
     }
     return true
   }

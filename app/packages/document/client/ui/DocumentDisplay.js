@@ -42,7 +42,7 @@ class DocumentDisplay extends Component {
   }
   componentWillUnmount () {
     let renderToElement = this.refs.openFullScreenEditorModal
-    if (this.state.openFullScreenEditorModal !== null) {
+    if (renderToElement && this.state.openFullScreenEditorModal !== null) {
       ReactDOM.unmountComponentAtNode(renderToElement)
     }
     Meteor.setTimeout(function () {
