@@ -78,6 +78,10 @@ class DocumentDisplay extends Component {
       this.setState({
         showSubDocuments: !this.state.showSubDocuments
       })
+    } else if (!open && this.state.showSubDocuments) {
+      this.setState({
+        showSubDocuments: false
+      })
     }
   }
   openFullscreenEditorModal () {
@@ -176,7 +180,7 @@ class DocumentDisplay extends Component {
 
 DocumentDisplay.propTypes = {
   document: PropTypes.object.isRequired,
-  documentAccess: PropTypes.object.isRequired,
+  documentAccess: PropTypes.object,
   action: PropTypes.string,
   permission: PropTypes.string,
   accessKey: PropTypes.string

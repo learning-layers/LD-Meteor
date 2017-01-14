@@ -68,7 +68,7 @@ MainContentBody.propTypes = {
   isViewMode: PropTypes.bool,
   document: PropTypes.object.isRequired,
   documentId: PropTypes.string.isRequired,
-  documentAccess: PropTypes.object.isRequired,
+  documentAccess: PropTypes.object,
   getPermissionLevel: PropTypes.func.isRequired
 }
 

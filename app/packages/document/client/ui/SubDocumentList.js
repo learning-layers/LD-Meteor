@@ -3,7 +3,6 @@ import { Meteor } from 'meteor/meteor'
 import { compose } from 'react-komposer'
 import { FlowRouter } from 'meteor/kadira:flow-router-ssr'
 import { Documents, DocumentSelections } from '../../lib/collections'
-import EventEmitterInstance from '../../../../common/client/EventEmitter'
 import { Tracker } from 'meteor/tracker'
 
 function getTrackerLoader (reactiveMapper) {

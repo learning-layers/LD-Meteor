@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import { Meteor } from 'meteor/meteor'
 import { compose } from 'react-komposer'
 import { Counts } from 'meteor/tmeasday:publish-counts'
@@ -39,6 +39,8 @@ function openSubDocs (open) {
 
 const throttledOpenSubDocs = _throttle(openSubDocs, 500)
 
+let lastDocumentIdChange = new Date()
+
 class SubDocumentCounter extends Component {
   componentDidMount () {
     if (this.props.subdocumentsCount > 0) {
@@ -48,6 +50,17 @@ class SubDocumentCounter extends Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.subdocumentsCount > 0) {
       throttledOpenSubDocs(true)
+    }
+    if (this.props.documentId !== nextProps.documentId) {
+      lastDocumentIdChange = new Date()
+      if (nextProps.subdocumentsCount === 0) {
+        throttledOpenSubDocs(false)
+      }
+    } else if (nextProps.subdocumentsCount === 0) {
+      const timeDiff = Math.abs(new Date().getTime() - lastDocumentIdChange.getTime())
+      if (timeDiff < 1000) {
+        throttledOpenSubDocs(false)
+      }
     }
   }
   toggleSubDocumentArea () {
@@ -63,7 +76,8 @@ class SubDocumentCounter extends Component {
 }
 
 SubDocumentCounter.propTypes = {
-  subdocumentsCount: React.PropTypes.number
+  documentId: PropTypes.string.isRequired,
+  subdocumentsCount: PropTypes.number
 }
 
 export default compose(getTrackerLoader(onPropsChange))(SubDocumentCounter)
