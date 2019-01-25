@@ -1,13 +1,9 @@
-[![bitHound Code](https://www.bithound.io/github/learning-layers/LD-Meteor/badges/code.svg)](https://www.bithound.io/github/learning-layers/LD-Meteor)
-[![bitHound Dependencies](https://www.bithound.io/github/learning-layers/LD-Meteor/badges/dependencies.svg)](https://www.bithound.io/github/learning-layers/LD-Meteor/master/dependencies/npm)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-[![bitHound Dev Dependencies](https://www.bithound.io/github/learning-layers/LD-Meteor/badges/devDependencies.svg)](https://www.bithound.io/github/learning-layers/LD-Meteor/master/dependencies/npm)
 <a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
 [![Build Status](https://travis-ci.org/learning-layers/LD-Meteor.svg?branch=master)](https://travis-ci.org/learning-layers/LD-Meteor)
 *The current build status only covers code linting since there are problems to get the tests running currently. This will be resolved by changing the project structure in one of the upcoming commits.*
 
-<a name="ld-meteor"/>
 # LD-Meteor
 Living Documents implemented in Meteor (web framework)
 
@@ -21,10 +17,8 @@ Living Documents implemented in Meteor (web framework)
     - [Deployment in the Layers Box (TODO)](#deployment-layersbox)
 - [License](#license)
 
-<a name="development"/>
 ## Development
 
-<a name="setting-up-development"/>
 ### Setting up the development environment
 *You should have your IDE already set up*
 In order to get the development environment up and running follow these steps:
@@ -41,7 +35,6 @@ In order to get the development environment up and running follow these steps:
 
 6. The next step that you should do is to create a file called settings-dev.json in the project directory and customize your settings there.
 
-<a name="customizing-the-settings"/>
 ### Customizing your settings-dev.json file
 *TODO finish*
 
@@ -51,22 +44,18 @@ In order to get the development environment up and running follow these steps:
 
 3. In the email property enter in the url the smtp string that allows you to access your email account: e.g. ```smtp://<username>:<password>@<domain>:<port>```
 
-<a name="deployment"/>
 ## Deployment
-<a name="deployment-mupx"/>
 ### Deployment via mupx
 *TODO*
-<a name="deployment-layersbox"/>
 ### Deployment in the Layers Box
 *TODO*
 
-<a name="license"/>
 ## License
 LD-Meteor is released under the MIT [license](https://github.com/learning-layers/LD-Meteor/blob/master/LICENSE) by Martin Bachl, Institute of Applied Research / Institute for Learning and Innovation in Networks, University of applied sciences Karlsruhe
 
-###Bootswatch Paper Theme
+### Bootswatch Paper Theme
 The [Bootswatch Paper Theme](http://bootswatch.com/paper/) by Thomas Park is licensed under the [MIT License](https://github.com/thomaspark/bootswatch/blob/gh-pages/LICENSE). Based on [Bootstrap](http://getbootstrap.com/). Icons from [Font Awesome](http://fortawesome.github.io/Font-Awesome/). Web fonts from [Google](https://www.google.com/fonts/).
 
-###Hopscotch
-Hopscotch by LinkedIn is licensed under the [Apache License V2.0](https://github.com/linkedin/hopscotch/blob/master/LICENSE).
+### Hopscotch
+Hopscotch is licensed under the [Apache License V2.0](https://github.com/linkedin/hopscotch/blob/master/LICENSE).
 "Hopscotch is a framework to make it easy for developers to add product tours to their pages." - [Hopscotch Github Repository 2016](https://github.com/linkedin/hopscotch)
